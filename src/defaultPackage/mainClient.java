@@ -28,7 +28,7 @@ public class mainClient extends Application
 	{
 		try
 		{
-			Parent root = FXMLLoader.load(getClass().getResource("/gui/PrototypeScreen.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("/gui/LoginScreen.fxml"));
 			Scene Loginscene = new Scene(root);
 			primaryStage.setScene(Loginscene);
 			primaryStage.setTitle("Ort Braude Library");
