@@ -13,7 +13,6 @@ public class mainClient extends Application
 
 	static Stage LoginStage; // save login stage
 
-	
 	public static void main(String[] args)
 	{
 		launch(args);

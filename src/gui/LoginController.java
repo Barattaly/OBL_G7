@@ -25,7 +25,6 @@ public class LoginController {
 
 
 	
-    
     @FXML
     void loginBtnDisplay(ActionEvent event) throws IOException {           //press on login button
     
