@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="528.0" prefWidth="700.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LibrarianScreenNew">
+<AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="528.0" prefWidth="700.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianScreenControllerNew">
    <children>
       <AnchorPane layoutX="-2.0" prefHeight="528.0" prefWidth="193.0" style="-fx-background-color: #a0a2ab;">
          <effect>
@@ -23,7 +23,7 @@
          <children>
             <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="46.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../resource/Logo.png" />
+                  <Image url="@../../bin/resources/Logo.png" />
                </image>
             </ImageView>
             <Label layoutX="76.0" layoutY="76.0" text="OBL" textFill="#203447">
@@ -38,7 +38,7 @@
             </JFXButton>
             <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="14.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../resource/house.png" />
+                  <Image url="@../../bin/resources/house.png" />
                </image>
             </ImageView>
             <JFXButton layoutY="153.0" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #203447 #203447;" text="Add subscriber" textFill="WHITE">
@@ -48,17 +48,17 @@
             </JFXButton>
             <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="14.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../resource/add.png" />
+                  <Image url="@../../bin/resources/add.png" />
                </image>
             </ImageView>
          </children>
       </AnchorPane>
       <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="22.0" layoutY="197.0" pickOnBounds="true" preserveRatio="true" />
-      <Pane layoutX="197.0" prefHeight="528.0" prefWidth="503.0" visible="false">
+      <Pane layoutX="197.0" prefHeight="528.0" prefWidth="503.0">
          <children>
             <ImageView fx:id="logoutimage" fitHeight="20.0" fitWidth="23.0" layoutX="435.0" layoutY="1.0" onMouseClicked="#logOutDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../resource/LogOut.png" />
+                  <Image url="@../../bin/resources/LogOut.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />

@@ -27,21 +27,21 @@ public class LoginController {
 	
     
     @FXML
-    void LoginDisplay(ActionEvent event) throws IOException {           //press on login button
+    void loginBtnDisplay(ActionEvent event) throws IOException {           //press on login button
     
-	   	/*((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
+	   	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
 	    	Stage SeondStage = new Stage();
-	    	AnchorPane root = FXMLLoader.load(getClass().getResource("/application/try.fxml"));
+	    	AnchorPane root = FXMLLoader.load(getClass().getResource("/gui/NewLibrarianScreen.fxml"));
 			Scene scene = new Scene(root);
 			SeondStage.setTitle("Ort Braude Library");
-			//SeondStage.getIcons().add(new Image("/resource/Braude.png"));
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
 			SeondStage.setScene(scene);		
-			SeondStage.show();*/
+			SeondStage.show();
     		
     	
     }
     
-  @FXML
+/*  @FXML
     void OpenSearchScreen(MouseEvent event) throws IOException 
     {
     	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
@@ -52,7 +52,7 @@ public class LoginController {
 		//SeondStage2.getIcons().add(new Image("application/Braude.png"));
 		SeondStage2.setScene(scene2);		
 		SeondStage2.show();
-  }
+  }*/
 
   
     

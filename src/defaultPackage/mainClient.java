@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 
 public class mainClient extends Application
 {
@@ -32,7 +33,7 @@ public class mainClient extends Application
 			Scene Loginscene = new Scene(root);
 			primaryStage.setScene(Loginscene);
 			primaryStage.setTitle("Ort Braude Library");
-			// primaryStage.getIcons().add(new Image("resource/Braude.png"));
+			primaryStage.getIcons().add(new Image("resources/Braude.png"));
 			primaryStage.show();
 			LoginStage = primaryStage; // save login stage
 

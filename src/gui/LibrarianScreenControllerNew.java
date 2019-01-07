@@ -16,7 +16,7 @@ import javafx.scene.input.MouseEvent;
 
 
 
-public class LibrarianScreenNew implements Initializable 
+public class LibrarianScreenControllerNew implements Initializable 
 {
 	
 	
