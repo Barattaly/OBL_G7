@@ -108,7 +108,7 @@ public class LibrarianScreenControllerNew implements Initializable
     	 Optional<ButtonType> option = alert.showAndWait();
      if (option.get() == ButtonType.OK) {
     	 ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	 defaultPackage.mainClient.getLoginStage().show();				//show login screen
+    	 GuiManager.getLoginStage().show();				//show login screen
      }
         
       else if (option.get() == ButtonType.CANCEL) {

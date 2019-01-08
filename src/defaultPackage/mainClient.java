@@ -1,23 +1,23 @@
 package defaultPackage;
 
 
+import client.ClientController;
+import gui.GuiManager;
+import gui.GuiManager.SCREENS;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 
 public class mainClient extends Application
 {
 
-	static Stage LoginStage; // save login stage
-
+	static ClientController clientController;
+	
 	public static void main(String[] args)
 	{
+		
 		launch(args);
 	}
-	
+
 	/**
 	 * This method is responsible for the creation of the Client UI.
 	 *
@@ -28,23 +28,17 @@ public class mainClient extends Application
 	{
 		try
 		{
-			Parent root = FXMLLoader.load(getClass().getResource("/gui/LoginScreen.fxml"));
-			Scene Loginscene = new Scene(root);
-			primaryStage.setScene(Loginscene);
-			primaryStage.setTitle("Ort Braude Library");
-			primaryStage.getIcons().add(new Image("resources/Braude.png"));
-			primaryStage.show();
-			LoginStage = primaryStage; // save login stage
+			clientController = new ClientController("localhost", ClientController.DEFAULT_PORT);
 
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			GuiManager.ShowErrorPopup("Can't Connect Client!");
+			clientController = null;
 		}
-	}
-
-	public static Stage getLoginStage()
-	{
-		return LoginStage;
+		finally 
+		{
+			GuiManager.InitialPrimeryStage(SCREENS.login,primaryStage);
+		}
 	}
 
 }

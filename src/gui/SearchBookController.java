@@ -73,11 +73,11 @@ public class SearchBookController implements Initializable{
 	    }*/
 
     @FXML
-    void logOutDisplay(MouseEvent event) {				//press on back to preview
+    void logOutDisplay(MouseEvent event)
+    {				//press on back to preview
    
     	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	defaultPackage.mainClient.getLoginStage().show();				//show login screen
-
+    	GuiManager.getLoginStage().show();//show login screen
     }
 
  
