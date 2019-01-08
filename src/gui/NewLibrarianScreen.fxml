@@ -15,24 +15,19 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="522.0" prefWidth="649.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianScreenControllerNew">
+<AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianScreenControllerNew">
    <children>
-      <AnchorPane layoutX="-2.0" prefHeight="522.0" prefWidth="92.0" style="-fx-background-color: #a0a2ab;">
+      <AnchorPane layoutX="-2.0" prefHeight="611.0" prefWidth="116.0" style="-fx-background-color: #a0a2ab;">
          <effect>
             <DropShadow />
          </effect>
          <children>
-            <Label layoutX="22.0" layoutY="67.0" text="OBL" textFill="#203447">
+            <Label layoutX="36.0" layoutY="83.0" text="OBL" textFill="#203447">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <ImageView fitHeight="78.0" fitWidth="79.0" layoutX="8.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../bin/resources/Logo.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="btn_home" fitHeight="78.0" fitWidth="91.0" layoutX="2.0" layoutY="120.0" onMouseClicked="#btn_homeDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_home" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="120.0" onMouseClicked="#btn_homeDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/HomePage.JPG" />
                </image>
@@ -40,7 +35,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_createNewSubscriberCard" fitHeight="78.0" fitWidth="91.0" layoutX="2.0" layoutY="200.0" onMouseClicked="#btn_createNewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_createNewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="230.0" onMouseClicked="#btn_createNewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/CreateNewSubscriberCard.jpg" />
                </image>
@@ -48,7 +43,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_books" fitHeight="78.0" fitWidth="100.0" layoutX="2.0" layoutY="280.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="340.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/Books.jpg" />
                </image>
@@ -56,7 +51,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_searchSubscriberCard" fitHeight="97.0" fitWidth="91.0" layoutX="2.0" layoutY="360.0" onMouseClicked="#btn_searchSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_searchSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="450.0" onMouseClicked="#btn_searchSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/SearchSubscriberCard.jpg" />
                </image>
@@ -64,9 +59,14 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <ImageView fitHeight="78.0" fitWidth="116.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../bin/resources/Logo.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
-      <Pane fx:id="pane_home" layoutX="91.0" layoutY="1.0" prefHeight="522.0" prefWidth="559.0" visible="false">
+      <Pane fx:id="pane_home" layoutX="116.0" prefHeight="611.0" prefWidth="650.0" visible="false">
          <children>
             <Label layoutX="180.0" layoutY="52.0" prefHeight="87.0" prefWidth="200.0" text="Home" textFill="#fcfcfc">
                <font>
@@ -75,9 +75,9 @@
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="pane_createNewSubscriberCard" layoutX="90.0" prefHeight="528.0" prefWidth="559.0" visible="false">
+      <Pane fx:id="pane_createNewSubscriberCard" layoutX="116.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
          <children>
-            <ImageView fx:id="logoutimage" fitHeight="20.0" fitWidth="23.0" layoutX="486.0" layoutY="11.0" onMouseClicked="#logOutDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="logoutimage" fitHeight="20.0" fitWidth="23.0" layoutX="568.0" layoutY="11.0" onMouseClicked="#logOutDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/LogOut.png" />
                </image>
@@ -85,7 +85,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="LogOut" layoutX="506.0" layoutY="12.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab">
+            <Label fx:id="LogOut" layoutX="588.0" layoutY="12.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />
                </font>
@@ -93,12 +93,12 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Label>
-            <Label layoutX="115.0" layoutY="39.0" text="Create new subsciber card" textFill="#a0a2ab">
+            <Label layoutX="185.0" layoutY="31.0" text="Create new subsciber card" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <GridPane fx:id="Grid" layoutX="155.0" layoutY="92.0">
+            <GridPane fx:id="Grid" layoutX="225.0" layoutY="97.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -188,14 +188,14 @@
                   </Label>
                </children>
             </GridPane>
-            <JFXButton layoutX="204.0" layoutY="432.0" onAction="#btn_createSubscriberCardDisplay" prefHeight="58.0" prefWidth="152.0" style="-fx-background-color: #3C58FA;" text="Create subscriber card" textFill="WHITE">
+            <JFXButton layoutX="249.0" layoutY="458.0" onAction="#btn_createSubscriberCardDisplay" prefHeight="58.0" prefWidth="152.0" style="-fx-background-color: #3C58FA;" text="Create subscriber card" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </JFXButton>
          </children>
       </Pane>
-      <Pane fx:id="pane_searchBook" layoutX="90.0" layoutY="1.0" prefHeight="522.0" prefWidth="559.0" visible="false">
+      <Pane fx:id="pane_searchBook" layoutX="116.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
          <children>
             <Label layoutX="131.0" layoutY="91.0" prefHeight="78.0" prefWidth="297.0" text="Search Book" textFill="#d7d1d1">
                <font>
@@ -204,7 +204,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="pane_searchSubscriberCard" layoutX="91.0" layoutY="1.0" prefHeight="522.0" prefWidth="559.0" visible="false">
+      <Pane fx:id="pane_searchSubscriberCard" layoutX="116.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0">
          <children>
             <Label layoutX="20.0" layoutY="172.0" prefHeight="147.0" prefWidth="531.0" text="search subscriber card" textFill="#eeeaea">
                <font>
