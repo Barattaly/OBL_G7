@@ -31,7 +31,7 @@ import javafx.stage.WindowEvent;
 
 public class PrototypeGUIController implements Initializable
 {
-	private LibrarianModel librarianDB;
+	//private LibrarianModel librarianDB;
 	private String ServerIp = null;
 	private String newStatus;
 	private EventHandler<MouseEvent> DoubleClickOnTable = new EventHandler<MouseEvent>()
@@ -40,13 +40,13 @@ public class PrototypeGUIController implements Initializable
 		@Override
 		public void handle(MouseEvent event)
 		{
-			if (librarianDB == null)
-				return;
+			//if (librarianDB == null)
+			//	return;
 			if (event.getClickCount() == 2 && !studentList.isEmpty())
 			{
 				if(studentTable.getSelectionModel().getSelectedItem() == null) return;
 				selectionPropmt();
-				librarianDB.updateStudentStatus(studentTable.getSelectionModel().getSelectedItem(), newStatus);
+				//librarianDB.updateStudentStatus(studentTable.getSelectionModel().getSelectedItem(), newStatus);
 				studentTable.getSelectionModel().getSelectedItem().StatusMembership = new SimpleStringProperty(
 						newStatus);
 				studentTable.refresh();
@@ -105,8 +105,8 @@ public class PrototypeGUIController implements Initializable
 		try
 		{
 			getServerIp();//Open window asking for the server IP
-			librarianDB = new LibrarianModel(ServerIp, LibrarianModel.DEFAULT_PORT);
-			librarianDB.updateStudentListFromDB(studentList);
+			//librarianDB = new LibrarianModel(ServerIp, LibrarianModel.DEFAULT_PORT);
+			//librarianDB.updateStudentListFromDB(studentList);
 			studentTable.setItems(studentList);
 
 		} catch (Exception e)

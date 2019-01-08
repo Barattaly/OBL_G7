@@ -3,6 +3,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import client.ClientController;
 import client.LibrarianModel;
 import defaultPackage.mainClient;
 import entities.Book;
@@ -40,7 +41,7 @@ import javafx.stage.StageStyle;
 
 public class LibrarianScreenController implements Initializable
 {
-    LibrarianModel librarianDB= new LibrarianModel("localhost",LibrarianModel.DEFAULT_PORT);
+    //ClientController librarianDB= new ClientController("localhost",ClientController.DEFAULT_PORT);
     private String newStatus; 
     @FXML
     private GridPane Grid;
@@ -173,7 +174,7 @@ public class LibrarianScreenController implements Initializable
 				if(event.getClickCount()==2)
 				{
 					selectionPropmt();
-					librarianDB.updateStudentStatus(studentTable.getSelectionModel().getSelectedItem(),newStatus);
+					//librarianDB.updateStudentStatus(studentTable.getSelectionModel().getSelectedItem(),newStatus);
 					studentTable.getSelectionModel().getSelectedItem().StatusMembership = new SimpleStringProperty(newStatus);
 					studentTable.refresh();
 				}
@@ -199,7 +200,7 @@ public class LibrarianScreenController implements Initializable
 		
 		});*/
 
-		   librarianDB.updateStudentListFromDB(studentList);
+		   //librarianDB.updateStudentListFromDB(studentList);
 		   studentTable.setItems(studentList);
 		   
 		   

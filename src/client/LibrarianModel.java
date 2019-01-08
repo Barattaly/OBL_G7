@@ -5,22 +5,22 @@ import java.io.IOException;
 import entities.Student;
 import javafx.collections.ObservableList;
 
-public class LibrarianModel implements ChatIF 
+public class LibrarianModel 
 {
 	 /**
 	   * The default port to connect on.
 	   */
-	  final public static int DEFAULT_PORT = 5555;
+	  /*final public static int DEFAULT_PORT = 5555;
 	    
 
-	  private ChatClient client;
+	  private ClientController client;
 	  private ObservableList<Student> librarianStudentListREF = null;
 
 	  public LibrarianModel(String host, int port) 
 	  {
 	    try 
 	    {
-	      client= new ChatClient(host, port, this);
+	      client= new ClientController(host, port, this);
 	    } 
 	    catch(IOException exception) 
 	    {
@@ -66,6 +66,6 @@ public class LibrarianModel implements ChatIF
 				{
 				}
 			}
-		}
+		}*/
 		
 }
