@@ -13,21 +13,17 @@
 
 <AnchorPane fx:id="rootAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
    <children>
-      <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="339.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../bin/resources/Logo.png" />
-         </image></ImageView>
-      <Label layoutX="367.0" layoutY="86.0" text="OBL" textFill="#2196f3">
+      <Label layoutX="372.0" layoutY="90.0" text="OBL" textFill="#2196f3">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label fx:id="resources" layoutX="360.0" layoutY="116.0" text="Login" textFill="#a0a2ab">
+      <Label fx:id="resources" layoutX="365.0" layoutY="120.0" text="Login" textFill="#a0a2ab">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="309.0" layoutY="455.0" onMouseClicked="#openSearchScreen" prefHeight="18.0" prefWidth="149.0" text="Search a book as guest" textFill="#a0a2ab" underline="true">
+      <Label layoutX="322.0" layoutY="485.0" onMouseClicked="#openSearchScreen" prefHeight="18.0" prefWidth="149.0" text="Search a book as guest" textFill="#a0a2ab" underline="true">
          <font>
             <Font size="14.0" />
          </font>
@@ -35,7 +31,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <ImageView fx:id="SearchImage" fitHeight="30.0" fitWidth="33.0" layoutX="270.0" layoutY="449.0" onMouseClicked="#openSearchScreen" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="SearchImage" fitHeight="30.0" fitWidth="33.0" layoutX="287.0" layoutY="479.0" onMouseClicked="#openSearchScreen" pickOnBounds="true" preserveRatio="true">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -43,9 +39,17 @@
             <Image url="@../resources/search.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="26.0" fitWidth="22.0" layoutX="274.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="26.0" fitWidth="22.0" layoutX="274.0" layoutY="245.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="324.0" layoutY="372.0" prefHeight="18.0" prefWidth="130.0" text="Forgot password ?" textFill="#a0a2ab" underline="true">
+      <ImageView fitHeight="26.0" fitWidth="22.0" layoutX="275.0" layoutY="199.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/resources/Login_Username.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="26.0" fitWidth="22.0" layoutX="275.0" layoutY="254.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/resources/Login_Password.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="329.0" layoutY="402.0" prefHeight="18.0" prefWidth="130.0" text="Forgot password ?" textFill="#a0a2ab" underline="true">
          <font>
             <Font size="14.0" />
          </font>
@@ -53,17 +57,17 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <JFXButton fx:id="Login" layoutX="395.0" layoutY="310.0" onAction="#loginBtnDisplay" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #3C58FA;" text="Login" textFill="WHITE">
+      <JFXButton fx:id="Login" layoutX="401.0" layoutY="320.0" onAction="#loginBtnDisplay" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #3C58FA;" text="Login" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <JFXTextField focusColor="#a0a2ab" labelFloat="true" layoutX="300.0" layoutY="187.0" prefHeight="23.0" prefWidth="189.0" promptText=" Username" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+      <JFXTextField focusColor="#a0a2ab" labelFloat="true" layoutX="302.0" layoutY="199.0" prefHeight="23.0" prefWidth="189.0" promptText=" Username" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>
       </JFXTextField>
-      <JFXCheckBox layoutX="266.0" layoutY="321.0" text="Remember me" textFill="#a0a2ab" unCheckedColor="#a0a2ab">
+      <JFXCheckBox layoutX="271.0" layoutY="331.0" text="Remember me" textFill="#a0a2ab" unCheckedColor="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>
@@ -71,10 +75,15 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXCheckBox>
-      <JFXPasswordField focusColor="#a0a2ab" labelFloat="true" layoutX="300.0" layoutY="242.0" prefHeight="28.0" prefWidth="189.0" promptText="Password" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+      <JFXPasswordField focusColor="#a0a2ab" labelFloat="true" layoutX="302.0" layoutY="254.0" prefHeight="28.0" prefWidth="189.0" promptText="Password" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>
       </JFXPasswordField>
+      <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="352.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/resources/Logo.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
