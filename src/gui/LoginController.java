@@ -8,41 +8,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 
-public class LoginController implements Initializable{
-	
+public class LoginController{
 
-	   
-	 
-	 
-	 @Override
-		public void initialize(URL arg0, ResourceBundle arg1) 
-	 	{
-		 
-			
-			
-		}
-	 
-	
-
-
-	
     @FXML
     void loginBtnDisplay(ActionEvent event) throws IOException {           //press on login button
     
 	   	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
 	    	Stage SeondStage = new Stage();
-	    	AnchorPane root = FXMLLoader.load(getClass().getResource("/gui/NewLibrarianScreen.fxml"));
+	    	BorderPane root = FXMLLoader.load(getClass().getResource("/gui/NewLibrarianScreen.fxml"));
 			Scene scene = new Scene(root);
 			SeondStage.setTitle("Ort Braude Library");
 			SeondStage.getIcons().add(new Image("/resources/Braude.png"));

@@ -8,9 +8,11 @@ import com.jfoenix.controls.JFXButton;
 
 import entities.*;
 import defaultPackage.mainClient;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -30,41 +32,61 @@ public class SearchBookController implements Initializable{
 	    @FXML
 	    private TableColumn<Book, String> namecol;
 
-	    @FXML
-	    private TableColumn<Book, Integer> catalognumbercol;
 
 	    @FXML
 	    private TableColumn<Book, String> authorcol;
+	    
 
 	    @FXML
-	    private TableColumn<Book, Integer> numbercol;
+	    private TableColumn<Book, Integer> catalognumbercol;
 
-	    @FXML
-	    private TableColumn<Book, String> categoriescol;
-
+	  
 	    @FXML
 	    private TableColumn<Book, String> locationcol;
+	    
+	    @FXML
+	    private TableColumn<Book, String> returndatecol;
+	    
+	    private ObservableList<Book> booklist;
 
 	
 	   @Override
 		public void initialize(URL arg0, ResourceBundle arg1)
 	   {
 		   namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		   catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalognumber"));
 		   authorcol.setCellValueFactory(new PropertyValueFactory<>("Author"));
-		   numbercol.setCellValueFactory(new PropertyValueFactory<>("Numberofcopys"));
-		   categoriescol.setCellValueFactory(new PropertyValueFactory<>("Categories"));
+		   catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalognumber"));
 		   locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
+		   returndatecol.setCellValueFactory(new PropertyValueFactory<>("Returndate"));
 		   
-		  Book book1 = new Book("Harry Potter", 123456, "J.K.Rolling", 7, "Adventure", "A6 313");
-		  Book book2 = new Book("Kofiko", 456789, "Galila Ron Feder", 3, "Fun", "A8 949");
-		  ObservableList<Book> list = FXCollections.observableArrayList(book1,book2);
+		  Book book1 = new Book("Harry Potter" , "J.K.Rolling", 12, "A6 313","14/10/2018");
+		  Book book2 = new Book("Kofiko" ,"Galila Ron Feder", 456789, "A8 949","12/3/2019");
+		  booklist = FXCollections.observableArrayList(book1,book2);
 		  
-		   BookTable.setItems(list);
+		   BookTable.setItems(booklist);
+		   
+		   BookTable.setOnMouseClicked(DoubleClickOnTable);
 		   
 		   
 	   }
+	   
+	   private EventHandler<MouseEvent> DoubleClickOnTable = new EventHandler<MouseEvent>()
+		{
 
+			@Override
+			public void handle(MouseEvent event)
+			{
+				//if (librarianDB == null)
+				//	return;
+				if (event.getClickCount() == 2 && !booklist.isEmpty())
+				{
+					
+				}
+			}
+		};
+
+		
+		
 	  /* @FXML
 	    void searchBookDisplay(ActionEvent event) {							//press on search in search book screen
 	    	

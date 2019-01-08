@@ -98,20 +98,27 @@
             <JFXTextArea focusColor="#a0a2ab" prefHeight="45.0" prefWidth="100.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <JFXButton layoutX="316.0" layoutY="366.0" prefHeight="50.0" prefWidth="96.0" style="-fx-background-color: #3C58FA;" text="Search Book" textFill="WHITE">
+      <JFXButton layoutX="314.0" layoutY="375.0" prefHeight="50.0" prefWidth="96.0" style="-fx-background-color: #3C58FA;" text="Search Book" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <TableView fx:id="BookTable" layoutX="13.0" layoutY="421.0" prefHeight="121.0" prefWidth="703.0" style="-fx-background-color: #a0a2ab;" tableMenuButtonVisible="true">
+      <TableView fx:id="BookTable" layoutX="33.0" layoutY="476.0" prefHeight="121.0" prefWidth="703.0" style="-fx-background-color: #a0a2ab;" tableMenuButtonVisible="true">
          <columns>
             <TableColumn fx:id="namecol" prefWidth="75.0" text="Name" />
-            <TableColumn fx:id="catalognumbercol" prefWidth="123.0" text="Catalogy Number" />
-            <TableColumn fx:id="authorcol" prefWidth="75.0" text="Author" />
-            <TableColumn fx:id="numbercol" prefWidth="121.0" text="number of copys" />
-            <TableColumn fx:id="categoriescol" prefWidth="75.0" text="Categories" />
+            <TableColumn fx:id="authorcol" prefWidth="88.0" text="Author" />
+            <TableColumn fx:id="catalognumbercol" prefWidth="110.0" text="Catalog Number" />
             <TableColumn fx:id="locationcol" prefWidth="130.0" text="Location in library" />
+            <TableColumn fx:id="returndatecol" prefWidth="106.0" text="Return date" />
          </columns>
       </TableView>
+      <Label layoutX="33.0" layoutY="437.0" onMouseClicked="#logOutDisplay" prefHeight="30.0" prefWidth="335.0" text="To open book page - Double click on the wanted row" textFill="#a0a2ab">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
    </children>
 </AnchorPane>

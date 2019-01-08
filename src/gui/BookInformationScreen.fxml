@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="723.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.BookInformationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="723.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="317.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../resource/Logo.png" />
+            <Image url="@../../bin/resources/Logo.png" />
          </image>
       </ImageView>
       <Label layoutX="340.0" layoutY="82.0" text="OBL" textFill="#2196f3">
@@ -31,7 +31,7 @@
       </Label>
       <ImageView fitHeight="30.0" fitWidth="37.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../Desktop/OBL/icons/backarrow.png" />
+            <Image url="@../../bin/resources/backarrow.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />
@@ -78,7 +78,10 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <ImageView fitHeight="229.0" fitWidth="187.0" layoutX="516.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="229.0" fitWidth="187.0" layoutX="516.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/resources/הארי_פוטר_4.jpg" />
+         </image></ImageView>
       <Label fx:id="resources111112" layoutX="482.0" layoutY="391.0" text="This book is wanted!" textFill="#a0a2ab">
          <font>
             <Font size="24.0" />

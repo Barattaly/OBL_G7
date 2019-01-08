@@ -90,11 +90,11 @@ public class SubscriberScreenController implements Initializable {
 		   subjectcol.setCellValueFactory(new PropertyValueFactory<>("Subject"));
 		   locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
 		   
-		  Book book1 = new Book("Harry Potter", 123456, "J.K.Rolling", 7, "Adventure", "A6 313");
-		  Book book2 = new Book("Kofiko", 456789, "Galila Ron Feder", 3, "Fun", "A8 949");
-		  ObservableList<Book> list = FXCollections.observableArrayList(book1,book2);
+		//  Book book1 = new Book("Harry Potter" ,"J.K.Rolling" ,123456,  7, "Adventure", "A6 313");
+		//  Book book2 = new Book("Kofiko", "Galila Ron Feder" ,456789, 3, "Fun", "A8 949");
+		//  ObservableList<Book> list = FXCollections.observableArrayList(book1,book2);
 		  
-		   Table2.setItems(list);
+		//   Table2.setItems(list);
 		   
 		   /////////////////////////////////////////////////////////////////////////////////////
 		   
