@@ -7,19 +7,19 @@ public class Book
 {
 	
 	public SimpleStringProperty name;
-	public SimpleIntegerProperty catalogynumber;
+	public SimpleIntegerProperty catalognumber;
 	public SimpleStringProperty author;
 	public SimpleIntegerProperty numberofcopys;
-	public SimpleStringProperty subject;
+	public SimpleStringProperty categories;
 	public SimpleStringProperty location;
 	   
-	   public Book(String name, int catalogynumber, String author, int numberofcopys, String subject, String location) 
+	   public Book(String name, int catalognumber, String author, int numberofcopys, String categories, String location) 
 	   {
 			this.name = new SimpleStringProperty(name);
-			this.catalogynumber =new SimpleIntegerProperty(catalogynumber);
+			this.catalognumber =new SimpleIntegerProperty(catalognumber);
 			this.author = new SimpleStringProperty(author);
 			this.numberofcopys =new SimpleIntegerProperty(numberofcopys);
-			this.subject =new SimpleStringProperty(subject);
+			this.categories =new SimpleStringProperty(categories);
 			this.location =new SimpleStringProperty(location);
 		}
 	   
@@ -32,12 +32,12 @@ public class Book
 		this.name =new SimpleStringProperty(name);
 	}
 
-	public int getCatalogynumber() {
-		return catalogynumber.get();
+	public int getCatalognumber() {
+		return catalognumber.get();
 	}
 
-	public void setCatalogynumber(int catalogynumber) {
-		this.catalogynumber =new SimpleIntegerProperty(catalogynumber);
+	public void setCatalognumber(int catalognumber) {
+		this.catalognumber =new SimpleIntegerProperty(catalognumber);
 	}
 
 	public String getAuthor() {
@@ -56,12 +56,12 @@ public class Book
 		this.numberofcopys =new SimpleIntegerProperty(numberofcopys);
 	}
 
-	public String getSubject() {
-		return subject.get();
+	public String getCategories() {
+		return categories.get();
 	}
 
-	public void setSubject(String subject) {
-		this.subject =new SimpleStringProperty(subject);
+	public void setCategories(String categories) {
+		this.categories =new SimpleStringProperty(categories);
 	}
 
 	public String getLocation() {

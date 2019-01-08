@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="723.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SearchBookController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="542.0" prefWidth="723.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SearchBookController">
    <children>
       <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="317.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../resource/Logo.png" />
+            <Image url="@../../bin/resources/Logo.png" />
          </image>
       </ImageView>
       <Label layoutX="340.0" layoutY="76.0" text="OBL" textFill="#2196f3">
@@ -32,7 +32,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="55.0" layoutY="14.0" onMouseClicked="#LogOutDisplay" prefHeight="30.0" prefWidth="102.0" text="Back to preview" textFill="#a0a2ab">
+      <Label layoutX="55.0" layoutY="14.0" onMouseClicked="#logOutDisplay" prefHeight="30.0" prefWidth="102.0" text="Back to preview" textFill="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>
@@ -40,10 +40,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <ImageView fitHeight="30.0" fitWidth="37.0" layoutX="25.0" layoutY="14.0" onMouseClicked="#LogOutImageDisplay" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="30.0" fitWidth="37.0" layoutX="25.0" layoutY="14.0" onMouseClicked="#logOutDisplay" pickOnBounds="true" preserveRatio="true">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <image>
+            <Image url="@../../bin/resources/backarrow.png" />
+         </image>
       </ImageView>
       <GridPane layoutX="262.0" layoutY="136.0">
          <columnConstraints>
@@ -95,20 +98,20 @@
             <JFXTextArea focusColor="#a0a2ab" prefHeight="45.0" prefWidth="100.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
-      <JFXButton fx:id="Search1" layoutX="316.0" layoutY="366.0" onAction="#SearchBookDisplay" prefHeight="50.0" prefWidth="96.0" style="-fx-background-color: #3C58FA;" text="Search Book" textFill="WHITE">
+      <JFXButton layoutX="316.0" layoutY="366.0" prefHeight="50.0" prefWidth="96.0" style="-fx-background-color: #3C58FA;" text="Search Book" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
       <TableView fx:id="BookTable" layoutX="13.0" layoutY="421.0" prefHeight="121.0" prefWidth="703.0" style="-fx-background-color: #a0a2ab;" tableMenuButtonVisible="true">
-        <columns>
-          <TableColumn fx:id="namecol" prefWidth="75.0" text="Name" />
-          <TableColumn fx:id="catalogynumbercol" prefWidth="123.0" text="Catalogy Number" />
+         <columns>
+            <TableColumn fx:id="namecol" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="catalognumbercol" prefWidth="123.0" text="Catalogy Number" />
             <TableColumn fx:id="authorcol" prefWidth="75.0" text="Author" />
             <TableColumn fx:id="numbercol" prefWidth="121.0" text="number of copys" />
-            <TableColumn fx:id="subjectcol" prefWidth="75.0" text="Categories" />
+            <TableColumn fx:id="categoriescol" prefWidth="75.0" text="Categories" />
             <TableColumn fx:id="locationcol" prefWidth="130.0" text="Location in library" />
-        </columns>
+         </columns>
       </TableView>
    </children>
 </AnchorPane>

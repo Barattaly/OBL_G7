@@ -31,7 +31,7 @@ public class SearchBookController implements Initializable{
 	    private TableColumn<Book, String> namecol;
 
 	    @FXML
-	    private TableColumn<Book, Integer> catalogynumbercol;
+	    private TableColumn<Book, Integer> catalognumbercol;
 
 	    @FXML
 	    private TableColumn<Book, String> authorcol;
@@ -40,7 +40,7 @@ public class SearchBookController implements Initializable{
 	    private TableColumn<Book, Integer> numbercol;
 
 	    @FXML
-	    private TableColumn<Book, String> subjectcol;
+	    private TableColumn<Book, String> categoriescol;
 
 	    @FXML
 	    private TableColumn<Book, String> locationcol;
@@ -50,10 +50,10 @@ public class SearchBookController implements Initializable{
 		public void initialize(URL arg0, ResourceBundle arg1)
 	   {
 		   namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		   catalogynumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalogynumber"));
+		   catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalognumber"));
 		   authorcol.setCellValueFactory(new PropertyValueFactory<>("Author"));
 		   numbercol.setCellValueFactory(new PropertyValueFactory<>("Numberofcopys"));
-		   subjectcol.setCellValueFactory(new PropertyValueFactory<>("Subject"));
+		   categoriescol.setCellValueFactory(new PropertyValueFactory<>("Categories"));
 		   locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
 		   
 		  Book book1 = new Book("Harry Potter", 123456, "J.K.Rolling", 7, "Adventure", "A6 313");
@@ -65,47 +65,21 @@ public class SearchBookController implements Initializable{
 		   
 	   }
 
-	   @FXML
-	    void SearchBookDisplay(ActionEvent event) {							//press on search in search book screen
-	    	Alert alert = new Alert(AlertType.CONFIRMATION);
-	    	alert.setTitle("OBL Search Book");
-	    	alert.setHeaderText("The book is exist in A4 383");
-	    	ButtonType show = new ButtonType("show Table of Contents");
-	    	ButtonType OK = new ButtonType("OK");
+	  /* @FXML
+	    void searchBookDisplay(ActionEvent event) {							//press on search in search book screen
 	    	
-	    	
-	        alert.getButtonTypes().clear();
-	        alert.getButtonTypes().addAll(OK, show);
-	        
-	        Optional<ButtonType> option = alert.showAndWait();
-	        if (option.get() == OK) {
-	            alert.close();
-	        } else if (option.get() == show) {
-	        	Alert alert2 = new Alert(AlertType.INFORMATION);
-	        	alert2.setTitle("Table of Contents");
-	        	alert2.setHeaderText("The book is pinokio ....");
-	        	alert2.showAndWait();
 
 
-	        } 
-
-
-	    }
+	    }*/
 
     @FXML
-    void LogOutDisplay(MouseEvent event) {				//press on back to preview
+    void logOutDisplay(MouseEvent event) {				//press on back to preview
    
     	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	mainClient.getLoginStage().show();				//show login screen
+    	defaultPackage.mainClient.getLoginStage().show();				//show login screen
 
     }
 
-    @FXML
-    void LogOutImageDisplay(MouseEvent event) {         //press on back to preview image
-    	
-    	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	mainClient.getLoginStage().show();				//show login screen
-
-    }
+ 
 
 }

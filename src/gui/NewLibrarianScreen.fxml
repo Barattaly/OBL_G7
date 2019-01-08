@@ -48,9 +48,9 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_searchBook" fitHeight="78.0" fitWidth="100.0" layoutX="2.0" layoutY="280.0" onMouseClicked="#btn_searchBookDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_books" fitHeight="78.0" fitWidth="100.0" layoutX="2.0" layoutY="280.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/SearchBook.jpg" />
+                  <Image url="@../../bin/resources/Books.jpg" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />

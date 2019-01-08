@@ -24,7 +24,7 @@ public class LibrarianScreenControllerNew implements Initializable
 	 private Pane pane_home , pane_createNewSubscriberCard , pane_searchBook , pane_searchSubscriberCard ;
 
 	 @FXML
-	 private ImageView btn_home , btn_createNewSubscriberCard , btn_searchBook , btn_searchSubscriberCard;
+	 private ImageView btn_home , btn_createNewSubscriberCard , btn_books , btn_searchSubscriberCard;
 
 
 	    @FXML
@@ -36,7 +36,7 @@ public class LibrarianScreenControllerNew implements Initializable
 	    	pane_searchSubscriberCard.setVisible(false);
 	    	btn_home.setOpacity(0.5);
 	    	btn_createNewSubscriberCard.setOpacity(1);
-	    	btn_searchBook.setOpacity(1);
+	    	btn_books.setOpacity(1);
 	    	btn_searchSubscriberCard.setOpacity(1);
 	    	
 	    }
@@ -50,12 +50,12 @@ public class LibrarianScreenControllerNew implements Initializable
 	    	pane_searchSubscriberCard.setVisible(false);
 	    	btn_home.setOpacity(1);
 	    	btn_createNewSubscriberCard.setOpacity(0.5);
-	    	btn_searchBook.setOpacity(1);
+	    	btn_books.setOpacity(1);
 	    	btn_searchSubscriberCard.setOpacity(1);
 	    }
 
 	 @FXML
-	 void btn_searchBookDisplay(MouseEvent event) 
+	 void btn_booksDisplay(MouseEvent event) 
 	 {
 	    	pane_home.setVisible(false);
 	    	pane_createNewSubscriberCard.setVisible(false);
@@ -63,7 +63,7 @@ public class LibrarianScreenControllerNew implements Initializable
 	    	pane_searchSubscriberCard.setVisible(false);
 	    	btn_home.setOpacity(1);
 	    	btn_createNewSubscriberCard.setOpacity(1);
-	    	btn_searchBook.setOpacity(0.5);
+	    	btn_books.setOpacity(0.5);
 	    	btn_searchSubscriberCard.setOpacity(1);
 	}
 
@@ -76,7 +76,7 @@ public class LibrarianScreenControllerNew implements Initializable
 	    	pane_searchSubscriberCard.setVisible(true);
 	    	btn_home.setOpacity(1);
 	    	btn_createNewSubscriberCard.setOpacity(1);
-	    	btn_searchBook.setOpacity(1);
+	    	btn_books.setOpacity(1);
 	    	btn_searchSubscriberCard.setOpacity(0.5);
 	   }
 
@@ -91,7 +91,7 @@ public class LibrarianScreenControllerNew implements Initializable
     	pane_searchSubscriberCard.setVisible(false);
     	btn_home.setOpacity(0.5);
     	btn_createNewSubscriberCard.setOpacity(1);
-    	btn_searchBook.setOpacity(1);
+    	btn_books.setOpacity(1);
     	btn_searchSubscriberCard.setOpacity(1);
 		
 		

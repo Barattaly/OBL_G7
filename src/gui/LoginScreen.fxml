@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane fx:id="rootAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="493.0" prefWidth="767.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
    <children>
       <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="339.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
@@ -28,7 +27,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label fx:id="Search" layoutX="309.0" layoutY="455.0" prefHeight="18.0" prefWidth="149.0" text="Search a book as guest" textFill="#a0a2ab" underline="true">
+      <Label layoutX="309.0" layoutY="455.0" onMouseClicked="#openSearchScreen" prefHeight="18.0" prefWidth="149.0" text="Search a book as guest" textFill="#a0a2ab" underline="true">
          <font>
             <Font size="14.0" />
          </font>
@@ -36,7 +35,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <ImageView fx:id="SearchImage" fitHeight="30.0" fitWidth="33.0" layoutX="270.0" layoutY="449.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="SearchImage" fitHeight="30.0" fitWidth="33.0" layoutX="270.0" layoutY="449.0" onMouseClicked="#openSearchScreen" pickOnBounds="true" preserveRatio="true">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
