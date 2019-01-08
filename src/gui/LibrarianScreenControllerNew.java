@@ -85,14 +85,14 @@ public class LibrarianScreenControllerNew implements Initializable
 	
 	public void initialize(URL arg0, ResourceBundle arg1) 
 	   {
-		pane_home.setVisible(true);
-    	pane_createNewSubscriberCard.setVisible(false);
-    	pane_searchBook.setVisible(false);
-    	pane_searchSubscriberCard.setVisible(false);
-    	btn_home.setOpacity(0.5);
-    	btn_createNewSubscriberCard.setOpacity(1);
-    	btn_books.setOpacity(1);
-    	btn_searchSubscriberCard.setOpacity(1);
+			pane_home.setVisible(true);
+	    	pane_createNewSubscriberCard.setVisible(false);
+	    	pane_searchBook.setVisible(false);
+	    	pane_searchSubscriberCard.setVisible(false);
+	    	btn_home.setOpacity(0.5);
+	    	btn_createNewSubscriberCard.setOpacity(1);
+	    	btn_books.setOpacity(1);
+	    	btn_searchSubscriberCard.setOpacity(1);
 		
 		
 			
