@@ -18,7 +18,7 @@ import javafx.scene.layout.Pane;
 
 
 
-public class LibrarianScreenController implements Initializable 
+public class LibrarianScreenControllerNew implements Initializable 
 {
 	 @FXML
 	 private Pane pane_home , pane_createNewSubscriberCard , pane_searchBook , pane_searchSubscriberCard ;

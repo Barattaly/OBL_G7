@@ -9,9 +9,8 @@ public class Book
 	public SimpleStringProperty name;
 	public SimpleStringProperty author;
 	public SimpleIntegerProperty catalognumber;
-	public SimpleStringProperty returndate;
-	
 	public SimpleStringProperty location;
+	public SimpleStringProperty returndate;
 	   
 	   public Book(String name, String author, int catalognumber, String location , String returndate) 
 	   {

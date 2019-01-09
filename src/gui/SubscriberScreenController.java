@@ -22,25 +22,53 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 public class SubscriberScreenController implements Initializable {
 
-    @FXML
-    private Button Search;
+	@FXML
+	 private Pane pane_home  , pane_searchBook , pane_viewSubscriberCard ;
 
-    @FXML
-    private TextField Username12;
+	 @FXML
+	 private ImageView btn_home ,  btn_books , btn_viewSubscriberCard;
+	 
+	   @FXML
+	    void btn_homeDisplay(MouseEvent event) 
+	    {
+	    	pane_home.setVisible(true);
+	    	pane_searchBook.setVisible(false);
+	    	pane_viewSubscriberCard.setVisible(false);
+	    	btn_home.setOpacity(0.5);
+	    	btn_books.setOpacity(1);
+	    	btn_viewSubscriberCard.setOpacity(1);
+	    	
+	    }
+	    
 
-    @FXML
-    private Button Order;
 
-    @FXML
-    private Label LogOut113;
+	 @FXML
+	 void btn_booksDisplay(MouseEvent event) 
+	 {
+	    	pane_home.setVisible(false);
+	    	pane_searchBook.setVisible(true);
+	    	pane_viewSubscriberCard.setVisible(false);
+	    	btn_home.setOpacity(1);
+	    	btn_books.setOpacity(0.5);
+	    	btn_viewSubscriberCard.setOpacity(1);
+	}
 
-    @FXML
-    private ImageView logoutimage113;
+	@FXML
+   void btn_viewSubscriberCardDisplay(MouseEvent event) 
+   {
+	    	pane_home.setVisible(false);
+	    	pane_searchBook.setVisible(false);
+	    	pane_viewSubscriberCard.setVisible(true);
+	    	btn_home.setOpacity(1);
+	    	btn_books.setOpacity(1);
+	    	btn_viewSubscriberCard.setOpacity(0.5);
+	   }
     
-    @FXML
+   /* @FXML
     private TableView<Book> Table2;
 
     @FXML
@@ -59,69 +87,49 @@ public class SubscriberScreenController implements Initializable {
     private TableColumn<Book, String> subjectcol;
 
     @FXML
-    private TableColumn<Book, String> locationcol;
+    private TableColumn<Book, String> locationcol;*/
     
-    /////////////////////////////////////////////////
-    @FXML
-    private TableView<ActionHistory> Table1;
-
-    @FXML
-    private TableColumn<ActionHistory, String> borrowcol;
-
-    @FXML
-    private TableColumn<ActionHistory, String> returncol;
-
-    @FXML
-    private TableColumn<ActionHistory, String> librariancol;
-
-    @FXML
-    private TableColumn<ActionHistory, String> bookcol;
-
-    @FXML
-    private TableColumn<ActionHistory, Integer> copycol;
+    
+    
     
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
-		   namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
+		/*   namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
 		   catalogynumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalogynumber"));
 		   authorcol.setCellValueFactory(new PropertyValueFactory<>("Author"));
 		   numbercol.setCellValueFactory(new PropertyValueFactory<>("Numberofcopys"));
 		   subjectcol.setCellValueFactory(new PropertyValueFactory<>("Subject"));
 		   locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
 		   
-		//  Book book1 = new Book("Harry Potter" ,"J.K.Rolling" ,123456,  7, "Adventure", "A6 313");
-		//  Book book2 = new Book("Kofiko", "Galila Ron Feder" ,456789, 3, "Fun", "A8 949");
-		//  ObservableList<Book> list = FXCollections.observableArrayList(book1,book2);
+		  Book book1 = new Book("Harry Potter" ,"J.K.Rolling" ,123456,  7, "Adventure", "A6 313");
+		  Book book2 = new Book("Kofiko", "Galila Ron Feder" ,456789, 3, "Fun", "A8 949");
+		 ObservableList<Book> list = FXCollections.observableArrayList(book1,book2);
 		  
-		//   Table2.setItems(list);
-		   
-		   /////////////////////////////////////////////////////////////////////////////////////
-		   
-		   borrowcol.setCellValueFactory(new PropertyValueFactory<>("Borrowdate"));
-		   returncol.setCellValueFactory(new PropertyValueFactory<>("Returndate"));
-		   librariancol.setCellValueFactory(new PropertyValueFactory<>("Librarian"));
-		   bookcol.setCellValueFactory(new PropertyValueFactory<>("Bookname"));
-		   copycol.setCellValueFactory(new PropertyValueFactory<>("Copynumber"));
-		  
-		   ActionHistory action1 = new ActionHistory("14/10/2017", "30/10/2017", "Galina","Harry Poter", 14);
-		   ActionHistory action2 = new ActionHistory("2/8/2012", "4/5/2014", "Talia","Kofiko", 4);
-		  
-		  ObservableList<ActionHistory> list2 = FXCollections.observableArrayList(action1,action2);
-		  
-		   Table1.setItems(list2);
+		   Table2.setItems(list);*/
+    	
+		pane_home.setVisible(true);
+    	pane_searchBook.setVisible(false);
+    	pane_viewSubscriberCard.setVisible(false);
+    	btn_home.setOpacity(0.5);
+    	btn_books.setOpacity(1);
+    	btn_viewSubscriberCard.setOpacity(1);
+    	
+    	
+		      
+		 
     	
 	}
 
     @FXML
-    void LogOutDisplay(MouseEvent event) {
+    void logOutDisplay(MouseEvent event) {
      	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("OBL Log Out");
     	alert.setHeaderText("Are you sure you want to log out ?");
     	 Optional<ButtonType> option = alert.showAndWait();
      if (option.get() == ButtonType.OK) {
     	 ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-     	 mainClient.getLoginStage().show();				//show login screen
+    	 GuiManager.getLoginStage().show();				//show login screen
      }
         
       else if (option.get() == ButtonType.CANCEL) {
@@ -131,22 +139,6 @@ public class SubscriberScreenController implements Initializable {
 
     }
 
-    @FXML
-    void LogOutImageDisplay(MouseEvent event) {
-     	Alert alert = new Alert(AlertType.CONFIRMATION);
-    	alert.setTitle("OBL Log Out");
-    	alert.setHeaderText("Are you sure you want to log out ?");
-    	 Optional<ButtonType> option = alert.showAndWait();
-     if (option.get() == ButtonType.OK) {
-    	 ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-     	 mainClient.getLoginStage().show();				//show login screen
-     }
-        
-      else if (option.get() == ButtonType.CANCEL) {
-    	  alert.close();
-    	
-      }
 
-    }
 
 }

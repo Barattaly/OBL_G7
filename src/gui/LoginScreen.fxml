@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="borderPane" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
    <center>
       <AnchorPane fx:id="rootAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;">
@@ -61,7 +60,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Label>
-            <JFXButton fx:id="Login" layoutX="401.0" layoutY="320.0" onAction="#loginBtnDisplay" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #3C58FA;" text="Login" textFill="WHITE">
+            <JFXButton fx:id="Login" layoutX="401.0" layoutY="320.0" onAction="#loginBtnClick" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #3C58FA;" text="Login" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

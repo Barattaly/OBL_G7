@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
 
 import entities.*;
+import gui.GuiManager.SCREENS;
 import defaultPackage.mainClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -19,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -65,25 +67,24 @@ public class SearchBookController implements Initializable{
 		  
 		   BookTable.setItems(booklist);
 		   
-		   BookTable.setOnMouseClicked(DoubleClickOnTable);
+		   BookTable.setRowFactory(tv -> {					//press on row in book table to open book information
+	           TableRow<Book> row = new TableRow<>();
+	           row.setOnMouseClicked(event -> {
+	               if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+	                   Book rowData = row.getItem();
+	                   System.out.println("Double click on: "+rowData.getCatalognumber());
+	               }
+	           });
+	           return row ;
+	       });
 		   
+		  
 		   
 	   }
 	   
-	   private EventHandler<MouseEvent> DoubleClickOnTable = new EventHandler<MouseEvent>()
-		{
-
-			@Override
-			public void handle(MouseEvent event)
-			{
-				//if (librarianDB == null)
-				//	return;
-				if (event.getClickCount() == 2 && !booklist.isEmpty())
-				{
-					
-				}
-			}
-		};
+	  
+	  
+	
 
 		
 		
@@ -94,11 +95,14 @@ public class SearchBookController implements Initializable{
 
 	    }*/
 
+
+    
+
     @FXML
-    void logOutDisplay(MouseEvent event) {				//press on back to preview
-   
+    void backPreviewClick(MouseEvent event) 
+    {
     	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	defaultPackage.mainClient.getLoginStage().show();				//show login screen
+    	GuiManager.getLoginStage().show();//show login screen
 
     }
 
