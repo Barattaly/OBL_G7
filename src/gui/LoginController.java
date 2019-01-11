@@ -35,7 +35,7 @@ public class LoginController implements Initializable
 	{ // press on login button
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 
-		GuiManager.SwitchScene(SCREENS.librarianManager);
+		GuiManager.SwitchScene(SCREENS.subscriber);
 
 	}
 

@@ -23,7 +23,7 @@
    <center>
       <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;">
          <children>
-            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0">
+            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
                   <Label layoutX="294.0" layoutY="65.0" text="Home" textFill="#a0a2ab">
                      <font>
@@ -50,7 +50,7 @@
                   </TitledPane>
                </children>
             </Pane>
-            <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
+            <Pane fx:id="pane_books" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
                   <Label layoutX="186.0" layoutY="64.0" text="Current borrowed books" textFill="#a0a2ab">
                      <font>
@@ -187,37 +187,54 @@
                         <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
-                           </cursor></JFXTextField>
+                           </cursor>
+                        </JFXTextField>
                         <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
-                           </cursor></JFXTextField>
+                           </cursor>
+                        </JFXTextField>
                         <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
-                           </cursor></JFXTextField>
+                           </cursor>
+                        </JFXTextField>
                         <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
-                           </cursor></JFXTextField>
+                           </cursor>
+                        </JFXTextField>
                         <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
-                           </cursor></JFXTextField>
+                           </cursor>
+                        </JFXTextField>
                         <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
-                           </cursor></JFXTextField>
+                           </cursor>
+                        </JFXTextField>
                         <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
-                           </cursor></JFXTextField>
+                           </cursor>
+                        </JFXTextField>
                      </children>
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </GridPane>
-               </children></Pane>
+               </children>
+            </Pane>
+            <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="652.0">
+               <children>
+                  <Label layoutX="80.0" layoutY="223.0" prefHeight="87.0" prefWidth="220.0" text="refernce to search book" textFill="#f5f4f4">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
             <Label fx:id="LogOut" layoutX="710.0" layoutY="5.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />
@@ -258,7 +275,7 @@
             </ImageView>
             <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="230.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Books.jpg" />
+                  <Image url="@../../bin/resources/My%20books.jpg" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -276,6 +293,14 @@
                <image>
                   <Image url="@../../bin/resources/Logo.png" />
                </image>
+            </ImageView>
+            <ImageView fx:id="btn_searchBook" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="450.0" onMouseClicked="#btn_searchBookDisplay" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../bin/resources/SearchBook.jpg" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
          </children>
       </AnchorPane>
