@@ -131,9 +131,11 @@ public class SubscriberScreenController implements Initializable {
 		pane_home.setVisible(true);
     	pane_searchBook.setVisible(false);
     	pane_viewSubscriberCard.setVisible(false);
+    	pane_searchBook.setVisible(false);
     	btn_home.setOpacity(0.5);
     	btn_books.setOpacity(1);
     	btn_viewSubscriberCard.setOpacity(1);
+    	btn_searchBook.setOpacity(1);
     	
     	
 		      
