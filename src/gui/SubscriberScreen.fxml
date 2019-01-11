@@ -30,12 +30,12 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Label layoutX="110.0" layoutY="160.0" text="Hello Yossi!" textFill="#a0a2ab">
+                  <Label layoutX="54.0" layoutY="159.0" text="Hello Yossi!" textFill="#a0a2ab">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label layoutX="227.0" layoutY="553.0" text="Subscriber status card: " textFill="#a0a2ab">
+                  <Label layoutX="227.0" layoutY="553.0" text="Subscriber card status: " textFill="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -52,37 +52,32 @@
             </Pane>
             <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
-                  <Label layoutX="294.0" layoutY="65.0" text="Books" textFill="#a0a2ab">
+                  <Label layoutX="186.0" layoutY="64.0" text="Current borrowed books" textFill="#a0a2ab">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Label layoutX="24.0" layoutY="204.0" text="Current borrowed books:" textFill="#a0a2ab">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TableView editable="true" layoutX="24.0" layoutY="222.0" prefHeight="200.0" prefWidth="563.0">
+                  <TableView editable="true" layoutX="24.0" layoutY="172.0" prefHeight="200.0" prefWidth="625.0">
                      <columns>
                         <TableColumn prefWidth="109.0" text="Borrowed date" />
                         <TableColumn prefWidth="112.0" text="Return date" />
-                        <TableColumn prefWidth="106.0" text="Copy number" />
-                        <TableColumn prefWidth="110.0" text="Book name" />
-                        <TableColumn prefWidth="112.0" text="Author" />
-                        <TableColumn minWidth="0.0" prefWidth="0.0" />
+                        <TableColumn prefWidth="82.4000244140625" text="Copy number" />
+                        <TableColumn prefWidth="108.0" text="Book name" />
+                        <TableColumn prefWidth="139.19998168945312" text="Authors" />
+                        <TableColumn minWidth="0.0" prefWidth="72.20001220703125" />
                      </columns>
                   </TableView>
-                  <Label layoutX="24.0" layoutY="462.0" text="*Can't extend this book return date" textFill="GREY">
+                  <Label layoutX="24.0" layoutY="435.0" text="*The book is wanted - can't extend this book return date" textFill="GREY">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="24.0" layoutY="447.0" text="*One day before return date / return date" textFill="GREEN">
+                  <Label layoutX="24.0" layoutY="412.0" text="*One day before return date / return date" textFill="GREEN">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="24.0" layoutY="432.0" text="*Return date has passed, you're late! " textFill="RED">
+                  <Label layoutX="24.0" layoutY="389.0" text="*Return date has passed, you're late! " textFill="RED">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -96,7 +91,7 @@
             </Pane>
             <Pane fx:id="pane_viewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="652.0" visible="false">
                <children>
-                  <JFXButton buttonType="RAISED" layoutX="248.0" layoutY="495.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
+                  <JFXButton buttonType="RAISED" layoutY="485.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -104,7 +99,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </JFXButton>
-                  <Label layoutX="185.0" layoutY="68.0" text="subscriber card details" textFill="#a0a2ab">
+                  <Label layoutX="207.0" layoutY="70.0" text="Subscriber card details" textFill="#a0a2ab">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -123,7 +118,7 @@
                            <children>
                               <TableView layoutY="1.0" prefHeight="284.0" prefWidth="413.0">
                                  <columns>
-                                    <TableColumn prefWidth="99.0" text="Action" />
+                                    <TableColumn prefWidth="99.0" text="Activity" />
                                     <TableColumn prefWidth="98.0" text="Book name" />
                                     <TableColumn prefWidth="84.0" text="Date" />
                                     <TableColumn prefWidth="127.0" text="comments" />

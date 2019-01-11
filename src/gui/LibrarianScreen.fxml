@@ -51,110 +51,6 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="pane_createNewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
-               <children>
-                  <Label layoutX="175.0" layoutY="58.0" text="Create new subsciber card" textFill="#a0a2ab">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <GridPane fx:id="Grid" layoutX="215.0" layoutY="136.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints maxHeight="169.0" minHeight="0.0" prefHeight="36.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="216.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="216.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="216.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="216.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="216.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="216.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label prefHeight="30.0" prefWidth="141.0" text="User name:" textFill="#a0a2ab">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label prefHeight="30.0" prefWidth="143.0" text="Password:" textFill="#a0a2ab" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label prefHeight="30.0" prefWidth="146.0" text="Last name:" textFill="#a0a2ab" GridPane.rowIndex="4">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label prefHeight="45.0" prefWidth="198.0" text="Phone number:" textFill="#a0a2ab" GridPane.rowIndex="5">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label prefHeight="45.0" prefWidth="198.0" text="E-mail:" textFill="#a0a2ab" GridPane.rowIndex="6">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </JFXTextField>
-                        <Label prefHeight="45.0" prefWidth="198.0" text="ID number:" textFill="#a0a2ab" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <JFXPasswordField focusColor="#a0a2ab" labelFloat="true" prefHeight="28.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </JFXPasswordField>
-                        <Label prefHeight="30.0" prefWidth="145.0" text="First name:" textFill="#a0a2ab" GridPane.rowIndex="3">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </GridPane>
-                  <JFXButton layoutX="249.0" layoutY="477.0" onAction="#btn_createSubscriberCardDisplay" prefHeight="58.0" prefWidth="152.0" style="-fx-background-color: #3C58FA;" text="Create subscriber card" textFill="WHITE">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </JFXButton>
-               </children>
-            </Pane>
             <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
                   <Label layoutX="131.0" layoutY="91.0" prefHeight="78.0" prefWidth="348.0" text="Book inventory" textFill="#d7d1d1">
@@ -169,14 +65,135 @@
                   </Label>
                </children>
             </Pane>
+            <Pane fx:id="pane_createNewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
+               <children>
+                  <Label layoutX="175.0" layoutY="58.0" text="Create new subsciber card" textFill="#a0a2ab">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <GridPane fx:id="Grid" layoutX="188.0" layoutY="138.0" prefHeight="274.0" prefWidth="251.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.5999755859375" minWidth="10.0" prefWidth="31.79998779296875" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.79998779296875" minWidth="10.0" prefWidth="107.60003662109375" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.199951171875" minWidth="10.0" prefWidth="117.39996337890625" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="38.20000610351562" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="42.99999389648437" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="37.0" prefWidth="106.0" text="User name:" textFill="#a0a2ab" GridPane.columnIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="39.0" prefWidth="106.0" text="Password:" textFill="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="40.0" prefWidth="106.0" text="Last name:" textFill="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="39.0" prefWidth="106.0" text="Phone number:" textFill="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="47.0" prefWidth="106.0" text="E-mail:" textFill="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <JFXTextField focusColor="#a0a2ab" prefHeight="30.0" prefWidth="130.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </JFXTextField>
+                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </JFXTextField>
+                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </JFXTextField>
+                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </JFXTextField>
+                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </JFXTextField>
+                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </JFXTextField>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="43.0" prefWidth="106.0" text="ID number:" textFill="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <JFXPasswordField focusColor="#a0a2ab" labelFloat="true" prefHeight="28.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </JFXPasswordField>
+                        <Label alignment="BOTTOM_LEFT" prefHeight="39.0" prefWidth="106.0" text="First name:" textFill="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="38.0" prefWidth="26.0" text="*" textFill="RED" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED" GridPane.rowIndex="2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </GridPane>
+                  <JFXButton layoutX="249.0" layoutY="477.0" onAction="#btn_createSubscriberCardDisplay" prefHeight="58.0" prefWidth="152.0" style="-fx-background-color: #3C58FA;" text="Create subscriber card" textFill="WHITE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </JFXButton>
+                  <Label layoutX="218.0" layoutY="428.0" style="-fx-font-weight: BOLD;" text="* Required fields" textFill="#ff0f0f" />
+               </children>
+            </Pane>
             <Pane fx:id="pane_searchSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
-                  <Label layoutX="110.0" layoutY="200.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID :" textFill="#a0a2ab">
+                  <Label layoutX="179.0" layoutY="205.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID:" textFill="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXButton alignment="TOP_CENTER" buttonType="RAISED" layoutX="222.0" layoutY="356.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
+                  <JFXButton alignment="TOP_CENTER" buttonType="RAISED" layoutX="252.0" layoutY="291.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -184,12 +201,12 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </JFXButton>
-                  <Label layoutX="175.0" layoutY="58.0" text="Search subscriber card" textFill="#a0a2ab">
+                  <Label layoutX="206.0" layoutY="57.0" text="Search subscriber card" textFill="#a0a2ab">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <JFXTextField focusColor="#a0a2ab" layoutX="270.0" layoutY="192.0" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+                  <JFXTextField focusColor="#a0a2ab" layoutX="309.0" layoutY="190.0" prefHeight="30.0" prefWidth="149.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -237,7 +254,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_createNewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="230.0" onMouseClicked="#btn_createNewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_createNewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="1.0" layoutY="343.0" onMouseClicked="#btn_createNewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/CreateNewSubscriberCard.jpg" />
                </image>
@@ -245,7 +262,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="340.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="231.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/Books.jpg" />
                </image>
@@ -253,7 +270,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_searchSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="450.0" onMouseClicked="#btn_searchSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_searchSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="455.0" onMouseClicked="#btn_searchSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/SearchSubscriberCard.jpg" />
                </image>
