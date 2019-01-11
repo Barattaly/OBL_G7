@@ -7,16 +7,20 @@ import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXButton;
 
 import entities.*;
+import gui.GuiManager.SCREENS;
 import defaultPackage.mainClient;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,82 +34,78 @@ public class SearchBookController implements Initializable{
 	    @FXML
 	    private TableColumn<Book, String> namecol;
 
-	    @FXML
-	    private TableColumn<Book, Integer> catalogynumbercol;
 
 	    @FXML
 	    private TableColumn<Book, String> authorcol;
+	    
 
 	    @FXML
-	    private TableColumn<Book, Integer> numbercol;
+	    private TableColumn<Book, Integer> catalognumbercol;
 
-	    @FXML
-	    private TableColumn<Book, String> subjectcol;
-
+	  
 	    @FXML
 	    private TableColumn<Book, String> locationcol;
+	    
+	    @FXML
+	    private TableColumn<Book, String> returndatecol;
+	    
+	    private ObservableList<Book> booklist;
 
 	
 	   @Override
 		public void initialize(URL arg0, ResourceBundle arg1)
 	   {
 		   namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		   catalogynumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalogynumber"));
 		   authorcol.setCellValueFactory(new PropertyValueFactory<>("Author"));
-		   numbercol.setCellValueFactory(new PropertyValueFactory<>("Numberofcopys"));
-		   subjectcol.setCellValueFactory(new PropertyValueFactory<>("Subject"));
+		   catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalognumber"));
 		   locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
+		   returndatecol.setCellValueFactory(new PropertyValueFactory<>("Returndate"));
 		   
-		  Book book1 = new Book("Harry Potter", 123456, "J.K.Rolling", 7, "Adventure", "A6 313");
-		  Book book2 = new Book("Kofiko", 456789, "Galila Ron Feder", 3, "Fun", "A8 949");
-		  ObservableList<Book> list = FXCollections.observableArrayList(book1,book2);
+		  Book book1 = new Book("Harry Potter" , "J.K.Rolling", 12, "A6 313","14/10/2018");
+		  Book book2 = new Book("Kofiko" ,"Galila Ron Feder", 456789, "A8 949","12/3/2019");
+		  booklist = FXCollections.observableArrayList(book1,book2);
 		  
-		   BookTable.setItems(list);
+		   BookTable.setItems(booklist);
 		   
+		   BookTable.setRowFactory(tv -> {					//press on row in book table to open book information
+	           TableRow<Book> row = new TableRow<>();
+	           row.setOnMouseClicked(event -> {
+	               if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+	                   Book rowData = row.getItem();
+	                   System.out.println("Double click on: "+rowData.getCatalognumber());
+	               }
+	           });
+	           return row ;
+	       });
+		   
+		  
 		   
 	   }
+	   
+	  
+	  
+	
 
-	   @FXML
-	    void SearchBookDisplay(ActionEvent event) {							//press on search in search book screen
-	    	Alert alert = new Alert(AlertType.CONFIRMATION);
-	    	alert.setTitle("OBL Search Book");
-	    	alert.setHeaderText("The book is exist in A4 383");
-	    	ButtonType show = new ButtonType("show Table of Contents");
-	    	ButtonType OK = new ButtonType("OK");
+		
+		
+	  /* @FXML
+	    void searchBookDisplay(ActionEvent event) {							//press on search in search book screen
 	    	
-	    	
-	        alert.getButtonTypes().clear();
-	        alert.getButtonTypes().addAll(OK, show);
-	        
-	        Optional<ButtonType> option = alert.showAndWait();
-	        if (option.get() == OK) {
-	            alert.close();
-	        } else if (option.get() == show) {
-	        	Alert alert2 = new Alert(AlertType.INFORMATION);
-	        	alert2.setTitle("Table of Contents");
-	        	alert2.setHeaderText("The book is pinokio ....");
-	        	alert2.showAndWait();
 
 
-	        } 
+	    }*/
 
 
-	    }
+    
 
     @FXML
-    void LogOutDisplay(MouseEvent event) {				//press on back to preview
-   
+    void backPreviewClick(MouseEvent event) 
+    {
     	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	mainClient.getLoginStage().show();				//show login screen
+    	GuiManager.getLoginStage().show();//show login screen
 
     }
 
-    @FXML
-    void LogOutImageDisplay(MouseEvent event) {         //press on back to preview image
-    	
-    	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	mainClient.getLoginStage().show();				//show login screen
-
-    }
+ 
 
 }
