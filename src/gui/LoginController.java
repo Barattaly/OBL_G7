@@ -1,84 +1,88 @@
 package gui;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
+
+import entities.DBMessage;
+import entities.DBMessage.DBAction;
+import entities.User;
+import gui.GuiManager.SCREENS;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
+
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+
 import javafx.stage.Stage;
 
+public class LoginController implements Initializable,IClientUI
+{
+	
+	private Node thisNode;
+	@FXML
+	private JFXTextField userNameTextField;
 
-public class LoginController {
+	@FXML
+	private JFXPasswordField passwordTextFIeld;
 
-    @FXML
-    private AnchorPane rootAnchor;
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1)
+	{
+	}
 
-    @FXML
-    private Label resources;
+	@FXML
+	void loginBtnClick(ActionEvent event)
+	{ // press on login button
+		try
+		{
+			thisNode = ((Node) event.getSource());
+			GuiManager.client.CheckValidUser(new User(userNameTextField.getText(), passwordTextFIeld.getText()));
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    @FXML
-    private Label Search;
+	@FXML
+	void openSearchScreen(MouseEvent event) throws IOException
+	{
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		GuiManager.SwitchScene(SCREENS.searchBook);
 
-    @FXML
-    private TextField Username;
+	}
 
-    @FXML
-    private TextField Password;
-
-    @FXML
-    private Button Login;
-    
-    @FXML
-    void LoginDisplay(ActionEvent event) throws IOException {           //press on login button
-    
-    	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	Stage SeondStage = new Stage();
-    	TabPane root = FXMLLoader.load(getClass().getResource("/application/LibrarianScreen.fxml"));
-		Scene scene = new Scene(root);
-		SeondStage.setTitle("Ort Braude Library");
-		//SeondStage.getIcons().add(new Image("/resource/Braude.png"));
-		SeondStage.setScene(scene);		
-		SeondStage.show();
-    }
-    
-    @FXML
-    void OpenSearchScreen(MouseEvent event) throws IOException 
-    {
-    	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	Stage SeondStage2 = new Stage();
-    	AnchorPane root2 = FXMLLoader.load(getClass().getResource("/application/SearchBookScreen.fxml"));
-		Scene scene2 = new Scene(root2);
-		SeondStage2.setTitle("Ort Braude Library");
-		SeondStage2.getIcons().add(new Image("application/Braude.png"));
-		SeondStage2.setScene(scene2);		
-		SeondStage2.show();
-
-    }
-
-    @FXML
-    void OpenSearchScreenImage(MouseEvent event)throws IOException  {
-    	((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	Stage SeondStage2 = new Stage();
-    	AnchorPane root2 = FXMLLoader.load(getClass().getResource("/Controllers/SearchBookScreen.fxml"));
-		Scene scene2 = new Scene(root2);
-		SeondStage2.setTitle("Ort Braude Library");
-		SeondStage2.getIcons().add(new Image("application/Braude.png"));
-		SeondStage2.setScene(scene2);		
-		SeondStage2.show();
-
-    }
-    
-
-    
-   
+	@Override
+	public void getMessageFromServer(DBMessage msg)
+	{
+		try
+		{
+		if (msg.Action == DBAction.RETCheckUser)
+		{
+			if ((User) msg.Data != null)
+			{
+				// Avoid throwing IllegalStateException by running from a non-JavaFX thread.
+				Platform.runLater(
+				  () -> 
+				  {
+					thisNode.getScene().getWindow().hide();
+					GuiManager.SwitchScene(SCREENS.librarian);
+				  }
+				);
+				
+			}
+		}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 
 }
