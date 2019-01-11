@@ -22,8 +22,11 @@ public class GuiManager
 	{
 		{
 			put(SCREENS.login, "/gui/LoginScreen.fxml");
-			put(SCREENS.librarian, "/gui/NewLibrarianScreen.fxml");
-			put(SCREENS.SearchBook, "/gui/SearchBookScreen.fxml");
+			put(SCREENS.librarian,"/gui/LibrarianScreen.fxml");
+			put(SCREENS.searchBook,"/gui/SearchBookScreen.fxml");
+			put(SCREENS.bookInformation,"/gui/BookInformationScreen.fxml");
+			put(SCREENS.subscriber,"/gui/SubscriberScreen.fxml");
+			put(SCREENS.librarianManager,"/gui/LibrarianManagerScreen.fxml");
 		}
 	};
 
@@ -49,7 +52,8 @@ public class GuiManager
 			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
 			SeondStage.setScene(scene);
 			SeondStage.show();
-		} catch (Exception e)
+		} 
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -95,7 +99,7 @@ public class GuiManager
 
 	public static enum SCREENS
 	{
-		login, librarian, SearchBook;
+		login,librarian,searchBook,bookInformation,subscriber,librarianManager;
 	}
 
 }

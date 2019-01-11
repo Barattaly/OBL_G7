@@ -5,6 +5,9 @@ import client.ClientController;
 import gui.GuiManager;
 import gui.GuiManager.SCREENS;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+
 import javafx.stage.Stage;
 
 public class mainClient extends Application
@@ -30,5 +33,4 @@ public class mainClient extends Application
 		GuiManager.InitialPrimeryStage(SCREENS.login,primaryStage);
 		
 	}
-
 }

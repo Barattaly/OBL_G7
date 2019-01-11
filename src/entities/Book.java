@@ -7,20 +7,18 @@ public class Book
 {
 	
 	public SimpleStringProperty name;
-	public SimpleIntegerProperty catalognumber;
 	public SimpleStringProperty author;
-	public SimpleIntegerProperty numberofcopys;
-	public SimpleStringProperty categories;
+	public SimpleIntegerProperty catalognumber;
 	public SimpleStringProperty location;
+	public SimpleStringProperty returndate;
 	   
-	   public Book(String name, int catalognumber, String author, int numberofcopys, String categories, String location) 
+	   public Book(String name, String author, int catalognumber, String location , String returndate) 
 	   {
 			this.name = new SimpleStringProperty(name);
 			this.catalognumber =new SimpleIntegerProperty(catalognumber);
 			this.author = new SimpleStringProperty(author);
-			this.numberofcopys =new SimpleIntegerProperty(numberofcopys);
-			this.categories =new SimpleStringProperty(categories);
 			this.location =new SimpleStringProperty(location);
+			this.returndate =new SimpleStringProperty(returndate);
 		}
 	   
 
@@ -32,13 +30,7 @@ public class Book
 		this.name =new SimpleStringProperty(name);
 	}
 
-	public int getCatalognumber() {
-		return catalognumber.get();
-	}
 
-	public void setCatalognumber(int catalognumber) {
-		this.catalognumber =new SimpleIntegerProperty(catalognumber);
-	}
 
 	public String getAuthor() {
 		return author.get();
@@ -47,22 +39,16 @@ public class Book
 	public void setAuthor(String author) {
 		this.author =new SimpleStringProperty(author);
 	}
-
-	public int getNumberofcopys() {
-		return numberofcopys.get();
+	
+	public int getCatalognumber() {
+		return catalognumber.get();
 	}
 
-	public void setNumberofcopys(int numberofcopys) {
-		this.numberofcopys =new SimpleIntegerProperty(numberofcopys);
+	public void setCatalognumber(int catalognumber) {
+		this.catalognumber =new SimpleIntegerProperty(catalognumber);
 	}
 
-	public String getCategories() {
-		return categories.get();
-	}
 
-	public void setCategories(String categories) {
-		this.categories =new SimpleStringProperty(categories);
-	}
 
 	public String getLocation() {
 		return location.get();
@@ -71,5 +57,14 @@ public class Book
 	public void setLocation(String location) {
 		this.location =new SimpleStringProperty(location);
 	}
+	
+	public String getReturndate() {
+		return returndate.get();
+	}
+
+	public void setReturndate(String returndate) {
+		this.returndate =new SimpleStringProperty(returndate);
+	}
+
 	   
 }

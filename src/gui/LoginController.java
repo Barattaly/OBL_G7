@@ -14,24 +14,20 @@ import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import javafx.scene.Node;
-import javafx.scene.Scene;
 
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 
 import javafx.stage.Stage;
 
-public class LoginController implements IClientUI
+public class LoginController implements Initializable,IClientUI
 {
 	
 	private Node thisNode;
 	@FXML
-	private JFXTextField userNameTexxtField;
+	private JFXTextField userNameTextField;
 
 	@FXML
 	private JFXPasswordField passwordTextFIeld;
@@ -47,19 +43,18 @@ public class LoginController implements IClientUI
 		try
 		{
 			thisNode = ((Node) event.getSource());
-			GuiManager.client.CheckValidUser(new User(userNameTexxtField.getText(), passwordTextFIeld.getText()));
+			GuiManager.client.CheckValidUser(new User(userNameTextField.getText(), passwordTextFIeld.getText()));
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
 	}
 
 	@FXML
 	void openSearchScreen(MouseEvent event) throws IOException
 	{
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		GuiManager.SwitchScene(SCREENS.SearchBook);
+		GuiManager.SwitchScene(SCREENS.searchBook);
 
 	}
 
