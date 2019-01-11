@@ -11,40 +11,35 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BookInformationController">
-   <center>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="723.0" style="-fx-background-color: #203447;">
+   <top>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="723.0" style="-fx-background-color: #203447;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="317.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/Logo.png" />
                </image>
             </ImageView>
-            <Label layoutX="340.0" layoutY="82.0" text="OBL" textFill="#2196f3">
+            <Label fx:id="resources1" layoutX="61.0" layoutY="140.0" text="Harry Potter" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="resources1" layoutX="57.0" layoutY="112.0" text="Harry Potter" textFill="#a0a2ab">
+            <Label fx:id="resources11" layoutX="61.0" layoutY="182.0" text="Author: J.K.Rolling" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="resources11" layoutX="57.0" layoutY="154.0" text="Author: J.K.Rolling" textFill="#a0a2ab">
+            <Label fx:id="resources111" layoutX="61.0" layoutY="224.0" text="Categories: Adventure" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="resources111" layoutX="57.0" layoutY="196.0" text="Categories: Adventure" textFill="#a0a2ab">
+            <Label fx:id="resources1111" layoutX="60.0" layoutY="312.0" text="Catalog number: 123456" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="resources1111" layoutX="56.0" layoutY="290.0" text="Catalog number: 123456" textFill="#a0a2ab">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            <JFXButton fx:id="Search1" layoutX="474.0" layoutY="364.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="View table of content" textFill="WHITE">
+            <JFXButton fx:id="Search1" layoutX="53.0" layoutY="439.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="View table of content" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -54,12 +49,12 @@
                   <Image url="@../../bin/resources/הארי_פוטר_4.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="resources111112" layoutX="90.0" layoutY="432.0" text="This book is wanted!" textFill="#a0a2ab">
+            <Label fx:id="resources111112" layoutX="483.0" layoutY="359.0" text="This book is wanted!" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <TitledPane animated="false" expanded="false" layoutX="53.0" layoutY="236.0" prefHeight="39.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
+            <TitledPane animated="false" expanded="false" layoutX="42.0" layoutY="260.0" prefHeight="39.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
@@ -67,7 +62,7 @@
                   <Font size="24.0" />
                </font>
             </TitledPane>
-            <TitledPane animated="false" expanded="false" layoutX="53.0" layoutY="333.0" prefHeight="39.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="More detailes" textFill="#a0a2ab">
+            <TitledPane animated="false" expanded="false" layoutX="42.0" layoutY="355.0" prefHeight="39.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="More detailes" textFill="#a0a2ab">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
@@ -75,17 +70,17 @@
                   <Font size="24.0" />
                </font>
             </TitledPane>
-            <ImageView fitHeight="37.0" fitWidth="37.0" layoutX="53.0" layoutY="425.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="37.0" fitWidth="37.0" layoutX="446.0" layoutY="358.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/warning.png" />
                </image>
             </ImageView>
-            <JFXButton fx:id="Search11" layoutX="474.0" layoutY="433.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
+            <JFXButton fx:id="Search11" layoutX="474.0" layoutY="409.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </JFXButton>
-            <JFXButton fx:id="Search111" layoutX="474.0" layoutY="478.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Move to archive" textFill="WHITE">
+            <JFXButton fx:id="Search111" layoutX="474.0" layoutY="454.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Move to archive" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -95,7 +90,17 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </JFXButton>
+            <Label layoutX="42.0" layoutY="90.0" text="OBL" textFill="#a0a2ab">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="296.0" layoutY="72.0" text="Book Details" textFill="#a0a2ab">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
-   </center>
+   </top>
 </BorderPane>
