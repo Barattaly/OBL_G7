@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -23,7 +24,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
-public class SubscriberScreenController implements Initializable {
+public class SubscriberScreenController implements Initializable
+{
 
     @FXML
     private Button Search;

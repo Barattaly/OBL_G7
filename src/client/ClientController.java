@@ -5,7 +5,13 @@
 package client;
 
 import ocsf.client.*;
+
 import java.io.*;
+
+import entities.DBMessage;
+import entities.User;
+import entities.DBMessage.DBAction;
+import gui.GuiManager;
 
 public class ClientController extends AbstractClient
 {
@@ -22,23 +28,20 @@ public class ClientController extends AbstractClient
 
 	public void handleMessageFromServer(Object msg)
 	{
-		
-	}
-
-
-	public void handleMessageFromClientUI(DBMessage message)
-	{
-		try
+		DBAction action = ((DBMessage)msg).Action;
+		 switch (action)
 		{
-			sendToServer(message);
-		} catch (IOException e)
-		{
-			/*
-			 * clientUI.display ("Could not send message to server.  Terminating client.");
-			 */
-			quit();
+		case RETCheckUser:
+			GuiManager.CurrentGuiController.getMessageFromServer((DBMessage)msg);
+			break;
+
+		default:
+			break;
 		}
 	}
+
+
+
 	/*  				from prototype:
 	 * 
 	public void updateStudentListFromDB(ObservableList<Student> studentList)
@@ -69,6 +72,21 @@ public class ClientController extends AbstractClient
 		}
 		
 		System.exit(0);
+	}
+
+
+	public void CheckValidUser(User user)
+	{
+		DBMessage message = new DBMessage(DBAction.CheckUser, user);
+		try 
+		{
+			sendToServer(message);			
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
 	}
 
 }

@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.sun.java.accessibility.util.GUIInitializedListener;
+
+import entities.DBMessage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +21,7 @@ import javafx.scene.layout.Pane;
 
 
 
-public class LibrarianScreenControllerNew implements Initializable 
+public class LibrarianScreenControllerNew implements IClientUI 
 {
 	 @FXML
 	 private Pane pane_home , pane_createNewSubscriberCard , pane_searchBook , pane_searchSubscriberCard ;
@@ -137,5 +140,12 @@ public class LibrarianScreenControllerNew implements Initializable
     	
 
     }
+
+	@Override
+	public void getMessageFromServer(DBMessage msg)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 }

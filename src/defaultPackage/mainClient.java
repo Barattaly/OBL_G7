@@ -26,19 +26,9 @@ public class mainClient extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
-		try
-		{
-			clientController = new ClientController("localhost", ClientController.DEFAULT_PORT);
-
-		} catch (Exception e)
-		{
-			GuiManager.ShowErrorPopup("Can't Connect Client!");
-			clientController = null;
-		}
-		finally 
-		{
-			GuiManager.InitialPrimeryStage(SCREENS.login,primaryStage);
-		}
+		
+		GuiManager.InitialPrimeryStage(SCREENS.login,primaryStage);
+		
 	}
 
 }

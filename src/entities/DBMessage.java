@@ -1,7 +1,7 @@
-package client;
+package entities;
 import java.io.Serializable;
-import java.sql.ResultSet;
 
+@SuppressWarnings("serial")
 public class DBMessage implements Serializable
 {
 	public DBAction Action;
@@ -13,8 +13,8 @@ public class DBMessage implements Serializable
 		this.Data = data;
 	}
 	
-	public static enum DBAction
+	public enum DBAction
 	{
-		AddSubscriber,GetUser,REMOVE,UPDATE,GET;
+		AddSubscriber,CheckUser,RETCheckUser;
 	}
 }

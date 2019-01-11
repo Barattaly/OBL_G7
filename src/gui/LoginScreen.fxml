@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
    <children>
       <Label layoutX="372.0" layoutY="90.0" text="OBL" textFill="#2196f3">
          <font>
@@ -57,12 +57,12 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <JFXButton fx:id="Login" layoutX="401.0" layoutY="320.0" onAction="#loginBtnDisplay" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #3C58FA;" text="Login" textFill="WHITE">
+      <JFXButton fx:id="LoginButton" layoutX="401.0" layoutY="320.0" onAction="#loginBtnClick" prefHeight="40.0" prefWidth="90.0" style="-fx-background-color: #3C58FA;" text="Login" textFill="WHITE">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <JFXTextField focusColor="#a0a2ab" labelFloat="true" layoutX="302.0" layoutY="199.0" prefHeight="23.0" prefWidth="189.0" promptText=" Username" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+      <JFXTextField fx:id="userNameTexxtField" focusColor="#a0a2ab" labelFloat="true" layoutX="302.0" layoutY="199.0" prefHeight="23.0" prefWidth="189.0" promptText=" Username" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>
@@ -75,7 +75,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXCheckBox>
-      <JFXPasswordField focusColor="#a0a2ab" labelFloat="true" layoutX="302.0" layoutY="254.0" prefHeight="28.0" prefWidth="189.0" promptText="Password" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+      <JFXPasswordField fx:id="passwordTextFIeld" focusColor="#a0a2ab" labelFloat="true" layoutX="302.0" layoutY="254.0" prefHeight="28.0" prefWidth="189.0" promptText="Password" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>

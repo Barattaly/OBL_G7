@@ -4,7 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
+
+import entities.DBMessage;
+import entities.DBMessage.DBAction;
+import entities.User;
 import gui.GuiManager.SCREENS;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,22 +26,33 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.stage.Stage;
 
-public class LoginController implements Initializable
+public class LoginController implements IClientUI
 {
+	
+	private Node thisNode;
+	@FXML
+	private JFXTextField userNameTexxtField;
+
+	@FXML
+	private JFXPasswordField passwordTextFIeld;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
-
 	}
 
 	@FXML
-	void loginBtnDisplay(ActionEvent event) throws IOException
+	void loginBtnClick(ActionEvent event)
 	{ // press on login button
+		try
+		{
+			thisNode = ((Node) event.getSource());
+			GuiManager.client.CheckValidUser(new User(userNameTexxtField.getText(), passwordTextFIeld.getText()));
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
-		//LOGIC OF LOGIN!!!!!
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		GuiManager.SwitchScene(SCREENS.librarian);
 	}
 
 	@FXML
@@ -42,7 +60,34 @@ public class LoginController implements Initializable
 	{
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		GuiManager.SwitchScene(SCREENS.SearchBook);
-		
+
+	}
+
+	@Override
+	public void getMessageFromServer(DBMessage msg)
+	{
+		try
+		{
+		if (msg.Action == DBAction.RETCheckUser)
+		{
+			if ((User) msg.Data != null)
+			{
+				// Avoid throwing IllegalStateException by running from a non-JavaFX thread.
+				Platform.runLater(
+				  () -> 
+				  {
+					thisNode.getScene().getWindow().hide();
+					GuiManager.SwitchScene(SCREENS.librarian);
+				  }
+				);
+				
+			}
+		}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 }
