@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import client.ClientController;
+import gui.GuiManager.SCREENS;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,10 +15,18 @@ import javafx.stage.Stage;
 
 public class GuiManager
 {
-	private static Stage loginStage;
 	public static ClientController client;
 	public static IClientUI CurrentGuiController;
+	
+	public static Map<String, SCREENS> userTypeFromString = new HashMap<String, SCREENS>()
+	{
+		{
+			put("librarian",SCREENS.librarian);
+			put("subscriber",SCREENS.subscriber);
+			put("library manager",SCREENS.librarianManager);
 
+		}
+	};
 	private static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
 	{
 		{
@@ -43,6 +52,8 @@ public class GuiManager
 	{
 		try
 		{
+			if(fxmlPath == SCREENS.login)
+				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(fxmlPath)));
 			Parent root = loader.load();
@@ -81,7 +92,6 @@ public class GuiManager
 				primaryStage.setScene(Scene);
 				primaryStage.setTitle("Ort Braude Server");
 				primaryStage.getIcons().add(new Image("/resources/Braude.png"));
-				loginStage = primaryStage;
 				primaryStage.show();
 				
 			} 
@@ -90,11 +100,6 @@ public class GuiManager
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public static Stage getLoginStage()
-	{
-		return loginStage;
 	}
 
 	public static enum SCREENS

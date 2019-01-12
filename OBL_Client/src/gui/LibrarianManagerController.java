@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import entities.DBMessage;
+import entities.User;
+import gui.GuiManager.SCREENS;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,14 +20,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
-public class LibrarianManagerController implements Initializable {
-
-   
-
+public class LibrarianManagerController implements Initializable ,IClientUI
+{
+	private User userLogedIn;
+    @FXML
+    private Label userWelcomLabel;
     @FXML
     private Pane pane_home ,  pane_createNewSubscriberCard , pane_searchBook , pane_searchSubscriberCard, pane_employees,pane_reports;
-
-
     @FXML
     private ImageView btn_home, btn_createNewSubscriberCard , btn_books , btn_searchSubscriberCard,btn_employees,btn_reports;
 
@@ -174,7 +176,7 @@ public class LibrarianManagerController implements Initializable {
     	 Optional<ButtonType> option = alert.showAndWait();
      if (option.get() == ButtonType.OK) {
     	 ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-    	 GuiManager.getLoginStage().show();				//show login screen
+    	 GuiManager.SwitchScene(SCREENS.login);			//show login screen
      }
         
       else if (option.get() == ButtonType.CANCEL) {
@@ -183,5 +185,25 @@ public class LibrarianManagerController implements Initializable {
       }	
 
     }
+	@Override
+	public void getMessageFromServer(DBMessage msg)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setUserLogedIn(User userLoged)
+	{
+		userLogedIn = userLoged;
+		//make the name start with upper case
+		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
+		userWelcomLabel.setText("Hello "+ name);
+	}
+	@Override
+	public User getUserLogedIn()
+	{
+		return userLogedIn;
+	}
 
 }

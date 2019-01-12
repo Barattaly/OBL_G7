@@ -88,6 +88,18 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
+	public void updateUserLogOut(User user)
+	{
+		DBMessage message = new DBMessage(DBAction.UpdateUserLogout, user);
+		try 
+		{
+			sendToServer(message);			
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 
 }
 //End of ClientController class

@@ -23,14 +23,14 @@
    <center>
       <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;">
          <children>
-            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
+            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0">
                <children>
                   <Label layoutX="294.0" layoutY="65.0" text="Home" textFill="#a0a2ab">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Label layoutX="54.0" layoutY="159.0" text="Hello Yossi!" textFill="#a0a2ab">
+                  <Label fx:id="userWelcomLabel" layoutX="54.0" layoutY="159.0" text="Hello Yossi!" textFill="#a0a2ab">
                      <font>
                         <Font size="36.0" />
                      </font>
@@ -111,7 +111,7 @@
                   </Label>
                   <TitledPane alignment="TOP_LEFT" animated="false" contentDisplay="TOP" expanded="false" layoutX="242.0" layoutY="172.0" prefHeight="313.0" prefWidth="410.0" stylesheets="@../../bin/resources/titledpane.css" text="View activity log " textFill="#a0a2ab" wrapText="true">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-insets: #3C58FA;">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #3C58FA;">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
@@ -226,7 +226,7 @@
                   </GridPane>
                </children>
             </Pane>
-            <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="652.0">
+            <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="652.0" visible="false">
                <children>
                   <Label layoutX="80.0" layoutY="223.0" prefHeight="87.0" prefWidth="220.0" text="refernce to search book" textFill="#f5f4f4">
                      <font>
