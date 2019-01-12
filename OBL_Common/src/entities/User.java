@@ -51,4 +51,44 @@ public class User implements Serializable
 		this.userName = userName;
 	}
 
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
+	}
+
+	public String getLoginStatus()
+	{
+		return loginStatus;
+	}
+
+	public void setLoginStatus(String loginStatus)
+	{
+		this.loginStatus = loginStatus;
+	}
+
+	public String getFirstName()
+	{
+		return firstName;
+	}
+
+	public void setFirstName(String firstName)
+	{
+		this.firstName = firstName;
+	}
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
 }

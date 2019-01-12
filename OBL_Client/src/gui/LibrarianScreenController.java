@@ -5,12 +5,15 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import entities.DBMessage;
+import entities.User;
+import gui.GuiManager.SCREENS;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +21,9 @@ import javafx.scene.layout.Pane;
 
 public class LibrarianScreenController implements Initializable, IClientUI
 {
+	private User userLogedIn;
+    @FXML
+    private Label userWelcomLabel;
 	@FXML
 	private Pane pane_home, pane_createNewSubscriberCard, pane_searchBook, pane_searchSubscriberCard;
 
@@ -101,7 +107,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		if (option.get() == ButtonType.OK)
 		{
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			GuiManager.getLoginStage().show(); // show login screen
+			GuiManager.SwitchScene(SCREENS.login);
 		}
 
 		else if (option.get() == ButtonType.CANCEL)
@@ -133,6 +139,21 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void setUserLogedIn(User userLoged)
+	{
+		userLogedIn = userLoged;
+		//make the name start with upper case
+		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
+		userWelcomLabel.setText("Hello "+ name);
+	}
+
+	@Override
+	public User getUserLogedIn()
+	{
+		return userLogedIn;
 	}
 
 }
