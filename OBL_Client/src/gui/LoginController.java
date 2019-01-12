@@ -45,6 +45,15 @@ public class LoginController implements IClientUI, Initializable
 		{
 			warningLabel.setText("Error connecting to server");
 			loginBtn.setDisable(true);
+			userNameTextField.setDisable(true);
+			passwordTextFIeld.setDisable(true);
+		}
+		else if(!GuiManager.dbConnected)
+		{
+			warningLabel.setText("Error connecting to database\nPlease check server.");
+			loginBtn.setDisable(true);
+			userNameTextField.setDisable(true);
+			passwordTextFIeld.setDisable(true);
 		}
 	}
 
@@ -65,6 +74,7 @@ public class LoginController implements IClientUI, Initializable
 	@FXML
 	void openSearchScreen(MouseEvent event) throws IOException
 	{
+		if(GuiManager.client == null || GuiManager.dbConnected) return;
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		GuiManager.SwitchScene(SCREENS.searchBook);
 

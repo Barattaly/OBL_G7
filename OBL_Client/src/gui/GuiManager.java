@@ -3,7 +3,11 @@ package gui;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import client.ClientController;
+import entities.DBMessage;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,6 +42,7 @@ public class GuiManager
 			put(SCREENS.librarianManager,"/gui/LibrarianManagerScreen.fxml");
 		}
 	};
+	public static boolean dbConnected = false;
 
 	public static void ShowErrorPopup(String msg)
 	{
@@ -75,8 +80,8 @@ public class GuiManager
 		
 		try
 		{
-			client = new ClientController("localhost", ClientController.DEFAULT_PORT);
-
+			client = new ClientController("localhost", ClientController.DEFAULT_PORT);//get connection
+			client.sendToServer(new DBMessage(DBAction.isDBRuning, null));//check DB
 		} catch (Exception e)
 		{
 			ShowErrorPopup("Can't Connect Client!");
