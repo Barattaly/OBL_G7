@@ -26,6 +26,8 @@ public class LibrarianManagerController implements Initializable ,IClientUI
     @FXML
     private Label userWelcomLabel;
     @FXML
+    private Label userNameLabel;
+    @FXML
     private Pane pane_home ,  pane_createNewSubscriberCard , pane_searchBook , pane_searchSubscriberCard, pane_employees,pane_reports;
     @FXML
     private ImageView btn_home, btn_createNewSubscriberCard , btn_books , btn_searchSubscriberCard,btn_employees,btn_reports;
@@ -199,6 +201,8 @@ public class LibrarianManagerController implements Initializable ,IClientUI
 		//make the name start with upper case
 		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
 		userWelcomLabel.setText("Hello "+ name);
+		String userName = userLoged.getUserName();
+		userNameLabel.setText(userName);
 	}
 	@Override
 	public User getUserLogedIn()

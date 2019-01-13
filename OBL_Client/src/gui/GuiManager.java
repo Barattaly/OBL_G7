@@ -103,7 +103,7 @@ public class GuiManager
 				Scene Scene = new Scene(root);
 				primaryStage.setScene(Scene);
 				primaryStage.setOnCloseRequest(e -> shutDown());// make sure safe shutdown
-				primaryStage.setTitle("Ort Braude Server");
+				primaryStage.setTitle("Ort Braude Library");
 				primaryStage.getIcons().add(new Image("/resources/Braude.png"));
 				primaryStage.show();
 
