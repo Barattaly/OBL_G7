@@ -65,7 +65,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="pane_createNewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
+            <Pane fx:id="pane_createNewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0">
                <children>
                   <Label layoutX="175.0" layoutY="58.0" text="Create new subsciber card" textFill="#a0a2ab">
                      <font>
@@ -113,22 +113,22 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="30.0" prefWidth="130.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2">
+                        <JFXTextField fx:id="userNameTextfield" focusColor="#a0a2ab" prefHeight="30.0" prefWidth="130.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <JFXTextField fx:id="idNumberTextfield" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="2">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <JFXTextField fx:id="firstNameTextfield" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="3">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                        <JFXTextField fx:id="lastNameTextfield" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="4">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -136,12 +136,12 @@
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                        <JFXTextField fx:id="phoneNumberTextfield" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="5">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </JFXTextField>
-                        <JFXTextField focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                        <JFXTextField fx:id="emailTextfield" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="6">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -151,7 +151,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <JFXPasswordField focusColor="#a0a2ab" labelFloat="true" prefHeight="28.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <JFXPasswordField fx:id="passwordTextfield" focusColor="#a0a2ab" labelFloat="true" prefHeight="28.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -176,14 +176,29 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED" GridPane.rowIndex="4">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
                      </children>
                   </GridPane>
-                  <JFXButton layoutX="249.0" layoutY="477.0" onAction="#btn_createSubscriberCardDisplay" prefHeight="58.0" prefWidth="152.0" style="-fx-background-color: #3C58FA;" text="Create subscriber card" textFill="WHITE">
+                  <JFXButton fx:id="createSubscriberBtn" layoutX="249.0" layoutY="477.0" onAction="#btn_createSubscriberCardDisplay" prefHeight="58.0" prefWidth="152.0" style="-fx-background-color: #3C58FA;" text="Create subscriber card" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </JFXButton>
                   <Label layoutX="218.0" layoutY="428.0" style="-fx-font-weight: BOLD;" text="* Required fields" textFill="#ff0f0f" />
+                  <Label fx:id="warningLabel" layoutX="222.0" layoutY="448.0" textFill="#ff0f0f">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Pane fx:id="pane_searchSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">

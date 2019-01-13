@@ -11,6 +11,7 @@ import java.io.*;
 import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
+import entities.Subscriber;
 import gui.GuiManager;
 
 public class ClientController extends AbstractClient
@@ -35,12 +36,10 @@ public class ClientController extends AbstractClient
 		case isDBRuning:
 			GuiManager.dbConnected = (boolean) message.Data;
 			break;
-		case RETCheckUser:
+		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
 			break;
 
-		default:
-			break;
 		}
 	}
 
@@ -95,6 +94,19 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
+	}
+
+	public void CreateSubscriber(Subscriber subscriber)
+	{
+		DBMessage message = new DBMessage(DBAction.CreateSubscriber, subscriber);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
 	}
 
 }

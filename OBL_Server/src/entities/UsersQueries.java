@@ -4,8 +4,15 @@ import java.sql.ResultSet;
 
 public class UsersQueries
 {
+	public static String searchUserByUserName(User userToCheck)
+	{
+		if (userToCheck == null)
+			return null;
+		String queryMsg = "SELECT * FROM obl_db.users WHERE userName ='" + userToCheck.getUserName()+"'";
+		return queryMsg;
+	}
 
-	public static String searchUserByUserNamePass(User userToCheck)
+	public static String searchUserByUserNameAndPass(User userToCheck)
 	{
 		if (userToCheck == null)
 			return null;
@@ -13,7 +20,17 @@ public class UsersQueries
 				+ "' AND password ='" + userToCheck.getPassWord() + "'";
 		return queryMsg;
 	}
-	
+	public static String createSubscriberUser(User userToAdd)
+	{
+		if (userToAdd == null)
+			return null;
+		String queryMsg ="INSERT INTO obl_db.users (`id`, `userName`, `password`, `firstName`, `lastName`,  `loginStatus`,`type`) "
+				+ "VALUES ('"+userToAdd.getId()+"', '"+userToAdd.getUserName()+"', '"+userToAdd.getPassWord()
+				+"', '"+userToAdd.getFirstName()+"', "+ "'"+userToAdd.getLastName()+"', 'off'"
+						+ ",'"+userToAdd.getType()+"');";
+
+		return queryMsg;
+	}
 	public static String updateUserloginStatus(User userToUpdate)
 	{
 		if (userToUpdate == null)
@@ -35,6 +52,14 @@ public class UsersQueries
 			e.printStackTrace();
 		} 
 		return userToCreate;
+	}
+
+	public static String searchUserByID(User userToCheck)
+	{
+		if (userToCheck == null)
+			return null;
+		String queryMsg = "SELECT * FROM obl_db.users WHERE id ='" + userToCheck.getId()+"'";
+		return queryMsg;
 	}
 
 }
