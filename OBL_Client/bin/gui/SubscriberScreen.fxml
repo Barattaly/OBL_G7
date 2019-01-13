@@ -19,19 +19,16 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberScreenController">
+<BorderPane prefHeight="616.0" prefWidth="890.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberScreenController">
    <left>
       <AnchorPane prefHeight="611.0" prefWidth="116.0" style="-fx-background-color: #a0a2ab;" BorderPane.alignment="CENTER">
-         <effect>
-            <DropShadow />
-         </effect>
          <children>
             <Label layoutX="36.0" layoutY="83.0" text="OBL" textFill="#203447">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <ImageView fx:id="btn_home" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="120.0" onMouseClicked="#btn_homeDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_home" fitHeight="124.0" fitWidth="116.0" layoutX="1.0" layoutY="120.0" onMouseClicked="#btn_homeDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/HomePage.JPG" />
                </image>
@@ -39,7 +36,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="230.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="1.0" layoutY="230.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/My%20books.jpg" />
                </image>
@@ -47,9 +44,17 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_viewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="340.0" onMouseClicked="#btn_viewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_viewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="1.0" layoutY="340.0" onMouseClicked="#btn_viewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/ViewSubscriberCard.jpg" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="btn_searchBook" fitHeight="124.0" fitWidth="116.0" layoutX="1.0" layoutY="450.0" onMouseClicked="#btn_searchBookDisplay" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../bin/resources/SearchBook.jpg" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -60,15 +65,10 @@
                   <Image url="@../../bin/resources/Logo.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="btn_searchBook" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="450.0" onMouseClicked="#btn_searchBookDisplay" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../bin/resources/SearchBook.jpg" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </ImageView>
          </children>
+         <effect>
+            <DropShadow />
+         </effect>
       </AnchorPane>
    </left>
    <center>
