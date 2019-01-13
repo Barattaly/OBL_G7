@@ -14,6 +14,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -26,6 +27,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -154,11 +156,22 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	    void btn_borrowClick(ActionEvent event) {
 		   final Stage dialog = new Stage();
 			dialog.initModality(Modality.APPLICATION_MODAL);
+			dialog.setTitle("Borrow Book");
 			Label headline = new Label("Enter book copy id and subscriber id");
-			VBox dialogVbox = new VBox(10);
-			TextField bookCopy = new TextField("Book copy ID");
-			bookCopy.setEditable(true);
-			bookCopy.setAlignment(Pos.CENTER);
+			headline.setFont(new Font(16));
+			VBox dialogVbox = new VBox(30);
+			Label bookCopylab = new Label("Book copy ID: ");
+			TextField bookCopy = new TextField();
+			Label subscriberIDlab = new Label("Subscriber ID: ");
+			TextField subscriberID = new TextField();
+			GridPane grid = new GridPane();
+			grid.add(bookCopylab, 1, 1);
+			grid.add(bookCopy, 2, 1);
+			grid.add(subscriberIDlab, 1, 2);
+			grid.add(subscriberID, 2, 2);
+			grid.setHgap(10); 
+			grid.setVgap(10); 
+			grid.setAlignment(Pos.CENTER);
 			dialogVbox.setAlignment(Pos.CENTER);
 			Button button = new Button("Borrow");
 			button.setOnMouseClicked(new EventHandler<Event>()
@@ -166,14 +179,68 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				@Override
 				public void handle(Event e)
 				{
-					
-					dialog.close();
+					if (bookCopy.getText().isEmpty() && subscriberID.getText().isEmpty())
+					{
+						GuiManager.ShowErrorPopup("Enter book copy id and subscriber id please");
+					}
+					else if (bookCopy.getText().isEmpty())
+					{
+						GuiManager.ShowErrorPopup("Enter book copy id please");
+						
+					}
+					else if (subscriberID.getText().isEmpty())
+					{
+						GuiManager.ShowErrorPopup("Enter subscriber id please");
+					}
+					else
+					{
+						dialog.close();
+					}
 				}
 			});
-			dialogVbox.getChildren().addAll(headline ,bookCopy, button);
+			dialogVbox.getChildren().addAll(headline ,grid, button);
 			Scene dialogScene = new Scene(dialogVbox, 300, 200);
 			dialog.setScene(dialogScene);
 			dialog.showAndWait();
+
+	    }
+	   
+	    @FXML
+	    void btn_ReturnClick(ActionEvent event) {
+			   final Stage dialog = new Stage();
+				dialog.initModality(Modality.APPLICATION_MODAL);
+				dialog.setTitle("Return Book");
+				Label headline = new Label("Enter book copy id");
+				headline.setFont(new Font(16));
+				VBox dialogVbox = new VBox(30);
+				Label bookCopylab = new Label("Book copy ID: ");
+				TextField bookCopy = new TextField();
+				GridPane grid = new GridPane();
+				grid.add(bookCopylab, 1, 1);
+				grid.add(bookCopy, 2, 1);
+				grid.setAlignment(Pos.CENTER);
+				dialogVbox.setAlignment(Pos.CENTER);
+				Button button = new Button("Return");
+				button.setOnMouseClicked(new EventHandler<Event>()
+				{
+					@Override
+					public void handle(Event e)
+					{
+		
+						if (bookCopy.getText().isEmpty())
+						{
+							GuiManager.ShowErrorPopup("Enter book copy id please");
+						}
+						else
+						{
+							dialog.close();
+						}
+					}
+				});
+				dialogVbox.getChildren().addAll(headline ,grid, button);
+				Scene dialogScene = new Scene(dialogVbox, 300, 200);
+				dialog.setScene(dialogScene);
+				dialog.showAndWait();
 
 	    }
 

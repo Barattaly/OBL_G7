@@ -39,7 +39,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="542.0" layoutY="260.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="542.0" layoutY="260.0" onAction="#btn_ReturnClick" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -269,7 +269,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_createNewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="1.0" layoutY="343.0" onMouseClicked="#btn_createNewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_createNewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="340.0" onMouseClicked="#btn_createNewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/CreateNewSubscriberCard.jpg" />
                </image>
@@ -277,7 +277,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="231.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="230.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/Books.jpg" />
                </image>
@@ -285,7 +285,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btn_searchSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="455.0" onMouseClicked="#btn_searchSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_searchSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="450.0" onMouseClicked="#btn_searchSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/SearchSubscriberCard.jpg" />
                </image>
