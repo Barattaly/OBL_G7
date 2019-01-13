@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 public class UsersQueries
 {
 
-	public static String CheckUser(User userToCheck)
+	public static String searchUserByUserNamePass(User userToCheck)
 	{
 		if (userToCheck == null)
 			return null;
@@ -13,7 +13,8 @@ public class UsersQueries
 				+ "' AND password ='" + userToCheck.getPassWord() + "'";
 		return queryMsg;
 	}
-	public static String updateUserLogedin(User userToUpdate)
+	
+	public static String updateUserloginStatus(User userToUpdate)
 	{
 		if (userToUpdate == null)
 			return null;
@@ -21,7 +22,7 @@ public class UsersQueries
 		return queryMsg;
 	}
 
-	public static User CreateUser(ResultSet rs)
+	public static User CreateUserFromRS(ResultSet rs)
 	{
 		User userToCreate = null;
 		try

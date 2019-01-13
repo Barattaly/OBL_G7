@@ -91,13 +91,13 @@ public class OBLServer extends AbstractServer
 			case CheckUser:
 			{
 				User userToCheck = (User) dbMessage.Data;
-				String query = UsersQueries.CheckUser(userToCheck);
+				String query = UsersQueries.searchUserByUserNamePass(userToCheck);
 				ResultSet rs = oblDB.executeOBLQuery(query);
 				int rowsNumber = getRowCount(rs);
 				if (rowsNumber == 1)
 				{
 					rs.next();
-					User user = UsersQueries.CreateUser(rs);
+					User user = UsersQueries.CreateUserFromRS(rs);
 					DBMessage returnMsg;
 					if (user.getLoginStatus().equals("on"))
 					{
@@ -106,7 +106,7 @@ public class OBLServer extends AbstractServer
 					} else
 					{
 						user.setLoginStatus("on");
-						query = UsersQueries.updateUserLogedin(user);
+						query = UsersQueries.updateUserloginStatus(user);
 						oblDB.executeUpdate(query);
 						returnMsg = new DBMessage(DBAction.RETCheckUser, user);
 					}
@@ -126,7 +126,7 @@ public class OBLServer extends AbstractServer
 				if (userToUpdate == null)
 					return;
 				userToUpdate.setLoginStatus("off");
-				String query = UsersQueries.updateUserLogedin(userToUpdate);
+				String query = UsersQueries.updateUserloginStatus(userToUpdate);
 				oblDB.executeUpdate(query);
 			}
 			default:
