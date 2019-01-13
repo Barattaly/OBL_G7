@@ -21,6 +21,7 @@ public class GuiManager
 {
 	public static ClientController client;
 	public static IClientUI CurrentGuiController;
+	public static boolean dbConnected = false;
 
 	public static Map<String, SCREENS> userTypeFromString = new HashMap<String, SCREENS>()
 	{
@@ -42,7 +43,6 @@ public class GuiManager
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
 		}
 	};
-	public static boolean dbConnected = false;
 
 	public static void ShowErrorPopup(String msg)
 	{

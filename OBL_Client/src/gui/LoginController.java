@@ -94,7 +94,7 @@ public class LoginController implements IClientUI, Initializable
 					if (((User) msg.Data).getUserName() == null)// if the user already connected
 					{
 						Platform.runLater(() -> {
-							warningLabel.setText("User aleady connected");
+							warningLabel.setText("User already connected");
 						});
 					} else
 					{
@@ -109,7 +109,7 @@ public class LoginController implements IClientUI, Initializable
 				} else
 				{
 					Platform.runLater(() -> {
-						warningLabel.setText("Wrong user name or password.");
+						warningLabel.setText("Wrong user userName or password.");
 					});
 				}
 			}

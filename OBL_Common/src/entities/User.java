@@ -4,31 +4,40 @@ import java.io.Serializable;
 
 public class User implements Serializable
 {
-	private String id = null;
-	private String userName = null;
-	private String password = null;
-	private String firstName = null;
-	private String lastName = null;
-	private String loginStatus = null;
-	private String  type= null;
+	private String userName;
+	private String password;
+	private String idNumber;
+	private String firstName;
+	private String lastName;
 
-	public User(String idNum, String name, String pass, 
-			String first, String last, String status, String userType)
+	private String loginStatus;
+	private String type;
+
+	public User(String idNum, String name, String pass, String first, String last, String status, String userType)
 	{
-
-		id = idNum;
-		userName = name;
-		password = pass;
-		firstName = first;
-		lastName = last;
-		loginStatus = status;
-		type = userType;
+		this.userName = name;
+		this.password = pass;
+		this.idNumber = idNum;
+		this.firstName = first;
+		this.lastName = last;
+		this.loginStatus = status;
+		this.type = userType;
 	}
 
-	public User(String name, String pass)
+	public User(String name, String pass)//for checking user exist
 	{
-		userName = name;
-		password = pass;
+		this.userName = name;
+		this.password = pass;
+	}
+
+	public User(String name, String pass, String idNum, String first, String last)
+	{
+		this.userName = name;
+		this.password = pass;
+		this.idNumber = idNum;
+		this.firstName = first;
+		this.lastName = last;
+		this.loginStatus = "off";
 	}
 
 	public String getPassWord()
@@ -36,9 +45,9 @@ public class User implements Serializable
 		return password;
 	}
 
-	public void setPassWord(String passWord)
+	public void setPassword(String password)
 	{
-		this.password = passWord;
+		this.password = password;
 	}
 
 	public String getUserName()
@@ -48,7 +57,7 @@ public class User implements Serializable
 
 	public void setUserName(String userName)
 	{
-		this.userName = userName;
+		this.userName =  userName;
 	}
 
 	public String getType()
@@ -80,15 +89,24 @@ public class User implements Serializable
 	{
 		this.firstName = firstName;
 	}
+	public String getLastName()
+	{
+		return lastName;
+	}
+
+	public void setLastName(String lastName)
+	{
+		this.lastName = lastName;
+	}
 
 	public String getId()
 	{
-		return id;
+		return idNumber;
 	}
 
-	public void setId(String id)
+	public void setId(String idNum)
 	{
-		this.id = id;
+		this.idNumber = idNum;
 	}
 
 }
