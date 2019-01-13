@@ -4,26 +4,42 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXTextField;
+
 import entities.DBMessage;
 import entities.User;
 import gui.GuiManager.SCREENS;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class LibrarianScreenController implements Initializable, IClientUI
 {
 	private User userLogedIn;
     @FXML
     private Label userWelcomLabel;
+    @FXML
+    private Label userNameLabel;
 	@FXML
 	private Pane pane_home, pane_createNewSubscriberCard, pane_searchBook, pane_searchSubscriberCard;
 
@@ -133,6 +149,33 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 
 	}
+	
+	   @FXML
+	    void btn_borrowClick(ActionEvent event) {
+		   final Stage dialog = new Stage();
+			dialog.initModality(Modality.APPLICATION_MODAL);
+			Label headline = new Label("Enter book copy id and subscriber id");
+			VBox dialogVbox = new VBox(10);
+			TextField bookCopy = new TextField("Book copy ID");
+			bookCopy.setEditable(true);
+			bookCopy.setAlignment(Pos.CENTER);
+			dialogVbox.setAlignment(Pos.CENTER);
+			Button button = new Button("Borrow");
+			button.setOnMouseClicked(new EventHandler<Event>()
+			{
+				@Override
+				public void handle(Event e)
+				{
+					
+					dialog.close();
+				}
+			});
+			dialogVbox.getChildren().addAll(headline ,bookCopy, button);
+			Scene dialogScene = new Scene(dialogVbox, 300, 200);
+			dialog.setScene(dialogScene);
+			dialog.showAndWait();
+
+	    }
 
 	@Override
 	public void getMessageFromServer(DBMessage msg)
@@ -148,6 +191,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		//make the name start with upper case
 		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
 		userWelcomLabel.setText("Hello "+ name);
+		String userName = userLoged.getUserName();
+		userNameLabel.setText(userName);
 	}
 
 	@Override
