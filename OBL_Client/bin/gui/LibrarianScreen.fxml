@@ -21,7 +21,7 @@
    <center>
       <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;">
          <children>
-            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0">
+            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
                   <Label fx:id="userWelcomLabel" layoutX="56.0" layoutY="150.0" text="Hello Galina!" textFill="#a0a2ab">
                      <font>
@@ -29,7 +29,7 @@
                      </font>
                   </Label>
                   <TitledPane animated="false" layoutX="56.0" layoutY="293.0" prefHeight="200.0" prefWidth="538.0" stylesheets="@../../bin/resources/titledpane.css" text="Messages:" textFill="#a0a2ab" />
-                  <JFXButton buttonType="RAISED" layoutX="56.0" layoutY="260.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="56.0" layoutY="260.0" onAction="#btn_borrowClick" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -231,6 +231,21 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+            </ImageView>
+            <Label fx:id="userNameLabel" layoutX="38.0" layoutY="14.0" text="username" textFill="#a0a2ab">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="15.0" layoutY="32.0" text="Loged as Librarian" textFill="#a0a2ab">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../bin/resources/Login_Username.png" />
+               </image>
             </ImageView>
          </children>
       </AnchorPane>

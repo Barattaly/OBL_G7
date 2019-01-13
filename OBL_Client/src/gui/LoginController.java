@@ -74,9 +74,11 @@ public class LoginController implements IClientUI, Initializable
 	@FXML
 	void openSearchScreen(MouseEvent event) throws IOException
 	{
-		if(GuiManager.client == null || GuiManager.dbConnected) return;
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		GuiManager.SwitchScene(SCREENS.searchBook);
+		
+		if (GuiManager.dbConnected) {
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			GuiManager.SwitchScene(SCREENS.searchBook);
+		}
 
 	}
 

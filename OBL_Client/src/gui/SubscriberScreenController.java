@@ -31,6 +31,10 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	private User userLogedIn;
     @FXML
     private Label userWelcomLabel;
+    @FXML
+    private Label userNameLabel;
+    @FXML
+    private Label statusLabel;
 	@FXML
 	private Pane pane_home, pane_books, pane_viewSubscriberCard, pane_searchBook;
 
@@ -173,6 +177,11 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		//make the name start with upper case
 		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);		
 		userWelcomLabel.setText("Hello "+ name);
+		String userName = userLoged.getUserName();
+		userNameLabel.setText(userName);
+		/*String status = userLoged.****.substring(0,1).toUpperCase() + userLoged.****.substring(1);
+		statusLabel.setText("Subscriber card status: "+ status);*/
+		
 	}
 
 	@Override

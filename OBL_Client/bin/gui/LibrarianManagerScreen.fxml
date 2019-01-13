@@ -21,9 +21,9 @@
 
 <BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianManagerController">
    <center>
-      <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;">
+      <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="765.0" style="-fx-background-color: #203447;">
          <children>
-            <Pane fx:id="pane_home" prefHeight="611.0" prefWidth="650.0">
+            <Pane fx:id="pane_home" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
                   <Label fx:id="userWelcomLabel" layoutX="56.0" layoutY="150.0" text="Hello Galina!" textFill="#a0a2ab">
                      <font>
@@ -239,7 +239,7 @@
                </children>
             </Pane>
             <Pane fx:id="pane_reports" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="652.0" visible="false" />
-            <Label fx:id="LogOut" layoutX="710.0" layoutY="5.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab">
+            <Label fx:id="LogOut" layoutX="711.0" layoutY="5.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />
                </font>
@@ -254,6 +254,21 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+            </ImageView>
+            <Label fx:id="userNameLabel" layoutX="26.0" layoutY="6.0" text="username" textFill="#a0a2ab">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="6.0" layoutY="23.0" text="Loged as Library Manager" textFill="#a0a2ab">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="6.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../bin/resources/Login_Username.png" />
+               </image>
             </ImageView>
          </children>
       </AnchorPane>
