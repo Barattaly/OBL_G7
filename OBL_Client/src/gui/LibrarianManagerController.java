@@ -198,7 +198,7 @@ public class LibrarianManagerController implements Initializable ,IClientUI
 	public void setUserLogedIn(User userLoged)
 	{
 		userLogedIn = userLoged;
-		//make the name start with upper case
+		//make the userName start with upper case
 		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
 		userWelcomLabel.setText("Hello "+ name);
 		String userName = userLoged.getUserName();

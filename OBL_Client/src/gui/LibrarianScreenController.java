@@ -4,11 +4,19 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.sun.deploy.util.StringUtils;
 
 import entities.DBMessage;
+import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -21,30 +29,50 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class LibrarianScreenController implements Initializable, IClientUI
 {
 	private User userLogedIn;
-    @FXML
-    private Label userWelcomLabel;
-    @FXML
-    private Label userNameLabel;
+	@FXML
+	private Label userWelcomLabel;
+	@FXML
+	private Label userNameLabel;
 	@FXML
 	private Pane pane_home, pane_createNewSubscriberCard, pane_searchBook, pane_searchSubscriberCard;
-
 	@FXML
 	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard;
+
+	@FXML
+	private JFXTextField userNameTextfield;
+
+	@FXML
+	private JFXTextField idNumberTextfield;
+
+	@FXML
+	private JFXTextField firstNameTextfield;
+
+	@FXML
+	private JFXTextField lastNameTextfield;
+
+	@FXML
+	private JFXTextField phoneNumberTextfield;
+
+	@FXML
+	private JFXTextField emailTextfield;
+
+	@FXML
+	private JFXPasswordField passwordTextfield;
+
+	@FXML
+	private Label warningLabel;
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
@@ -137,60 +165,117 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	void btn_createSubscriberCardDisplay(ActionEvent event)
 	{
-
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("OBL Create new subscriber");
-		alert.setHeaderText("The subscriber's card was created successfully");
-		alert.setContentText("Subscriber Number: ______ ");
-		Optional<ButtonType> option = alert.showAndWait();
-		if (option.get() == ButtonType.OK)
+		warningLabel.setText("");
+		if (idNumberTextfield.getText().isEmpty() || userNameTextfield.getText().isEmpty()
+				|| firstNameTextfield.getText().isEmpty() || lastNameTextfield.getText().isEmpty()
+				|| passwordTextfield.getText().isEmpty())
 		{
-			alert.close();
+			warningLabel.setText("Please fill all the requierd field.");
+			return;
 		}
+		Subscriber newSubscriberToCreate = createSubscriberFromTextFields();
+
+		GuiManager.client.CreateSubscriber(newSubscriberToCreate);
+		/*
+		 * Alert alert = new Alert(AlertType.INFORMATION);
+		 * alert.setTitle("OBL Create new subscriber");
+		 * alert.setHeaderText("The subscriber's card was created successfully");
+		 * alert.setContentText("Subscriber Number: ______ "); Optional<ButtonType>
+		 * option = alert.showAndWait(); if (option.get() == ButtonType.OK) {
+		 * alert.close(); }
+		 */
 
 	}
-	
-	   @FXML
-	    void btn_borrowClick(ActionEvent event) {
-		   final Stage dialog = new Stage();
-			dialog.initModality(Modality.APPLICATION_MODAL);
-			Label headline = new Label("Enter book copy id and subscriber id");
-			VBox dialogVbox = new VBox(10);
-			TextField bookCopy = new TextField("Book copy ID");
-			bookCopy.setEditable(true);
-			bookCopy.setAlignment(Pos.CENTER);
-			dialogVbox.setAlignment(Pos.CENTER);
-			Button button = new Button("Borrow");
-			button.setOnMouseClicked(new EventHandler<Event>()
-			{
-				@Override
-				public void handle(Event e)
-				{
-					
-					dialog.close();
-				}
-			});
-			dialogVbox.getChildren().addAll(headline ,bookCopy, button);
-			Scene dialogScene = new Scene(dialogVbox, 300, 200);
-			dialog.setScene(dialogScene);
-			dialog.showAndWait();
 
-	    }
+	private Subscriber createSubscriberFromTextFields()
+	{
+		Subscriber subscriber = new Subscriber(userNameTextfield.getText(), passwordTextfield.getText(),
+				idNumberTextfield.getText(), firstNameTextfield.getText(), lastNameTextfield.getText());
+		String warningMessage = "";
+		// input checks:
+		if (!phoneNumberTextfield.getText().isEmpty())
+		{
+			try
+			{
+				double tryParse = Integer.valueOf(phoneNumberTextfield.getText());
+				subscriber.setPhoneNumber(phoneNumberTextfield.getText());
+			} catch (Exception e)
+			{
+				warningMessage = "Wrong phone number format.\n";
+				subscriber.setPhoneNumber("0");
+			}
+		}
+		else subscriber.setPhoneNumber("0");
+
+		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText()))
+		{
+			subscriber.setEmail(emailTextfield.getText());
+		} else
+			warningMessage += "Wrong email format. ";
+		if(!warningMessage.isEmpty())
+			warningLabel.setText(warningMessage);
+		return subscriber;
+	}
+
+	@FXML
+	void btn_borrowClick(ActionEvent event)
+	{
+		final Stage dialog = new Stage();
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		Label headline = new Label("Enter book copy id and subscriber id");
+		VBox dialogVbox = new VBox(10);
+		TextField bookCopy = new TextField("Book copy ID");
+		bookCopy.setEditable(true);
+		bookCopy.setAlignment(Pos.CENTER);
+		dialogVbox.setAlignment(Pos.CENTER);
+		Button button = new Button("Borrow");
+		button.setOnMouseClicked(new EventHandler<Event>()
+		{
+			@Override
+			public void handle(Event e)
+			{
+
+				dialog.close();
+			}
+		});
+		dialogVbox.getChildren().addAll(headline, bookCopy, button);
+		Scene dialogScene = new Scene(dialogVbox, 300, 200);
+		dialog.setScene(dialogScene);
+		dialog.showAndWait();
+
+	}
 
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
-		// TODO Auto-generated method stub
+		switch (msg.Action)
+		{
+		case CreateSubscriber:
+		{
+			Subscriber newSub = (Subscriber) msg.Data;
+			if (newSub == null)
+			{
+				Platform.runLater(() -> {
+					warningLabel.setText("Subscriber already exist!");
+				});
+			} else
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Subscriber Added Successfully!");
+				});
 
+			}
+		}
+		}
 	}
 
 	@Override
 	public void setUserLogedIn(User userLoged)
 	{
 		userLogedIn = userLoged;
-		//make the name start with upper case
+		// make the userName start with upper case
 		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
-		userWelcomLabel.setText("Hello "+ name);
+		userWelcomLabel.setText("Hello " + name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
 	}
@@ -199,6 +284,20 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	public User getUserLogedIn()
 	{
 		return userLogedIn;
+	}
+
+	private static boolean isValidEmailAddress(String email)
+	{
+		boolean result = true;
+		try
+		{
+			InternetAddress emailAddr = new InternetAddress(email);
+			emailAddr.validate();
+		} catch (AddressException ex)
+		{
+			result = false;
+		}
+		return result;
 	}
 
 }

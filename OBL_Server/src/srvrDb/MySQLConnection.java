@@ -136,7 +136,7 @@ public class MySQLConnection
 		Statement stmt;
 		try {
 			stmt = con1.createStatement();
-			stmt.executeUpdate("create table courses(num int, name VARCHAR(40), semestr VARCHAR(10));");
+			stmt.executeUpdate("create table courses(num int, userName VARCHAR(40), semestr VARCHAR(10));");
 			stmt.executeUpdate("load data local infile \"courses.txt\" into table courses");
 	 		
 		} catch (SQLException e) {	e.printStackTrace();}

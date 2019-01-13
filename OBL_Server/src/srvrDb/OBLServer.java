@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import entities.UsersQueries;
 import entities.DBMessage;
+import entities.Subscriber;
+import entities.SubscribersQueries;
 import entities.DBMessage.DBAction;
 import entities.User;
 import javafx.scene.control.TextArea;
@@ -82,7 +84,8 @@ public class OBLServer extends AbstractServer
 
 		}
 		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
-		if(!isDBRunning()) return;
+		if (!isDBRunning())
+			return;
 		try
 		{
 			switch (dbMessage.Action)
@@ -91,7 +94,7 @@ public class OBLServer extends AbstractServer
 			case CheckUser:
 			{
 				User userToCheck = (User) dbMessage.Data;
-				String query = UsersQueries.searchUserByUserNamePass(userToCheck);
+				String query = UsersQueries.searchUserByUserNameAndPass(userToCheck);
 				ResultSet rs = oblDB.executeOBLQuery(query);
 				int rowsNumber = getRowCount(rs);
 				if (rowsNumber == 1)
@@ -128,6 +131,27 @@ public class OBLServer extends AbstractServer
 				userToUpdate.setLoginStatus("off");
 				String query = UsersQueries.updateUserloginStatus(userToUpdate);
 				oblDB.executeUpdate(query);
+				break;
+			}
+			case CreateSubscriber:
+			{
+				User userToCheck = (User) dbMessage.Data;
+				Subscriber subscriberToCreate = (Subscriber) dbMessage.Data;
+				if (isUserExist(userToCheck))
+				{
+					DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, null);
+					client.sendToClient(returnMsg);
+					break;
+				}
+				userToCheck.setType("subscriber");
+				String query = UsersQueries.createSubscriberUser(userToCheck);
+				oblDB.executeUpdate(query);// add to Users table
+				query = SubscribersQueries.createSubscriber(subscriberToCreate);
+				oblDB.executeUpdate(query);// add to Subscribers table
+				System.out.println(query);
+				DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, userToCheck);
+				client.sendToClient(returnMsg);
+				break;
 			}
 			default:
 				break;
@@ -138,6 +162,24 @@ public class OBLServer extends AbstractServer
 			e.printStackTrace();
 
 		}
+	}
+
+	private boolean isUserExist(User userToCheck)
+	{
+		String query = UsersQueries.searchUserByUserName(userToCheck);// search by user name
+		ResultSet rsUserName = oblDB.executeOBLQuery(query);
+
+		query = UsersQueries.searchUserByID(userToCheck);// search by user name
+		ResultSet rsID = oblDB.executeOBLQuery(query);
+
+		int numberOfIDs = getRowCount(rsID);
+		int numberOfUserNames = getRowCount(rsUserName);
+
+		if (numberOfUserNames > 0 || numberOfIDs > 0) // means that the user already exist
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
