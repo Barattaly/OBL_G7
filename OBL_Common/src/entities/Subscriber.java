@@ -1,97 +1,112 @@
 package entities;
 
-
 public class Subscriber extends User
 {
-	private int subscriberId;
+	private String subscriberNumber;
 	private String phoneNumber;
 	private String email;
 	private String status;
 	private int currentNumOfBorrows = 0;
 	private int currentNumOfOrders = 0;
 
-	public Subscriber(String uName, String pass, String idNum, String first, String last,String phone, String mail)
+	public Subscriber(String subscriberNum, String id, String phone, String email, String status,int numOfBorrow, int numofOrders)
 	{
-		super(uName, pass,idNum,first,last);
-		status = "active";
-		email =mail;
-		phoneNumber = phone;
-	}
-	public Subscriber(String uName, String pass, String idNum, String first, String last)
-	{
-		super(uName, pass,idNum,first,last);
-		status = "active";
-		email =null;
-		phoneNumber = null;
-	}
-	public int getSubscriberId()
-	{
-		return subscriberId;
+		super();
+		  subscriberNumber = subscriberNum;
+		  this.idNumber = id;
+		  phoneNumber = phone;
+		  this.email = email;
+		  this.status = status;
+		  currentNumOfBorrows = numOfBorrow;
+		  currentNumOfOrders = numofOrders;
 	}
 
+	public Subscriber(String uName, String pass, String idNum, String first, String last, String phone, String mail,
+			String subsNumber)
+	{
+		super(uName, pass, idNum, first, last);
+		subscriberNumber = subsNumber;
+		status = "active";
+		email = mail;
+		phoneNumber = phone;
+	}
+
+	public Subscriber(String uName, String pass, String idNum, String first, String last)
+	{
+		super(uName, pass, idNum, first, last);
+		status = "active";
+		email = null;
+		phoneNumber = null;
+	}
+
+	public String getSubscriberNumber()
+	{
+		return subscriberNumber;
+	}
 
 	public String getPhoneNumber()
 	{
 		return phoneNumber;
 	}
 
-
 	public String getEmail()
 	{
 		return email;
 	}
-
 
 	public String getStatus()
 	{
 		return status;
 	}
 
-
 	public int getCurrentNumOfBorrows()
 	{
 		return currentNumOfBorrows;
 	}
-
 
 	public int getCurrentNumOfOrders()
 	{
 		return currentNumOfOrders;
 	}
 
-
-	public void setSubscriberId(int subscriberId)
+	public void setSubscriberNumber(String subscriberId)
 	{
-		this.subscriberId = subscriberId;
+		this.subscriberNumber = subscriberId;
 	}
-
 
 	public void setPhoneNumber(String phoneNumber)
 	{
 		this.phoneNumber = phoneNumber;
 	}
 
-
 	public void setEmail(String email)
 	{
 		this.email = email;
 	}
-
 
 	public void setStatus(String status)
 	{
 		this.status = status;
 	}
 
-
 	public void setCurrentNumOfBorrows(int currentNumOfBorrows)
 	{
 		this.currentNumOfBorrows = currentNumOfBorrows;
 	}
 
-
 	public void setCurrentNumOfOrders(int currentNumOfOrders)
 	{
 		this.currentNumOfOrders = currentNumOfOrders;
 	}
+
+	public void FillInformationFromUser(User userToCheck)
+	{
+		this.userName = userToCheck.userName;
+		this.password = userToCheck.password;
+		this.idNumber = userToCheck.idNumber;
+		this.firstName = userToCheck.firstName;
+		this.lastName = userToCheck.lastName;
+		this.loginStatus = userToCheck.loginStatus;
+		this.type = userToCheck.type;
+		}
 }

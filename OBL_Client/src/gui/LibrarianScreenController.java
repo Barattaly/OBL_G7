@@ -7,10 +7,8 @@ import java.util.ResourceBundle;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import com.sun.deploy.util.StringUtils;
 
 import entities.DBMessage;
 import entities.Subscriber;
@@ -22,7 +20,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -179,103 +176,98 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		Subscriber newSubscriberToCreate = createSubscriberFromTextFields();
 
 		GuiManager.client.CreateSubscriber(newSubscriberToCreate);
-		
-		
 
 	}
 
-	
-	   @FXML
-	    void btn_borrowClick(ActionEvent event) {
-		   final Stage dialog = new Stage();
-			dialog.initModality(Modality.APPLICATION_MODAL);
-			dialog.setTitle("Borrow Book");
-			Label headline = new Label("Enter book copy id and subscriber id");
-			headline.setFont(new Font(16));
-			VBox dialogVbox = new VBox(30);
-			Label bookCopylab = new Label("Book copy ID: ");
-			TextField bookCopy = new TextField();
-			Label subscriberIDlab = new Label("Subscriber ID: ");
-			TextField subscriberID = new TextField();
-			GridPane grid = new GridPane();
-			grid.add(bookCopylab, 1, 1);
-			grid.add(bookCopy, 2, 1);
-			grid.add(subscriberIDlab, 1, 2);
-			grid.add(subscriberID, 2, 2);
-			grid.setHgap(10); 
-			grid.setVgap(10); 
-			grid.setAlignment(Pos.CENTER);
-			dialogVbox.setAlignment(Pos.CENTER);
-			Button button = new Button("Borrow");
-			button.setOnMouseClicked(new EventHandler<Event>()
+	@FXML
+	void btn_borrowClick(ActionEvent event)
+	{
+		final Stage dialog = new Stage();
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.setTitle("Borrow Book");
+		Label headline = new Label("Enter book copy id and subscriber id");
+		headline.setFont(new Font(16));
+		VBox dialogVbox = new VBox(30);
+		Label bookCopylab = new Label("Book copy ID: ");
+		TextField bookCopy = new TextField();
+		Label subscriberIDlab = new Label("Subscriber ID: ");
+		TextField subscriberID = new TextField();
+		GridPane grid = new GridPane();
+		grid.add(bookCopylab, 1, 1);
+		grid.add(bookCopy, 2, 1);
+		grid.add(subscriberIDlab, 1, 2);
+		grid.add(subscriberID, 2, 2);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setAlignment(Pos.CENTER);
+		dialogVbox.setAlignment(Pos.CENTER);
+		Button button = new Button("Borrow");
+		button.setOnMouseClicked(new EventHandler<Event>()
+		{
+			@Override
+			public void handle(Event e)
 			{
-				@Override
-				public void handle(Event e)
+				if (bookCopy.getText().isEmpty() && subscriberID.getText().isEmpty())
 				{
-					if (bookCopy.getText().isEmpty() && subscriberID.getText().isEmpty())
-					{
-						GuiManager.ShowErrorPopup("Enter book copy id and subscriber id please");
-					}
-					else if (bookCopy.getText().isEmpty())
-					{
-						GuiManager.ShowErrorPopup("Enter book copy id please");
-						
-					}
-					else if (subscriberID.getText().isEmpty())
-					{
-						GuiManager.ShowErrorPopup("Enter subscriber id please");
-					}
-					else
-					{
-						dialog.close();
-					}
+					GuiManager.ShowErrorPopup("Enter book copy id and subscriber id please");
+				} else if (bookCopy.getText().isEmpty())
+				{
+					GuiManager.ShowErrorPopup("Enter book copy id please");
+
+				} else if (subscriberID.getText().isEmpty())
+				{
+					GuiManager.ShowErrorPopup("Enter subscriber id please");
+				} else
+				{
+					dialog.close();
 				}
-			});
-			dialogVbox.getChildren().addAll(headline ,grid, button);
-			Scene dialogScene = new Scene(dialogVbox, 300, 200);
-			dialog.setScene(dialogScene);
-			dialog.showAndWait();
+			}
+		});
+		dialogVbox.getChildren().addAll(headline, grid, button);
+		Scene dialogScene = new Scene(dialogVbox, 300, 200);
+		dialog.setScene(dialogScene);
+		dialog.showAndWait();
 
-	    }
-	   
-	    @FXML
-	    void btn_ReturnClick(ActionEvent event) {
-			   final Stage dialog = new Stage();
-				dialog.initModality(Modality.APPLICATION_MODAL);
-				dialog.setTitle("Return Book");
-				Label headline = new Label("Enter book copy id");
-				headline.setFont(new Font(16));
-				VBox dialogVbox = new VBox(30);
-				Label bookCopylab = new Label("Book copy ID: ");
-				TextField bookCopy = new TextField();
-				GridPane grid = new GridPane();
-				grid.add(bookCopylab, 1, 1);
-				grid.add(bookCopy, 2, 1);
-				grid.setAlignment(Pos.CENTER);
-				dialogVbox.setAlignment(Pos.CENTER);
-				Button button = new Button("Return");
-				button.setOnMouseClicked(new EventHandler<Event>()
+	}
+
+	@FXML
+	void btn_ReturnClick(ActionEvent event)
+	{
+		final Stage dialog = new Stage();
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.setTitle("Return Book");
+		Label headline = new Label("Enter book copy id");
+		headline.setFont(new Font(16));
+		VBox dialogVbox = new VBox(30);
+		Label bookCopylab = new Label("Book copy ID: ");
+		TextField bookCopy = new TextField();
+		GridPane grid = new GridPane();
+		grid.add(bookCopylab, 1, 1);
+		grid.add(bookCopy, 2, 1);
+		grid.setAlignment(Pos.CENTER);
+		dialogVbox.setAlignment(Pos.CENTER);
+		Button button = new Button("Return");
+		button.setOnMouseClicked(new EventHandler<Event>()
+		{
+			@Override
+			public void handle(Event e)
+			{
+
+				if (bookCopy.getText().isEmpty())
 				{
-					@Override
-					public void handle(Event e)
-					{
-		
-						if (bookCopy.getText().isEmpty())
-						{
-							GuiManager.ShowErrorPopup("Enter book copy id please");
-						}
-						else
-						{
-							dialog.close();
-						}
-					}
-				});
-				dialogVbox.getChildren().addAll(headline ,grid, button);
-				Scene dialogScene = new Scene(dialogVbox, 300, 200);
-				dialog.setScene(dialogScene);
-				dialog.showAndWait();
+					GuiManager.ShowErrorPopup("Enter book copy id please");
+				} else
+				{
+					dialog.close();
+				}
+			}
+		});
+		dialogVbox.getChildren().addAll(headline, grid, button);
+		Scene dialogScene = new Scene(dialogVbox, 300, 200);
+		dialog.setScene(dialogScene);
+		dialog.showAndWait();
 
-	    }
+	}
 
 	private Subscriber createSubscriberFromTextFields()
 	{
@@ -294,20 +286,18 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				warningMessage = "Wrong phone number format.\n";
 				subscriber.setPhoneNumber("0");
 			}
-		}
-		else subscriber.setPhoneNumber("0");
+		} else
+			subscriber.setPhoneNumber("0");
 
 		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText()))
 		{
 			subscriber.setEmail(emailTextfield.getText());
 		} else
 			warningMessage += "Wrong email format. ";
-		if(!warningMessage.isEmpty())
+		if (!warningMessage.isEmpty())
 			warningLabel.setText(warningMessage);
 		return subscriber;
 	}
-
-
 
 	@Override
 	public void getMessageFromServer(DBMessage msg)
@@ -325,7 +315,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			} else
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("Subscriber Added Successfully!");
+					GuiManager.ShowMessagePopup("Subscriber "+ ((Subscriber)msg.Data).getSubscriberNumber() +" Added Successfully!");
 				});
 
 			}

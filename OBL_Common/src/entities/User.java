@@ -4,15 +4,16 @@ import java.io.Serializable;
 
 public class User implements Serializable
 {
-	private String userName;
-	private String password;
-	private String idNumber;
-	private String firstName;
-	private String lastName;
+	protected String userName;
+	protected String password;
+	protected String idNumber;
+	protected String firstName;
+	protected String lastName;
 
-	private String loginStatus;
-	private String type;
+	protected String loginStatus;
+	protected String type;
 
+	public User() {}
 	public User(String idNum, String name, String pass, String first, String last, String status, String userType)
 	{
 		this.userName = name;
