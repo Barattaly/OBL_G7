@@ -10,7 +10,6 @@ import javax.mail.internet.InternetAddress;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import com.sun.deploy.util.StringUtils;
 
 import entities.DBMessage;
 import entities.Subscriber;
