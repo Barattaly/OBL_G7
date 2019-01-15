@@ -11,19 +11,38 @@ public class Book implements Serializable
 	private String classification;
 	private String description;
 	private int maxCopies;
+	private String location;
 	private int currentNumOfBorrows;
 	private int currentNumOfOrders;
 	private String tableOfContenPath;
 	private String isArchived;
 	private ArrayList<CopyOfBook> copies;
+	private ArrayList<String> authorNameList;
 	
-	public Book() {}
+	
+	public Book(String catalogNumber, String name, String purchaseDate,
+			String classification, String description, int maxCopies, String location,
+	 int currentNumOfBorrows, int currentNumOfOrders, String tableOfContenPath, String isArchived)
+	{
+		this.catalogNumber =catalogNumber;
+		this.name = name;
+		this.purchaseDate= purchaseDate;
+		this.classification = classification;
+		this.description = description;
+		this.maxCopies = maxCopies;
+		this.location = location;
+		this.currentNumOfBorrows = currentNumOfBorrows;
+		this.currentNumOfOrders = currentNumOfOrders;
+		this.tableOfContenPath = tableOfContenPath;
+		this.isArchived = isArchived;
+
+	}
+	
 	
 	public Book(String catalogNumber, String name, String purchaseDate, String classification, String description,
 			int maxCopies, int currentNumOfBorrows, int currentNumOfOrders, String tableOfContenPath, String isArchived,
 			ArrayList<CopyOfBook> copies) 
 	{
-		super();
 		this.catalogNumber = catalogNumber;
 		this.name = name;
 		this.purchaseDate = purchaseDate;
@@ -39,7 +58,6 @@ public class Book implements Serializable
 
 	public Book(String catalogNumber)
 	{
-		super();
 		this.catalogNumber = catalogNumber;
 	}
 	public String getCatalogNumber() 
@@ -131,6 +149,26 @@ public class Book implements Serializable
 	public void setCopies(ArrayList<CopyOfBook> copies) 
 	{
 		this.copies = copies;
+	}
+
+	public String getLocation()
+	{
+		return location;
+	}
+
+	public void setLocation(String location)
+	{
+		this.location = location;
+	}
+
+	public ArrayList<String> getAuthorNameList()
+	{
+		return authorNameList;
+	}
+
+	public void setAuthorNameList(ArrayList<String> authorNameList)
+	{
+		this.authorNameList = authorNameList;
 	}
 	
 	
