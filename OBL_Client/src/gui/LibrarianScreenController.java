@@ -15,6 +15,7 @@ import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

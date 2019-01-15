@@ -1,34 +1,40 @@
 package gui;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
-import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
 import gui.GuiManager.SCREENS;
-import defaultPackage.mainClient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
 public class SearchBookController implements Initializable, IClientUI
 {
+
+	@FXML
+	private JFXTextField bookNameTextField;
+
+	@FXML
+	private JFXTextField authorNameTextfield;
+
+	@FXML
+	private JFXTextField bookSubjectTextfield;
+
+	@FXML
+	private JFXTextField freeSearchTextfield;
 
 	@FXML
 	private TableView<Book> BookTable;
@@ -53,6 +59,7 @@ public class SearchBookController implements Initializable, IClientUI
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
+		
 		namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
 		authorcol.setCellValueFactory(new PropertyValueFactory<>("Author"));
 		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalognumber"));
@@ -79,14 +86,11 @@ public class SearchBookController implements Initializable, IClientUI
 
 	}
 
-	/*
-	 * @FXML void searchBookDisplay(ActionEvent event) { //press on search in search
-	 * book screen
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
+	@FXML
+	void searchBookBtnClick(ActionEvent event)
+	{
+		
+	}
 
 	@FXML
 	void backPreviewClick(MouseEvent event)
@@ -99,7 +103,13 @@ public class SearchBookController implements Initializable, IClientUI
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
-		// TODO Auto-generated method stub
+		switch(msg.Action)
+		{
+			case GetAllBooksList:
+			{
+				
+			}
+		}
 
 	}
 
