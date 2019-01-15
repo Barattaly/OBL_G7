@@ -183,7 +183,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	
-	//@SuppressWarnings("unchecked")
 	@FXML
 	void btn_borrowClick(ActionEvent event) {
 	   final Stage dialog = new Stage();
@@ -235,40 +234,34 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		   public void handle(Event e)
 		   {
 			   String warningMessage = "";
+			   warningMessageLab.setText(warningMessage);
 			   if (bookCatalogNumber.getText().isEmpty() && bookCopy.getText().isEmpty() && subscriberID.getText().isEmpty())
 				{
-					GuiManager.ShowErrorPopup("Enter book catalog number, book copy id and subscriber id please");
+				   warningMessage = "Please fill all of the fields";
+				   //GuiManager.ShowErrorPopup("Enter book catalog number, book copy id and subscriber id please");
 				}
 				else if (bookCatalogNumber.getText().isEmpty())
 				{
-					GuiManager.ShowErrorPopup("Enter book catalog number please");
+					warningMessage = "Please enter book catalog number";
+					//GuiManager.ShowErrorPopup("Enter book catalog number please");
 				}
 				else if (bookCopy.getText().isEmpty())
 				{
-					GuiManager.ShowErrorPopup("Enter book copy id please");
+					warningMessage = "Please enter book copy id";
+					//GuiManager.ShowErrorPopup("Enter book copy id please");
 				}
 				else if (subscriberID.getText().isEmpty())
 				{
-					GuiManager.ShowErrorPopup("Enter subscriber id please");
+					warningMessage = "Please enter subscriber id";
+					//GuiManager.ShowErrorPopup("Enter subscriber id please");
 				}
 				else
 				{
 					//גישה למסד נתונים
 					//dialog.close();
 				}
-				/*if (!bookCatalogNumber.getText().isEmpty())
-				{
-					try
-					{
-						double tryParse = Integer.valueOf(bookCatalogNumber.getText());
-					} 
-					catch (Exception ex)
-					{
-						warningMessage = "Wrong book catalog number format.\n";
-					}
-				}
 				if(!warningMessage.isEmpty())
-					warningMessageLab.setText(warningMessage);*/
+					warningMessageLab.setText(warningMessage);
 			}
 		});
 		dialogVbox.getChildren().addAll(headline ,grid,warningMessageLab, button);
@@ -379,7 +372,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			} else
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("Subscriber Added Successfully!");
+					GuiManager.ShowMessagePopup("Subscriber "+ ((Subscriber)msg.Data).getSubscriberNumber() +" Added Successfully!");
 				});
 
 			}

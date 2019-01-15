@@ -260,7 +260,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="6.0" layoutY="23.0" text="Loged as Library Manager" textFill="#a0a2ab">
+            <Label layoutX="6.0" layoutY="23.0" text="Logged as Library Manager" textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />
                </font>
