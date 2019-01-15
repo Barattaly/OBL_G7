@@ -135,7 +135,7 @@ public class GuiManager
 		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
 	}
 
-	public static void preventLettersType(JFXTextField textField) 
+	public static void preventLettersTypeInTextField(JFXTextField textField) 
 	{
 		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
 		   {
@@ -144,6 +144,18 @@ public class GuiManager
 			    if (!"0123456789".contains(e.getCharacter())) {
 				        e.consume();
 				}
+			   }
+			});
+	}
+	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength) 
+	{
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
+		   {
+			   @Override
+			   public void handle(KeyEvent e) {
+			    if (textField.getText().length() >= maxLength) {                    
+	                e.consume();
+	            }
 			   }
 			});
 	}
