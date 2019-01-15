@@ -7,10 +7,12 @@ import java.util.ResourceBundle;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.DBMessage;
+import entities.DBMessage.DBAction;
 import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
@@ -70,9 +72,14 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 	@FXML
 	private JFXPasswordField passwordTextfield;
+	
+    @FXML
+    private JFXTextField txt_subscriberID;
 
 	@FXML
 	private Label warningLabel;
+    @FXML
+    private JFXButton btn_viewSubscriberCard;
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
@@ -317,9 +324,19 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Subscriber "+ ((Subscriber)msg.Data).getSubscriberNumber() +" Added Successfully!");
 				});
-
 			}
+			break;
 		}
+		case ViewSubscriberCard:
+			if (msg.Data == null)
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowErrorPopup("This subscriber is not exist ");
+				});
+			}
+			Subscriber newSub = (Subscriber) msg.Data;
+			
+			
 		}
 	}
 
@@ -353,5 +370,34 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 		return result;
 	}
+	
+    @FXML
+    void btn_viewSubscriberCardClick(ActionEvent event)
+    {
+    	final Stage dialog = new Stage();
+    	VBox dialogVbox = new VBox(30);
+    	
+    	btn_viewSubscriberCard.setOnMouseClicked(new EventHandler<Event>()
+    		{
+    		@Override
+			public void handle(Event e)
+			{
+
+				if (txt_subscriberID.getText().isEmpty())
+				{
+					GuiManager.ShowErrorPopup("Subscriber ID can't be empty");
+				}
+				
+				else
+				{
+					GuiManager.client.GetSubscriberFromDB(txt_subscriberID.getText());
+				}
+			}
+    		});
+
+    //	Scene dialogScene = new Scene(dialogVbox);
+      //  dialog.setScene(dialogScene);
+	   // dialog.showAndWait();
+    }
 
 }

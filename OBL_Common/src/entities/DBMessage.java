@@ -15,6 +15,6 @@ public class DBMessage implements Serializable
 	
 	public enum DBAction
 	{
-		UpdateUserLogout,CheckUser,isDBRuning,CreateSubscriber;
+		UpdateUserLogout,CheckUser,isDBRuning,CreateSubscriber,ViewSubscriberCard;
 	}
 }

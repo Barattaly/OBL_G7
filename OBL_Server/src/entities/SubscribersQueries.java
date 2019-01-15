@@ -21,8 +21,35 @@ public class SubscribersQueries
 		String queryMsg ="SELECT * FROM obl_db.subscribers WHERE subscriberID ='" +subscriber.getId() + "'";
 		return queryMsg;
 	}
+	//shiran function
+	public static String getSubscriberFullInformationByID(String subscriberID)
+	{
+		if (subscriberID == null)
+			return null;
+		String queryMsg ="SELECT * FROM obl_db.users INNER JOIN obl_db.subscribers"
+				+ " ON obl_db.subscribers.subscriberID = obl_db.users.id "
+				+ "WHERE obl_db.users.id='"+subscriberID+"';";
+		return queryMsg;
+	}
+	
 	
 	public static Subscriber CreateSubscriberFromRS(ResultSet rs)
+	{
+		Subscriber subscriberToCreate = null;
+		try
+		{
+			rs.next();
+			subscriberToCreate = new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+					rs.getInt(6), rs.getInt(7));
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		} 
+		return subscriberToCreate;
+	}
+	
+	public static Subscriber CreateSubscriberFromFullInformationRS(ResultSet rs)
 	{
 		Subscriber subscriberToCreate = null;
 		try

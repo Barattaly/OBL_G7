@@ -109,5 +109,19 @@ public class ClientController extends AbstractClient
 		
 	}
 
-}
+	
+
+	public void GetSubscriberFromDB(String id) //in this function we send to the server id from txtFiled in case to get the subscriber from db
+	{
+		DBMessage message = new DBMessage(DBAction.ViewSubscriberCard, id);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
+	}
 //End of ClientController class

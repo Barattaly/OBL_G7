@@ -1,14 +1,16 @@
 package gui;
 
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -41,6 +43,7 @@ public class GuiManager
 			put(SCREENS.bookInformation, "/gui/BookInformationScreen.fxml");
 			put(SCREENS.subscriber, "/gui/SubscriberScreen.fxml");
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
+			
 		}
 	};
 
@@ -132,5 +135,5 @@ public class GuiManager
 	{
 		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
 	}
-
+	
 }
