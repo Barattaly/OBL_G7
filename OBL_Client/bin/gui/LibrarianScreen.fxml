@@ -21,7 +21,7 @@
    <center>
       <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;">
          <children>
-            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
+            <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0">
                <children>
                   <Label fx:id="userWelcomLabel" layoutX="56.0" layoutY="150.0" text="Hello Galina!" textFill="#a0a2ab">
                      <font>
@@ -252,7 +252,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="15.0" layoutY="32.0" text="Loged as Librarian" textFill="#a0a2ab">
+            <Label layoutX="15.0" layoutY="32.0" text="Logged as Librarian" textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />
                </font>

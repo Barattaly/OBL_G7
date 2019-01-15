@@ -15,6 +15,7 @@ import entities.DBMessage;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
 import entities.User;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -22,6 +23,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -29,9 +31,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -153,7 +157,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("OBL Log Out");
-		alert.setHeaderText("Are you sure you want to log out ?");
+		alert.setHeaderText("Are you sure you want to log out?");
 		Optional<ButtonType> option = alert.showAndWait();
 		if (option.get() == ButtonType.OK)
 		{
@@ -164,7 +168,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		else if (option.get() == ButtonType.CANCEL)
 		{
 			alert.close();
-
 		}
 
 	}
@@ -181,9 +184,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			return;
 		}
 		Subscriber newSubscriberToCreate = createSubscriberFromTextFields();
-
+		
 		GuiManager.client.CreateSubscriber(newSubscriberToCreate);
-
 	}
 
 	@FXML
@@ -191,50 +193,85 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	{
 		final Stage dialog = new Stage();
 		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.setTitle("Borrow Book");
-		Label headline = new Label("Enter book copy id and subscriber id");
+		dialog.setHeight(400);
+		dialog.setWidth(400);
+		dialog.setTitle("Borrow a copy of a Book");
+		dialog.getIcons().add(new Image("/resources/Braude.png"));
+		Label headline = new Label("Enter book catalog number, \nbook copy id and subscriber id");
+		headline.setStyle("-fx-text-fill: #a0a2ab");
 		headline.setFont(new Font(16));
-		VBox dialogVbox = new VBox(30);
+		VBox dialogVbox = new VBox(15);
+		Label bookCatalogNumberlab = new Label("Book catalog number: ");
+		bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCatalogNumber = new JFXTextField();
+		bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCatalogNumber);
 		Label bookCopylab = new Label("Book copy ID: ");
-		TextField bookCopy = new TextField();
+		bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCopy = new JFXTextField();
+		bookCopy.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCopy);
 		Label subscriberIDlab = new Label("Subscriber ID: ");
-		TextField subscriberID = new TextField();
+		subscriberIDlab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField subscriberID = new JFXTextField();
+		subscriberID.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(subscriberID);
+		GuiManager.limitTextFieldMaxCharacters(subscriberID, 9);
 		GridPane grid = new GridPane();
-		grid.add(bookCopylab, 1, 1);
-		grid.add(bookCopy, 2, 1);
-		grid.add(subscriberIDlab, 1, 2);
-		grid.add(subscriberID, 2, 2);
+		grid.add(bookCatalogNumberlab, 1, 1);
+		grid.add(bookCatalogNumber, 2, 1);
+		grid.add(bookCopylab, 1, 2);
+		grid.add(bookCopy, 2, 2);
+		grid.add(subscriberIDlab, 1, 3);
+		grid.add(subscriberID, 2, 3);
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setAlignment(Pos.CENTER);
 		dialogVbox.setAlignment(Pos.CENTER);
-		Button button = new Button("Borrow");
+		Label warningMessageLab = new Label("");
+		warningMessageLab.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
+		JFXButton button = new JFXButton("Borrow");
+		button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
+		dialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
+
 		button.setOnMouseClicked(new EventHandler<Event>()
 		{
 			@Override
 			public void handle(Event e)
 			{
-				if (bookCopy.getText().isEmpty() && subscriberID.getText().isEmpty())
+				String warningMessage = "";
+				warningMessageLab.setText(warningMessage);
+				if (bookCatalogNumber.getText().isEmpty() && bookCopy.getText().isEmpty()
+						&& subscriberID.getText().isEmpty())
 				{
-					GuiManager.ShowErrorPopup("Enter book copy id and subscriber id please");
+					warningMessage = "Please fill all of the fields";
+					// GuiManager.ShowErrorPopup("Enter book catalog number, book copy id and
+					// subscriber id please");
+				} else if (bookCatalogNumber.getText().isEmpty())
+				{
+					warningMessage = "Please enter book catalog number";
+					// GuiManager.ShowErrorPopup("Enter book catalog number please");
 				} else if (bookCopy.getText().isEmpty())
 				{
-					GuiManager.ShowErrorPopup("Enter book copy id please");
-
+					warningMessage = "Please enter book copy id";
+					// GuiManager.ShowErrorPopup("Enter book copy id please");
 				} else if (subscriberID.getText().isEmpty())
 				{
-					GuiManager.ShowErrorPopup("Enter subscriber id please");
+					warningMessage = "Please enter subscriber id";
+					// GuiManager.ShowErrorPopup("Enter subscriber id please");
 				} else
 				{
-					dialog.close();
+					// גישה למסד נתונים
+					// dialog.close();
 				}
+				if (!warningMessage.isEmpty())
+					warningMessageLab.setText(warningMessage);
 			}
 		});
-		dialogVbox.getChildren().addAll(headline, grid, button);
+		dialogVbox.getChildren().addAll(headline, grid, warningMessageLab, button);
 		Scene dialogScene = new Scene(dialogVbox, 300, 200);
 		dialog.setScene(dialogScene);
 		dialog.showAndWait();
-
 	}
 
 	@FXML
@@ -242,18 +279,36 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	{
 		final Stage dialog = new Stage();
 		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.setTitle("Return Book");
-		Label headline = new Label("Enter book copy id");
+		dialog.setTitle("Return a copy of a Book");
+		dialog.getIcons().add(new Image("/resources/Braude.png"));
+		dialog.setHeight(250);
+		dialog.setWidth(400);
+		Label headline = new Label("Enter book catalog number and book copy id");
+		headline.setStyle("-fx-text-fill: #a0a2ab");
 		headline.setFont(new Font(16));
-		VBox dialogVbox = new VBox(30);
+		VBox dialogVbox = new VBox(10);
+		Label bookCatalogNumberlab = new Label("Book catalog number: ");
+		bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCatalogNumber = new JFXTextField();
+		bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCatalogNumber);
 		Label bookCopylab = new Label("Book copy ID: ");
-		TextField bookCopy = new TextField();
+		bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCopy = new JFXTextField();
+		bookCopy.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCopy);
 		GridPane grid = new GridPane();
-		grid.add(bookCopylab, 1, 1);
-		grid.add(bookCopy, 2, 1);
+		grid.add(bookCatalogNumberlab, 1, 1);
+		grid.add(bookCatalogNumber, 2, 1);
+		grid.add(bookCopylab, 1, 2);
+		grid.add(bookCopy, 2, 2);
+		grid.setHgap(10);
+		grid.setVgap(10);
 		grid.setAlignment(Pos.CENTER);
 		dialogVbox.setAlignment(Pos.CENTER);
-		Button button = new Button("Return");
+		JFXButton button = new JFXButton("Return");
+		button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
+		dialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
 		button.setOnMouseClicked(new EventHandler<Event>()
 		{
 			@Override
@@ -273,7 +328,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		Scene dialogScene = new Scene(dialogVbox, 300, 200);
 		dialog.setScene(dialogScene);
 		dialog.showAndWait();
-
 	}
 
 	private Subscriber createSubscriberFromTextFields()
@@ -322,7 +376,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			} else
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("Subscriber "+ ((Subscriber)msg.Data).getSubscriberNumber() +" Added Successfully!");
+					GuiManager.ShowMessagePopup(
+							"Subscriber " + ((Subscriber) msg.Data).getSubscriberNumber() + " Added Successfully!");
 				});
 			}
 			break;

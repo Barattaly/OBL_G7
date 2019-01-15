@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class GuiManager
@@ -135,5 +135,29 @@ public class GuiManager
 	{
 		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
 	}
-	
+
+	public static void preventLettersTypeInTextField(JFXTextField textField) 
+	{
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
+		   {
+			   @Override
+			   public void handle(KeyEvent e) {
+			    if (!"0123456789".contains(e.getCharacter())) {
+				        e.consume();
+				}
+			   }
+			});
+	}
+	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength) 
+	{
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
+		   {
+			   @Override
+			   public void handle(KeyEvent e) {
+			    if (textField.getText().length() >= maxLength) {                    
+	                e.consume();
+	            }
+			   }
+			});
+	}
 }

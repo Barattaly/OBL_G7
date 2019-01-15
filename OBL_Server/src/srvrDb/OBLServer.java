@@ -3,7 +3,13 @@ package srvrDb;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import java.util.List;
+
+
 import entities.UsersQueries;
+import entities.Book;
+import entities.BooksQueries;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.SubscribersQueries;
@@ -84,7 +90,7 @@ public class OBLServer extends AbstractServer
 			}
 
 		}
-		//update gui for getting message
+		// update gui for getting message
 		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
 		if (!isDBRunning())
 			return;
@@ -95,18 +101,23 @@ public class OBLServer extends AbstractServer
 
 			case CheckUser:
 			{
-				CheckIfUserExist((User) dbMessage.Data, client);
+				checkIfUserExist((User) dbMessage.Data, client);
 				break;
 			}
 			case UpdateUserLogout:
 			{
-				UpdateUserLogout((User) dbMessage.Data, client);
-				
+				updateUserLogout((User) dbMessage.Data, client);
+
 				break;
 			}
 			case CreateSubscriber:
 			{
-				CreateSubscriber((Subscriber) dbMessage.Data, client);
+				createSubscriber((Subscriber) dbMessage.Data, client);
+				break;
+			}
+			case GetAllBooksList:
+			{
+				getListOfAllBooks(client);
 				break;
 			}
 			case ViewSubscriberCard: 
@@ -121,11 +132,29 @@ public class OBLServer extends AbstractServer
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-
+			try
+			{
+				client.sendToClient(null);
+			} catch (IOException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 
-	private void UpdateUserLogout(User userToUpdate, ConnectionToClient client)
+	private void getListOfAllBooks(ConnectionToClient client) throws SQLException, IOException
+	{
+		String query = BooksQueries.SelectAllBooks();
+		ResultSet rs = oblDB.executeQuery(query);
+		int numOfROws = getRowCount(rs);
+		rs.next();
+		List<Book> booksList= BooksQueries.CreateBookListFromRS(rs);
+		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
+		
+	}
+
+	private void updateUserLogout(User userToUpdate, ConnectionToClient client)
 	{
 		if (userToUpdate == null)
 			return;
@@ -134,7 +163,7 @@ public class OBLServer extends AbstractServer
 		oblDB.executeUpdate(query);
 	}
 
-	private void CheckIfUserExist(User userToCheck, ConnectionToClient client) throws SQLException, IOException
+	private void checkIfUserExist(User userToCheck, ConnectionToClient client) throws SQLException, IOException
 	{
 		String query = UsersQueries.searchUserByUserNameAndPass(userToCheck);
 		ResultSet rs = oblDB.executeQuery(query);
@@ -165,7 +194,7 @@ public class OBLServer extends AbstractServer
 
 	}
 
-	private void CreateSubscriber(Subscriber subscriberToCreate, ConnectionToClient client) throws IOException
+	private void createSubscriber(Subscriber subscriberToCreate, ConnectionToClient client) throws IOException
 	{
 		User userToCheck = (User) subscriberToCreate;
 		if (isUserExist(userToCheck))
@@ -179,12 +208,12 @@ public class OBLServer extends AbstractServer
 		oblDB.executeUpdate(query);// add to Users table
 		query = SubscribersQueries.createSubscriber(subscriberToCreate);
 		oblDB.executeUpdate(query);// add to Subscribers table
-		
+
 		query = SubscribersQueries.searchSubscriberByID(subscriberToCreate);
 		ResultSet rs = oblDB.executeQuery(query);
 		subscriberToCreate = SubscribersQueries.CreateSubscriberFromRS(rs);
 		subscriberToCreate.FillInformationFromUser(userToCheck);
-		
+
 		DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, subscriberToCreate);
 		client.sendToClient(returnMsg);
 	}
