@@ -178,8 +178,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		Subscriber newSubscriberToCreate = createSubscriberFromTextFields();
 
 		GuiManager.client.CreateSubscriber(newSubscriberToCreate);
-		
-		
 
 	}
 

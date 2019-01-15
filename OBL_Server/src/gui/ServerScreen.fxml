@@ -47,7 +47,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="dbNameTextField" layoutX="177.0" layoutY="71.0" />
+            <TextField fx:id="dbNameTextField" disable="true" editable="false" layoutX="177.0" layoutY="71.0" text="obl_db" />
             <TextField fx:id="dbPassTextField" layoutX="177.0" layoutY="146.0" />
             <Button fx:id="_connectButton" layoutX="201.0" layoutY="203.0" mnemonicParsing="false" onAction="#connectBtnClicked" prefHeight="39.0" prefWidth="98.0" text="Connect">
                <font>

@@ -3,8 +3,6 @@ package gui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import client.ClientController;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;

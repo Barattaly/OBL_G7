@@ -147,7 +147,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	{
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("OBL Log Out");
-		alert.setHeaderText("Are you sure you want to log out ?");
+		alert.setHeaderText("Are you sure you want to log out?");
 		Optional<ButtonType> option = alert.showAndWait();
 		if (option.get() == ButtonType.OK)
 		{

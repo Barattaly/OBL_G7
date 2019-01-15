@@ -1,5 +1,6 @@
 package srvrDb;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import entities.UsersQueries;
@@ -83,6 +84,7 @@ public class OBLServer extends AbstractServer
 			}
 
 		}
+		//update gui for getting message
 		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
 		if (!isDBRunning())
 			return;
@@ -93,64 +95,18 @@ public class OBLServer extends AbstractServer
 
 			case CheckUser:
 			{
-				User userToCheck = (User) dbMessage.Data;
-				String query = UsersQueries.searchUserByUserNameAndPass(userToCheck);
-				ResultSet rs = oblDB.executeOBLQuery(query);
-				int rowsNumber = getRowCount(rs);
-				if (rowsNumber == 1)
-				{
-					rs.next();
-					User user = UsersQueries.CreateUserFromRS(rs);
-					DBMessage returnMsg;
-					if (user.getLoginStatus().equals("on"))
-					{
-						user = new User(null, null);
-						returnMsg = new DBMessage(DBAction.RETCheckUser, user);
-					} else
-					{
-						user.setLoginStatus("on");
-						query = UsersQueries.updateUserloginStatus(user);
-						oblDB.executeUpdate(query);
-						returnMsg = new DBMessage(DBAction.RETCheckUser, user);
-					}
-					client.sendToClient(returnMsg);
-					return;
-				} else
-				{
-					DBMessage returnMsg = new DBMessage(DBAction.RETCheckUser, null);
-					client.sendToClient(returnMsg);
-				}
-
+				CheckIfUserExist((User) dbMessage.Data, client);
 				break;
 			}
 			case UpdateUserLogout:
 			{
-				User userToUpdate = (User) dbMessage.Data;
-				if (userToUpdate == null)
-					return;
-				userToUpdate.setLoginStatus("off");
-				String query = UsersQueries.updateUserloginStatus(userToUpdate);
-				oblDB.executeUpdate(query);
+				UpdateUserLogout((User) dbMessage.Data, client);
+				
 				break;
 			}
 			case CreateSubscriber:
 			{
-				User userToCheck = (User) dbMessage.Data;
-				Subscriber subscriberToCreate = (Subscriber) dbMessage.Data;
-				if (isUserExist(userToCheck))
-				{
-					DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, null);
-					client.sendToClient(returnMsg);
-					break;
-				}
-				userToCheck.setType("subscriber");
-				String query = UsersQueries.createSubscriberUser(userToCheck);
-				oblDB.executeUpdate(query);// add to Users table
-				query = SubscribersQueries.createSubscriber(subscriberToCreate);
-				oblDB.executeUpdate(query);// add to Subscribers table
-				System.out.println(query);
-				DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, userToCheck);
-				client.sendToClient(returnMsg);
+				CreateSubscriber((Subscriber) dbMessage.Data, client);
 				break;
 			}
 			default:
@@ -164,13 +120,77 @@ public class OBLServer extends AbstractServer
 		}
 	}
 
+	private void UpdateUserLogout(User userToUpdate, ConnectionToClient client)
+	{
+		if (userToUpdate == null)
+			return;
+		userToUpdate.setLoginStatus("off");
+		String query = UsersQueries.updateUserloginStatus(userToUpdate);
+		oblDB.executeUpdate(query);
+	}
+
+	private void CheckIfUserExist(User userToCheck, ConnectionToClient client) throws SQLException, IOException
+	{
+		String query = UsersQueries.searchUserByUserNameAndPass(userToCheck);
+		ResultSet rs = oblDB.executeQuery(query);
+		int rowsNumber = getRowCount(rs);
+		if (rowsNumber == 1)
+		{
+			rs.next();
+			User user = UsersQueries.CreateUserFromRS(rs);
+			DBMessage returnMsg;
+			if (user.getLoginStatus().equals("on"))
+			{
+				user = new User(null, null);
+				returnMsg = new DBMessage(DBAction.CheckUser, user);
+			} else
+			{
+				user.setLoginStatus("on");
+				query = UsersQueries.updateUserloginStatus(user);
+				oblDB.executeUpdate(query);
+				returnMsg = new DBMessage(DBAction.CheckUser, user);
+			}
+			client.sendToClient(returnMsg);
+			return;
+		} else
+		{
+			DBMessage returnMsg = new DBMessage(DBAction.CheckUser, null);
+			client.sendToClient(returnMsg);
+		}
+
+	}
+
+	private void CreateSubscriber(Subscriber subscriberToCreate, ConnectionToClient client) throws IOException
+	{
+		User userToCheck = (User) subscriberToCreate;
+		if (isUserExist(userToCheck))
+		{
+			DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		userToCheck.setType("subscriber");
+		String query = UsersQueries.createSubscriberUser(userToCheck);
+		oblDB.executeUpdate(query);// add to Users table
+		query = SubscribersQueries.createSubscriber(subscriberToCreate);
+		oblDB.executeUpdate(query);// add to Subscribers table
+		
+		query = SubscribersQueries.searchSubscriberByID(subscriberToCreate);
+		ResultSet rs = oblDB.executeQuery(query);
+		subscriberToCreate = SubscribersQueries.CreateSubscriberFromRS(rs);
+		subscriberToCreate.FillInformationFromUser(userToCheck);
+		
+		DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, subscriberToCreate);
+		client.sendToClient(returnMsg);
+	}
+
 	private boolean isUserExist(User userToCheck)
 	{
 		String query = UsersQueries.searchUserByUserName(userToCheck);// search by user name
-		ResultSet rsUserName = oblDB.executeOBLQuery(query);
+		ResultSet rsUserName = oblDB.executeQuery(query);
 
 		query = UsersQueries.searchUserByID(userToCheck);// search by user name
-		ResultSet rsID = oblDB.executeOBLQuery(query);
+		ResultSet rsID = oblDB.executeQuery(query);
 
 		int numberOfIDs = getRowCount(rsID);
 		int numberOfUserNames = getRowCount(rsUserName);

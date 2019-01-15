@@ -87,7 +87,7 @@ public class LoginController implements IClientUI, Initializable
 	{
 		try
 		{
-			if (msg.Action == DBAction.RETCheckUser)
+			if (msg.Action == DBAction.CheckUser)
 			{
 				if (((User) msg.Data) != null)// if the user exist
 				{
