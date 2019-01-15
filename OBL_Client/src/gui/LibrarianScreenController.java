@@ -33,6 +33,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -182,6 +183,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	
+	//@SuppressWarnings("unchecked")
 	@FXML
 	void btn_borrowClick(ActionEvent event) {
 	   final Stage dialog = new Stage();
@@ -198,14 +200,17 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	   bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
 	   JFXTextField bookCatalogNumber = new JFXTextField();
 	   bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
+	   GuiManager.preventLettersType(bookCatalogNumber);
 	   Label bookCopylab = new Label("Book copy ID: ");
 	   bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
 	   JFXTextField bookCopy = new JFXTextField();
 	   bookCopy.setStyle("-fx-text-fill: #a0a2ab");
+	   GuiManager.preventLettersType(bookCopy);
 	   Label subscriberIDlab = new Label("Subscriber ID: ");
 	   subscriberIDlab.setStyle("-fx-text-fill: #a0a2ab");
 	   JFXTextField subscriberID = new JFXTextField();
 	   subscriberID.setStyle("-fx-text-fill: #a0a2ab");
+	   GuiManager.preventLettersType(subscriberID);
 	   GridPane grid = new GridPane();
 	   grid.add(bookCatalogNumberlab, 1, 1);
 	   grid.add(bookCatalogNumber, 2, 1);
@@ -222,30 +227,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	   JFXButton button = new JFXButton("Borrow");
 	   button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
 	   dialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-
+	   
 	   button.setOnMouseClicked(new EventHandler<Event>()
 	   {
 		   @Override
 		   public void handle(Event e)
 		   {
 			   String warningMessage = "";
-			   /*
-				try
-				{
-					double tryParse = Integer.valueOf(bookCopy.getText());
-				} 
-				catch (Exception ex)
-				{
-					warningMessage = "Wrong book copy id format.\n";
-				}
-				try
-				{
-					double tryParse = Integer.valueOf(subscriberID.getText());
-				} 
-				catch (Exception ex)
-				{
-					warningMessage = "Wrong subscriber id format.\n";
-				}*/	
 			   if (bookCatalogNumber.getText().isEmpty() && bookCopy.getText().isEmpty() && subscriberID.getText().isEmpty())
 				{
 					GuiManager.ShowErrorPopup("Enter book catalog number, book copy id and subscriber id please");
@@ -267,7 +255,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					//גישה למסד נתונים
 					//dialog.close();
 				}
-				if (!bookCatalogNumber.getText().isEmpty())
+				/*if (!bookCatalogNumber.getText().isEmpty())
 				{
 					try
 					{
@@ -279,15 +267,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					}
 				}
 				if(!warningMessage.isEmpty())
-					warningMessageLab.setText(warningMessage);
+					warningMessageLab.setText(warningMessage);*/
 			}
 		});
 		dialogVbox.getChildren().addAll(headline ,grid,warningMessageLab, button);
 		Scene dialogScene = new Scene(dialogVbox, 300, 200);
 		dialog.setScene(dialogScene);
 		dialog.showAndWait();
-	
-					
 	    }
 	
 	@FXML
@@ -306,10 +292,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
 			JFXTextField bookCatalogNumber = new JFXTextField();
 			bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
+			GuiManager.preventLettersType(bookCatalogNumber);
 			Label bookCopylab = new Label("Book copy ID: ");
 			bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
 			JFXTextField bookCopy = new JFXTextField();
 			bookCopy.setStyle("-fx-text-fill: #a0a2ab");
+			GuiManager.preventLettersType(bookCopy);
 			GridPane grid = new GridPane();
 			grid.add(bookCatalogNumberlab, 1, 1);
 			grid.add(bookCatalogNumber, 2, 1);
@@ -373,8 +361,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			warningLabel.setText(warningMessage);
 		return subscriber;
 	}
-
-
 
 	@Override
 	public void getMessageFromServer(DBMessage msg)
