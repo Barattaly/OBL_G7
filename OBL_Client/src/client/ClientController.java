@@ -8,6 +8,7 @@ import ocsf.client.*;
 
 import java.io.*;
 
+import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
@@ -99,6 +100,18 @@ public class ClientController extends AbstractClient
 	public void CreateSubscriber(Subscriber subscriber)
 	{
 		DBMessage message = new DBMessage(DBAction.CreateSubscriber, subscriber);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
+	public void createNewBorrow(BorrowACopyOfBook borrow)
+	{
+		DBMessage message = new DBMessage(DBAction.CreateNewBorrow, borrow);
 		try
 		{
 			sendToServer(message);

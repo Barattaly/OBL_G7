@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import entities.UsersQueries;
+import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.SubscribersQueries;
@@ -109,6 +110,11 @@ public class OBLServer extends AbstractServer
 				CreateSubscriber((Subscriber) dbMessage.Data, client);
 				break;
 			}
+			case CreateNewBorrow:
+			{
+				//CreateNewBorrow((BorrowACopyOfBook) dbMessage.Data, client)
+				break;
+			}
 			default:
 				break;
 			}
@@ -197,11 +203,50 @@ public class OBLServer extends AbstractServer
 
 		if (numberOfUserNames > 0 || numberOfIDs > 0) // means that the user already exist
 		{
-			return true;
+			return true; 
 		}
 		return false;
 	}
 
+	/*private void CreateNewBorrow(BorrowACopyOfBook borrowToAdd, ConnectionToClient client) throws IOException
+	{
+		if (!isBookExist(borrowToAdd))
+		{
+			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		
+		String query = BooksQueries.addNewBorrow(borrowToAdd);
+		oblDB.executeUpdate(query);// add a new borrow to Borrows table
+		query = CopiesQueries.changeCopyStatus(borrowToAdd);
+		oblDB.executeUpdate(query);// update the copy status
+		
+		query = SubscribersQueries.searchSubscriberByID(borrowToAdd);
+		ResultSet rs = oblDB.executeQuery(query);
+		subscriberToCreate = SubscribersQueries.CreateSubscriberFromRS(rs);
+		subscriberToCreate.FillInformationFromUser(userToCheck);
+		
+		DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
+		client.sendToClient(returnMsg);
+	}
+	
+	private boolean isBookExist(BorrowACopyOfBook bookToCheck)
+	{
+		String query = BooksQueries.searchBookByCatalogNumber(bookToCheck);// search by user name
+		ResultSet rsCatalogNumber = oblDB.executeQuery(query);
+
+		int numberOfCatalogNumbers = getRowCount(rsCatalogNumber);
+		if (numberOfCatalogNumbers > 0) // means that the book exist
+		{
+			return true;
+		}
+		return false;
+	}*/
+
+	
+	
+	
 	/**
 	 * This method overrides the one in the superclass. Called when the server
 	 * starts listening for connections.
