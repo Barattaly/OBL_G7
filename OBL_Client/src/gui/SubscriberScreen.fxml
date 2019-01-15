@@ -297,7 +297,7 @@
                   <Image url="@../../bin/resources/Login_Username.png" />
                </image>
             </ImageView>
-            <Label layoutX="14.0" layoutY="32.0" text="Loged as Subscriber" textFill="#a0a2ab">
+            <Label layoutX="14.0" layoutY="32.0" text="Logged as Subscriber" textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />
                </font>

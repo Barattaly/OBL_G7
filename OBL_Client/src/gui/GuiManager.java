@@ -3,18 +3,20 @@ package gui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class GuiManager
@@ -133,4 +135,28 @@ public class GuiManager
 		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
 	}
 
+	public static void preventLettersTypeInTextField(JFXTextField textField) 
+	{
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
+		   {
+			   @Override
+			   public void handle(KeyEvent e) {
+			    if (!"0123456789".contains(e.getCharacter())) {
+				        e.consume();
+				}
+			   }
+			});
+	}
+	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength) 
+	{
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
+		   {
+			   @Override
+			   public void handle(KeyEvent e) {
+			    if (textField.getText().length() >= maxLength) {                    
+	                e.consume();
+	            }
+			   }
+			});
+	}
 }
