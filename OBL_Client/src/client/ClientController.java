@@ -27,6 +27,8 @@ public class ClientController extends AbstractClient
 
 	public void handleMessageFromServer(Object msg)
 	{
+		if(msg==null)
+			GuiManager.ShowErrorPopup("Something went wrong.\nPlease restart the progrem");
 		if (!(msg instanceof DBMessage))
 			return;// check if the message is DBMessage and not something else
 		DBMessage message = (DBMessage) msg;
@@ -107,6 +109,18 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 		
+	}
+
+	public void getAllBooks()
+	{
+		DBMessage message = new DBMessage(DBAction.GetAllBooksList, null);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 }
