@@ -37,4 +37,12 @@ public class SubscribersQueries
 		} 
 		return subscriberToCreate;
 	}
+	
+	public static String searchSubscriberByID(BorrowACopyOfBook borrowToAdd)
+	{
+		if (borrowToAdd == null)
+			return null;
+		String queryMsg ="SELECT * FROM obl_db.subscribers WHERE subscriberID ='" +borrowToAdd.getSubscriberId() + "'";
+		return queryMsg;
+	}
 }

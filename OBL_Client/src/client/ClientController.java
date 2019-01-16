@@ -8,6 +8,7 @@ import ocsf.client.*;
 
 import java.io.*;
 
+import entities.Book;
 import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
@@ -135,6 +136,18 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-
+	
+	public void getBookClassification(Book bookToCheck)
+	{
+		DBMessage message = new DBMessage(DBAction.GetBookClassification, bookToCheck);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
 }
 //End of ClientController class

@@ -37,24 +37,24 @@ public class SearchBookController implements Initializable, IClientUI
 	private JFXTextField freeSearchTextfield;
 
 	@FXML
-	private TableView<Book> BookTable;
+	private TableView<ObservableBook> BookTable;
 
 	@FXML
-	private TableColumn<Book, String> namecol;
+	private TableColumn<ObservableBook, String> namecol;
 
 	@FXML
-	private TableColumn<Book, String> authorcol;
+	private TableColumn<ObservableBook, String> authorcol;
 
 	@FXML
-	private TableColumn<Book, Integer> catalognumbercol;
+	private TableColumn<ObservableBook, Integer> catalognumbercol;
 
 	@FXML
-	private TableColumn<Book, String> locationcol;
+	private TableColumn<ObservableBook, String> locationcol;
 
 	@FXML
-	private TableColumn<Book, String> returndatecol;
+	private TableColumn<ObservableBook, String> returndatecol;
 
-	private ObservableList<Book> booklist;
+	private ObservableList<ObservableBook> booklist;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -66,18 +66,18 @@ public class SearchBookController implements Initializable, IClientUI
 		locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
 		returndatecol.setCellValueFactory(new PropertyValueFactory<>("Returndate"));
 
-		Book book1 = new Book("Harry Potter", "J.K.Rolling", 12, "A6 313", "14/10/2018");
-		Book book2 = new Book("Kofiko", "Galila Ron Feder", 456789, "A8 949", "12/3/2019");
+		ObservableBook book1 = new ObservableBook("Harry Potter", "J.K.Rolling", 12, "A6 313", "14/10/2018");
+		ObservableBook book2 = new ObservableBook("Kofiko", "Galila Ron Feder", 456789, "A8 949", "12/3/2019");
 		booklist = FXCollections.observableArrayList(book1, book2);
 
 		BookTable.setItems(booklist);
 
 		BookTable.setRowFactory(tv -> { // press on row in book table to open book information
-			TableRow<Book> row = new TableRow<>();
+			TableRow<ObservableBook> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
-					Book rowData = row.getItem();
+					ObservableBook rowData = row.getItem();
 					System.out.println("Double click on: " + rowData.getCatalognumber());
 				}
 			});

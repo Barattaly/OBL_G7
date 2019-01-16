@@ -1,16 +1,22 @@
 package gui;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.time.LocalDate;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
+import entities.Book;
 import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
@@ -29,6 +35,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -44,8 +51,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class LibrarianScreenController implements Initializable, IClientUI
-{
+public class LibrarianScreenController implements Initializable, IClientUI {
 	private User userLogedIn;
 	@FXML
 	private Label userWelcomLabel;
@@ -80,12 +86,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	private Label warningLabel;
 
-	final Stage borrowDialog = new Stage();
-	final Stage returnDialog = new Stage();
+	private Stage borrowDialog = null;
+	private Stage returnDialog = null;
+	private JFXDatePicker returnDate = null;
 
 	@FXML
-	void btn_homeDisplay(MouseEvent event)
-	{
+	void btn_homeDisplay(MouseEvent event) {
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -98,8 +104,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_createNewSubscriberCardDisplay(MouseEvent event)
-	{
+	void btn_createNewSubscriberCardDisplay(MouseEvent event) {
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(true);
 		pane_searchBook.setVisible(false);
@@ -111,8 +116,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_booksDisplay(MouseEvent event)
-	{
+	void btn_booksDisplay(MouseEvent event) {
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(true);
@@ -124,8 +128,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_searchSubscriberCardDisplay(MouseEvent event)
-	{
+	void btn_searchSubscriberCardDisplay(MouseEvent event) {
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -136,8 +139,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_searchSubscriberCard.setOpacity(0.5);
 	}
 
-	public void initialize(URL arg0, ResourceBundle arg1)
-	{
+	public void initialize(URL arg0, ResourceBundle arg1) {
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -150,34 +152,29 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void logOutDisplay(MouseEvent event)
-	{ // logout
+	void logOutDisplay(MouseEvent event) { // logout
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("OBL Log Out");
 		alert.setHeaderText("Are you sure you want to log out?");
 		Optional<ButtonType> option = alert.showAndWait();
-		if (option.get() == ButtonType.OK)
-		{
+		if (option.get() == ButtonType.OK) {
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			GuiManager.SwitchScene(SCREENS.login);
 		}
 
-		else if (option.get() == ButtonType.CANCEL)
-		{
+		else if (option.get() == ButtonType.CANCEL) {
 			alert.close();
 		}
 
 	}
 
 	@FXML
-	void btn_createSubscriberCardDisplay(ActionEvent event)
-	{
+	void btn_createSubscriberCardDisplay(ActionEvent event) {
 		warningLabel.setText("");
 		if (idNumberTextfield.getText().isEmpty() || userNameTextfield.getText().isEmpty()
 				|| firstNameTextfield.getText().isEmpty() || lastNameTextfield.getText().isEmpty()
-				|| passwordTextfield.getText().isEmpty())
-		{
+				|| passwordTextfield.getText().isEmpty()) {
 			warningLabel.setText("Please fill all the requierd field.");
 			return;
 		}
@@ -187,213 +184,280 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 	}
 
-	
 	@FXML
-	void btn_borrowClick(ActionEvent event) {
-	   borrowDialog.initModality(Modality.APPLICATION_MODAL);
-	   borrowDialog.setHeight(400);
-	   borrowDialog.setWidth(400);
-	   borrowDialog.setTitle("Borrow a copy of a Book");	
-	   borrowDialog.getIcons().add(new Image("/resources/Braude.png"));
-	   Label headline = new Label("Enter book catalog number, \nbook copy id and subscriber id");
-	   headline.setStyle("-fx-text-fill: #a0a2ab");
-	   headline.setFont(new Font(16));
-	   VBox borrowDialogVbox = new VBox(15);
-	   Label bookCatalogNumberlab = new Label("Book catalog number: ");
-	   bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
-	   JFXTextField bookCatalogNumber = new JFXTextField();
-	   bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
-	   GuiManager.preventLettersTypeInTextField(bookCatalogNumber);
-	   Label bookCopylab = new Label("Book copy ID: ");
-	   bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
-	   JFXTextField bookCopyId = new JFXTextField();
-	   bookCopyId.setStyle("-fx-text-fill: #a0a2ab");
-	   GuiManager.preventLettersTypeInTextField(bookCopyId);
-	   Label subscriberIDlab = new Label("Subscriber ID: ");
-	   subscriberIDlab.setStyle("-fx-text-fill: #a0a2ab");
-	   JFXTextField subscriberID = new JFXTextField();
-	   subscriberID.setStyle("-fx-text-fill: #a0a2ab");
-	   GuiManager.preventLettersTypeInTextField(subscriberID);
-	   GuiManager.limitTextFieldMaxCharacters(subscriberID,9);
-	   GridPane grid = new GridPane();
-	   grid.add(bookCatalogNumberlab, 1, 1);
-	   grid.add(bookCatalogNumber, 2, 1);
-	   grid.add(bookCopylab, 1, 2);
-	   grid.add(bookCopyId, 2, 2);
-	   grid.add(subscriberIDlab, 1, 3);
-	   grid.add(subscriberID, 2, 3);
-	   grid.setHgap(10); 
-	   grid.setVgap(10); 
-	   grid.setAlignment(Pos.CENTER);
-	   borrowDialogVbox.setAlignment(Pos.CENTER);
-	   Label warningMessageLab = new Label("");
-	   warningMessageLab.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
-	   JFXButton button = new JFXButton("Borrow");
-	   button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
-	   borrowDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-	   
-	   button.setOnMouseClicked(new EventHandler<Event>()
-	   {
-		   @Override
-		   public void handle(Event e)
-		   {
-			   String warningMessage = "";
-			   warningMessageLab.setText(warningMessage);
-			   if (bookCatalogNumber.getText().isEmpty() && bookCopyId.getText().isEmpty() && subscriberID.getText().isEmpty())
+	void btn_borrowClick(ActionEvent event) 
+	{
+		borrowDialog = new Stage();
+		borrowDialog.initModality(Modality.APPLICATION_MODAL);
+		borrowDialog.setHeight(400);
+		borrowDialog.setWidth(400);
+		borrowDialog.setTitle("Borrow a copy of a Book");
+		borrowDialog.getIcons().add(new Image("/resources/Braude.png"));
+		Label headline = new Label("Enter borrow details");
+		headline.setStyle("-fx-text-fill: #a0a2ab");
+		headline.setFont(new Font(16));
+		VBox borrowDialogVbox = new VBox(15);
+		Label bookCatalogNumberLab = new Label("Book catalog number: ");
+		bookCatalogNumberLab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCatalogNumber = new JFXTextField();
+		bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCatalogNumber);
+		Label bookCopyLab = new Label("Book copy ID: ");
+		bookCopyLab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCopyId = new JFXTextField();
+		bookCopyId.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCopyId);
+		Label subscriberIdLab = new Label("Subscriber ID: ");
+		subscriberIdLab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField subscriberID = new JFXTextField();
+		subscriberID.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(subscriberID);
+		GuiManager.limitTextFieldMaxCharacters(subscriberID, 9);
+		Label returnDateLab = new Label("Return date: ");
+		returnDateLab.setStyle("-fx-text-fill: #a0a2ab");
+		returnDate = new JFXDatePicker();
+		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
+		
+		returnDate.setDayCellFactory(picker -> new DateCell() {
+	        public void updateItem(LocalDate date, boolean empty) {
+	            super.updateItem(date, empty);
+	            LocalDate today = LocalDate.now();
+
+	            setDisable(empty || date.compareTo(today) < 0 || date.compareTo(today.plusDays(14)) > 0);
+	        }
+		});
+		
+		returnDate.setOnMouseClicked(new EventHandler<Event>() 
+		{
+			@Override
+			public void handle(Event e) 
+			{
+				try {
+					//returnDate.setDisable(true);
+					Book bookToCheck = new Book(bookCatalogNumber.getText());
+					GuiManager.client.getBookClassification(bookToCheck);
+				} 
+				catch (Exception ex) 
 				{
-				   warningMessage = "Please fill all of the fields";
-				   //GuiManager.ShowErrorPopup("Enter book catalog number, book copy id and subscriber id please");
+					ex.printStackTrace();
 				}
-				else if (bookCatalogNumber.getText().isEmpty())
+			}
+		});
+		
+		GridPane grid = new GridPane();
+		grid.add(bookCatalogNumberLab, 1, 1);
+		grid.add(bookCatalogNumber, 2, 1);
+		grid.add(bookCopyLab, 1, 2);
+		grid.add(bookCopyId, 2, 2);
+		grid.add(subscriberIdLab, 1, 3);
+		grid.add(subscriberID, 2, 3);
+		grid.add(returnDateLab, 1, 4);
+		grid.add(returnDate, 2, 4);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setAlignment(Pos.CENTER);
+		borrowDialogVbox.setAlignment(Pos.CENTER);
+		Label warningMessageLab = new Label("");
+		warningMessageLab.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
+		JFXButton borrowBtn = new JFXButton("Borrow");
+		borrowBtn.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
+		borrowDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;"); 
+		
+		borrowBtn.setOnMouseClicked(new EventHandler<Event>() 
+		{
+			@Override
+			public void handle(Event e) 
+			{
+				String warningMessage = "";
+				warningMessageLab.setText(warningMessage);
+				if (bookCatalogNumber.getText().isEmpty() && bookCopyId.getText().isEmpty()
+						&& subscriberID.getText().isEmpty() && (returnDate.getValue() == null)) 
 				{
+					warningMessage = "Please fill all of the fields";
+				} else if (bookCatalogNumber.getText().isEmpty()) {
 					warningMessage = "Please enter book catalog number";
-					//GuiManager.ShowErrorPopup("Enter book catalog number please");
-				}
-				else if (bookCopyId.getText().isEmpty())
-				{
+				} else if (bookCopyId.getText().isEmpty()) {
 					warningMessage = "Please enter book copy id";
-					//GuiManager.ShowErrorPopup("Enter book copy id please");
-				}
-				else if (subscriberID.getText().isEmpty())
-				{
+				} else if (subscriberID.getText().isEmpty()) {
 					warningMessage = "Please enter subscriber id";
-					//GuiManager.ShowErrorPopup("Enter subscriber id please");
-				}
-				else
+				} else if (returnDate.getValue() == null) {
+					warningMessage = "Please enter return date";
+				}/* else if (returnDate.getValue() != null)
 				{
-					BorrowACopyOfBook newBorrow = new BorrowACopyOfBook(subscriberID.getText(), bookCatalogNumber.getText(), bookCopyId.getText());
-					
-					GuiManager.client.createNewBorrow(newBorrow);
-					//borrowDialog.close();
+					String retDate = returnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+					int year = returnDate.getValue().getYear();
+					if(year < 2019)
+					{
+						retDate.
+					}
+				}*/ else {
+					try {
+						String retDate = returnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+						
+						BorrowACopyOfBook newBorrow = new BorrowACopyOfBook(subscriberID.getText(), retDate,
+								bookCatalogNumber.getText(), bookCopyId.getText());
+						GuiManager.client.createNewBorrow(newBorrow);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
-				if(!warningMessage.isEmpty())
+				if (!warningMessage.isEmpty())
 					warningMessageLab.setText(warningMessage);
 			}
 		});
-		borrowDialogVbox.getChildren().addAll(headline ,grid,warningMessageLab, button);
+		borrowDialogVbox.getChildren().addAll(headline, grid, warningMessageLab, borrowBtn);
 		Scene borrowDialogScene = new Scene(borrowDialogVbox, 300, 200);
 		borrowDialog.setScene(borrowDialogScene);
 		borrowDialog.showAndWait();
-	    }
-	
+	}
+
 	@FXML
-    void btn_ReturnClick(ActionEvent event) {
-			returnDialog.initModality(Modality.APPLICATION_MODAL);
-			returnDialog.setTitle("Return a copy of a Book");
-			returnDialog.getIcons().add(new Image("/resources/Braude.png"));
-			returnDialog.setHeight(250);
-			returnDialog.setWidth(400);
-			Label headline = new Label("Enter book catalog number and book copy id");
-			headline.setStyle("-fx-text-fill: #a0a2ab");
-			headline.setFont(new Font(16));
-			VBox returnDialogVbox = new VBox(10);
-			Label bookCatalogNumberlab = new Label("Book catalog number: ");
-			bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
-			JFXTextField bookCatalogNumber = new JFXTextField();
-			bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
-			GuiManager.preventLettersTypeInTextField(bookCatalogNumber);
-			Label bookCopylab = new Label("Book copy ID: ");
-			bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
-			JFXTextField bookCopy = new JFXTextField();
-			bookCopy.setStyle("-fx-text-fill: #a0a2ab");
-			GuiManager.preventLettersTypeInTextField(bookCopy);
-			GridPane grid = new GridPane();
-			grid.add(bookCatalogNumberlab, 1, 1);
-			grid.add(bookCatalogNumber, 2, 1);
-			grid.add(bookCopylab, 1, 2);
-			grid.add(bookCopy, 2, 2);
-			grid.setHgap(10); 
-			grid.setVgap(10); 
-			grid.setAlignment(Pos.CENTER);
-			returnDialogVbox.setAlignment(Pos.CENTER);
-			JFXButton button = new JFXButton("Return");
-			button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
-			returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-			button.setOnMouseClicked(new EventHandler<Event>()
-			{
-				@Override
-				public void handle(Event e)
-				{
-	
-					if (bookCopy.getText().isEmpty())
-					{
-						GuiManager.ShowErrorPopup("Enter book copy id please");
-					}
-					else
-					{
-						returnDialog.close();
-					}
+	void btn_ReturnClick(ActionEvent event) {
+		returnDialog = new Stage();
+		returnDialog.initModality(Modality.APPLICATION_MODAL);
+		returnDialog.setTitle("Return a copy of a Book");
+		returnDialog.getIcons().add(new Image("/resources/Braude.png"));
+		returnDialog.setHeight(250);
+		returnDialog.setWidth(400);
+		Label headline = new Label("Enter book catalog number and book copy id");
+		headline.setStyle("-fx-text-fill: #a0a2ab");
+		headline.setFont(new Font(16));
+		VBox returnDialogVbox = new VBox(10);
+		Label bookCatalogNumberlab = new Label("Book catalog number: ");
+		bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCatalogNumber = new JFXTextField();
+		bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCatalogNumber);
+		Label bookCopylab = new Label("Book copy ID: ");
+		bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCopy = new JFXTextField();
+		bookCopy.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCopy);
+		GridPane grid = new GridPane();
+		grid.add(bookCatalogNumberlab, 1, 1);
+		grid.add(bookCatalogNumber, 2, 1);
+		grid.add(bookCopylab, 1, 2);
+		grid.add(bookCopy, 2, 2);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setAlignment(Pos.CENTER);
+		returnDialogVbox.setAlignment(Pos.CENTER);
+		JFXButton button = new JFXButton("Return");
+		button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
+		returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
+		button.setOnMouseClicked(new EventHandler<Event>() {
+			@Override
+			public void handle(Event e) {
+
+				if (bookCopy.getText().isEmpty()) {
+					GuiManager.ShowErrorPopup("Enter book copy id please");
+				} else {
+					returnDialog.close();
 				}
-			});
-			returnDialogVbox.getChildren().addAll(headline ,grid, button);
-			Scene returnDialogScene = new Scene(returnDialogVbox, 300, 200);
-			returnDialog.setScene(returnDialogScene);
-			returnDialog.showAndWait();
-    }
-    
-	private Subscriber createSubscriberFromTextFields()
-	{
+			}
+		});
+		returnDialogVbox.getChildren().addAll(headline, grid, button);
+		Scene returnDialogScene = new Scene(returnDialogVbox, 300, 200);
+		returnDialog.setScene(returnDialogScene);
+		returnDialog.showAndWait();
+	}
+
+	private Subscriber createSubscriberFromTextFields() {
 		Subscriber subscriber = new Subscriber(userNameTextfield.getText(), passwordTextfield.getText(),
 				idNumberTextfield.getText(), firstNameTextfield.getText(), lastNameTextfield.getText());
 		String warningMessage = "";
 		// input checks:
-		if (!phoneNumberTextfield.getText().isEmpty())
-		{
-			try
-			{
+		if (!phoneNumberTextfield.getText().isEmpty()) {
+			try {
 				double tryParse = Integer.valueOf(phoneNumberTextfield.getText());
 				subscriber.setPhoneNumber(phoneNumberTextfield.getText());
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				warningMessage = "Wrong phone number format.\n";
 				subscriber.setPhoneNumber("0");
 			}
-		}
-		else subscriber.setPhoneNumber("0");
+		} else
+			subscriber.setPhoneNumber("0");
 
-		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText()))
-		{
+		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText())) {
 			subscriber.setEmail(emailTextfield.getText());
 		} else
 			warningMessage += "Wrong email format. ";
-		if(!warningMessage.isEmpty())
+		if (!warningMessage.isEmpty())
 			warningLabel.setText(warningMessage);
 		return subscriber;
 	}
+
 	@Override
-	public void getMessageFromServer(DBMessage msg)
-	{
-		switch (msg.Action)
-		{
-		case CreateSubscriber:
-		{
+	public void getMessageFromServer(DBMessage msg) {
+		switch (msg.Action) {
+		case CreateSubscriber: {
 			Subscriber newSub = (Subscriber) msg.Data;
-			if (newSub == null)
-			{
+			if (newSub == null) {
 				Platform.runLater(() -> {
 					warningLabel.setText("Subscriber already exist!");
 				});
-			} else
-			{
+			} else {
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("Subscriber "+ ((Subscriber)msg.Data).getSubscriberNumber() +" Added Successfully!");
+					GuiManager.ShowMessagePopup(
+							"Subscriber " + ((Subscriber) msg.Data).getSubscriberNumber() + " Added Successfully!");
 				});
 
 			}
 			break;
 		}
-		case CreateNewBorrow:
+		case GetBookClassification: 
 		{
-			
+			Book bookToCheck = (Book) msg.Data;
+			if (bookToCheck == null) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Enter book catalog number first"); });
+				returnDate.setDisable(false);
+			}
+			/*else if (bookToCheck.getClassification().equals("ordinary")) 
+			{
+				
+			}
+			else if (bookToCheck.getClassification().equals("wanted")) 
+			{
+				
+			}*/
 			break;
 		}
-		
+		case CreateNewBorrow: 
+		{
+			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
+			if (newBorrow.getBookCatalogNumber().equals("0")) {
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
+				});
+			} else if (newBorrow.getCopyId().equals("0")) {
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
+				});
+			} else if (newBorrow.getSubscriberId().equals("0")) {
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Subscriber ID doesn't exist!");
+				});
+			} else if (newBorrow.getExpectedReturnDate().equals("0")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Wrong date format, pleas enter 'dd.mm.yyyy' format.");
+				});
+			} else {
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Borrow executed Successfully!");
+					borrowDialog.close();
+				});
+			}
+			break;
+		}
+
 		}
 	}
 
 	@Override
-	public void setUserLogedIn(User userLoged)
-	{
+	public void setUserLogedIn(User userLoged) {
 		userLogedIn = userLoged;
 		// make the userName start with upper case
 		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
@@ -403,23 +467,31 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@Override
-	public User getUserLogedIn()
-	{
+	public User getUserLogedIn() {
 		return userLogedIn;
 	}
 
-	private static boolean isValidEmailAddress(String email)
-	{
+	private static boolean isValidEmailAddress(String email) {
 		boolean result = true;
-		try
-		{
+		try {
 			InternetAddress emailAddr = new InternetAddress(email);
 			emailAddr.validate();
-		} catch (AddressException ex)
-		{
+		} catch (AddressException ex) {
 			result = false;
 		}
 		return result;
 	}
 
+	
+	
+	/*public void setRangeOfPossibleDatesForBorrow(int range)
+	{
+	returnDate.setDayCellFactory(picker -> new DateCell() {
+        public void updateItem(LocalDate date, boolean empty) {
+            super.updateItem(date, empty);
+            LocalDate today = LocalDate.now();
+            setDisable(empty || date.compareTo(today) < 0 || date.compareTo(today.plusDays(range)) > 0);
+        }
+    });
+	}*/
 }

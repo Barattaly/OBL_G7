@@ -1,7 +1,12 @@
 package entities;
 
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import entities.Book;
@@ -35,4 +40,25 @@ public class BooksQueries
 		} 
 		return Books;
 	}
+	
+	public static String getClassificationOfBook(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		System.out.println(queryMsg);
+		return queryMsg;
+	}
+	
+	/*public static String getNowAsString(String format)
+	{
+		Calendar calStartDate = new GregorianCalendar();
+		calStartDate.setTime(new Date());
+		Date startDate = calStartDate.getTime();
+		DateFormat dateFormat = new SimpleDateFormat(format);
+		String dateTimeString = dateFormat.format(startDate);
+		return dateTimeString;
+	}*/
+	
+	
 }

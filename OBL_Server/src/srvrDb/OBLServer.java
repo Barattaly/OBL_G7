@@ -3,11 +3,14 @@ package srvrDb;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
+import entities.BorrowsQueries;
+import entities.CopiesQueries;
 import entities.Book;
 import entities.BooksQueries;
 import entities.DBMessage;
@@ -120,9 +123,14 @@ public class OBLServer extends AbstractServer
 				getListOfAllBooks(client);
 				break;
 			}
+			case GetBookClassification:
+			{
+				getBookClassification((Book) dbMessage.Data, client);
+				break;
+			}
 			case CreateNewBorrow:
 			{
-				//CreateNewBorrow((BorrowACopyOfBook) dbMessage.Data, client)
+				createNewBorrow((BorrowACopyOfBook) dbMessage.Data, client);
 				break;
 			}
 			default:
@@ -236,32 +244,47 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 
-	/*private void CreateNewBorrow(BorrowACopyOfBook borrowToAdd, ConnectionToClient client) throws IOException
+	private void createNewBorrow(BorrowACopyOfBook borrowToAdd, ConnectionToClient client) throws IOException
 	{
 		if (!isBookExist(borrowToAdd))
 		{
-			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, null);
+			borrowToAdd.setBookCatalogNumber("0");
+			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 			client.sendToClient(returnMsg);
 			return;
 		}
 		
-		String query = BooksQueries.addNewBorrow(borrowToAdd);
+		else if (!isCopyExist(borrowToAdd))
+		{
+			borrowToAdd.setCopyId("0");
+			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		
+		else if (!isSubscriberExist(borrowToAdd))
+		{
+			borrowToAdd.setSubscriberId("0");
+			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		
+		updateDateFormat(borrowToAdd);
+		String query = BorrowsQueries.addNewBorrow(borrowToAdd);
 		oblDB.executeUpdate(query);// add a new borrow to Borrows table
-		query = CopiesQueries.changeCopyStatus(borrowToAdd);
-		oblDB.executeUpdate(query);// update the copy status
 		
-		query = SubscribersQueries.searchSubscriberByID(borrowToAdd);
-		ResultSet rs = oblDB.executeQuery(query);
-		subscriberToCreate = SubscribersQueries.CreateSubscriberFromRS(rs);
-		subscriberToCreate.FillInformationFromUser(userToCheck);
+		/*query = CopiesQueries.changeCopyStatus(borrowToAdd);
+		oblDB.executeUpdate(query);// update the copy status*/
 		
+
 		DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 		client.sendToClient(returnMsg);
 	}
 	
-	private boolean isBookExist(BorrowACopyOfBook bookToCheck)
+	private boolean isBookExist(BorrowACopyOfBook borrowToAdd)
 	{
-		String query = BooksQueries.searchBookByCatalogNumber(bookToCheck);// search by user name
+		String query = BorrowsQueries.searchBookByCatalogNumber(borrowToAdd);// search by book catalog number
 		ResultSet rsCatalogNumber = oblDB.executeQuery(query);
 
 		int numberOfCatalogNumbers = getRowCount(rsCatalogNumber);
@@ -270,8 +293,78 @@ public class OBLServer extends AbstractServer
 			return true;
 		}
 		return false;
-	}*/
+	}
+	
+	private void getBookClassification(Book bookToCheck, ConnectionToClient client) throws IOException
+	{
+		String query = BooksQueries.getClassificationOfBook(bookToCheck);// search by book catalog number
+		ResultSet rsClassification = oblDB.executeQuery(query);
+		
+		int numberOfCatalogNumbers = getRowCount(rsClassification);
+		if (numberOfCatalogNumbers == 0) 
+		// means that the book doesn't exist or that the book catalog number field is empty
+		{
+			DBMessage returnMsg = new DBMessage(DBAction.GetBookClassification, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		else if (numberOfCatalogNumbers > 0) // means that the book exist
+		{
+			try {
+				rsClassification.next();
+				bookToCheck.setClassification(rsClassification.getString(1));
+				System.out.println(bookToCheck.getClassification());
+				DBMessage returnMsg = new DBMessage(DBAction.GetBookClassification, bookToCheck);
+				client.sendToClient(returnMsg);
+				return;
+			}
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	private boolean isCopyExist(BorrowACopyOfBook bookToCheck)
+	{
+		String query = CopiesQueries.searchBookCopyId(bookToCheck);// search by copy id
+		ResultSet rsCatalogNumber = oblDB.executeQuery(query);
 
+		int numberOfCatalogNumbers = getRowCount(rsCatalogNumber);
+		if (numberOfCatalogNumbers > 0) // means that the copy of the book is exist
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isSubscriberExist(BorrowACopyOfBook bookToCheck)
+	{
+		String query = SubscribersQueries.searchSubscriberByID(bookToCheck);// search by copy id
+		ResultSet rsCatalogNumber = oblDB.executeQuery(query);
+
+		int numberOfCatalogNumbers = getRowCount(rsCatalogNumber);
+		if (numberOfCatalogNumbers > 0) // means that the copy of the book is exist
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private void updateDateFormat(BorrowACopyOfBook borrowToAdd) 
+	{
+		String date = borrowToAdd.getExpectedReturnDate();
+		String year = borrowToAdd.getExpectedReturnDate();
+		year = year.substring(0, 4);
+		String monthDay = borrowToAdd.getExpectedReturnDate();
+		monthDay = monthDay.substring(4, 10);
+		int year1 = Integer.parseInt(year);
+		borrowToAdd.setExpectedReturnDate("" + year1 + monthDay);
+		System.out.println(borrowToAdd.getExpectedReturnDate());
+
+	}
+	
 	/**
 	 * This method overrides the one in the superclass. Called when the server
 	 * starts listening for connections.
