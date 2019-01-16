@@ -103,16 +103,15 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </JFXButton>
-                  <TableView fx:id="BookTable" layoutX="84.0" layoutY="476.0" prefHeight="121.0" prefWidth="519.0" style="-fx-background-color: #a0a2ab;">
+                  <TableView fx:id="BookTable" layoutY="419.0" prefHeight="178.0" prefWidth="715.0" style="-fx-background-color: #a0a2ab;">
                      <columns>
-                        <TableColumn fx:id="namecol" prefWidth="75.0" text="Name" />
-                        <TableColumn fx:id="authorcol" prefWidth="88.0" text="Author" />
-                        <TableColumn fx:id="catalognumbercol" prefWidth="110.0" text="Catalog Number" />
-                        <TableColumn fx:id="locationcol" prefWidth="130.0" text="Location in library" />
-                        <TableColumn fx:id="returndatecol" prefWidth="106.0" text="Return date" />
+                        <TableColumn fx:id="namecol" prefWidth="276.0" text="Name" />
+                        <TableColumn fx:id="authorcol" prefWidth="214.0" text="Authors" />
+                        <TableColumn fx:id="catalognumbercol" prefWidth="104.0" text="Catalog Number" />
+                        <TableColumn fx:id="locationcol" prefWidth="119.0" text="Location in library" />
                      </columns>
                   </TableView>
-                  <Label layoutX="8.0" layoutY="437.0" prefHeight="30.0" prefWidth="335.0" text="To open book page - Double click on the wanted row" textFill="#a0a2ab">
+                  <Label layoutX="8.0" layoutY="390.0" prefHeight="30.0" prefWidth="335.0" text="To open book page - Double click on the wanted row" textFill="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>

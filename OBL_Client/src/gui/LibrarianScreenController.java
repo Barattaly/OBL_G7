@@ -8,6 +8,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
@@ -262,7 +263,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					warningMessageLab.setText(warningMessage);
 			}
 		});
-		dialogVbox.getChildren().addAll(headline, grid, warningMessageLab, button);
+		JFXDatePicker aDatePicker = new JFXDatePicker();
+		aDatePicker.setEditable(false);
+		dialogVbox.getChildren().addAll(headline, grid, warningMessageLab,aDatePicker, button);
 		Scene dialogScene = new Scene(dialogVbox, 300, 200);
 		dialog.setScene(dialogScene);
 		dialog.showAndWait();

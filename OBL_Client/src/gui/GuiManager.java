@@ -8,7 +8,6 @@ import com.jfoenix.controls.JFXTextField;
 import client.ClientController;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
-import gui.GuiManager.SCREENS;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,9 +31,9 @@ public class GuiManager
 			put("subscriber", SCREENS.subscriber);
 			put("library manager", SCREENS.librarianManager);
 
-		}
+		} 
 	};
-	private static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
+	public static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
 	{
 		{
 			put(SCREENS.login, "/gui/LoginScreen.fxml");
@@ -44,7 +43,7 @@ public class GuiManager
 			put(SCREENS.subscriber, "/gui/SubscriberScreen.fxml");
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
 		}
-	};
+	}; 
 
 	public static void ShowErrorPopup(String msg)
 	{
@@ -54,6 +53,7 @@ public class GuiManager
 		alert.setContentText(msg);
 		alert.showAndWait();
 	}
+
 	public static void ShowMessagePopup(String msg)
 	{
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -118,16 +118,22 @@ public class GuiManager
 
 	private static void shutDown()
 	{
-		if(client == null) return;
+		if (client == null)
+			return;
 		try
 		{
-			client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
+			if (CurrentGuiController instanceof LibrarianManagerController
+					|| CurrentGuiController instanceof LibrarianScreenController
+					|| CurrentGuiController instanceof SubscriberScreenController)
+			{
+				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
+			}
 			client.closeConnection();
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
+ 
 	}
 
 	public static enum SCREENS
@@ -135,28 +141,33 @@ public class GuiManager
 		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
 	}
 
-	public static void preventLettersTypeInTextField(JFXTextField textField) 
+	public static void preventLettersTypeInTextField(JFXTextField textField)
 	{
-		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
-		   {
-			   @Override
-			   public void handle(KeyEvent e) {
-			    if (!"0123456789".contains(e.getCharacter())) {
-				        e.consume();
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
+		{
+			@Override
+			public void handle(KeyEvent e)
+			{
+				if (!"0123456789".contains(e.getCharacter()))
+				{
+					e.consume();
 				}
-			   }
-			});
+			}
+		});
 	}
-	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength) 
+
+	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength)
 	{
-		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
-		   {
-			   @Override
-			   public void handle(KeyEvent e) {
-			    if (textField.getText().length() >= maxLength) {                    
-	                e.consume();
-	            }
-			   }
-			});
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
+		{
+			@Override
+			public void handle(KeyEvent e)
+			{
+				if (textField.getText().length() >= maxLength)
+				{
+					e.consume();
+				}
+			}
+		});
 	}
 }

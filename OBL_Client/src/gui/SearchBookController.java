@@ -1,13 +1,15 @@
 package gui;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
 import gui.GuiManager.SCREENS;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +25,6 @@ import javafx.scene.input.MouseEvent;
 
 public class SearchBookController implements Initializable, IClientUI
 {
-
 	@FXML
 	private JFXTextField bookNameTextField;
 
@@ -37,48 +38,53 @@ public class SearchBookController implements Initializable, IClientUI
 	private JFXTextField freeSearchTextfield;
 
 	@FXML
-	private TableView<Book> BookTable;
+	private TableView<ObservableBook> BookTable;
 
 	@FXML
-	private TableColumn<Book, String> namecol;
+	private TableColumn<ObservableBook, String> namecol;
 
 	@FXML
-	private TableColumn<Book, String> authorcol;
+	private TableColumn<ObservableBook, String> authorcol;
 
 	@FXML
-	private TableColumn<Book, Integer> catalognumbercol;
+	private TableColumn<ObservableBook, Integer> catalognumbercol;
 
 	@FXML
-	private TableColumn<Book, String> locationcol;
+	private TableColumn<ObservableBook, String> locationcol;
 
-	@FXML
-	private TableColumn<Book, String> returndatecol;
+	private ObservableList<ObservableBook> booklist;//for table view...
+	private Map<Integer, Book> bookMap;//key = catalog number, value = the book!
 
-	private ObservableList<Book> booklist;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
+		GuiManager.client.getAllBooks();//fill in the table off books from the updated DB book list
 		
-		namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		authorcol.setCellValueFactory(new PropertyValueFactory<>("Author"));
-		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalognumber"));
-		locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
-		returndatecol.setCellValueFactory(new PropertyValueFactory<>("Returndate"));
+		namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
+		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
+		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
+		locationcol.setCellValueFactory(new PropertyValueFactory<>("location"));
 
-		Book book1 = new Book("Harry Potter", "J.K.Rolling", 12, "A6 313", "14/10/2018");
-		Book book2 = new Book("Kofiko", "Galila Ron Feder", 456789, "A8 949", "12/3/2019");
-		booklist = FXCollections.observableArrayList(book1, book2);
+
+		booklist = FXCollections.observableArrayList(/*book1, book2*/);
 
 		BookTable.setItems(booklist);
 
 		BookTable.setRowFactory(tv -> { // press on row in book table to open book information
-			TableRow<Book> row = new TableRow<>();
+			TableRow<ObservableBook> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
-				{
-					Book rowData = row.getItem();
+				{ 
+					ObservableBook rowData = row.getItem();
 					System.out.println("Double click on: " + rowData.getCatalognumber());
+
+					GuiManager.SwitchScene(SCREENS.bookInformation);
+					int bookCatNum = rowData.getCatalognumber();
+
+					while(!(GuiManager.CurrentGuiController instanceof BookInformationController));
+					((BookInformationController)GuiManager.CurrentGuiController).setBookInformation(bookMap.get(bookCatNum));
+					
 				}
 			});
 			return row;
@@ -89,7 +95,6 @@ public class SearchBookController implements Initializable, IClientUI
 	@FXML
 	void searchBookBtnClick(ActionEvent event)
 	{
-		
 	}
 
 	@FXML
@@ -107,10 +112,28 @@ public class SearchBookController implements Initializable, IClientUI
 		{
 			case GetAllBooksList:
 			{
-				
+				bookMap = (Map<Integer,Book> )msg.Data;
+				copyBookMapToBookList();
 			}
 		}
 
+	}
+
+	//this function is because of the fucking stupid table view of javaFx
+	private void copyBookMapToBookList()
+	{
+		for (Integer key : bookMap.keySet()) 
+		{
+			String authors = "";
+			for(String author :bookMap.get(key).getAuthorNameList())
+			{
+				if(authors.isEmpty())authors = author;
+				else authors = authors +", "+author;
+			}
+			ObservableBook temp = new ObservableBook(bookMap.get(key).getName(), authors, Integer.parseInt(bookMap.get(key).getCatalogNumber())
+					, bookMap.get(key).getLocation());
+			booklist.add(temp);
+		}		
 	}
 
 	@Override
