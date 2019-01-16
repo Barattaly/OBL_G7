@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.DBMessage;
+import entities.Subscriber;
 import entities.DBMessage.DBAction;
 import entities.User;
 import gui.GuiManager.SCREENS;
@@ -132,5 +133,7 @@ public class LoginController implements IClientUI, Initializable
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+
 
 }
