@@ -84,6 +84,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	private Label warningLabel;
     @FXML
     private JFXButton btn_viewSubscriberCard;
+    
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
@@ -136,6 +137,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(0.5);
+		txt_subscriberID.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(txt_subscriberID);
+		GuiManager.limitTextFieldMaxCharacters(txt_subscriberID, 9);
 	}
 
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -389,7 +393,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.ShowErrorPopup("This subscriber is not exist ");
 				});
 			}
-			Subscriber newSub = (Subscriber) msg.Data;
+			
+				Subscriber newSub = (Subscriber) msg.Data;
+				//here i need to add - guiManager.viewSubscriberCardController.somthing
 			
 			
 		}
@@ -445,7 +451,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				
 				else
 				{
-					GuiManager.client.GetSubscriberFromDB(txt_subscriberID.getText());
+					GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
 				}
 			}
     		});

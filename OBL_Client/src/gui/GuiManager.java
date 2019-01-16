@@ -31,6 +31,7 @@ public class GuiManager
 			put("librarian", SCREENS.librarian);
 			put("subscriber", SCREENS.subscriber);
 			put("library manager", SCREENS.librarianManager);
+			
 
 		}
 	};
@@ -43,6 +44,7 @@ public class GuiManager
 			put(SCREENS.bookInformation, "/gui/BookInformationScreen.fxml");
 			put(SCREENS.subscriber, "/gui/SubscriberScreen.fxml");
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
+			put(SCREENS.viewSubscriberCard, "/gui/viewSubscriberCardScreen.fxml");
 			
 		}
 	};
@@ -133,7 +135,7 @@ public class GuiManager
 
 	public static enum SCREENS
 	{
-		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
+		login, librarian, searchBook, bookInformation, subscriber, librarianManager,viewSubscriberCard;
 	}
 
 	public static void preventLettersTypeInTextField(JFXTextField textField) 

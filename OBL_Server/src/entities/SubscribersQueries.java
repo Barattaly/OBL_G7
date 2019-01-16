@@ -50,18 +50,19 @@ public class SubscribersQueries
 	}
 	
 	public static Subscriber CreateSubscriberFromFullInformationRS(ResultSet rs)
-	{
-		Subscriber subscriberToCreate = null;
-		try
-		{
-			rs.next();
-			subscriberToCreate = new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-					rs.getInt(6), rs.getInt(7));
+    {
+      Subscriber subscriberToCreate = null;
+      try
+      {
+        rs.next();
+        subscriberToCreate = new Subscriber(rs.getString(8),rs.getString(10),rs.getString(11),
+            rs.getString(12),rs.getInt(13),rs.getInt(14),rs.getString(2),rs.getString(1),
+            rs.getString(4),rs.getString(5));
 
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		} 
-		return subscriberToCreate;
-	}
+      } catch (Exception e)
+      {
+        e.printStackTrace();
+      } 
+      return subscriberToCreate;
+    }
 }
