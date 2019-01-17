@@ -54,12 +54,11 @@ public class Book implements Serializable
 		this.isArchived = isArchived;
 		this.copies = copies;
 	}
-
+	
 	public Book(String catalogNumber) 
 	{
 		this.catalogNumber = catalogNumber;
 	}
-
 
 	public String getCatalogNumber() 
 	{
