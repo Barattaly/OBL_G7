@@ -27,6 +27,7 @@ public class ClientController extends AbstractClient
 		openConnection();
 	}
 
+	@Override
 	public void handleMessageFromServer(Object msg)
 	{
 		if(msg==null)

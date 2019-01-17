@@ -1,29 +1,30 @@
 package gui;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
 import gui.GuiManager.SCREENS;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import com.jfoenix.controls.JFXRadioButton;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
 public class SearchBookController implements Initializable, IClientUI
 {
-
 	@FXML
 	private JFXTextField bookNameTextField;
 
@@ -50,25 +51,36 @@ public class SearchBookController implements Initializable, IClientUI
 
 	@FXML
 	private TableColumn<ObservableBook, String> locationcol;
+	
+    @FXML
+    private JFXRadioButton bookNameRadioBtn;
 
-	@FXML
-	private TableColumn<ObservableBook, String> returndatecol;
+    @FXML
+    private JFXRadioButton authorNameRadioBtn;
 
-	private ObservableList<ObservableBook> booklist;
+    @FXML
+    private JFXRadioButton bookSubjectRadioBtn;
+
+    @FXML
+    private JFXRadioButton freeTextRadioBtn;
+    
+    @FXML
+    private ToggleGroup radioGroup;
+
+
+	private ObservableList<ObservableBook> booklist;// for table view...
+
+	private Map<Integer, Book> bookMap;// key = catalog number, value = the book!
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
-		
-		namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		authorcol.setCellValueFactory(new PropertyValueFactory<>("Author"));
-		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("Catalognumber"));
-		locationcol.setCellValueFactory(new PropertyValueFactory<>("Location"));
-		returndatecol.setCellValueFactory(new PropertyValueFactory<>("Returndate"));
-
-		ObservableBook book1 = new ObservableBook("Harry Potter", "J.K.Rolling", 12, "A6 313", "14/10/2018");
-		ObservableBook book2 = new ObservableBook("Kofiko", "Galila Ron Feder", 456789, "A8 949", "12/3/2019");
-		booklist = FXCollections.observableArrayList(book1, book2);
+		GuiManager.client.getAllBooks();// fill in the table off books from the updated DB book list
+		namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
+		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
+		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
+		locationcol.setCellValueFactory(new PropertyValueFactory<>("location"));
+		booklist = FXCollections.observableArrayList();
 
 		BookTable.setItems(booklist);
 
@@ -78,18 +90,82 @@ public class SearchBookController implements Initializable, IClientUI
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
 					ObservableBook rowData = row.getItem();
-					System.out.println("Double click on: " + rowData.getCatalognumber());
+					int bookCatNum = rowData.getCatalognumber();
+					GuiManager.openBookWindow(bookMap.get(bookCatNum));
 				}
 			});
 			return row;
 		});
 
 	}
+    @FXML
+    void radioBtnClicked(ActionEvent event) 
+    {
+    	/*switch(radioGroup.getSelectedToggle().getUserData().toString())
+    	{
+    	case "Free text":
+    		System.out.println("freeee");
+    		break;
+    	case "Author name":
+    		break;
+    		
+    	}*/
+    }
 
 	@FXML
 	void searchBookBtnClick(ActionEvent event)
 	{
 		
+		// free
+		JFXTextField txtField = freeSearchTextfield;
+		ObservableList<ObservableBook> data = booklist;
+
+		if (txtField.textProperty().get().isEmpty())
+		{
+
+			BookTable.setItems(data);
+
+			return;
+		}
+
+		ObservableList<ObservableBook> itemsAfterFilter = FXCollections.observableArrayList();
+
+		ObservableList<TableColumn<ObservableBook, ?>> cols = BookTable.getColumns();
+		try
+		{
+			for (int i = 0; i < data.size(); i++)
+			{
+				for (int j = 0; j < cols.size(); j++)
+				{
+
+					TableColumn col = cols.get(j);
+					String cellValue =	null;
+					try
+					{
+						cellValue = col.getCellData(data.get(i)).toString();
+					} catch (NullPointerException ex)
+					{
+						break;
+					}
+					cellValue = cellValue.toLowerCase();
+
+					if (cellValue.contains(txtField.textProperty().get().toLowerCase()))
+					{
+
+						itemsAfterFilter.add(data.get(i));
+
+						break;
+
+					}
+
+				}
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		BookTable.setItems(itemsAfterFilter);
 	}
 
 	@FXML
@@ -103,14 +179,34 @@ public class SearchBookController implements Initializable, IClientUI
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
-		switch(msg.Action)
+		switch (msg.Action)
 		{
-			case GetAllBooksList:
-			{
-				
-			}
+		case GetAllBooksList:
+		{
+			bookMap = (Map<Integer, Book>) msg.Data;
+			copyBookMapToBookList();
+		}
 		}
 
+	}
+
+	// this function is because of the fucking stupid table view of javaFx
+	private void copyBookMapToBookList()
+	{
+		for (Integer key : bookMap.keySet())
+		{
+			String authors = "";
+			for (String author : bookMap.get(key).getAuthorNameList())
+			{
+				if (authors.isEmpty())
+					authors = author;
+				else
+					authors = authors + ", " + author;
+			}
+			ObservableBook temp = new ObservableBook(bookMap.get(key).getName(), authors,
+					Integer.parseInt(bookMap.get(key).getCatalogNumber()), bookMap.get(key).getLocation());
+			booklist.add(temp);
+		}
 	}
 
 	@Override

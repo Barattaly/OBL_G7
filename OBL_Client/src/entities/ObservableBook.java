@@ -12,20 +12,14 @@ public class ObservableBook
 	public SimpleStringProperty location;
 	public SimpleStringProperty returndate;
 
-	public ObservableBook(String name, String author, int catalognumber, String location, String returndate)
+	public ObservableBook(String name, String author, int catalognumber, String location)//, String returndate)
 	{
 		this.name = new SimpleStringProperty(name);
 		this.catalognumber = new SimpleIntegerProperty(catalognumber);
 		this.author = new SimpleStringProperty(author);
 		this.location = new SimpleStringProperty(location);
-		this.returndate = new SimpleStringProperty(returndate);
+		//this.returndate = new SimpleStringProperty(returndate);
 	}
-
-	
-	/*public Book(SimpleIntegerProperty catalognumber) 
-	{
-		this.catalognumber = catalognumber;
-	}*/
 
 	public String getName()
 	{

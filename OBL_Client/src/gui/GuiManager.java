@@ -6,6 +6,7 @@ import java.util.Map;
 import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
+import entities.Book;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
@@ -34,7 +35,7 @@ public class GuiManager
 
 		}
 	};
-	private static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
+	public static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
 	{
 		{
 			put(SCREENS.login, "/gui/LoginScreen.fxml");
@@ -54,6 +55,7 @@ public class GuiManager
 		alert.setContentText(msg);
 		alert.showAndWait();
 	}
+
 	public static void ShowMessagePopup(String msg)
 	{
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -67,7 +69,7 @@ public class GuiManager
 	{
 		try
 		{
-			if (fxmlPath == SCREENS.login)
+			if (fxmlPath == SCREENS.login && !(CurrentGuiController instanceof SearchBookController))
 				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(fxmlPath)));
@@ -118,10 +120,16 @@ public class GuiManager
 
 	private static void shutDown()
 	{
-		if(client == null) return;
+		if (client == null)
+			return;
 		try
 		{
-			client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
+			if (CurrentGuiController instanceof LibrarianManagerController
+					|| CurrentGuiController instanceof LibrarianScreenController
+					|| CurrentGuiController instanceof SubscriberScreenController)
+			{
+				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
+			}
 			client.closeConnection();
 		} catch (Exception e)
 		{
@@ -135,29 +143,58 @@ public class GuiManager
 		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
 	}
 
-	public static void preventLettersTypeInTextField(JFXTextField textField) 
+	public static void preventLettersTypeInTextField(JFXTextField textField)
 	{
-		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
-		   {
-			   @Override
-			   public void handle(KeyEvent e) {
-			    if (!"0123456789".contains(e.getCharacter())) {
-				        e.consume();
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
+		{
+			@Override
+			public void handle(KeyEvent e)
+			{
+				if (!"0123456789".contains(e.getCharacter()))
+				{
+					e.consume();
 				}
-			   }
-			});
+			}
+		});
 	}
-	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength) 
+
+	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength)
 	{
-		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() 
-		   {
-			   @Override
-			   public void handle(KeyEvent e) {
-			    if (textField.getText().length() >= maxLength) {                    
-	                e.consume();
-	            }
-			   }
-			});
+		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
+		{
+			@Override
+			public void handle(KeyEvent e)
+			{
+				if (textField.getText().length() >= maxLength)
+				{
+					e.consume();
+				}
+			}
+		});
 	}
-	
+
+	public static void openBookWindow(Book book)
+	{
+		try
+		{
+
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(
+					GuiManager.class.getResource(availableFXML.get(SCREENS.bookInformation)));
+			Parent root = loader.load();
+			BookInformationController controller = loader.getController();
+			controller.setBookInformation(book);
+			Scene scene = new Scene(root);
+			SeondStage.setTitle("Ort Braude Library");
+			SeondStage.setOnCloseRequest(e -> shutDown());// make sure safe shutdown
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 }

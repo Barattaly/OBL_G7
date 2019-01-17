@@ -51,7 +51,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class LibrarianScreenController implements Initializable, IClientUI {
+public class LibrarianScreenController implements Initializable, IClientUI 
+{
 	private User userLogedIn;
 	@FXML
 	private Label userWelcomLabel;
@@ -91,7 +92,8 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	private JFXDatePicker returnDate = null;
 
 	@FXML
-	void btn_homeDisplay(MouseEvent event) {
+	void btn_homeDisplay(MouseEvent event) 
+	{
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -104,7 +106,8 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	}
 
 	@FXML
-	void btn_createNewSubscriberCardDisplay(MouseEvent event) {
+	void btn_createNewSubscriberCardDisplay(MouseEvent event) 
+	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(true);
 		pane_searchBook.setVisible(false);
@@ -116,7 +119,8 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	}
 
 	@FXML
-	void btn_booksDisplay(MouseEvent event) {
+	void btn_booksDisplay(MouseEvent event) 
+	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(true);
@@ -128,7 +132,8 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	}
 
 	@FXML
-	void btn_searchSubscriberCardDisplay(MouseEvent event) {
+	void btn_searchSubscriberCardDisplay(MouseEvent event) 
+	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -139,7 +144,8 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 		btn_searchSubscriberCard.setOpacity(0.5);
 	}
 
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void initialize(URL arg0, ResourceBundle arg1) 
+	{
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -152,25 +158,29 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	}
 
 	@FXML
-	void logOutDisplay(MouseEvent event) { // logout
+	void logOutDisplay(MouseEvent event) 
+	{ // logout
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("OBL Log Out");
 		alert.setHeaderText("Are you sure you want to log out?");
 		Optional<ButtonType> option = alert.showAndWait();
-		if (option.get() == ButtonType.OK) {
+		if (option.get() == ButtonType.OK) 
+		{
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			GuiManager.SwitchScene(SCREENS.login);
 		}
 
-		else if (option.get() == ButtonType.CANCEL) {
+		else if (option.get() == ButtonType.CANCEL) 
+		{
 			alert.close();
 		}
 
 	}
 
 	@FXML
-	void btn_createSubscriberCardDisplay(ActionEvent event) {
+	void btn_createSubscriberCardDisplay(ActionEvent event) 
+	{
 		warningLabel.setText("");
 		if (idNumberTextfield.getText().isEmpty() || userNameTextfield.getText().isEmpty()
 				|| firstNameTextfield.getText().isEmpty() || lastNameTextfield.getText().isEmpty()
@@ -312,7 +322,8 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	}
 
 	@FXML
-	void btn_ReturnClick(ActionEvent event) {
+	void btn_ReturnClick(ActionEvent event) 
+	{
 		returnDialog = new Stage();
 		returnDialog.initModality(Modality.APPLICATION_MODAL);
 		returnDialog.setTitle("Return a copy of a Book");
@@ -347,9 +358,11 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 		returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
 		button.setOnMouseClicked(new EventHandler<Event>() {
 			@Override
-			public void handle(Event e) {
+			public void handle(Event e) 
+			{
 
-				if (bookCopy.getText().isEmpty()) {
+				if (bookCopy.getText().isEmpty()) 
+				{
 					GuiManager.ShowErrorPopup("Enter book copy id please");
 				} else {
 					returnDialog.close();
@@ -368,19 +381,24 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 		String warningMessage = "";
 		// input checks:
 		if (!phoneNumberTextfield.getText().isEmpty()) {
-			try {
+			try 
+			{
 				double tryParse = Integer.valueOf(phoneNumberTextfield.getText());
 				subscriber.setPhoneNumber(phoneNumberTextfield.getText());
-			} catch (Exception e) {
+			} 
+			catch (Exception e) 
+			{
 				warningMessage = "Wrong phone number format.\n";
 				subscriber.setPhoneNumber("0");
 			}
-		} else
+		} 
+		else
 			subscriber.setPhoneNumber("0");
 
 		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText())) {
 			subscriber.setEmail(emailTextfield.getText());
-		} else
+		} 
+		else
 			warningMessage += "Wrong email format. ";
 		if (!warningMessage.isEmpty())
 			warningLabel.setText(warningMessage);
@@ -388,15 +406,21 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	}
 
 	@Override
-	public void getMessageFromServer(DBMessage msg) {
-		switch (msg.Action) {
-		case CreateSubscriber: {
+	public void getMessageFromServer(DBMessage msg) 
+	{
+		switch (msg.Action) 
+		{
+		case CreateSubscriber: 
+		{
 			Subscriber newSub = (Subscriber) msg.Data;
-			if (newSub == null) {
+			if (newSub == null) 
+			{
 				Platform.runLater(() -> {
 					warningLabel.setText("Subscriber already exist!");
 				});
-			} else {
+			} 
+			else 
+			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup(
 							"Subscriber " + ((Subscriber) msg.Data).getSubscriberNumber() + " Added Successfully!");
@@ -458,7 +482,8 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 
 
 	@Override
-	public void setUserLogedIn(User userLoged) {
+	public void setUserLogedIn(User userLoged) 
+	{
 		userLogedIn = userLoged;
 		// make the userName start with upper case
 		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
@@ -468,16 +493,19 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 	}
 
 	@Override
-	public User getUserLogedIn() {
+	public User getUserLogedIn() 
+	{
 		return userLogedIn;
 	}
 
-	private static boolean isValidEmailAddress(String email) {
+	private static boolean isValidEmailAddress(String email) 
+	{
 		boolean result = true;
 		try {
 			InternetAddress emailAddr = new InternetAddress(email);
 			emailAddr.validate();
-		} catch (AddressException ex) {
+		} catch (AddressException ex) 
+		{
 			result = false;
 		}
 		return result;
