@@ -85,7 +85,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
     @FXML
     private JFXButton btn_viewSubscriberCard;
     
-
+    ViewSubscriberCardController controller;  //check
+    public static IClientUI CurrentGuiController;//check
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
 	{
@@ -395,6 +396,14 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			
 				Subscriber newSub = (Subscriber) msg.Data;
+				//ViewSubscriberCardController controller = new ViewSubscriberCardController(newSub);
+				//((Node) event.getSource()).getScene().getWindow().hide();
+				Platform.runLater(() -> {
+					controller = new ViewSubscriberCardController(newSub); 
+					GuiManager.SwitchScene(SCREENS.viewSubscriberCard);
+				});
+				// chnge scene to view subscriber card
+				//GuiManager.client.
 				//here i need to add - guiManager.viewSubscriberCardController.somthing
 			
 			
@@ -435,9 +444,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
     @FXML
     void btn_viewSubscriberCardClick(ActionEvent event)
     {
-    	final Stage dialog = new Stage();
-    	VBox dialogVbox = new VBox(30);
-    	
+
     	btn_viewSubscriberCard.setOnMouseClicked(new EventHandler<Event>()
     		{
     		@Override
@@ -456,9 +463,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
     		});
 
-    //	Scene dialogScene = new Scene(dialogVbox);
-      //  dialog.setScene(dialogScene);
-	   // dialog.showAndWait();
+    	
     }
 
 }

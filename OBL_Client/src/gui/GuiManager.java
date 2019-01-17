@@ -72,6 +72,8 @@ public class GuiManager
 		{
 			if (fxmlPath == SCREENS.login)
 				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
+			//if (fxmlPath==SCREENS.viewSubscriberCard)
+				
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(fxmlPath)));
 			Parent root = loader.load();
@@ -162,4 +164,5 @@ public class GuiManager
 			   }
 			});
 	}
+	
 }
