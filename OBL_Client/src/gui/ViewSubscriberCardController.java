@@ -14,9 +14,11 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 	
-public class ViewSubscriberCardController implements  IClientUI, Initializable{
-	    private Subscriber sub;
-		private Node thisNode; //check if needed
+public class ViewSubscriberCardController implements  IClientUI
+{
+	    
+		private Subscriber subscriberToShow;
+
 	    @FXML
 	    private Pane pane_viewSubscriberCard;
 
@@ -41,24 +43,18 @@ public class ViewSubscriberCardController implements  IClientUI, Initializable{
 	    @FXML
 	    private JFXTextField email;
 	    
-	  
-	     public ViewSubscriberCardController(Subscriber sub) {
-			// TODO Auto-generated constructor stub
-	    	 this.sub =sub;
-		}
-	    @Override
-		public void initialize(URL arg0, ResourceBundle arg1)
-		{
-	    	subNumber.setText(sub.getSubscriberNumber());
-	    	userName.setText(sub.getUserName());
-	    	idNumber.setText(sub.getId());
-	    	firstName.setText(sub.getFirstName());
-	    	lastName.setText(sub.getLastName());
-	    	phoneNumber.setText(sub.getPhoneNumber());
-	    	email.setText(sub.getEmail());
-	    	
-		}
-		
+	    public void setSubscriberToShow(Subscriber sub)
+	    {
+	    	subscriberToShow = sub;
+	    	subNumber.setText(subscriberToShow.getSubscriberNumber());
+	    	userName.setText(subscriberToShow.getUserName());
+	    	idNumber.setText(subscriberToShow.getId());
+	    	firstName.setText(subscriberToShow.getFirstName());
+	    	lastName.setText(subscriberToShow.getLastName());
+	    	phoneNumber.setText(subscriberToShow.getPhoneNumber());
+	    	email.setText(subscriberToShow.getEmail());
+	    }
+
 		
 	    @Override
 		public void getMessageFromServer(DBMessage msg)

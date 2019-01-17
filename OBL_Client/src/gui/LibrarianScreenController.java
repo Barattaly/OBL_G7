@@ -390,17 +390,23 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			if (msg.Data == null)
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowErrorPopup("This subscriber is not exist ");
+					GuiManager.ShowErrorPopup("This subscriber doesnt exist!");
 				});
 			}
-			
+			else
+			{
 				Subscriber newSub = (Subscriber) msg.Data;
+				Platform.runLater(() -> {
+					GuiManager.openSubscriberCard(newSub);
+
+			});
+			}
 				//ViewSubscriberCardController controller = new ViewSubscriberCardController(newSub);
 				//((Node) event.getSource()).getScene().getWindow().hide();
-				Platform.runLater(() -> {
+				/*Platform.runLater(() -> {
 					controller = new ViewSubscriberCardController(newSub); 
 					GuiManager.SwitchScene(SCREENS.viewSubscriberCard);
-				});
+				});*/
 				// chnge scene to view subscriber card
 				//GuiManager.client.
 				//here i need to add - guiManager.viewSubscriberCardController.somthing
@@ -444,26 +450,15 @@ public class LibrarianScreenController implements Initializable, IClientUI
     @FXML
     void btn_viewSubscriberCardClick(ActionEvent event)
     {
-
-    	btn_viewSubscriberCard.setOnMouseClicked(new EventHandler<Event>()
-    		{
-    		@Override
-			public void handle(Event e)
-			{
-
-				if (txt_subscriberID.getText().isEmpty())
-				{
-					GuiManager.ShowErrorPopup("Subscriber ID can't be empty");
-				}
-				
-				else
-				{
-					GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
-				}
-			}
-    		});
-
-    	
+    	if (txt_subscriberID.getText().isEmpty())
+		{
+			GuiManager.ShowErrorPopup("Subscriber ID can't be empty");
+		}
+		
+		else
+		{
+			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
+		}  	
     }
 
 }

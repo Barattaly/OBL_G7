@@ -179,7 +179,6 @@ public class OBLServer extends AbstractServer
 				booksList.get(key).getCategories().add(rs.getString(1));
 			}
 		}
-
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
 	}
 

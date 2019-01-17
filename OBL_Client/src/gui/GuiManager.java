@@ -9,6 +9,7 @@ import client.ClientController;
 import entities.Book;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
+import entities.Subscriber;
 import gui.GuiManager.SCREENS;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -198,5 +199,30 @@ public class GuiManager
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public static void openSubscriberCard(Subscriber newSub) 
+	{
+		try
+		{
+		Stage SeondStage = new Stage();
+		FXMLLoader loader = new FXMLLoader(
+		GuiManager.class.getResource(availableFXML.get(SCREENS.viewSubscriberCard)));
+		Parent root = loader.load();
+		ViewSubscriberCardController controller = loader.getController();
+		controller.setSubscriberToShow(newSub);
+		Scene scene = new Scene(root);
+		SeondStage.setResizable(false);
+		SeondStage.setTitle("Subscriber Card");
+		SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+		SeondStage.setScene(scene);
+		SeondStage.showAndWait();
+
+		} 
+		catch (Exception e)
+		{
+		e.printStackTrace();
+		}
+		
 	}
 }
