@@ -6,6 +6,7 @@ import java.util.Map;
 import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
+import entities.Book;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
 import javafx.event.EventHandler;
@@ -34,7 +35,7 @@ public class GuiManager
 		} 
 	};
 	public static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
-	{
+	{ 
 		{
 			put(SCREENS.login, "/gui/LoginScreen.fxml");
 			put(SCREENS.librarian, "/gui/LibrarianScreen.fxml");
@@ -169,5 +170,29 @@ public class GuiManager
 				}
 			}
 		});
+	}
+
+	public static void openBookWindow(Book book)
+	{
+		try
+		{
+
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(SCREENS.bookInformation)));
+			Parent root = loader.load();
+			BookInformationController controller= loader.getController();
+			controller.setBookInformation(book);
+			Scene scene = new Scene(root);
+			SeondStage.setTitle("Ort Braude Library");
+			SeondStage.setOnCloseRequest(e -> shutDown());// make sure safe shutdown
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 }

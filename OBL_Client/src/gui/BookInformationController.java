@@ -50,6 +50,8 @@ public class BookInformationController implements IClientUI
 
 	public void setBookInformation(Book book)
 	{
+		System.out.println(book.getDescription());
+		descreptionPane.setText(book.getDescription());
 		bookToShow = book;
 		bookNameLabel.setText(book.getName());
 		String authors = book.getAuthorNameList().toString().replace("[", "").replace("]", "");
@@ -60,17 +62,12 @@ public class BookInformationController implements IClientUI
 		if (book.getClassification().equals("wanted"))
 		{
 			wantedBookLabel.setVisible(true);
-			descreptionPane.setVisible(true);
 			wantedLogo.setVisible(true);
 		} else
 		{
 			wantedBookLabel.setVisible(false);
-			descreptionPane.setVisible(false);
 			wantedLogo.setVisible(false);
 		}
-		System.out.println(book.getDescription());
-		descreptionPane.setText(book.getDescription());
-
 	}
 
 	@Override
