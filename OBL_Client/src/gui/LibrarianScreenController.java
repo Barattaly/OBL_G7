@@ -8,6 +8,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
@@ -15,7 +16,6 @@ import entities.DBMessage;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
 import entities.User;
-import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,19 +23,15 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -143,6 +139,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		GuiManager.limitTextFieldMaxCharacters(txt_subscriberID, 9);
 	}
 
+	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
 		pane_home.setVisible(true);
@@ -273,7 +270,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					warningMessageLab.setText(warningMessage);
 			}
 		});
-		dialogVbox.getChildren().addAll(headline, grid, warningMessageLab, button);
+		JFXDatePicker aDatePicker = new JFXDatePicker();
+		aDatePicker.setEditable(false);
+		dialogVbox.getChildren().addAll(headline, grid, warningMessageLab,aDatePicker, button);
 		Scene dialogScene = new Scene(dialogVbox, 300, 200);
 		dialog.setScene(dialogScene);
 		dialog.showAndWait();
@@ -409,6 +408,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			
 		}
 	}
+
 
 	@Override
 	public void setUserLogedIn(User userLoged)

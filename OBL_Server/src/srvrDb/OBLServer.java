@@ -3,8 +3,9 @@ package srvrDb;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 import entities.UsersQueries;
@@ -122,7 +123,7 @@ public class OBLServer extends AbstractServer
 			}
 			case ViewSubscriberCard: 
 			{
-				searchSubscriberByID((String) dbMessage.Data, client);
+				searchSubscriberByID((String)dbMessage.Data, client);
 				break;
 			}
 			default:
@@ -142,16 +143,44 @@ public class OBLServer extends AbstractServer
 			}
 		}
 	}
+	private void searchSubscriberByID(String subscriberID, ConnectionToClient client) throws IOException 
+	  {
+	    String query = SubscribersQueries.getSubscriberFullInformationByID(subscriberID);
+	    ResultSet rs = oblDB.executeQuery(query); //here I found the subscriber by subscriber ID that enter in txt filed
+	    int rowCount = getRowCount(rs);
+	    if(rowCount == 0) //check if that subscriber is not really exist
+	    {
+	      DBMessage returnMsg = new DBMessage(DBAction.ViewSubscriberCard, null);
+	      client.sendToClient(returnMsg);
+	      return;
+	    }
+	    else
+	    { //return the subscriber we found to the client
+	      Subscriber subscriber=SubscribersQueries.CreateSubscriberFromFullInformationRS(rs);
+	      DBMessage returnMsg = new DBMessage(DBAction.ViewSubscriberCard, subscriber);
+	      client.sendToClient(returnMsg);
+	    } 
+	  }
+
 
 	private void getListOfAllBooks(ConnectionToClient client) throws SQLException, IOException
 	{
-		String query = BooksQueries.SelectAllBooks();
+		String query = BooksQueries.SelectAllBooksEachRowForNewAuthor();
 		ResultSet rs = oblDB.executeQuery(query);
-		int numOfROws = getRowCount(rs);
-		rs.next();
-		List<Book> booksList= BooksQueries.CreateBookListFromRS(rs);
+		Map<Integer,Book>  booksList = BooksQueries.CreateBookListFromRS(rs);
+		//now we need to get the authors:
+		for(int key:booksList.keySet())
+		{
+			query = BooksQueries.getCatagoriesForBookId(booksList.get(key).getCatalogNumber());
+			rs = oblDB.executeQuery(query);
+			booksList.get(key).setCategories(new ArrayList<>());
+			while(rs.next())
+			{
+				booksList.get(key).getCategories().add(rs.getString(1));
+			}
+		}
+
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
-		
 	}
 
 	private void updateUserLogout(User userToUpdate, ConnectionToClient client)
@@ -285,24 +314,5 @@ public class OBLServer extends AbstractServer
 			}
 		}
 		return 0;
-	}
-	//shiran function
-	private void searchSubscriberByID(String subscriberID, ConnectionToClient client) throws IOException 
-	{
-		String query = SubscribersQueries.getSubscriberFullInformationByID(subscriberID);
-		ResultSet rs = oblDB.executeQuery(query); //here I found the subscriber by subscriber ID that enter in txt filed
-		int rowCount = getRowCount(rs);
-		if(rowCount == 0) //check if that subscriber is really exist
-		{
-			DBMessage returnMsg = new DBMessage(DBAction.ViewSubscriberCard, null);
-			client.sendToClient(returnMsg);
-			return;
-		}
-		else
-		{ //return the subscriber we found to the client
-			Subscriber subscriber=SubscribersQueries.CreateSubscriberFromFullInformationRS(rs);
-			DBMessage returnMsg = new DBMessage(DBAction.ViewSubscriberCard, subscriber);
-			client.sendToClient(returnMsg);
-		} 
 	}
 }

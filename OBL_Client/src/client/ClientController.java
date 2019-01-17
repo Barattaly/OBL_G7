@@ -25,6 +25,7 @@ public class ClientController extends AbstractClient
 		openConnection();
 	}
 
+	@Override
 	public void handleMessageFromServer(Object msg)
 	{
 		if(msg==null)
@@ -110,22 +111,6 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
-
-
-
-
-	public void getSubscriberFromDB(String id)
-	  {
-	    DBMessage message = new DBMessage(DBAction.ViewSubscriberCard, id);
-	    try
-	    {
-	      sendToServer(message);
-	    } catch (Exception ex)
-	    {
-	      ex.printStackTrace();
-	    }
-	    
-	  }
 	
 	public void getAllBooks()
 	{
@@ -137,6 +122,19 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
+	}
+	
+	public void getSubscriberFromDB(String id)
+	{
+		DBMessage message = new DBMessage(DBAction.ViewSubscriberCard, id);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
 	}
 
 }

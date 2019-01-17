@@ -5,9 +5,13 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXTextField;
+
+import client.ClientController;
 import entities.*;
 import gui.GuiManager.SCREENS;
 import defaultPackage.mainClient;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -35,6 +39,28 @@ public class SubscriberScreenController implements Initializable, IClientUI
     private Label userNameLabel;
     @FXML
     private Label statusLabel;
+    
+    @FXML
+    private JFXTextField subscriberNumberField;
+
+    @FXML
+    private JFXTextField idNumberField;
+
+    @FXML
+    private JFXTextField firstNameField;
+
+    @FXML
+    private JFXTextField lastNameField;
+
+    @FXML
+    private JFXTextField phoneNumberField;
+
+    @FXML
+    private JFXTextField emailField;
+
+    @FXML
+    private JFXTextField userNameField;
+    
 	@FXML
 	private Pane pane_home, pane_books, pane_viewSubscriberCard, pane_searchBook;
 
@@ -79,6 +105,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(0.5);
 		btn_searchBook.setOpacity(1);
+		
 	}
 
 	@FXML
@@ -139,6 +166,10 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(1);
 		btn_searchBook.setOpacity(1);
+		
+		
+
+	
 
 	}
 
@@ -167,8 +198,44 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	public void getMessageFromServer(DBMessage msg)
 	{
 		// TODO Auto-generated method stub
+		switch(msg.Action)
+		{
+			case ViewSubscriberCard:
+			{
+				Subscriber newSub = (Subscriber) msg.Data;
+				if (newSub == null)
+				{
+					Platform.runLater(() -> {
+						GuiManager.ShowErrorPopup("Something went wrong\nPlease restart the program.");
+					});
+				} else
+				{
+					Platform.runLater(() -> {
+						setSubscriberCardDisplay(newSub);
+					});
+
+				}
+				break;
+			}
+		}
 
 	}
+	
+	private void setSubscriberCardDisplay(Subscriber newSub)
+	{
+		String status = newSub.getStatus().substring(0,1).toUpperCase() + newSub.getStatus().substring(1);
+		statusLabel.setText("Subscriber card status: "+ status);
+	    subscriberNumberField.setText(newSub.getSubscriberNumber());
+	    idNumberField.setText(newSub.getId());
+	    firstNameField.setText(newSub.getFirstName());
+	    lastNameField.setText(newSub.getLastName());
+	    phoneNumberField.setText(newSub.getPhoneNumber());
+	    emailField.setText(newSub.getEmail());
+	    userNameField.setText(newSub.getUserName());
+		
+	}
+
+
 
 	@Override
 	public void setUserLogedIn(User userLoged)
@@ -179,10 +246,12 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		userWelcomLabel.setText("Hello "+ name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
-		/*String status = userLoged.****.substring(0,1).toUpperCase() + userLoged.****.substring(1);
-		statusLabel.setText("Subscriber card status: "+ status);*/
+		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
+
 		
 	}
+	
+
 
 	@Override
 	public User getUserLogedIn()

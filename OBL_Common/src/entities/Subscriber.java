@@ -38,18 +38,17 @@ public class Subscriber extends User
 		email = null;
 		phoneNumber = null;
 	}
-	
-	
-	public Subscriber(String subscriberNumber,String phoneNumber,String email,String status,int currentNumOfBorrows, int currentNumOfOrders ,String userName,String idNumber,String firstName,String lastName) //tal cons
-	   {
-	     super(userName,idNumber,firstName,lastName);
-	     this.subscriberNumber=subscriberNumber;
-	     this.phoneNumber=phoneNumber;
-	     this.email=email;
-	     this.status=status;
-	     this.currentNumOfBorrows=currentNumOfBorrows;
-	     this.currentNumOfOrders=currentNumOfOrders;
-	   }
+	 public Subscriber(String subscriberNumber,String phoneNumber,String email,String status,int currentNumOfBorrows, int currentNumOfOrders ,String userName,String idNumber,String firstName,String lastName) //tal cons
+	 {
+		 super(userName,idNumber,firstName,lastName);
+		 this.subscriberNumber=subscriberNumber;
+		 this.phoneNumber=phoneNumber;
+		 this.email=email;
+		 this.status=status;
+		 this.currentNumOfBorrows=currentNumOfBorrows;
+		 this.currentNumOfOrders=currentNumOfOrders;
+	 }
+
 
 	public String getSubscriberNumber()
 	{
