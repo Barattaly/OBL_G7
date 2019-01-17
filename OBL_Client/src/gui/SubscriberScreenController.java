@@ -5,6 +5,10 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
@@ -14,8 +18,10 @@ import defaultPackage.mainClient;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -29,6 +35,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class SubscriberScreenController implements Initializable, IClientUI
 {
@@ -60,6 +67,21 @@ public class SubscriberScreenController implements Initializable, IClientUI
 
     @FXML
     private JFXTextField userNameField;
+    
+    @FXML
+    private JFXButton btn_Edit;
+    
+    @FXML
+    private JFXButton btn_Cancel;
+
+    @FXML
+    private JFXButton btn_Save;
+    
+    @FXML
+    private Label warningLabel;
+    
+    @FXML
+    private Label SuccessLabel;
     
 	@FXML
 	private Pane pane_home, pane_books, pane_viewSubscriberCard, pane_searchBook;
@@ -217,6 +239,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 				}
 				break;
 			}
+
 		}
 
 	}
@@ -234,6 +257,116 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	    userNameField.setText(newSub.getUserName());
 		
 	}
+	
+    @FXML
+    void btn_EditClick(ActionEvent event) {
+    	GuiManager.preventLettersTypeInTextField(phoneNumberField);
+    	
+    	btn_Edit.setVisible(false);
+    	btn_Cancel.setVisible(true);
+    	btn_Save.setVisible(true);
+    	
+    	firstNameField.setEditable(true);
+    	lastNameField.setEditable(true);
+    	phoneNumberField.setEditable(true);
+    	emailField.setEditable(true);
+    	
+       	firstNameField.setCursor(Cursor.TEXT);
+    	lastNameField.setCursor(Cursor.TEXT);
+    	phoneNumberField.setCursor(Cursor.TEXT);
+    	emailField.setCursor(Cursor.TEXT);
+
+    }
+    
+    @FXML
+    void btn_CancelClick(ActionEvent event) {
+    	setUserLogedIn(userLogedIn);
+    	
+    	btn_Edit.setVisible(true);
+    	btn_Cancel.setVisible(false);
+    	btn_Save.setVisible(false);
+    	
+       	firstNameField.setEditable(false);
+    	lastNameField.setEditable(false);
+    	phoneNumberField.setEditable(false);
+    	emailField.setEditable(false);
+    	
+       	firstNameField.setCursor(Cursor.DEFAULT);
+    	lastNameField.setCursor(Cursor.DEFAULT);
+    	phoneNumberField.setCursor(Cursor.DEFAULT);
+    	emailField.setCursor(Cursor.DEFAULT);
+
+
+    }
+    
+    @FXML
+    void btn_SaveClick(ActionEvent event) {
+    	if(firstNameField.getText().isEmpty())
+    	{
+    		SuccessLabel.setVisible(false);
+    		warningLabel.setVisible(true);
+    		warningLabel.setText("Enter first name please");
+    	}
+    	else if(lastNameField.getText().isEmpty())
+    	{
+    		SuccessLabel.setVisible(false);
+    		warningLabel.setVisible(true);
+    		warningLabel.setText("Enter last name please");
+    	}
+    	else if(phoneNumberField.getText().isEmpty())
+    	{
+    		SuccessLabel.setVisible(false);
+    		warningLabel.setVisible(true);
+    		warningLabel.setText("Enter phone number please");
+    	}
+    	else if(emailField.getText().isEmpty())
+    	{
+    		SuccessLabel.setVisible(false);
+    		warningLabel.setVisible(true);
+    		warningLabel.setText("Enter Email please");
+    	}
+    	else if(!isValidEmailAddress(emailField.getText()))
+    	{
+    		SuccessLabel.setVisible(false);
+    		warningLabel.setVisible(true);
+    		warningLabel.setText("The Email is incorrect");
+    	}
+    	else
+    	{
+    	   	btn_Edit.setVisible(true);
+        	btn_Cancel.setVisible(false);
+        	btn_Save.setVisible(false);
+        	
+           	firstNameField.setEditable(false);
+        	lastNameField.setEditable(false);
+        	phoneNumberField.setEditable(false);
+        	emailField.setEditable(false);
+        	
+           	firstNameField.setCursor(Cursor.DEFAULT);
+        	lastNameField.setCursor(Cursor.DEFAULT);
+        	phoneNumberField.setCursor(Cursor.DEFAULT);
+        	emailField.setCursor(Cursor.DEFAULT);
+        	
+    		Subscriber subscriberToUpdate = new Subscriber(userLogedIn.getId(),firstNameField.getText(),lastNameField.getText(),
+    				phoneNumberField.getText(),emailField.getText(),userLogedIn.getLoginStatus());
+    		GuiManager.client.updateSubscriberDetails(subscriberToUpdate);
+    		subscriberToUpdate.setUserName(userLogedIn.getUserName());
+    		String name = subscriberToUpdate.getFirstName().substring(0, 1).toUpperCase() + subscriberToUpdate.getFirstName().substring(1);		
+    		userWelcomLabel.setText("Hello "+ name);
+    		String userName = subscriberToUpdate.getUserName();
+    		userNameLabel.setText(userName);
+    		SuccessLabel.setVisible(true);
+    		warningLabel.setVisible(false);
+    		SuccessLabel.setText("Changes saved successfully");
+    		
+    		
+    			
+        	
+    	}
+    	
+    	
+
+    }
 
 
 
@@ -258,6 +391,20 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	{
 		// TODO Auto-generated method stub
 		return userLogedIn;
+	}
+	
+	private static boolean isValidEmailAddress(String email)
+	{
+		boolean result = true;
+		try
+		{
+			InternetAddress emailAddr = new InternetAddress(email);
+			emailAddr.validate();
+		} catch (AddressException ex)
+		{
+			result = false;
+		}
+		return result;
 	}
 
 }

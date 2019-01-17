@@ -132,7 +132,7 @@
             </Pane>
             <Pane fx:id="pane_viewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="586.0" prefWidth="652.0">
                <children>
-                  <JFXButton buttonType="RAISED" layoutY="485.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
+                  <JFXButton fx:id="btn_Edit" buttonType="RAISED" layoutY="485.0" onAction="#btn_EditClick" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -260,6 +260,32 @@
                         <Insets />
                      </opaqueInsets>
                   </GridPane>
+                  <JFXButton fx:id="btn_Cancel" buttonType="RAISED" layoutY="485.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_Save" buttonType="RAISED" layoutX="128.0" layoutY="485.0" onAction="#btn_SaveClick" style="-fx-background-color: green;" text="Save changes" textFill="#fffefe" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </JFXButton>
+                  <Label fx:id="warningLabel" layoutX="7.0" layoutY="463.0" textFill="RED">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="SuccessLabel" layoutX="3.0" layoutY="458.0" prefHeight="25.0" prefWidth="367.0" textFill="#a0a2ab">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="586.0" prefWidth="652.0" visible="false">
