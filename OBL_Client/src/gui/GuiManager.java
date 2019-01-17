@@ -177,16 +177,14 @@ public class GuiManager
 	{
 		try
 		{
-
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(
-					GuiManager.class.getResource(availableFXML.get(SCREENS.bookInformation)));
+			GuiManager.class.getResource(availableFXML.get(SCREENS.bookInformation)));
 			Parent root = loader.load();
 			BookInformationController controller = loader.getController();
 			controller.setBookInformation(book);
 			Scene scene = new Scene(root);
 			SeondStage.setTitle("Ort Braude Library");
-			SeondStage.setOnCloseRequest(e -> shutDown());// make sure safe shutdown
 			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
 			SeondStage.setScene(scene);
 			SeondStage.showAndWait();
