@@ -5,7 +5,7 @@ import entities.DBMessage;
 import entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-
+import java.util.ArrayList;
 
 import com.jfoenix.controls.JFXButton;
 
@@ -14,7 +14,6 @@ import javafx.scene.image.ImageView;
 
 public class BookInformationController implements IClientUI
 {
-
 	@FXML
 	private Label bookNameLabel;
 
@@ -47,10 +46,8 @@ public class BookInformationController implements IClientUI
 
 	private Book bookToShow;
 
-
 	public void setBookInformation(Book book)
 	{
-		System.out.println(book.getDescription());
 		descreptionPane.setText(book.getDescription());
 		bookToShow = book;
 		bookNameLabel.setText(book.getName());
@@ -58,6 +55,7 @@ public class BookInformationController implements IClientUI
 		authorLabel.setText(authors);
 		String categories = book.getCategories().toString().replace("[", "").replace("]", "");
 		categoriesLabel.setText(categories);
+		
 		catNumLabel.setText(book.getCatalogNumber());
 		if (book.getClassification().equals("wanted"))
 		{
@@ -90,7 +88,5 @@ public class BookInformationController implements IClientUI
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 
 }

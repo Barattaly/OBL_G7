@@ -68,7 +68,7 @@ public class GuiManager
 	{
 		try
 		{
-			if (fxmlPath == SCREENS.login)
+			if (fxmlPath == SCREENS.login && !(CurrentGuiController instanceof SearchBookController))
 				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(fxmlPath)));
@@ -195,4 +195,5 @@ public class GuiManager
 		}
 		
 	}
+	
 }
