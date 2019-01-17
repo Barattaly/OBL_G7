@@ -274,8 +274,8 @@ public class OBLServer extends AbstractServer
 		String query = BorrowsQueries.addNewBorrow(borrowToAdd);
 		oblDB.executeUpdate(query);// add a new borrow to Borrows table
 		
-		/*query = CopiesQueries.changeCopyStatus(borrowToAdd);
-		oblDB.executeUpdate(query);// update the copy status*/
+		query = CopiesQueries.changeCopyStatus(borrowToAdd);
+		oblDB.executeUpdate(query);// update copy status to unavailable
 		
 
 		DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
