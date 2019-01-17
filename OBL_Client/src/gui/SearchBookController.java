@@ -9,17 +9,18 @@ import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
 import gui.GuiManager.SCREENS;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import com.jfoenix.controls.JFXRadioButton;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
@@ -51,6 +52,22 @@ public class SearchBookController implements Initializable, IClientUI
 
 	@FXML
 	private TableColumn<ObservableBook, String> locationcol;
+	
+    @FXML
+    private JFXRadioButton bookNameRadioBtn;
+
+    @FXML
+    private JFXRadioButton authorNameRadioBtn;
+
+    @FXML
+    private JFXRadioButton bookSubjectRadioBtn;
+
+    @FXML
+    private JFXRadioButton freeTextRadioBtn;
+    
+    @FXML
+    private ToggleGroup radioGroup;
+
 
 	private ObservableList<ObservableBook> booklist;// for table view...
 
@@ -60,7 +77,6 @@ public class SearchBookController implements Initializable, IClientUI
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
 		GuiManager.client.getAllBooks();// fill in the table off books from the updated DB book list
-
 		namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
 		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
@@ -83,10 +99,24 @@ public class SearchBookController implements Initializable, IClientUI
 		});
 
 	}
+    @FXML
+    void radioBtnClicked(ActionEvent event) 
+    {
+    	/*switch(radioGroup.getSelectedToggle().getUserData().toString())
+    	{
+    	case "Free text":
+    		System.out.println("freeee");
+    		break;
+    	case "Author name":
+    		break;
+    		
+    	}*/
+    }
 
 	@FXML
 	void searchBookBtnClick(ActionEvent event)
 	{
+		
 		// free
 		JFXTextField txtField = freeSearchTextfield;
 		ObservableList<ObservableBook> data = booklist;

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,14 +16,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="659.0" prefWidth="765.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SearchBookController">
 	<children>
-		<VBox alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="426.0" prefWidth="733.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
-			<children>
-				<HBox alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="426.0" prefWidth="733.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="14.0">
+				<HBox alignment="CENTER" prefHeight="426.0" prefWidth="733.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="14.0">
 					<children>
 						<Pane fx:id="searchBookPane" prefHeight="426.0" prefWidth="733.0">
 							<children>
@@ -43,38 +41,44 @@
 										<RowConstraints maxHeight="216.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 									</rowConstraints>
 									<children>
-										<JFXTextField fx:id="bookNameTextField" editable="false" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1">
+                  										<JFXTextField fx:id="bookNameTextField" disable="true" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1">
+                  											<font>
+                  												<Font size="14.0" />
+                  											</font>
+                  										</JFXTextField>
+                  										<JFXTextField fx:id="authorNameTextfield" disable="true" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  											<font>
+                  												<Font size="14.0" />
+                  											</font>
+                  										</JFXTextField>
+                  										<JFXTextField fx:id="bookSubjectTextfield" disable="true" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  											<font>
+                  												<Font size="14.0" />
+                  											</font>
+                  										</JFXTextField>
+                  										<JFXTextField fx:id="freeSearchTextfield" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" promptText="Any text..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <font>
+                              <Font size="14.0" />
+                           </font></JFXTextField>
+										<JFXRadioButton fx:id="bookNameRadioBtn" onAction="#radioBtnClicked" prefHeight="44.0" prefWidth="114.0" text="Book name:" textFill="#a0a2ab">
 											<font>
 												<Font size="14.0" />
 											</font>
-										</JFXTextField>
-										<JFXTextField fx:id="authorNameTextfield" editable="false" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="1">
-											<font>
-												<Font size="14.0" />
-											</font>
-										</JFXTextField>
-										<JFXTextField fx:id="bookSubjectTextfield" editable="false" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="2">
-											<font>
-												<Font size="14.0" />
-											</font>
-										</JFXTextField>
-										<JFXTextField fx:id="freeSearchTextfield" focusColor="#a0a2ab" prefHeight="23.0" prefWidth="189.0" unFocusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-										<JFXRadioButton prefHeight="44.0" prefWidth="114.0" text="Book name:" textFill="#a0a2ab">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="radioGroup" />
+                           </toggleGroup>
+										</JFXRadioButton>
+										<JFXRadioButton fx:id="authorNameRadioBtn" prefHeight="42.0" prefWidth="128.0" text="Author name:" textFill="#a0a2ab" toggleGroup="$radioGroup" GridPane.rowIndex="1">
 											<font>
 												<Font size="14.0" />
 											</font>
 										</JFXRadioButton>
-										<JFXRadioButton prefHeight="42.0" prefWidth="128.0" text="Author name:" textFill="#a0a2ab" GridPane.rowIndex="1">
+										<JFXRadioButton fx:id="bookSubjectRadioBtn" prefHeight="42.0" prefWidth="128.0" text="Book subject:" textFill="#a0a2ab" toggleGroup="$radioGroup" GridPane.rowIndex="2">
 											<font>
 												<Font size="14.0" />
 											</font>
 										</JFXRadioButton>
-										<JFXRadioButton prefHeight="42.0" prefWidth="128.0" text="Book subject:" textFill="#a0a2ab" GridPane.rowIndex="2">
-											<font>
-												<Font size="14.0" />
-											</font>
-										</JFXRadioButton>
-										<JFXRadioButton prefHeight="42.0" prefWidth="128.0" text="Free search:" textFill="#a0a2ab" GridPane.rowIndex="3">
+										<JFXRadioButton fx:id="freeTextRadioBtn" prefHeight="42.0" prefWidth="128.0" selected="true" text="Free text:" textFill="#a0a2ab" toggleGroup="$radioGroup" GridPane.rowIndex="3">
 											<font>
 												<Font size="14.0" />
 											</font>
@@ -108,13 +112,11 @@
 						</Pane>
 					</children>
 				</HBox>
-			</children>
-		</VBox>
 		<TableView fx:id="BookTable" layoutX="25.0" layoutY="451.0" prefHeight="178.0" prefWidth="715.0" style="-fx-background-color: #a0a2ab;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="451.0">
 			<columns>
+				<TableColumn fx:id="catalognumbercol" prefWidth="104.0" text="Catalog Number" />
 				<TableColumn fx:id="namecol" prefWidth="276.0" text="Name" />
 				<TableColumn fx:id="authorcol" prefWidth="214.0" text="Authors" />
-				<TableColumn fx:id="catalognumbercol" prefWidth="104.0" text="Catalog Number" />
 				<TableColumn fx:id="locationcol" prefWidth="119.0" text="Location in library" />
 			</columns>
 			<columnResizePolicy>
