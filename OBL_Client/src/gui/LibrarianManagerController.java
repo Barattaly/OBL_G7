@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import entities.DBMessage;
+import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
 import javafx.event.ActionEvent;
@@ -193,6 +194,7 @@ public class LibrarianManagerController implements Initializable ,IClientUI
 		// TODO Auto-generated method stub
 		
 	}
+
 
 	@Override
 	public void setUserLogedIn(User userLoged)

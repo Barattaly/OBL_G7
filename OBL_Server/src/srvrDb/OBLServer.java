@@ -123,6 +123,11 @@ public class OBLServer extends AbstractServer
 				getListOfAllBooks(client);
 				break;
 			}
+			case ViewSubscriberCard:
+			{
+				searchSubscriberByID((String)dbMessage.Data, client);
+				break;
+			}
 			case GetBookClassification:
 			{
 				getBookClassification((Book) dbMessage.Data, client);
@@ -150,6 +155,24 @@ public class OBLServer extends AbstractServer
 			}
 		}
 	}
+	private void searchSubscriberByID(String subscriberID, ConnectionToClient client) throws IOException 
+	  {
+	    String query = SubscribersQueries.getSubscriberFullInformationByID(subscriberID);
+	    ResultSet rs = oblDB.executeQuery(query); //here I found the subscriber by subscriber ID that enter in txt filed
+	    int rowCount = getRowCount(rs);
+	    if(rowCount == 0) //check if that subscriber is not really exist
+	    {
+	      DBMessage returnMsg = new DBMessage(DBAction.ViewSubscriberCard, null);
+	      client.sendToClient(returnMsg);
+	      return;
+	    }
+	    else
+	    { //return the subscriber we found to the client
+	      Subscriber subscriber=SubscribersQueries.CreateSubscriberFromFullInformationRS(rs);
+	      DBMessage returnMsg = new DBMessage(DBAction.ViewSubscriberCard, subscriber);
+	      client.sendToClient(returnMsg);
+	    } 
+	  }
 
 	private void getListOfAllBooks(ConnectionToClient client) throws SQLException, IOException
 	{

@@ -3,6 +3,7 @@ package gui;
 import com.jfoenix.controls.JFXButton;
 
 import entities.DBMessage;
+import entities.Subscriber;
 import entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -16,6 +17,8 @@ public class BookInformationController implements IClientUI
 		// TODO Auto-generated method stub
 
 	}
+	
+
 
 	@Override
 	public void setUserLogedIn(User userLoged)

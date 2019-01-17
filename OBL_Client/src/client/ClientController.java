@@ -149,5 +149,19 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
+
+	public void getSubscriberFromDB(String id)
+	{
+		DBMessage message = new DBMessage(DBAction.ViewSubscriberCard, id);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
+
 }
 //End of ClientController class

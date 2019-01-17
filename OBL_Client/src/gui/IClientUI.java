@@ -7,6 +7,7 @@ import javafx.scene.Node;
 
 public interface IClientUI
 {
+
 	User getUserLogedIn();
 	void setUserLogedIn(User userLoged);
 	void getMessageFromServer(DBMessage msg);

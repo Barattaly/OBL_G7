@@ -130,7 +130,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="pane_viewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="586.0" prefWidth="652.0" visible="false">
+            <Pane fx:id="pane_viewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="586.0" prefWidth="652.0">
                <children>
                   <JFXButton buttonType="RAISED" layoutY="485.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
                      <font>
@@ -220,37 +220,37 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1">
+                        <JFXTextField fx:id="subscriberNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </JFXTextField>
-                        <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <JFXTextField fx:id="idNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </JFXTextField>
-                        <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <JFXTextField fx:id="firstNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </JFXTextField>
-                        <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <JFXTextField fx:id="lastNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </JFXTextField>
-                        <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <JFXTextField fx:id="phoneNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </JFXTextField>
-                        <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <JFXTextField fx:id="emailField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </JFXTextField>
-                        <JFXTextField editable="false" focusColor="#a0a2ab" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <JFXTextField fx:id="userNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>

@@ -456,6 +456,7 @@ public class LibrarianScreenController implements Initializable, IClientUI {
 		}
 	}
 
+
 	@Override
 	public void setUserLogedIn(User userLoged) {
 		userLogedIn = userLoged;
