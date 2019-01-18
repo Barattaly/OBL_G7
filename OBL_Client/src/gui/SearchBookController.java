@@ -19,6 +19,7 @@ import com.jfoenix.controls.JFXRadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
@@ -32,7 +33,7 @@ public class SearchBookController implements Initializable, IClientUI
 	private JFXTextField authorNameTextfield;
 
 	@FXML
-	private JFXTextField bookSubjectTextfield;
+	private JFXTextField bookCatagoriesTextfield;
 
 	@FXML
 	private JFXTextField freeSearchTextfield;
@@ -51,22 +52,23 @@ public class SearchBookController implements Initializable, IClientUI
 
 	@FXML
 	private TableColumn<ObservableBook, String> locationcol;
-	
-    @FXML
-    private JFXRadioButton bookNameRadioBtn;
+	@FXML
+	private TableColumn<ObservableBook, String> catagoriesCol;
 
-    @FXML
-    private JFXRadioButton authorNameRadioBtn;
+	@FXML
+	private JFXRadioButton bookNameRadioBtn;
 
-    @FXML
-    private JFXRadioButton bookSubjectRadioBtn;
+	@FXML
+	private JFXRadioButton authorNameRadioBtn;
 
-    @FXML
-    private JFXRadioButton freeTextRadioBtn;
-    
-    @FXML
-    private ToggleGroup radioGroup;
+	@FXML
+	private JFXRadioButton bookCatagoriesRadioBtn;
 
+	@FXML
+	private JFXRadioButton freeTextRadioBtn;
+
+	@FXML
+	private ToggleGroup radioGroup;
 
 	private ObservableList<ObservableBook> booklist;// for table view...
 
@@ -80,6 +82,7 @@ public class SearchBookController implements Initializable, IClientUI
 		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
 		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
 		locationcol.setCellValueFactory(new PropertyValueFactory<>("location"));
+		catagoriesCol.setCellValueFactory(new PropertyValueFactory<>("catagories"));
 		booklist = FXCollections.observableArrayList();
 
 		BookTable.setItems(booklist);
@@ -98,29 +101,110 @@ public class SearchBookController implements Initializable, IClientUI
 		});
 
 	}
-    @FXML
-    void radioBtnClicked(ActionEvent event) 
-    {
-    	/*switch(radioGroup.getSelectedToggle().getUserData().toString())
-    	{
-    	case "Free text":
-    		System.out.println("freeee");
-    		break;
-    	case "Author name":
-    		break;
-    		
-    	}*/
-    }
+
+	@FXML
+	void radioBtnClicked(ActionEvent event)
+	{
+		switch (((JFXRadioButton) radioGroup.getSelectedToggle()).getText())
+		{
+		case "Free text:":
+			bookNameTextField.setDisable(true);
+			bookCatagoriesTextfield.setDisable(true);
+			authorNameTextfield.setDisable(true);
+			freeSearchTextfield.setDisable(false);
+			break;
+		case "Book name:":
+			bookNameTextField.setDisable(false);
+			bookCatagoriesTextfield.setDisable(true);
+			authorNameTextfield.setDisable(true);
+			freeSearchTextfield.setDisable(true);
+			break;
+		case "Author name:":
+			bookNameTextField.setDisable(true);
+			bookCatagoriesTextfield.setDisable(true);
+			authorNameTextfield.setDisable(false);
+			freeSearchTextfield.setDisable(true);
+			break;
+		case "Book catagory:":
+			bookNameTextField.setDisable(true);
+			bookCatagoriesTextfield.setDisable(false);
+			authorNameTextfield.setDisable(true);
+			freeSearchTextfield.setDisable(true);
+			break;
+		}
+	}
 
 	@FXML
 	void searchBookBtnClick(ActionEvent event)
 	{
-		
-		// free
-		JFXTextField txtField = freeSearchTextfield;
+		if (!bookNameTextField.isDisable())
+		{
+			searchBook(namecol, bookNameTextField);
+
+		} else if (!bookCatagoriesTextfield.isDisable())
+		{
+			searchBook(catagoriesCol, bookCatagoriesTextfield);
+
+		} else if (!authorNameTextfield.isDisable())
+		{
+			searchBook(authorcol, authorNameTextfield);
+
+		} else
+		{
+			searchByFreeText();
+		}
+
+	}
+
+	private void searchBook(TableColumn<ObservableBook, String> col, JFXTextField txtField)
+	{
 		ObservableList<ObservableBook> data = booklist;
 
 		if (txtField.textProperty().get().isEmpty())
+		{
+
+			BookTable.setItems(data);
+
+			return;
+		}
+
+		ObservableList<ObservableBook> itemsAfterFilter = FXCollections.observableArrayList();
+
+		try
+		{
+			for (int i = 0; i < data.size(); i++)
+			{
+
+				String cellValue = null;
+				try
+				{
+					cellValue = col.getCellData(data.get(i)).toString();
+				} catch (NullPointerException ex)
+				{
+					break;
+				}
+				cellValue = cellValue.toLowerCase();
+
+				if (cellValue.contains(txtField.textProperty().get().toLowerCase()))
+				{
+					itemsAfterFilter.add(data.get(i));
+					break;
+				}
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		BookTable.setItems(itemsAfterFilter);
+
+	}
+
+	private void searchByFreeText()
+	{
+		ObservableList<ObservableBook> data = booklist;
+
+		if (freeSearchTextfield.textProperty().get().isEmpty())
 		{
 
 			BookTable.setItems(data);
@@ -139,7 +223,7 @@ public class SearchBookController implements Initializable, IClientUI
 				{
 
 					TableColumn col = cols.get(j);
-					String cellValue =	null;
+					String cellValue = null;
 					try
 					{
 						cellValue = col.getCellData(data.get(i)).toString();
@@ -149,7 +233,7 @@ public class SearchBookController implements Initializable, IClientUI
 					}
 					cellValue = cellValue.toLowerCase();
 
-					if (cellValue.contains(txtField.textProperty().get().toLowerCase()))
+					if (cellValue.contains(freeSearchTextfield.textProperty().get().toLowerCase()))
 					{
 
 						itemsAfterFilter.add(data.get(i));
@@ -157,14 +241,12 @@ public class SearchBookController implements Initializable, IClientUI
 						break;
 
 					}
-
 				}
 			}
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
 		BookTable.setItems(itemsAfterFilter);
 	}
 
@@ -203,8 +285,17 @@ public class SearchBookController implements Initializable, IClientUI
 				else
 					authors = authors + ", " + author;
 			}
+			String catagories = "";
+			for (String catagory : bookMap.get(key).getCategories())
+			{
+				if (catagories.isEmpty())
+					catagories = catagory;
+				else
+					catagories = catagories + ", " + catagory;
+			}
+
 			ObservableBook temp = new ObservableBook(bookMap.get(key).getName(), authors,
-					Integer.parseInt(bookMap.get(key).getCatalogNumber()), bookMap.get(key).getLocation());
+					Integer.parseInt(bookMap.get(key).getCatalogNumber()), bookMap.get(key).getLocation(), catagories);
 			booklist.add(temp);
 		}
 	}
@@ -222,7 +313,5 @@ public class SearchBookController implements Initializable, IClientUI
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-
 
 }

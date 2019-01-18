@@ -23,7 +23,7 @@
    <center>
       <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="765.0" style="-fx-background-color: #203447;">
          <children>
-            <Pane fx:id="pane_home" prefHeight="611.0" prefWidth="650.0" visible="false">
+            <Pane fx:id="pane_home" prefHeight="611.0" prefWidth="650.0">
                <children>
                   <Label fx:id="userWelcomLabel" layoutX="56.0" layoutY="150.0" text="Hello Galina!" textFill="#a0a2ab">
                      <font>
@@ -31,7 +31,7 @@
                      </font>
                   </Label>
                   <TitledPane animated="false" layoutX="56.0" layoutY="293.0" prefHeight="200.0" prefWidth="538.0" stylesheets="@../../bin/resources/titledpane.css" text="Messages:" textFill="#a0a2ab" />
-                  <JFXButton buttonType="RAISED" layoutX="56.0" layoutY="260.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="56.0" layoutY="260.0" onAction="#btn_borrowClickOfManager" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

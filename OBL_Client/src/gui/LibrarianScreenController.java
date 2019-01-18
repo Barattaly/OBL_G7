@@ -180,7 +180,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_borrowClick(ActionEvent event)
+	protected void btn_borrowClick(ActionEvent event)
 	{
 		final Stage dialog = new Stage();
 		dialog.initModality(Modality.APPLICATION_MODAL);

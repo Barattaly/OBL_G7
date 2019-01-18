@@ -10,15 +10,15 @@ public class ObservableBook
 	public SimpleStringProperty author;
 	public SimpleIntegerProperty catalognumber;
 	public SimpleStringProperty location;
-	public SimpleStringProperty returndate;
+	public SimpleStringProperty catagories;
 
-	public ObservableBook(String name, String author, int catalognumber, String location)//, String returndate)
+	public ObservableBook(String name, String author, int catalognumber, String location, String catagories)//, String returndate)
 	{
 		this.name = new SimpleStringProperty(name);
 		this.catalognumber = new SimpleIntegerProperty(catalognumber);
 		this.author = new SimpleStringProperty(author);
 		this.location = new SimpleStringProperty(location);
-		//this.returndate = new SimpleStringProperty(returndate);
+		this.catagories = new SimpleStringProperty(catagories);
 	}
 
 	public String getName()
@@ -61,14 +61,14 @@ public class ObservableBook
 		this.location = new SimpleStringProperty(location);
 	}
 
-	public String getReturndate()
+	public String getCatagories()
 	{
-		return returndate.get();
+		return catagories.get();
 	}
 
-	public void setReturndate(String returndate)
+	public void setCatagories(String catagories)
 	{
-		this.returndate = new SimpleStringProperty(returndate);
+		this.catagories = new SimpleStringProperty(catagories);
 	}
 
 }

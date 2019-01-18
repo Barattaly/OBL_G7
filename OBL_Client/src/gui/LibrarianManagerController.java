@@ -20,7 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-public class LibrarianManagerController implements Initializable ,IClientUI
+public class LibrarianManagerController extends LibrarianScreenController
 {
 	private User userLogedIn;
     @FXML
@@ -211,5 +211,13 @@ public class LibrarianManagerController implements Initializable ,IClientUI
 	{
 		return userLogedIn;
 	}
+	
+	
+	@FXML
+	void btn_borrowClickOfManager(ActionEvent event)
+	{
+		this.btn_borrowClick(event);
+	}
+
 
 }
