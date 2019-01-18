@@ -18,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 public class LibrarianManagerController implements Initializable ,IClientUI
@@ -136,7 +135,8 @@ public class LibrarianManagerController implements Initializable ,IClientUI
 	 	btn_reports.setOpacity(0.5);
 	}
 	 
-	 public void initialize(URL arg0, ResourceBundle arg1) 
+	 @Override
+	public void initialize(URL arg0, ResourceBundle arg1) 
 	   {
 	    	pane_home.setVisible(true);
 	    	pane_createNewSubscriberCard.setVisible(false);

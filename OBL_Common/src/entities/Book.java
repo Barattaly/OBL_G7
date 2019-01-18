@@ -18,6 +18,8 @@ public class Book implements Serializable
 	private String isArchived;
 	private ArrayList<CopyOfBook> copies;
 	private ArrayList<String> authorNameList;
+	private ArrayList<String> categories;
+
 	
 	
 	public Book(String catalogNumber, String name, String purchaseDate,
@@ -169,6 +171,18 @@ public class Book implements Serializable
 	public void setAuthorNameList(ArrayList<String> authorNameList)
 	{
 		this.authorNameList = authorNameList;
+	}
+
+
+	public ArrayList<String> getCategories()
+	{
+		return categories;
+	}
+
+
+	public void setCategories(ArrayList<String> categories)
+	{
+		this.categories = categories;
 	}
 	
 	

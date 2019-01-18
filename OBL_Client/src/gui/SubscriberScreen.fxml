@@ -260,7 +260,7 @@
                         <Insets />
                      </opaqueInsets>
                   </GridPane>
-                  <JFXButton fx:id="btn_Cancel" buttonType="RAISED" layoutY="485.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
+                  <JFXButton fx:id="btn_Cancel" buttonType="RAISED" layoutX="143.0" layoutY="485.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -268,7 +268,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </JFXButton>
-                  <JFXButton fx:id="btn_Save" buttonType="RAISED" layoutX="128.0" layoutY="485.0" onAction="#btn_SaveClick" style="-fx-background-color: green;" text="Save changes" textFill="#fffefe" visible="false">
+                  <JFXButton fx:id="btn_Save" buttonType="RAISED" layoutY="485.0" onAction="#btn_SaveClick" style="-fx-background-color: green;" text="Save changes" textFill="#fffefe" visible="false">
                      <font>
                         <Font size="14.0" />
                      </font>
