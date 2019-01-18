@@ -295,6 +295,9 @@ public class SubscriberScreenController implements Initializable, IClientUI
     	lastNameField.setCursor(Cursor.DEFAULT);
     	phoneNumberField.setCursor(Cursor.DEFAULT);
     	emailField.setCursor(Cursor.DEFAULT);
+    	
+    	SuccessLabel.setVisible(false);
+		warningLabel.setVisible(false);
 
 
     }
