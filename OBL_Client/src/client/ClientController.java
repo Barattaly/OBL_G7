@@ -137,20 +137,6 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-	
-	public void getBookClassification(Book bookToCheck)
-	{
-		DBMessage message = new DBMessage(DBAction.GetBookClassification, bookToCheck);
-		try
-		{
-			sendToServer(message);
-		} catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		
-	}
-
 	public void getSubscriberFromDB(String id)
 	{
 		DBMessage message = new DBMessage(DBAction.ViewSubscriberCard, id);
