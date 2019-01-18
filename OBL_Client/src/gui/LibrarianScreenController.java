@@ -1,12 +1,17 @@
 package gui;
 
 import java.net.URL;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.GregorianCalendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.chrono.ChronoLocalDate;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -227,13 +232,14 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		returnDateLab.setStyle("-fx-text-fill: #a0a2ab");
 		returnDate = new JFXDatePicker();
 		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
-		
-		returnDate.setDayCellFactory(picker -> new DateCell() {
-	        public void updateItem(LocalDate date, boolean empty) {
+		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yyyy");
+		returnDate.setDayCellFactory(picker -> new DateCell() 
+		{
+	        public void updateItem(LocalDate date, boolean empty) 
+	        {
 	            super.updateItem(date, empty);
 	            LocalDate today = LocalDate.now();
-
-	            setDisable(empty || date.compareTo(today) < 0 || date.compareTo(today.plusDays(14)) > 0);
+	            setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.compareTo(today) < 0 || date.compareTo(today.plusDays(13)) > 0);
 	        }
 		});
 		
@@ -243,7 +249,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			public void handle(Event e) 
 			{
 				try {
-					//returnDate.setDisable(true);
 					Book bookToCheck = new Book(bookCatalogNumber.getText());
 					GuiManager.client.getBookClassification(bookToCheck);
 				} 
@@ -284,30 +289,34 @@ public class LibrarianScreenController implements Initializable, IClientUI
 						&& subscriberID.getText().isEmpty() && (returnDate.getValue() == null)) 
 				{
 					warningMessage = "Please fill all of the fields";
-				} else if (bookCatalogNumber.getText().isEmpty()) {
-					warningMessage = "Please enter book catalog number";
-				} else if (bookCopyId.getText().isEmpty()) {
-					warningMessage = "Please enter book copy id";
-				} else if (subscriberID.getText().isEmpty()) {
-					warningMessage = "Please enter subscriber id";
-				} else if (returnDate.getValue() == null) {
-					warningMessage = "Please enter return date";
-				}/* else if (returnDate.getValue() != null)
+				} 
+				else if (bookCatalogNumber.getText().isEmpty()) 
 				{
-					String retDate = returnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-					int year = returnDate.getValue().getYear();
-					if(year < 2019)
-					{
-						retDate.
-					}
-				}*/ else {
+					warningMessage = "Please enter book catalog number";
+				} 
+				else if (bookCopyId.getText().isEmpty()) 
+				{
+					warningMessage = "Please enter book copy id";
+				} 
+				else if (subscriberID.getText().isEmpty()) 
+				{
+					warningMessage = "Please enter subscriber id";
+				} 
+				else if (returnDate.getValue() == null) 
+				{
+					warningMessage = "Please enter return date";
+				}
+				else 
+				{
 					try {
 						String retDate = returnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 						
 						BorrowACopyOfBook newBorrow = new BorrowACopyOfBook(subscriberID.getText(), retDate,
 								bookCatalogNumber.getText(), bookCopyId.getText());
 						GuiManager.client.createNewBorrow(newBorrow);
-					} catch (Exception ex) {
+					} 
+					catch (Exception ex) 
+					{
 						ex.printStackTrace();
 					}
 				}
@@ -429,46 +438,42 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
-		case GetBookClassification: 
-		{
-			Book bookToCheck = (Book) msg.Data;
-			if (bookToCheck == null) 
-			{
-				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("Enter book catalog number first"); });
-				returnDate.setDisable(false);
-			}
-			/*else if (bookToCheck.getClassification().equals("ordinary")) 
-			{
-				
-			}
-			else if (bookToCheck.getClassification().equals("wanted")) 
-			{
-				
-			}*/
-			break;
-		}
 		case CreateNewBorrow: 
 		{
 			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
-			if (newBorrow.getBookCatalogNumber().equals("0")) {
+			if (newBorrow.getBookCatalogNumber().equals("0")) 
+			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
 				});
-			} else if (newBorrow.getCopyId().equals("0")) {
+			} 
+			else if (newBorrow.getCopyId().equals("0")) 
+			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
 				});
-			} else if (newBorrow.getSubscriberId().equals("0")) {
+			} 
+			else if (newBorrow.getSubscriberId().equals("0")) 
+			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Subscriber ID doesn't exist!");
 				});
-			} else if (newBorrow.getExpectedReturnDate().equals("0")) 
+			}
+			else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("Wrong date format, pleas enter 'dd.mm.yyyy' format.");
+					GuiManager.ShowMessagePopup("Wrong return date, please enter date up to 14 days from today");
 				});
-			} else {
+			} 
+			else if (newBorrow.getExpectedReturnDate().equals("1")) // after press on "borrow button
+			{
+				Platform.runLater(() -> {
+					GuiManager
+							.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
+				});
+			} 
+			else 
+			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Borrow executed Successfully!");
 					borrowDialog.close();
@@ -511,16 +516,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		return result;
 	}
 
-	
-	
-	/*public void setRangeOfPossibleDatesForBorrow(int range)
+	public static String getCurrentDateAsString()
 	{
-	returnDate.setDayCellFactory(picker -> new DateCell() {
-        public void updateItem(LocalDate date, boolean empty) {
-            super.updateItem(date, empty);
-            LocalDate today = LocalDate.now();
-            setDisable(empty || date.compareTo(today) < 0 || date.compareTo(today.plusDays(range)) > 0);
-        }
-    });
-	}*/
+		GregorianCalendar calendar = new GregorianCalendar();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String string = format.format(calendar.getTime());
+		return string;
+	}
 }

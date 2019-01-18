@@ -2,18 +2,21 @@ package entities;
 
 public class CopiesQueries 
 {
-	public static String searchBookCopyId(BorrowACopyOfBook borrowToAdd)
+	public static String searchBookCopyId(Book bookToCheck)
 	{
-		if (borrowToAdd == null)
+		if (bookToCheck == null)
 			return null;
-		String queryMsg = "SELECT * FROM obl_db.book_" + borrowToAdd.getBookCatalogNumber() + "_copies WHERE id = '" + borrowToAdd.getCopyId()+ "'";
+		String queryMsg = "SELECT * FROM obl_db.book_" + bookToCheck.getCatalogNumber()
+						+ "_copies WHERE id = '" + bookToCheck.getCopies().get(0).getId()+ "'";
 		return queryMsg;
 	}
-	public static String changeCopyStatus(BorrowACopyOfBook borrowToAdd)
+	public static String changeCopyStatus(Book bookToUpdate)
 	{
-		if (borrowToAdd == null)
+		if (bookToUpdate == null)
 			return null;
-		String queryMsg = "UPDATE obl_db.book_" + borrowToAdd.getBookCatalogNumber() + "_copies SET status = 'unavailable' WHERE (id = '" + borrowToAdd.getCopyId() + "');";
+		String queryMsg = "UPDATE obl_db.book_" + bookToUpdate.getCatalogNumber() 
+						+ "_copies SET status = 'unavailable' WHERE (id = '"
+						+ bookToUpdate.getCopies().get(0).getId() + "');";
 		return queryMsg;
 	}
 }

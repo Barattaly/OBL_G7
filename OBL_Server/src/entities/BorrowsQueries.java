@@ -9,7 +9,7 @@ public class BorrowsQueries
 	{
 		if (borrowToAdd == null)
 			return null;
-		String currentDateTimeString = getNowAsString();
+		String currentDateTimeString = getcurrentDateTimesString();
 		
 		String queryMsg = "INSERT INTO obl_db.borrows (subscriberID, borrowDate, expectedReturnDate, isReturnedLate, bookCatalogNumber)"
 						+ " VALUES ('" + borrowToAdd.getSubscriberId() + "', '" + currentDateTimeString + "', '" + borrowToAdd.getExpectedReturnDate() 
@@ -17,7 +17,7 @@ public class BorrowsQueries
 		return queryMsg;
 	}
 	
-	public static String getNowAsString()
+	public static String getcurrentDateTimesString()
 	{
 		GregorianCalendar calendar = new GregorianCalendar();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

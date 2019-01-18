@@ -68,9 +68,33 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		if (bookToCheck == null)
 			return null;
 		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
-		System.out.println(queryMsg);
 		return queryMsg;
 	}
+	public static String getClassificationOfBook(BorrowACopyOfBook borrowToAdd)
+	{
+		if (borrowToAdd == null)
+			return null;
+		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '" + borrowToAdd.getBookCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	
+	public static String getCurrentNumOfBorrows(Book bookToUpdate)
+	{
+		if (bookToUpdate == null)
+			return null;
+		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.books WHERE books.catalogNumber = '" + bookToUpdate.getCatalogNumber() + "';";
+		return queryMsg;
+	}
+	
+	public static String updateCurrentNumOfBorrows(Book bookToUpdate)
+	{
+		if (bookToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.books SET currentNumOfBorrows = '" + bookToUpdate.getCurrentNumOfBorrows()
+						+ "' WHERE (catalogNumber = '" + bookToUpdate.getCatalogNumber() + "');";
+		return queryMsg;
+	}
+	
 	
 	/*public static String getNowAsString(String format)
 	{

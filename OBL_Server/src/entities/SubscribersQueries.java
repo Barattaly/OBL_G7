@@ -71,4 +71,21 @@ public class SubscribersQueries
 		String queryMsg ="SELECT * FROM obl_db.subscribers WHERE subscriberID ='" +borrowToAdd.getSubscriberId() + "'";
 		return queryMsg;
 	}
+	
+	public static String getCurrentNumOfBorrows(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.subscribers WHERE subscriberID = '" + subscriberToUpdate.getId() + "';";
+		return queryMsg;
+	}
+	
+	public static String updateCurrentNumOfBorrows(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.subscribers SET currentNumOfBorrows = '" + subscriberToUpdate.getCurrentNumOfBorrows()
+						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
+		return queryMsg;
+	}
 }
