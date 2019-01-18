@@ -11,8 +11,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
-import javax.print.attribute.standard.Copies;
-
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
@@ -100,7 +98,7 @@ public class OBLServer extends AbstractServer
 			}
 
 		}
-		//update gui for getting message
+		// update gui for getting message
 		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
 		if (!isDBRunning())
 			return;
@@ -140,6 +138,11 @@ public class OBLServer extends AbstractServer
 				createNewBorrow((BorrowACopyOfBook) dbMessage.Data, client);
 				break;
 			}
+			case UpdateSubscriberCard:
+			{
+				updateSubscriberInformation((Subscriber)dbMessage.Data, client);
+				break;
+			}
 			default:
 				break;
 			}
@@ -156,6 +159,28 @@ public class OBLServer extends AbstractServer
 				e1.printStackTrace();
 			}
 		}
+	}
+	private void updateSubscriberInformation(Subscriber subscriberToUpdate, ConnectionToClient client )throws IOException 
+	{
+	    
+	  
+	    if (subscriberToUpdate == null)
+	    {
+	    	return;
+
+	    }
+	    else
+	    {
+	    	String query=UsersQueries.updateUserInformation(subscriberToUpdate);
+	    	oblDB.executeUpdate(query);
+	         query=SubscribersQueries.updateSubscriberInformation(subscriberToUpdate);
+	    	oblDB.executeUpdate(query);
+	    	
+	    	
+	    }
+	   
+	    	
+	
 	}
 	private void searchSubscriberByID(String subscriberID, ConnectionToClient client) throws IOException 
 	  {
@@ -192,6 +217,7 @@ public class OBLServer extends AbstractServer
 				booksList.get(key).getCategories().add(rs.getString(1));
 			}
 		}
+
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
 	}
 

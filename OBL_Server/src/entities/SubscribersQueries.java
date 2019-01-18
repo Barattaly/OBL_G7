@@ -37,6 +37,7 @@ public class SubscribersQueries
 		} 
 		return subscriberToCreate;
 	}
+	
 	public static String getSubscriberFullInformationByID(String subscriberID)
 	  {
 	    if (subscriberID == null)
@@ -63,6 +64,19 @@ public class SubscribersQueries
 	    } 
 	    return subscriberToCreate;
 	  }
+	
+	public static String updateSubscriberInformation(Subscriber subscriberToUpdate)
+	{
+		
+		 String queryMsg ="UPDATE obl_db.subscribers" 
+			 		+ "\nSET phoneNumber='"+subscriberToUpdate.getPhoneNumber()+"'," +"emailAddress='"+subscriberToUpdate.getEmail()+"'" 
+			 		+ "\nWHERE subscriberID='"+subscriberToUpdate.getId()+"';";
+		 		
+		return queryMsg;
+		
+		
+	}
+
 	
 	public static String searchSubscriberByID(BorrowACopyOfBook borrowToAdd)
 	{

@@ -48,6 +48,14 @@ public class User implements Serializable
 		this.firstName = firstName;
 		this.lastName=lastName;
 	}
+	
+	public User(String idNumber,String firstName,String lastName)  //tal cons
+	{
+		this.idNumber=idNumber;
+		this.firstName = firstName;
+		this.lastName=lastName;
+	}
+
 	public String getPassWord()
 	{
 		return password;

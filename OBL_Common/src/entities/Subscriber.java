@@ -38,6 +38,14 @@ public class Subscriber extends User
 		email = null;
 		phoneNumber = null;
 	}
+	 
+	 public Subscriber (String idNumber,String firstName,String lastName,String phoneNumber,String email,String status)  //only update information constructor
+	 {
+		 super(idNumber,firstName,lastName);
+		 this.phoneNumber=phoneNumber;
+		 this.email=email;
+		
+	 }
 
 	public Subscriber(String subscriberNumber, String phoneNumber, String email, String status, int currentNumOfBorrows,
 			int currentNumOfOrders, String userName, String idNumber, String firstName, String lastName) // tal cons
