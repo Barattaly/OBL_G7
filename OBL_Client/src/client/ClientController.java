@@ -136,6 +136,19 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
+	
+	public void updateSubscriberDetails(Subscriber subscriberToUpdate)
+	{
+		DBMessage message = new DBMessage(DBAction.UpdateSubscriberCard, subscriberToUpdate);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
 
 }
 //End of ClientController class

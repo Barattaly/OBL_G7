@@ -61,5 +61,16 @@ public class UsersQueries
 		String queryMsg = "SELECT * FROM obl_db.users WHERE id ='" + userToCheck.getId()+"'";
 		return queryMsg;
 	}
+	
+	public static String updateUserInformation(Subscriber subscriberToUpdate)
+	{
+		
+		 String queryMsg ="UPDATE obl_db.users" +
+				 "\nSET firstName='"+subscriberToUpdate.getFirstName()+"'," +  "lastName='"+subscriberToUpdate.getLastName()+"'"
+				 +"\nWHERE id='"+subscriberToUpdate.getId() +"';";
+		return queryMsg;
+		
+		
+	}
 
 }

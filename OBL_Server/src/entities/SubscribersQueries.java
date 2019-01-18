@@ -65,5 +65,18 @@ public class SubscribersQueries
 	    return subscriberToCreate;
 	  }
 	
+	public static String updateSubscriberInformation(Subscriber subscriberToUpdate)
+	{
+		
+		 String queryMsg ="UPDATE obl_db.subscribers" 
+			 		+ "\nSET phoneNumber='"+subscriberToUpdate.getPhoneNumber()+"'," +"emailAddress='"+subscriberToUpdate.getEmail()+"'" 
+			 		+ "\nWHERE subscriberID='"+subscriberToUpdate.getId()+"';";
+		 		
+		return queryMsg;
+		
+		
+	}
+
+	
 
 }

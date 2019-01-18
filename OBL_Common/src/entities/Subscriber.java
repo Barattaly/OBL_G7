@@ -48,6 +48,14 @@ public class Subscriber extends User
 		 this.currentNumOfBorrows=currentNumOfBorrows;
 		 this.currentNumOfOrders=currentNumOfOrders;
 	 }
+	 
+	 public Subscriber (String idNumber,String firstName,String lastName,String phoneNumber,String email,String status)  //only update information constructor
+	 {
+		 super(idNumber,firstName,lastName);
+		 this.phoneNumber=phoneNumber;
+		 this.email=email;
+		
+	 }
 
 	public String getSubscriberNumber()
 	{
