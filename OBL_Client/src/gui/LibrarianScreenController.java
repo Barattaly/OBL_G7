@@ -243,22 +243,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	        }
 		});
 		
-		returnDate.setOnMouseClicked(new EventHandler<Event>() 
-		{
-			@Override
-			public void handle(Event e) 
-			{
-				try {
-					Book bookToCheck = new Book(bookCatalogNumber.getText());
-					GuiManager.client.getBookClassification(bookToCheck);
-				} 
-				catch (Exception ex) 
-				{
-					ex.printStackTrace();
-				}
-			}
-		});
-		
 		GridPane grid = new GridPane();
 		grid.add(bookCatalogNumberLab, 1, 1);
 		grid.add(bookCatalogNumber, 2, 1);
