@@ -268,6 +268,8 @@ public class SearchBookController implements Initializable, IClientUI
 			bookMap = (Map<Integer, Book>) msg.Data;
 			copyBookMapToBookList();
 		}
+		default:
+			break;
 		}
 
 	}
