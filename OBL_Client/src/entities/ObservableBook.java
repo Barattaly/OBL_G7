@@ -1,5 +1,6 @@
 package entities;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -11,14 +12,17 @@ public class ObservableBook
 	public SimpleIntegerProperty catalognumber;
 	public SimpleStringProperty location;
 	public SimpleStringProperty catagories;
+	public SimpleBooleanProperty isAvailableToBorrow;
 
-	public ObservableBook(String name, String author, int catalognumber, String location, String catagories)//, String returndate)
+
+	public ObservableBook(String name, String author, int catalognumber, String location, String catagories,boolean available)//, String returndate)
 	{
 		this.name = new SimpleStringProperty(name);
 		this.catalognumber = new SimpleIntegerProperty(catalognumber);
 		this.author = new SimpleStringProperty(author);
 		this.location = new SimpleStringProperty(location);
 		this.catagories = new SimpleStringProperty(catagories);
+		this.isAvailableToBorrow = new SimpleBooleanProperty(available);
 	}
 
 	public String getName()
@@ -69,6 +73,16 @@ public class ObservableBook
 	public void setCatagories(String catagories)
 	{
 		this.catagories = new SimpleStringProperty(catagories);
+	}
+	
+	public boolean getIsAvailableToBorrow()
+	{
+		return isAvailableToBorrow.get();
+	}
+
+	public void setIsAvailableToBorrow(boolean isAvailableToBorrow)
+	{
+		this.isAvailableToBorrow = new SimpleBooleanProperty(isAvailableToBorrow);
 	}
 
 }

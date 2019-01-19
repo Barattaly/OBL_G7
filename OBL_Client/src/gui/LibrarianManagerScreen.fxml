@@ -23,7 +23,7 @@
    <center>
       <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="765.0" style="-fx-background-color: #203447;">
          <children>
-            <Pane fx:id="pane_home" prefHeight="611.0" prefWidth="650.0">
+            <Pane fx:id="pane_home" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>
                   <Label fx:id="userWelcomLabel" layoutX="56.0" layoutY="150.0" text="Hello Galina!" textFill="#a0a2ab">
                      <font>
@@ -49,20 +49,6 @@
                   <Label layoutX="302.0" layoutY="57.0" text="Home" textFill="#a0a2ab">
                      <font>
                         <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-            <Pane fx:id="pane_searchBook" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
-               <children>
-                  <Label layoutX="131.0" layoutY="91.0" prefHeight="78.0" prefWidth="348.0" text="Book inventory" textFill="#d7d1d1">
-                     <font>
-                        <Font size="48.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="131.0" layoutY="181.0" prefHeight="78.0" prefWidth="348.0" text="refernce to search book screen" textFill="#d7d1d1">
-                     <font>
-                        <Font size="14.0" />
                      </font>
                   </Label>
                </children>
@@ -239,7 +225,8 @@
                </children>
             </Pane>
             <Pane fx:id="pane_reports" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="652.0" visible="false" />
-            <Label fx:id="LogOut" layoutX="711.0" layoutY="5.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab">
+            <AnchorPane fx:id="pane_searchBook" layoutX="84.0" layoutY="81.0" prefHeight="450.0" prefWidth="597.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label fx:id="LogOut" layoutX="711.0" layoutY="5.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="14.0" />
                </font>
@@ -247,7 +234,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Label>
-            <ImageView fx:id="logoutimage" fitHeight="20.0" fitWidth="23.0" layoutX="690.0" layoutY="4.0" onMouseClicked="#logOutDisplay" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="logoutimage" fitHeight="20.0" fitWidth="23.0" layoutX="690.0" layoutY="4.0" onMouseClicked="#logOutDisplay" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="4.0">
                <image>
                   <Image url="@../../bin/resources/LogOut.png" />
                </image>
@@ -255,17 +242,17 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="userNameLabel" layoutX="26.0" layoutY="6.0" text="username" textFill="#a0a2ab">
+            <Label fx:id="userNameLabel" layoutX="26.0" layoutY="6.0" text="username" textFill="#a0a2ab" AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="6.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="6.0" layoutY="23.0" text="Logged as Library Manager" textFill="#a0a2ab">
+            <Label layoutX="6.0" layoutY="23.0" text="Logged as Library Manager" textFill="#a0a2ab" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="23.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="6.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="6.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="7.0">
                <image>
                   <Image url="@../../bin/resources/Login_Username.png" />
                </image>

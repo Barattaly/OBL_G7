@@ -14,18 +14,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 public class SearchBookController implements Initializable, IClientUI
 {
+	private User userLogged;
 	@FXML
 	private JFXTextField bookNameTextField;
 
@@ -54,6 +59,8 @@ public class SearchBookController implements Initializable, IClientUI
 	private TableColumn<ObservableBook, String> locationcol;
 	@FXML
 	private TableColumn<ObservableBook, String> catagoriesCol;
+	@FXML
+	private TableColumn<ObservableBook, String> availableCol;
 
 	@FXML
 	private JFXRadioButton bookNameRadioBtn;
@@ -74,6 +81,24 @@ public class SearchBookController implements Initializable, IClientUI
 
 	private Map<Integer, Book> bookMap;// key = catalog number, value = the book!
 
+	@FXML
+	private Label backToLabel;
+
+	@FXML
+	private ImageView goBackArrowImg;
+
+	@FXML
+	private ImageView oblLogoImg;
+
+	@FXML
+	private Label oblLogoLabel;
+
+    @FXML
+    private JFXButton addNewBookBtn;
+    
+	@FXML
+	private Label headlineLabel;
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
@@ -83,6 +108,8 @@ public class SearchBookController implements Initializable, IClientUI
 		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
 		locationcol.setCellValueFactory(new PropertyValueFactory<>("location"));
 		catagoriesCol.setCellValueFactory(new PropertyValueFactory<>("catagories"));
+		availableCol.setCellValueFactory(new PropertyValueFactory<>("isAvailableToBorrow"));
+		
 		booklist = FXCollections.observableArrayList();
 
 		BookTable.setItems(booklist);
@@ -94,7 +121,7 @@ public class SearchBookController implements Initializable, IClientUI
 				{
 					ObservableBook rowData = row.getItem();
 					int bookCatNum = rowData.getCatalognumber();
-					GuiManager.openBookWindow(bookMap.get(bookCatNum));
+					GuiManager.openBookWindow(bookMap.get(bookCatNum), getUserLogedIn());
 				}
 			});
 			return row;
@@ -179,7 +206,8 @@ public class SearchBookController implements Initializable, IClientUI
 				try
 				{
 					cellValue = col.getCellData(data.get(i)).toString();
-				} catch (NullPointerException ex)
+				} 
+				catch (NullPointerException ex)
 				{
 					break;
 				}
@@ -188,7 +216,6 @@ public class SearchBookController implements Initializable, IClientUI
 				if (cellValue.contains(txtField.textProperty().get().toLowerCase()))
 				{
 					itemsAfterFilter.add(data.get(i));
-					break;
 				}
 			}
 		} catch (Exception e)
@@ -295,9 +322,10 @@ public class SearchBookController implements Initializable, IClientUI
 				else
 					catagories = catagories + ", " + catagory;
 			}
-
+			boolean isAvailable=  bookMap.get(key).getMaxCopies() - bookMap.get(key).getCurrentNumOfBorrows() >0;
 			ObservableBook temp = new ObservableBook(bookMap.get(key).getName(), authors,
-					Integer.parseInt(bookMap.get(key).getCatalogNumber()), bookMap.get(key).getLocation(), catagories);
+					Integer.parseInt(bookMap.get(key).getCatalogNumber()), 
+					bookMap.get(key).getLocation(), catagories,isAvailable);
 			booklist.add(temp);
 		}
 	}
@@ -305,15 +333,53 @@ public class SearchBookController implements Initializable, IClientUI
 	@Override
 	public void setUserLogedIn(User userLoged)
 	{
-		// TODO Auto-generated method stub
-
+		this.userLogged = userLoged;
+		if(userLoged.getType().equals("librarian")||userLoged.getType().equals("library manager"))
+		{
+			addNewBookBtn.setVisible(true);
+			headlineLabel.setText("Book Inventory");
+		}
+		else
+		{
+			addNewBookBtn.setVisible(false);
+			headlineLabel.setText("Search Book");
+		}
 	}
 
 	@Override
 	public User getUserLogedIn()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return userLogged;
 	}
 
+	public Map<Integer, Book> getBookMap()
+	{
+		return bookMap;
+	}
+
+	public void setBookMap(Map<Integer, Book> bookMap)
+	{
+		this.bookMap = bookMap;
+		copyBookMapToBookList();
+		BookTable.refresh();
+	}
+
+	// The default is pop up
+	public void setPopUpMode(boolean isPopUp)
+	{
+		if(isPopUp)
+		{
+			backToLabel.setVisible(true);
+		    goBackArrowImg.setVisible(true);
+		    oblLogoImg.setVisible(true);
+		    oblLogoLabel.setVisible(true);
+		}
+		else
+		{
+			backToLabel.setVisible(false);
+		    goBackArrowImg.setVisible(false);
+		    oblLogoImg.setVisible(false);
+		    oblLogoLabel.setVisible(false);
+		}
+	}
 }
