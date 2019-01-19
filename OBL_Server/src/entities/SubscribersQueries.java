@@ -18,7 +18,7 @@ public class SubscribersQueries
 	{
 		if (subscriber == null)
 			return null;
-		String queryMsg ="SELECT * FROM obl_db.subscribers WHERE subscriberID ='" +subscriber.getId() + "'";
+		String queryMsg ="SELECT * FROM obl_db.subscribers WHERE subscriberID ='" + subscriber.getId() + "'";
 		return queryMsg;
 	}
 	

@@ -327,9 +327,16 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isBookAvailableToBorrow(book))
+		else if (isBookArchived(book))
 		{
 			borrowToAdd.setBookCatalogNumber("-1");
+			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		else if (!isBookAvailableToBorrow(book))
+		{
+			borrowToAdd.setBookCatalogNumber("-2");
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 			client.sendToClient(returnMsg);
 			return;
@@ -415,6 +422,24 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 	
+	boolean isBookArchived(Book bookToCheck)
+	{
+		String query = BooksQueries.getArchiveStatus(bookToCheck);// search by book catalog number
+		ResultSet rsArchiveStatus = oblDB.executeQuery(query);
+		try 
+		{
+			rsArchiveStatus.next();
+			String archiveStatus = rsArchiveStatus.getString(1);
+			if(archiveStatus.equals("yes"))
+				return true;
+			return false;
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
 	boolean isBookAvailableToBorrow(Book bookToCheck)
 	{
 		String query = BooksQueries.getMaxCopiesAndCurrentNumOfBorrows(bookToCheck);// search by book catalog number
