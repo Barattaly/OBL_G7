@@ -9,6 +9,7 @@ import client.ClientController;
 import entities.Book;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
+import entities.Subscriber;
 import gui.GuiManager.SCREENS;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +33,7 @@ public class GuiManager
 			put("librarian", SCREENS.librarian);
 			put("subscriber", SCREENS.subscriber);
 			put("library manager", SCREENS.librarianManager);
+			
 
 		}
 	};
@@ -44,6 +46,8 @@ public class GuiManager
 			put(SCREENS.bookInformation, "/gui/BookInformationScreen.fxml");
 			put(SCREENS.subscriber, "/gui/SubscriberScreen.fxml");
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
+			put(SCREENS.viewSubscriberCard, "/gui/viewSubscriberCardScreen.fxml");
+			
 		}
 	};
 
@@ -55,7 +59,7 @@ public class GuiManager
 		alert.setContentText(msg);
 		alert.showAndWait();
 	}
-
+	
 	public static void ShowMessagePopup(String msg)
 	{
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -71,6 +75,8 @@ public class GuiManager
 		{
 			if (fxmlPath == SCREENS.login && !(CurrentGuiController instanceof SearchBookController))
 				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
+			//if (fxmlPath==SCREENS.viewSubscriberCard)
+				
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(fxmlPath)));
 			Parent root = loader.load();
@@ -140,7 +146,7 @@ public class GuiManager
 
 	public static enum SCREENS
 	{
-		login, librarian, searchBook, bookInformation, subscriber, librarianManager;
+		login, librarian, searchBook, bookInformation, subscriber, librarianManager,viewSubscriberCard;
 	}
 
 	public static void preventLettersTypeInTextField(JFXTextField textField)
@@ -195,4 +201,29 @@ public class GuiManager
 		}
 	}
 
+	public static void openSubscriberCard(Subscriber newSub) 
+	{
+		try
+		{
+		Stage SeondStage = new Stage();
+		FXMLLoader loader = new FXMLLoader(
+		GuiManager.class.getResource(availableFXML.get(SCREENS.viewSubscriberCard)));
+		Parent root = loader.load();
+		ViewSubscriberCardController controller = loader.getController();
+		controller.setSubscriberToShow(newSub);
+		Scene scene = new Scene(root);
+		SeondStage.setResizable(false);
+		SeondStage.setTitle("Subscriber Card");
+		SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+		SeondStage.setScene(scene);
+		SeondStage.showAndWait();
+
+		} 
+		catch (Exception e)
+		{
+		e.printStackTrace();
+		}
+		
+	}
+	
 }

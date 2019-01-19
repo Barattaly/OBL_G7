@@ -13,6 +13,7 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.DBMessage;
+import entities.DBMessage.DBAction;
 import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
@@ -71,10 +72,17 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 	@FXML
 	private JFXPasswordField passwordTextfield;
+	
+    @FXML
+    private JFXTextField txt_subscriberID;
 
 	@FXML
 	private Label warningLabel;
-
+    @FXML
+    private JFXButton btn_viewSubscriberCard;
+    
+    ViewSubscriberCardController controller;  //check
+    public static IClientUI CurrentGuiController;//check
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
 	{
@@ -126,6 +134,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(0.5);
+		txt_subscriberID.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(txt_subscriberID);
+		GuiManager.limitTextFieldMaxCharacters(txt_subscriberID, 9);
 	}
 
 	@Override
@@ -372,10 +383,35 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.ShowMessagePopup(
 							"Subscriber " + ((Subscriber) msg.Data).getSubscriberNumber() + " Added Successfully!");
 				});
-
 			}
 			break;
 		}
+		case ViewSubscriberCard:
+			if (msg.Data == null)
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowErrorPopup("This subscriber doesnt exist!");
+				});
+			}
+			else
+			{
+				Subscriber newSub = (Subscriber) msg.Data;
+				Platform.runLater(() -> {
+					GuiManager.openSubscriberCard(newSub);
+
+			});
+			}
+				//ViewSubscriberCardController controller = new ViewSubscriberCardController(newSub);
+				//((Node) event.getSource()).getScene().getWindow().hide();
+				/*Platform.runLater(() -> {
+					controller = new ViewSubscriberCardController(newSub); 
+					GuiManager.SwitchScene(SCREENS.viewSubscriberCard);
+				});*/
+				// chnge scene to view subscriber card
+				//GuiManager.client.
+				//here i need to add - guiManager.viewSubscriberCardController.somthing
+			
+			
 		}
 	}
 
@@ -410,5 +446,19 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 		return result;
 	}
+	
+    @FXML
+    void btn_viewSubscriberCardClick(ActionEvent event)
+    {
+    	if (txt_subscriberID.getText().isEmpty())
+		{
+			GuiManager.ShowErrorPopup("Subscriber ID can't be empty");
+		}
+		
+		else
+		{
+			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
+		}  	
+    }
 
 }

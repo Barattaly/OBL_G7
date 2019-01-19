@@ -111,7 +111,7 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
-
+	
 	public void getAllBooks()
 	{
 		DBMessage message = new DBMessage(DBAction.GetAllBooksList, null);

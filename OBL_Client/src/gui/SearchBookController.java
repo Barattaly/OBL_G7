@@ -76,6 +76,7 @@ public class SearchBookController implements Initializable, IClientUI
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
 		GuiManager.client.getAllBooks();// fill in the table off books from the updated DB book list
+		
 		namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
 		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
