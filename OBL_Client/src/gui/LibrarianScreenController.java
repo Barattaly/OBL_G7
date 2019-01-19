@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -12,6 +13,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
+import entities.Book;
 import entities.DBMessage;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
@@ -22,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -33,6 +36,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -48,7 +52,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	private Label userNameLabel;
 	@FXML
-	private Pane pane_home, pane_createNewSubscriberCard, pane_searchBook, pane_searchSubscriberCard;
+	private Pane pane_home, pane_createNewSubscriberCard,pane_searchSubscriberCard;
+	@FXML
+	private AnchorPane pane_searchBook;
 	@FXML
 	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard;
 
@@ -81,8 +87,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
     @FXML
     private JFXButton btn_viewSubscriberCard;
     
-    ViewSubscriberCardController controller;  //check
+    private ViewSubscriberCardController controller;  //check
+    
     public static IClientUI CurrentGuiController;//check
+    
+	private SearchBookController searchBookWindowController = null;
+
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
 	{
@@ -387,6 +397,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			break;
 		}
 		case ViewSubscriberCard:
+		{
 			if (msg.Data == null)
 			{
 				Platform.runLater(() -> {
@@ -398,20 +409,21 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				Subscriber newSub = (Subscriber) msg.Data;
 				Platform.runLater(() -> {
 					GuiManager.openSubscriberCard(newSub);
-
 			});
 			}
-				//ViewSubscriberCardController controller = new ViewSubscriberCardController(newSub);
-				//((Node) event.getSource()).getScene().getWindow().hide();
-				/*Platform.runLater(() -> {
-					controller = new ViewSubscriberCardController(newSub); 
-					GuiManager.SwitchScene(SCREENS.viewSubscriberCard);
-				});*/
-				// chnge scene to view subscriber card
-				//GuiManager.client.
-				//here i need to add - guiManager.viewSubscriberCardController.somthing
-			
-			
+			//ViewSubscriberCardController controller = new ViewSubscriberCardController(newSub);
+			//((Node) event.getSource()).getScene().getWindow().hide();
+			/*Platform.runLater(() -> {
+				controller = new ViewSubscriberCardController(newSub); 
+				GuiManager.SwitchScene(SCREENS.viewSubscriberCard);
+			});*/
+			// chnge scene to view subscriber card
+			//GuiManager.client.
+			//here i need to add - guiManager.viewSubscriberCardController.somthing
+		}
+			case GetAllBooksList:
+			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
+			break;			
 		}
 	}
 
@@ -425,6 +437,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		userWelcomLabel.setText("Hello " + name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
+		initialSearchWindow();
 	}
 
 	@Override
@@ -460,5 +473,22 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
 		}  	
     }
+    	private void initialSearchWindow()
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/SearchBookScreen.fxml"));
+			AnchorPane newLoadedPane = loader.load(); 
+			searchBookWindowController = loader.getController();
+			searchBookWindowController.setUserLogedIn(userLogedIn);
+			searchBookWindowController.setPopUpMode(false);
+			
+			pane_searchBook.getChildren().add(newLoadedPane);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 }
