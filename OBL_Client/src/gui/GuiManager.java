@@ -3,6 +3,9 @@ package gui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
@@ -223,7 +226,20 @@ public class GuiManager
 		{
 			e.printStackTrace();
 		}
-
+	}
+	
+	public static boolean isValidEmailAddress(String email)
+	{
+		boolean result = true;
+		try
+		{
+			InternetAddress emailAddr = new InternetAddress(email);
+			emailAddr.validate();
+		} catch (AddressException ex)
+		{
+			result = false;
+		}
+		return result;
 	}
 
 }

@@ -127,7 +127,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_createNewSubscriberCardDisplay(MouseEvent event)
+	protected void btn_createNewSubscriberCardDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(true);
@@ -179,6 +179,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
+
 	}
 
 	@FXML
@@ -208,18 +209,17 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		warningLabel.setText("");
 		if (idNumberTextfield.getText().isEmpty() || userNameTextfield.getText().isEmpty()
 				|| firstNameTextfield.getText().isEmpty() || lastNameTextfield.getText().isEmpty()
-				|| passwordTextfield.getText().isEmpty()) 
+				|| passwordTextfield.getText().isEmpty())
 		{
 			warningLabel.setText("Please fill all the requierd field.");
 			return;
 		}
 		Subscriber newSubscriberToCreate = createSubscriberFromTextFields();
-
+		
 		GuiManager.client.CreateSubscriber(newSubscriberToCreate);
-
 	}
 
-	@FXML
+@FXML
 	void btn_borrowClick(ActionEvent event)
 	{
 		borrowDialog = new Stage();
@@ -403,20 +403,18 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				double tryParse = Integer.valueOf(phoneNumberTextfield.getText());
 				subscriber.setPhoneNumber(phoneNumberTextfield.getText());
-			} 
-			catch (Exception e) 
+			} catch (Exception e)
 			{
 				warningMessage = "Wrong phone number format.\n";
 				subscriber.setPhoneNumber("0");
 			}
-		} 
-		else
+		} else
 			subscriber.setPhoneNumber("0");
 
-		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText())) {
+		if (!emailTextfield.getText().isEmpty() && GuiManager.isValidEmailAddress(emailTextfield.getText()))
+		{
 			subscriber.setEmail(emailTextfield.getText());
-		} 
-		else
+		} else
 			warningMessage += "Wrong email format. ";
 		if (!warningMessage.isEmpty())
 			warningLabel.setText(warningMessage);
@@ -436,8 +434,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				Platform.runLater(() -> {
 					warningLabel.setText("Subscriber already exist!");
 				});
-			} 
-			else 
+			} else
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup(
@@ -446,7 +443,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
-		case CreateNewBorrow: 
+				case CreateNewBorrow: 
 		{
 			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
 			if (newBorrow.getSubscriberId().equals("0")) 
@@ -526,9 +523,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 			case GetAllBooksList:
 			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
-			break;		
-		
-
+			break;			
 		}
 	}
 
@@ -551,21 +546,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		return userLogedIn;
 	}
 
-	private static boolean isValidEmailAddress(String email) 
-	{
-		boolean result = true;
-		try {
-			InternetAddress emailAddr = new InternetAddress(email);
-			emailAddr.validate();
-		} catch (AddressException ex) 
-		{
-			result = false;
-		}
-		return result;
-	}
-	
     @FXML
-    void btn_viewSubscriberCardClick(ActionEvent event)
+    protected void btn_viewSubscriberCardClick(ActionEvent event)
     {
     	if (txt_subscriberID.getText().isEmpty())
 		{
@@ -577,7 +559,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
 		}  	
     }
-    	private void initialSearchWindow()
+
+	private void initialSearchWindow()
 	{
 		try
 		{

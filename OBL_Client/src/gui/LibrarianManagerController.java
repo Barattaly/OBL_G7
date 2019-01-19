@@ -12,6 +12,7 @@ import entities.User;
 import gui.GuiManager.SCREENS;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -21,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 public class LibrarianManagerController extends LibrarianScreenController
@@ -30,12 +32,15 @@ public class LibrarianManagerController extends LibrarianScreenController
 	private Label userWelcomLabel;
 	@FXML
 	private Label userNameLabel;
+	
 	@FXML
 	private Pane pane_home, pane_createNewSubscriberCard, pane_searchBook, pane_searchSubscriberCard, pane_employees,
 			pane_reports;
 	@FXML
 	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard, btn_employees,
 			btn_reports;
+	private SearchBookController searchBookWindowController = null;
+
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
@@ -55,7 +60,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 	}
 
 	@FXML
-	void btn_createNewSubscriberCardDisplay(MouseEvent event)
+	protected void btn_createNewSubscriberCardDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(true);
@@ -160,22 +165,14 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	void btn_createSubscriberCardDisplay(ActionEvent event)
 	{
-
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("OBL Create new subscriber");
-		alert.setHeaderText("The subscriber's card was created successfully");
-		alert.setContentText("Subscriber Number: ______ ");
-		Optional<ButtonType> option = alert.showAndWait();
-		if (option.get() == ButtonType.OK)
-		{
-			alert.close();
-		}
+		super.btn_createSubscriberCardDisplay(event);
 	}
 
 	@FXML
 	void logOutDisplay(MouseEvent event)
 	{
-		Alert alert = new Alert(AlertType.CONFIRMATION);
+		super.logOutDisplay(event);
+		/*Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("OBL Log Out");
 		alert.setHeaderText("Are you sure you want to log out ?");
 		Optional<ButtonType> option = alert.showAndWait();
@@ -189,13 +186,13 @@ public class LibrarianManagerController extends LibrarianScreenController
 		{
 			alert.close();
 
-		}
+		}*/
 
 	}
 
 
 
-	/*@Override
+	@Override
 	public void setUserLogedIn(User userLoged)
 	{
 		userLogedIn = userLoged;
@@ -204,8 +201,8 @@ public class LibrarianManagerController extends LibrarianScreenController
 		userWelcomLabel.setText("Hello " + name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
-		
-	}*/
+		initialSearchWindow();
+	}
 
 	@Override
 	public User getUserLogedIn()
@@ -217,6 +214,29 @@ public class LibrarianManagerController extends LibrarianScreenController
 	void btn_borrowClickOfManager(ActionEvent event)
 	{
 		this.btn_borrowClick(event);
+	}
+	
+	private void initialSearchWindow()
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/SearchBookScreen.fxml"));
+			AnchorPane newLoadedPane = loader.load(); 
+			searchBookWindowController = loader.getController();
+			searchBookWindowController.setUserLogedIn(userLogedIn);
+			searchBookWindowController.setPopUpMode(false);
+			
+			pane_searchBook.getChildren().add(newLoadedPane);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	@FXML
+	protected void btn_viewSubscriberCardClick(ActionEvent event)
+	{
+		super.btn_viewSubscriberCardClick(event);
 	}
 
 }

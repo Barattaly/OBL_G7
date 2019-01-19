@@ -5,26 +5,62 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="513.0" prefWidth="580.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ViewSubscriberCardController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="587.0" prefWidth="730.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ViewSubscriberCardController">
    <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" style="-fx-background-color: #203447;" StackPane.alignment="CENTER">
+      <Pane fx:id="pane_viewSubscriberCard" layoutX="50.0" layoutY="11.0" prefHeight="586.0" prefWidth="652.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Subscriber card details" textFill="#a0a2ab">
+            <JFXButton fx:id="btn_Edit" buttonType="RAISED" layoutX="50.0" layoutY="513.0" onAction="#btn_EditClick" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
+            <Label layoutX="207.0" layoutY="70.0" text="Subscriber card details" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <GridPane alignment="BASELINE_LEFT" cacheShape="false" prefHeight="284.0" prefWidth="450.0" VBox.vgrow="NEVER">
+            <TitledPane alignment="TOP_LEFT" animated="false" contentDisplay="TOP" layoutX="306.0" layoutY="160.0" prefHeight="313.0" prefWidth="410.0" stylesheets="@../../bin/resources/titledpane.css" text="View activity log " textFill="#a0a2ab" wrapText="true">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #3C58FA;">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <children>
+                        <TableView layoutY="1.0" prefHeight="284.0" prefWidth="413.0">
+                           <columns>
+                              <TableColumn prefWidth="99.0" text="Activity" />
+                              <TableColumn prefWidth="98.0" text="Book name" />
+                              <TableColumn prefWidth="84.0" text="Date" />
+                              <TableColumn prefWidth="127.0" text="comments" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </TitledPane>
+            <GridPane alignment="BASELINE_LEFT" cacheShape="false" layoutX="50.0" layoutY="164.0" prefHeight="282.0" prefWidth="248.0">
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="9.0" prefWidth="90.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="10.0" prefWidth="123.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="9.0" prefWidth="113.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -71,71 +107,47 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXTextField fx:id="subNumber" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1">
+                  <JFXTextField fx:id="subscriberNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="userName" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <JFXTextField fx:id="idNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="idNumber" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <JFXTextField fx:id="firstNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="firstName" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <JFXTextField fx:id="lastNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="lastName" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <JFXTextField fx:id="phoneNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="phoneNumber" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <JFXTextField fx:id="emailField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </JFXTextField>
-                  <JFXTextField fx:id="email" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <JFXTextField fx:id="userNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
                   </JFXTextField>
                </children>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-               <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </VBox.margin>
             </GridPane>
-            <JFXButton buttonType="RAISED" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
+            <JFXButton fx:id="btn_Cancel" buttonType="RAISED" layoutX="193.0" layoutY="513.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
@@ -143,16 +155,25 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </JFXButton>
+            <JFXButton fx:id="btn_Save" buttonType="RAISED" layoutX="50.0" layoutY="513.0" onAction="#btn_SaveClick" style="-fx-background-color: green;" text="Save changes" textFill="#fffefe" visible="false">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
+            <Label fx:id="warningLabel" layoutX="57.0" layoutY="491.0" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="SuccessLabel" layoutX="53.0" layoutY="486.0" prefHeight="25.0" prefWidth="367.0" textFill="#a0a2ab">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
          </children>
-         <padding>
-            <Insets bottom="50.0" left="70.0" right="70.0" top="50.0" />
-         </padding>
-         <StackPane.margin>
-            <Insets />
-         </StackPane.margin>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </VBox>
+      </Pane>
    </children>
-</StackPane>
+</AnchorPane>
