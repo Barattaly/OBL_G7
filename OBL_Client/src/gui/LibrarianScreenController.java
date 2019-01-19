@@ -292,7 +292,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				}
 				else 
 				{
-					try {
+					try 
+					{
 						String retDate = returnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 						
 						BorrowACopyOfBook newBorrow = new BorrowACopyOfBook(subscriberID.getText(), retDate,
@@ -425,22 +426,34 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		case CreateNewBorrow: 
 		{
 			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
-			if (newBorrow.getBookCatalogNumber().equals("0")) 
+			if (newBorrow.getSubscriberId().equals("0")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Subscriber ID doesn't exist!");
+				});
+			}
+			else if (newBorrow.getSubscriberId().equals("1")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("The subscriber card status is not active,\nthis subscriber can't borrow new books!");
+				});
+			}
+			 else if (newBorrow.getBookCatalogNumber().equals("0")) 
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
+				});
+			} 
+			else if (newBorrow.getBookCatalogNumber().equals("-1")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the right book catalog number");
 				});
 			} 
 			else if (newBorrow.getCopyId().equals("0")) 
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
-				});
-			} 
-			else if (newBorrow.getSubscriberId().equals("0")) 
-			{
-				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("Subscriber ID doesn't exist!");
 				});
 			}
 			else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button

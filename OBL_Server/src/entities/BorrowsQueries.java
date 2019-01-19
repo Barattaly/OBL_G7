@@ -24,12 +24,4 @@ public class BorrowsQueries
 		String string = format.format(calendar.getTime());
 		return string;
 	}
-	
-	public static String searchBookByCatalogNumber(BorrowACopyOfBook borrowToAdd)
-	{
-		if (borrowToAdd == null)
-			return null;
-		String queryMsg = "SELECT * FROM obl_db.books WHERE books.catalogNumber = '" + borrowToAdd.getBookCatalogNumber()+ "';";
-		return queryMsg;
-	}
 }

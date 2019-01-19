@@ -95,6 +95,23 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return queryMsg;
 	}
 	
+	public static String searchBookByCatalogNumber(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT * FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	
+	public static String getMaxCopiesAndCurrentNumOfBorrows(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT maxCopies, currentNumOfBorrows FROM obl_db.books "
+						+ "WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	
 	
 	/*public static String getNowAsString(String format)
 	{

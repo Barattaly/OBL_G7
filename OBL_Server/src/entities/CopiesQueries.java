@@ -2,7 +2,7 @@ package entities;
 
 public class CopiesQueries 
 {
-	public static String searchBookCopyId(Book bookToCheck)
+	public static String getCopyDetails(Book bookToCheck)
 	{
 		if (bookToCheck == null)
 			return null;

@@ -22,6 +22,14 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 	
+	public static String getSubscriberStatus(Subscriber subscriber)
+	{
+		if (subscriber == null)
+			return null;
+		String queryMsg ="SELECT status FROM obl_db.subscribers WHERE subscriberID ='" +subscriber.getId() + "'";
+		return queryMsg;
+	}
+	
 	public static Subscriber CreateSubscriberFromRS(ResultSet rs)
 	{
 		Subscriber subscriberToCreate = null;
