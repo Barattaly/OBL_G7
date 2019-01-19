@@ -8,6 +8,8 @@ import ocsf.client.*;
 
 import java.io.*;
 
+import entities.Book;
+import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
@@ -111,7 +113,19 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
-	
+
+	public void createNewBorrow(BorrowACopyOfBook borrow)
+	{
+		DBMessage message = new DBMessage(DBAction.CreateNewBorrow, borrow);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
 	public void getAllBooks()
 	{
 		DBMessage message = new DBMessage(DBAction.GetAllBooksList, null);
@@ -123,7 +137,6 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-	
 	public void getSubscriberFromDB(String id)
 	{
 		DBMessage message = new DBMessage(DBAction.ViewSubscriberCard, id);

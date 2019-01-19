@@ -40,6 +40,7 @@ public class User implements Serializable
 		this.lastName = last;
 		this.loginStatus = "off";
 	}
+	
 	public User(String userName,String idNumber,String firstName,String lastName)  //tal cons
 	{
 		this.userName = userName;

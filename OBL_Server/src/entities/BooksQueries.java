@@ -1,8 +1,13 @@
 package entities;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +15,7 @@ import entities.Book;
 
 public class BooksQueries
 {
-	public static String SelectAllBooksEachRowForNewAuthor()
+public static String SelectAllBooksEachRowForNewAuthor()
 	{
 		String queryMsg = "SELECT * FROM obl_db.books " + "INNER JOIN obl_db.books_authors ON "
 				+ "obl_db.books.catalogNumber = obl_db.books_authors.bookCatalogNumber;";
@@ -57,6 +62,66 @@ public class BooksQueries
 		}
 		return Books;
 	}
-
-
+	
+	public static String getClassificationOfBook(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	public static String getClassificationOfBook(BorrowACopyOfBook borrowToAdd)
+	{
+		if (borrowToAdd == null)
+			return null;
+		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '" + borrowToAdd.getBookCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	
+	public static String getCurrentNumOfBorrows(Book bookToUpdate)
+	{
+		if (bookToUpdate == null)
+			return null;
+		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.books WHERE books.catalogNumber = '" + bookToUpdate.getCatalogNumber() + "';";
+		return queryMsg;
+	}
+	
+	public static String updateCurrentNumOfBorrows(Book bookToUpdate)
+	{
+		if (bookToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.books SET currentNumOfBorrows = '" + bookToUpdate.getCurrentNumOfBorrows()
+						+ "' WHERE (catalogNumber = '" + bookToUpdate.getCatalogNumber() + "');";
+		return queryMsg;
+	}
+	
+	public static String searchBookByCatalogNumber(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT * FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	
+	public static String getMaxCopiesAndCurrentNumOfBorrows(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT maxCopies, currentNumOfBorrows FROM obl_db.books "
+						+ "WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	
+	
+	/*public static String getNowAsString(String format)
+	{
+		Calendar calStartDate = new GregorianCalendar();
+		calStartDate.setTime(new Date());
+		Date startDate = calStartDate.getTime();
+		DateFormat dateFormat = new SimpleDateFormat(format);
+		String dateTimeString = dateFormat.format(startDate);
+		return dateTimeString;
+	}*/
+	
+	
 }

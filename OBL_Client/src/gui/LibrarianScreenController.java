@@ -1,9 +1,18 @@
 package gui;
 
 import java.net.URL;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.chrono.ChronoLocalDate;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -14,10 +23,11 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Book;
+import entities.BorrowACopyOfBook;
 import entities.DBMessage;
-import entities.DBMessage.DBAction;
 import entities.Subscriber;
 import entities.User;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -26,15 +36,20 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -92,6 +107,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
     public static IClientUI CurrentGuiController;//check
     
 	private SearchBookController searchBookWindowController = null;
+
+	private Stage borrowDialog = null;
+	private Stage returnDialog = null;
+	private JFXDatePicker returnDate = null;
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
@@ -160,7 +179,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
-
 	}
 
 	@FXML
@@ -190,117 +208,146 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		warningLabel.setText("");
 		if (idNumberTextfield.getText().isEmpty() || userNameTextfield.getText().isEmpty()
 				|| firstNameTextfield.getText().isEmpty() || lastNameTextfield.getText().isEmpty()
-				|| passwordTextfield.getText().isEmpty())
+				|| passwordTextfield.getText().isEmpty()) 
 		{
 			warningLabel.setText("Please fill all the requierd field.");
 			return;
 		}
 		Subscriber newSubscriberToCreate = createSubscriberFromTextFields();
-		
+
 		GuiManager.client.CreateSubscriber(newSubscriberToCreate);
+
 	}
 
 	@FXML
 	void btn_borrowClick(ActionEvent event)
 	{
-		final Stage dialog = new Stage();
-		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.setHeight(400);
-		dialog.setWidth(400);
-		dialog.setTitle("Borrow a copy of a Book");
-		dialog.getIcons().add(new Image("/resources/Braude.png"));
-		Label headline = new Label("Enter book catalog number, \nbook copy id and subscriber id");
+		borrowDialog = new Stage();
+		borrowDialog.initModality(Modality.APPLICATION_MODAL);
+		borrowDialog.setHeight(400);
+		borrowDialog.setWidth(400);
+		borrowDialog.setTitle("Borrow a copy of a Book");
+		borrowDialog.getIcons().add(new Image("/resources/Braude.png"));
+		Label headline = new Label("Enter borrow details");
 		headline.setStyle("-fx-text-fill: #a0a2ab");
 		headline.setFont(new Font(16));
-		VBox dialogVbox = new VBox(15);
-		Label bookCatalogNumberlab = new Label("Book catalog number: ");
-		bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
+		VBox borrowDialogVbox = new VBox(15);
+		Label bookCatalogNumberLab = new Label("Book catalog number: ");
+		bookCatalogNumberLab.setStyle("-fx-text-fill: #a0a2ab");
 		JFXTextField bookCatalogNumber = new JFXTextField();
 		bookCatalogNumber.setStyle("-fx-text-fill: #a0a2ab");
 		GuiManager.preventLettersTypeInTextField(bookCatalogNumber);
-		Label bookCopylab = new Label("Book copy ID: ");
-		bookCopylab.setStyle("-fx-text-fill: #a0a2ab");
-		JFXTextField bookCopy = new JFXTextField();
-		bookCopy.setStyle("-fx-text-fill: #a0a2ab");
-		GuiManager.preventLettersTypeInTextField(bookCopy);
-		Label subscriberIDlab = new Label("Subscriber ID: ");
-		subscriberIDlab.setStyle("-fx-text-fill: #a0a2ab");
+		Label bookCopyLab = new Label("Book copy ID: ");
+		bookCopyLab.setStyle("-fx-text-fill: #a0a2ab");
+		JFXTextField bookCopyId = new JFXTextField();
+		bookCopyId.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(bookCopyId);
+		Label subscriberIdLab = new Label("Subscriber ID: ");
+		subscriberIdLab.setStyle("-fx-text-fill: #a0a2ab");
 		JFXTextField subscriberID = new JFXTextField();
 		subscriberID.setStyle("-fx-text-fill: #a0a2ab");
 		GuiManager.preventLettersTypeInTextField(subscriberID);
 		GuiManager.limitTextFieldMaxCharacters(subscriberID, 9);
+		Label returnDateLab = new Label("Return date: ");
+		returnDateLab.setStyle("-fx-text-fill: #a0a2ab");
+		returnDate = new JFXDatePicker();
+		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
+		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yyyy");
+		returnDate.setDayCellFactory(picker -> new DateCell() 
+		{
+	        public void updateItem(LocalDate date, boolean empty) 
+	        {
+	            super.updateItem(date, empty);
+	            LocalDate today = LocalDate.now();
+	            setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.compareTo(today) < 0 || date.compareTo(today.plusDays(13)) > 0);
+	        }
+		});
+		
 		GridPane grid = new GridPane();
-		grid.add(bookCatalogNumberlab, 1, 1);
+		grid.add(bookCatalogNumberLab, 1, 1);
 		grid.add(bookCatalogNumber, 2, 1);
-		grid.add(bookCopylab, 1, 2);
-		grid.add(bookCopy, 2, 2);
-		grid.add(subscriberIDlab, 1, 3);
+		grid.add(bookCopyLab, 1, 2);
+		grid.add(bookCopyId, 2, 2);
+		grid.add(subscriberIdLab, 1, 3);
 		grid.add(subscriberID, 2, 3);
+		grid.add(returnDateLab, 1, 4);
+		grid.add(returnDate, 2, 4);
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setAlignment(Pos.CENTER);
-		dialogVbox.setAlignment(Pos.CENTER);
+		borrowDialogVbox.setAlignment(Pos.CENTER);
 		Label warningMessageLab = new Label("");
 		warningMessageLab.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
-		JFXButton button = new JFXButton("Borrow");
-		button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
-		dialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-
-		button.setOnMouseClicked(new EventHandler<Event>()
+		JFXButton borrowBtn = new JFXButton("Borrow");
+		borrowBtn.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
+		borrowDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;"); 
+		
+		borrowBtn.setOnMouseClicked(new EventHandler<Event>() 
 		{
 			@Override
-			public void handle(Event e)
+			public void handle(Event e) 
 			{
 				String warningMessage = "";
 				warningMessageLab.setText(warningMessage);
-				if (bookCatalogNumber.getText().isEmpty() && bookCopy.getText().isEmpty()
-						&& subscriberID.getText().isEmpty())
+				if (bookCatalogNumber.getText().isEmpty() && bookCopyId.getText().isEmpty()
+						&& subscriberID.getText().isEmpty() && (returnDate.getValue() == null)) 
 				{
 					warningMessage = "Please fill all of the fields";
-					// GuiManager.ShowErrorPopup("Enter book catalog number, book copy id and
-					// subscriber id please");
-				} else if (bookCatalogNumber.getText().isEmpty())
+				} 
+				else if (bookCatalogNumber.getText().isEmpty()) 
 				{
 					warningMessage = "Please enter book catalog number";
-					// GuiManager.ShowErrorPopup("Enter book catalog number please");
-				} else if (bookCopy.getText().isEmpty())
+				} 
+				else if (bookCopyId.getText().isEmpty()) 
 				{
 					warningMessage = "Please enter book copy id";
-					// GuiManager.ShowErrorPopup("Enter book copy id please");
-				} else if (subscriberID.getText().isEmpty())
+				} 
+				else if (subscriberID.getText().isEmpty()) 
 				{
 					warningMessage = "Please enter subscriber id";
-					// GuiManager.ShowErrorPopup("Enter subscriber id please");
-				} else
+				} 
+				else if (returnDate.getValue() == null) 
 				{
-					// גישה למסד נתונים
-					// dialog.close();
+					warningMessage = "Please enter return date";
+				}
+				else 
+				{
+					try 
+					{
+						String retDate = returnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+						
+						BorrowACopyOfBook newBorrow = new BorrowACopyOfBook(subscriberID.getText(), retDate,
+								bookCatalogNumber.getText(), bookCopyId.getText());
+						GuiManager.client.createNewBorrow(newBorrow);
+					} 
+					catch (Exception ex) 
+					{
+						ex.printStackTrace();
+					}
 				}
 				if (!warningMessage.isEmpty())
 					warningMessageLab.setText(warningMessage);
 			}
 		});
-		JFXDatePicker aDatePicker = new JFXDatePicker();
-		aDatePicker.setEditable(false);
-		dialogVbox.getChildren().addAll(headline, grid, warningMessageLab,aDatePicker, button);
-		Scene dialogScene = new Scene(dialogVbox, 300, 200);
-		dialog.setScene(dialogScene);
-		dialog.showAndWait();
+		borrowDialogVbox.getChildren().addAll(headline, grid, warningMessageLab, borrowBtn);
+		Scene borrowDialogScene = new Scene(borrowDialogVbox, 300, 200);
+		borrowDialog.setScene(borrowDialogScene);
+		borrowDialog.showAndWait();
 	}
 
 	@FXML
-	void btn_ReturnClick(ActionEvent event)
+	void btn_ReturnClick(ActionEvent event) 
 	{
-		final Stage dialog = new Stage();
-		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.setTitle("Return a copy of a Book");
-		dialog.getIcons().add(new Image("/resources/Braude.png"));
-		dialog.setHeight(250);
-		dialog.setWidth(400);
+		returnDialog = new Stage();
+		returnDialog.initModality(Modality.APPLICATION_MODAL);
+		returnDialog.setTitle("Return a copy of a Book");
+		returnDialog.getIcons().add(new Image("/resources/Braude.png"));
+		returnDialog.setHeight(250);
+		returnDialog.setWidth(400);
 		Label headline = new Label("Enter book catalog number and book copy id");
 		headline.setStyle("-fx-text-fill: #a0a2ab");
 		headline.setFont(new Font(16));
-		VBox dialogVbox = new VBox(10);
+		VBox returnDialogVbox = new VBox(10);
 		Label bookCatalogNumberlab = new Label("Book catalog number: ");
 		bookCatalogNumberlab.setStyle("-fx-text-fill: #a0a2ab");
 		JFXTextField bookCatalogNumber = new JFXTextField();
@@ -319,11 +366,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setAlignment(Pos.CENTER);
-		dialogVbox.setAlignment(Pos.CENTER);
+		returnDialogVbox.setAlignment(Pos.CENTER);
 		JFXButton button = new JFXButton("Return");
 		button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
-		dialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-		button.setOnMouseClicked(new EventHandler<Event>()
+		returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
+		button.setOnMouseClicked(new EventHandler<Event>() 
 		{
 			@Override
 			public void handle(Event e)
@@ -332,16 +379,16 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				if (bookCopy.getText().isEmpty())
 				{
 					GuiManager.ShowErrorPopup("Enter book copy id please");
-				} else
+				} else 
 				{
-					dialog.close();
+					returnDialog.close();
 				}
 			}
 		});
-		dialogVbox.getChildren().addAll(headline, grid, button);
-		Scene dialogScene = new Scene(dialogVbox, 300, 200);
-		dialog.setScene(dialogScene);
-		dialog.showAndWait();
+		returnDialogVbox.getChildren().addAll(headline, grid, button);
+		Scene returnDialogScene = new Scene(returnDialogVbox, 300, 200);
+		returnDialog.setScene(returnDialogScene);
+		returnDialog.showAndWait();
 	}
 
 	private Subscriber createSubscriberFromTextFields()
@@ -356,18 +403,20 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				double tryParse = Integer.valueOf(phoneNumberTextfield.getText());
 				subscriber.setPhoneNumber(phoneNumberTextfield.getText());
-			} catch (Exception e)
+			} 
+			catch (Exception e) 
 			{
 				warningMessage = "Wrong phone number format.\n";
 				subscriber.setPhoneNumber("0");
 			}
-		} else
+		} 
+		else
 			subscriber.setPhoneNumber("0");
 
-		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText()))
-		{
+		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText())) {
 			subscriber.setEmail(emailTextfield.getText());
-		} else
+		} 
+		else
 			warningMessage += "Wrong email format. ";
 		if (!warningMessage.isEmpty())
 			warningLabel.setText(warningMessage);
@@ -387,11 +436,67 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				Platform.runLater(() -> {
 					warningLabel.setText("Subscriber already exist!");
 				});
-			} else
+			} 
+			else 
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup(
 							"Subscriber " + ((Subscriber) msg.Data).getSubscriberNumber() + " Added Successfully!");
+				});
+			}
+			break;
+		}
+		case CreateNewBorrow: 
+		{
+			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
+			if (newBorrow.getSubscriberId().equals("0")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Subscriber ID doesn't exist!");
+				});
+			}
+			else if (newBorrow.getSubscriberId().equals("1")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("The subscriber card status is not active,\nthis subscriber can't borrow new books!");
+				});
+			}
+			 else if (newBorrow.getBookCatalogNumber().equals("0")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
+				});
+			} 
+			else if (newBorrow.getBookCatalogNumber().equals("-1")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the right book catalog number");
+				});
+			} 
+			else if (newBorrow.getCopyId().equals("0")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
+				});
+			}
+			else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Wrong return date, please enter date up to 14 days from today");
+				});
+			} 
+			else if (newBorrow.getExpectedReturnDate().equals("1")) // after press on "borrow button
+			{
+				Platform.runLater(() -> {
+					GuiManager
+							.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
+				});
+			} 
+			else 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Borrow executed Successfully!");
+					borrowDialog.close();
 				});
 			}
 			break;
@@ -415,7 +520,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 			case GetAllBooksList:
 			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
-			break;			
+			break;		
+		
+
 		}
 	}
 
@@ -438,14 +545,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		return userLogedIn;
 	}
 
-	private static boolean isValidEmailAddress(String email)
+	private static boolean isValidEmailAddress(String email) 
 	{
 		boolean result = true;
-		try
-		{
+		try {
 			InternetAddress emailAddr = new InternetAddress(email);
 			emailAddr.validate();
-		} catch (AddressException ex)
+		} catch (AddressException ex) 
 		{
 			result = false;
 		}
@@ -483,4 +589,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 	}
 
+	public static String getCurrentDateAsString()
+	{
+		GregorianCalendar calendar = new GregorianCalendar();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String string = format.format(calendar.getTime());
+		return string;
+	}
 }
