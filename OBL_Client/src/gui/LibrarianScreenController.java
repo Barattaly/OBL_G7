@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.time.DayOfWeek;
@@ -33,6 +34,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -49,6 +51,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -56,7 +59,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class LibrarianScreenController implements Initializable, IClientUI 
+public class LibrarianScreenController implements Initializable, IClientUI
 {
 	private User userLogedIn;
 	@FXML
@@ -64,7 +67,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	private Label userNameLabel;
 	@FXML
-	private Pane pane_home, pane_createNewSubscriberCard, pane_searchBook, pane_searchSubscriberCard;
+	private Pane pane_home, pane_createNewSubscriberCard,pane_searchSubscriberCard;
+	@FXML
+	private AnchorPane pane_searchBook;
 	@FXML
 	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard;
 
@@ -88,16 +93,27 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 	@FXML
 	private JFXPasswordField passwordTextfield;
+	
+    @FXML
+    private JFXTextField txt_subscriberID;
 
 	@FXML
 	private Label warningLabel;
+    @FXML
+    private JFXButton btn_viewSubscriberCard;
+    
+    private ViewSubscriberCardController controller;  //check
+    
+    public static IClientUI CurrentGuiController;//check
+    
+	private SearchBookController searchBookWindowController = null;
 
 	private Stage borrowDialog = null;
 	private Stage returnDialog = null;
 	private JFXDatePicker returnDate = null;
 
 	@FXML
-	void btn_homeDisplay(MouseEvent event) 
+	void btn_homeDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -111,7 +127,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_createNewSubscriberCardDisplay(MouseEvent event) 
+	void btn_createNewSubscriberCardDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(true);
@@ -124,7 +140,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_booksDisplay(MouseEvent event) 
+	void btn_booksDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -137,7 +153,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_searchSubscriberCardDisplay(MouseEvent event) 
+	void btn_searchSubscriberCardDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -147,9 +163,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(0.5);
+		txt_subscriberID.setStyle("-fx-text-fill: #a0a2ab");
+		GuiManager.preventLettersTypeInTextField(txt_subscriberID);
+		GuiManager.limitTextFieldMaxCharacters(txt_subscriberID, 9);
 	}
 
-	public void initialize(URL arg0, ResourceBundle arg1) 
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1)
 	{
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -159,24 +179,23 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
-
 	}
 
 	@FXML
-	void logOutDisplay(MouseEvent event) 
+	void logOutDisplay(MouseEvent event)
 	{ // logout
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("OBL Log Out");
 		alert.setHeaderText("Are you sure you want to log out?");
 		Optional<ButtonType> option = alert.showAndWait();
-		if (option.get() == ButtonType.OK) 
+		if (option.get() == ButtonType.OK)
 		{
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			GuiManager.SwitchScene(SCREENS.login);
 		}
 
-		else if (option.get() == ButtonType.CANCEL) 
+		else if (option.get() == ButtonType.CANCEL)
 		{
 			alert.close();
 		}
@@ -184,12 +203,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_createSubscriberCardDisplay(ActionEvent event) 
+	void btn_createSubscriberCardDisplay(ActionEvent event)
 	{
 		warningLabel.setText("");
 		if (idNumberTextfield.getText().isEmpty() || userNameTextfield.getText().isEmpty()
 				|| firstNameTextfield.getText().isEmpty() || lastNameTextfield.getText().isEmpty()
-				|| passwordTextfield.getText().isEmpty()) {
+				|| passwordTextfield.getText().isEmpty()) 
+		{
 			warningLabel.setText("Please fill all the requierd field.");
 			return;
 		}
@@ -200,7 +220,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_borrowClick(ActionEvent event) 
+	void btn_borrowClick(ActionEvent event)
 	{
 		borrowDialog = new Stage();
 		borrowDialog.initModality(Modality.APPLICATION_MODAL);
@@ -350,15 +370,17 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		JFXButton button = new JFXButton("Return");
 		button.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
 		returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-		button.setOnMouseClicked(new EventHandler<Event>() {
+		button.setOnMouseClicked(new EventHandler<Event>() 
+		{
 			@Override
-			public void handle(Event e) 
+			public void handle(Event e)
 			{
 
-				if (bookCopy.getText().isEmpty()) 
+				if (bookCopy.getText().isEmpty())
 				{
 					GuiManager.ShowErrorPopup("Enter book copy id please");
-				} else {
+				} else 
+				{
 					returnDialog.close();
 				}
 			}
@@ -369,13 +391,15 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		returnDialog.showAndWait();
 	}
 
-	private Subscriber createSubscriberFromTextFields() {
+	private Subscriber createSubscriberFromTextFields()
+	{
 		Subscriber subscriber = new Subscriber(userNameTextfield.getText(), passwordTextfield.getText(),
 				idNumberTextfield.getText(), firstNameTextfield.getText(), lastNameTextfield.getText());
 		String warningMessage = "";
 		// input checks:
-		if (!phoneNumberTextfield.getText().isEmpty()) {
-			try 
+		if (!phoneNumberTextfield.getText().isEmpty())
+		{
+			try
 			{
 				double tryParse = Integer.valueOf(phoneNumberTextfield.getText());
 				subscriber.setPhoneNumber(phoneNumberTextfield.getText());
@@ -400,14 +424,14 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@Override
-	public void getMessageFromServer(DBMessage msg) 
+	public void getMessageFromServer(DBMessage msg)
 	{
-		switch (msg.Action) 
+		switch (msg.Action)
 		{
-		case CreateSubscriber: 
+		case CreateSubscriber:
 		{
 			Subscriber newSub = (Subscriber) msg.Data;
-			if (newSub == null) 
+			if (newSub == null)
 			{
 				Platform.runLater(() -> {
 					warningLabel.setText("Subscriber already exist!");
@@ -419,7 +443,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.ShowMessagePopup(
 							"Subscriber " + ((Subscriber) msg.Data).getSubscriberNumber() + " Added Successfully!");
 				});
-
 			}
 			break;
 		}
@@ -478,13 +501,34 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case ViewSubscriberCard:
+		{
+			if (msg.Data == null)
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowErrorPopup("This subscriber doesnt exist!");
+				});
+			}
+			else
+			{
+				Subscriber newSub = (Subscriber) msg.Data;
+				Platform.runLater(() -> {
+					GuiManager.openSubscriberCard(newSub);
+			});
+			}
+			break;
+		}
+			case GetAllBooksList:
+			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
+			break;		
+		
 
 		}
 	}
 
 
 	@Override
-	public void setUserLogedIn(User userLoged) 
+	public void setUserLogedIn(User userLoged)
 	{
 		userLogedIn = userLoged;
 		// make the userName start with upper case
@@ -492,10 +536,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		userWelcomLabel.setText("Hello " + name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
+		initialSearchWindow();
 	}
 
 	@Override
-	public User getUserLogedIn() 
+	public User getUserLogedIn()
 	{
 		return userLogedIn;
 	}
@@ -511,6 +556,37 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			result = false;
 		}
 		return result;
+	}
+	
+    @FXML
+    void btn_viewSubscriberCardClick(ActionEvent event)
+    {
+    	if (txt_subscriberID.getText().isEmpty())
+		{
+			GuiManager.ShowErrorPopup("Subscriber ID can't be empty");
+		}
+		
+		else
+		{
+			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
+		}  	
+    }
+    	private void initialSearchWindow()
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/SearchBookScreen.fxml"));
+			AnchorPane newLoadedPane = loader.load(); 
+			searchBookWindowController = loader.getController();
+			searchBookWindowController.setUserLogedIn(userLogedIn);
+			searchBookWindowController.setPopUpMode(false);
+			
+			pane_searchBook.getChildren().add(newLoadedPane);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static String getCurrentDateAsString()

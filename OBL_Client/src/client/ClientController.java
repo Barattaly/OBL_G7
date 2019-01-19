@@ -113,6 +113,7 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
+
 	public void createNewBorrow(BorrowACopyOfBook borrow)
 	{
 		DBMessage message = new DBMessage(DBAction.CreateNewBorrow, borrow);
@@ -125,7 +126,6 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
-
 	public void getAllBooks()
 	{
 		DBMessage message = new DBMessage(DBAction.GetAllBooksList, null);

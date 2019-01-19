@@ -1,5 +1,6 @@
 package entities;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -10,15 +11,18 @@ public class ObservableBook
 	public SimpleStringProperty author;
 	public SimpleIntegerProperty catalognumber;
 	public SimpleStringProperty location;
-	public SimpleStringProperty returndate;
+	public SimpleStringProperty catagories;
+	public SimpleBooleanProperty isAvailableToBorrow;
 
-	public ObservableBook(String name, String author, int catalognumber, String location)//, String returndate)
+
+	public ObservableBook(String name, String author, int catalognumber, String location, String catagories,boolean available)//, String returndate)
 	{
 		this.name = new SimpleStringProperty(name);
 		this.catalognumber = new SimpleIntegerProperty(catalognumber);
 		this.author = new SimpleStringProperty(author);
 		this.location = new SimpleStringProperty(location);
-		//this.returndate = new SimpleStringProperty(returndate);
+		this.catagories = new SimpleStringProperty(catagories);
+		this.isAvailableToBorrow = new SimpleBooleanProperty(available);
 	}
 
 	public String getName()
@@ -61,14 +65,24 @@ public class ObservableBook
 		this.location = new SimpleStringProperty(location);
 	}
 
-	public String getReturndate()
+	public String getCatagories()
 	{
-		return returndate.get();
+		return catagories.get();
 	}
 
-	public void setReturndate(String returndate)
+	public void setCatagories(String catagories)
 	{
-		this.returndate = new SimpleStringProperty(returndate);
+		this.catagories = new SimpleStringProperty(catagories);
+	}
+	
+	public boolean getIsAvailableToBorrow()
+	{
+		return isAvailableToBorrow.get();
+	}
+
+	public void setIsAvailableToBorrow(boolean isAvailableToBorrow)
+	{
+		this.isAvailableToBorrow = new SimpleBooleanProperty(isAvailableToBorrow);
 	}
 
 }

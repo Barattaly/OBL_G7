@@ -11,6 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
@@ -128,7 +129,7 @@ public class OBLServer extends AbstractServer
 				getListOfAllBooks(client);
 				break;
 			}
-			case ViewSubscriberCard:
+			case ViewSubscriberCard: 
 			{
 				searchSubscriberByID((String)dbMessage.Data, client);
 				break;
@@ -194,6 +195,7 @@ public class OBLServer extends AbstractServer
 	    } 
 	  }
 
+
 	private void getListOfAllBooks(ConnectionToClient client) throws SQLException, IOException
 	{
 		String query = BooksQueries.SelectAllBooksEachRowForNewAuthor();
@@ -210,7 +212,6 @@ public class OBLServer extends AbstractServer
 				booksList.get(key).getCategories().add(rs.getString(1));
 			}
 		}
-
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
 	}
 
@@ -591,7 +592,7 @@ public class OBLServer extends AbstractServer
 		}
 		return 0;
 	}
-	
+
 	public static String getCurrentDateAsString()
 	{
 		GregorianCalendar calendar = new GregorianCalendar();
