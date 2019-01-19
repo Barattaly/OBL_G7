@@ -22,6 +22,14 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 	
+	public static String getSubscriberStatus(Subscriber subscriber)
+	{
+		if (subscriber == null)
+			return null;
+		String queryMsg ="SELECT status FROM obl_db.subscribers WHERE subscriberID ='" +subscriber.getId() + "'";
+		return queryMsg;
+	}
+	
 	public static Subscriber CreateSubscriberFromRS(ResultSet rs)
 	{
 		Subscriber subscriberToCreate = null;
@@ -78,5 +86,28 @@ public class SubscribersQueries
 	}
 
 	
-
+	public static String searchSubscriberByID(BorrowACopyOfBook borrowToAdd)
+	{
+		if (borrowToAdd == null)
+			return null;
+		String queryMsg ="SELECT * FROM obl_db.subscribers WHERE subscriberID ='" +borrowToAdd.getSubscriberId() + "'";
+		return queryMsg;
+	}
+	
+	public static String getCurrentNumOfBorrows(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.subscribers WHERE subscriberID = '" + subscriberToUpdate.getId() + "';";
+		return queryMsg;
+	}
+	
+	public static String updateCurrentNumOfBorrows(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.subscribers SET currentNumOfBorrows = '" + subscriberToUpdate.getCurrentNumOfBorrows()
+						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
+		return queryMsg;
+	}
 }

@@ -21,7 +21,6 @@ public class Book implements Serializable
 	private ArrayList<String> categories;
 
 	
-	
 	public Book(String catalogNumber, String name, String purchaseDate,
 			String classification, String description, int maxCopies, String location,
 	 int currentNumOfBorrows, int currentNumOfOrders, String tableOfContenPath, String isArchived)
@@ -57,11 +56,12 @@ public class Book implements Serializable
 		this.isArchived = isArchived;
 		this.copies = copies;
 	}
-
-	public Book(String catalogNumber)
+	
+	public Book(String catalogNumber) 
 	{
 		this.catalogNumber = catalogNumber;
 	}
+
 	public String getCatalogNumber() 
 	{
 		return catalogNumber;
