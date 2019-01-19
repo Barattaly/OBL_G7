@@ -237,7 +237,8 @@ public class SubscriberScreenController implements Initializable, IClientUI
 					Platform.runLater(() -> {
 						GuiManager.ShowErrorPopup("Something went wrong\nPlease restart the program.");
 					});
-				} else
+				} 
+				else
 				{
 					Platform.runLater(() -> {
 						setSubscriberCardDisplay(newSub);

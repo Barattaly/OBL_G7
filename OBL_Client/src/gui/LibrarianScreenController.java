@@ -411,15 +411,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.openSubscriberCard(newSub);
 			});
 			}
-			//ViewSubscriberCardController controller = new ViewSubscriberCardController(newSub);
-			//((Node) event.getSource()).getScene().getWindow().hide();
-			/*Platform.runLater(() -> {
-				controller = new ViewSubscriberCardController(newSub); 
-				GuiManager.SwitchScene(SCREENS.viewSubscriberCard);
-			});*/
-			// chnge scene to view subscriber card
-			//GuiManager.client.
-			//here i need to add - guiManager.viewSubscriberCardController.somthing
+			break;
 		}
 			case GetAllBooksList:
 			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
