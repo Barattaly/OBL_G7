@@ -108,7 +108,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_createNewSubscriberCardDisplay(MouseEvent event)
+	protected void btn_createNewSubscriberCardDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(true);
@@ -364,7 +364,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		} else
 			subscriber.setPhoneNumber("0");
 
-		if (!emailTextfield.getText().isEmpty() && isValidEmailAddress(emailTextfield.getText()))
+		if (!emailTextfield.getText().isEmpty() && GuiManager.isValidEmailAddress(emailTextfield.getText()))
 		{
 			subscriber.setEmail(emailTextfield.getText());
 		} else
@@ -438,22 +438,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		return userLogedIn;
 	}
 
-	private static boolean isValidEmailAddress(String email)
-	{
-		boolean result = true;
-		try
-		{
-			InternetAddress emailAddr = new InternetAddress(email);
-			emailAddr.validate();
-		} catch (AddressException ex)
-		{
-			result = false;
-		}
-		return result;
-	}
-	
     @FXML
-    void btn_viewSubscriberCardClick(ActionEvent event)
+    protected void btn_viewSubscriberCardClick(ActionEvent event)
     {
     	if (txt_subscriberID.getText().isEmpty())
 		{
@@ -465,7 +451,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
 		}  	
     }
-    	private void initialSearchWindow()
+
+	private void initialSearchWindow()
 	{
 		try
 		{

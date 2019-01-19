@@ -33,62 +33,39 @@ import javafx.scene.layout.Pane;
 public class SubscriberScreenController implements Initializable, IClientUI
 {
 	private User userLogedIn;
-    @FXML
-    private Label userWelcomLabel;
-    @FXML
-    private Label userNameLabel;
-    @FXML
-    private Label statusLabel;
-    
-    @FXML
-    private JFXTextField subscriberNumberField;
 
-    @FXML
-    private JFXTextField idNumberField;
+	private Subscriber subscriberLoggedIn;
 
-    @FXML
-    private JFXTextField firstNameField;
-
-    @FXML
-    private JFXTextField lastNameField;
-
-    @FXML
-    private JFXTextField phoneNumberField;
-
-    @FXML
-    private JFXTextField emailField;
-
-    @FXML
-    private JFXTextField userNameField;
-    
-    @FXML
-    private JFXButton btn_Edit;
-    
-    @FXML
-    private JFXButton btn_Cancel;
-
-    @FXML
-    private JFXButton btn_Save;
-    
-    @FXML
-    private Label warningLabel;
-    
-    @FXML
-    private Label SuccessLabel;
-    
 	@FXML
-	private Pane pane_home, pane_books, pane_viewSubscriberCard;
+	private Label userWelcomLabel;
+	@FXML
+	private Label userNameLabel;
+	@FXML
+	private Label statusLabel;
+
+	@FXML
+	private Pane pane_home, pane_books;
+	@FXML
+	private AnchorPane pane_viewSubscriberCard;
 	@FXML
 	private AnchorPane pane_searchBook;
 
 	@FXML
 	private ImageView btn_home, btn_books, btn_viewSubscriberCard, btn_searchBook;
-	
+
 	private SearchBookController searchBookWindowController = null;
-	
+
+	private ViewSubscriberCardController viewSubscriberCardController = null;
+
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
 	{
+		if (!viewSubscriberCardController.getFirstNameField().getText().isEmpty())// in case user first name changed by him
+		{
+			String name = viewSubscriberCardController.getFirstNameField().getText().substring(0, 1).toUpperCase()
+					+ viewSubscriberCardController.getFirstNameField().getText().substring(1);
+			userWelcomLabel.setText("Hello " + name);
+		}
 		pane_home.setVisible(true);
 		pane_books.setVisible(false);
 		pane_viewSubscriberCard.setVisible(false);
@@ -122,7 +99,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_home.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(0.5);
-		btn_searchBook.setOpacity(1);	
+		btn_searchBook.setOpacity(1);
 	}
 
 	@FXML
@@ -138,42 +115,9 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_searchBook.setOpacity(0.5);
 	}
 
-	/*
-	 * @FXML private TableView<Book> Table2;
-	 * 
-	 * @FXML private TableColumn<Book, String> namecol;
-	 * 
-	 * @FXML private TableColumn<Book, Integer> catalogynumbercol;
-	 * 
-	 * @FXML private TableColumn<Book, String> authorcol;
-	 * 
-	 * @FXML private TableColumn<Book, Integer> numbercol;
-	 * 
-	 * @FXML private TableColumn<Book, String> subjectcol;
-	 * 
-	 * @FXML private TableColumn<Book, String> locationcol;
-	 */
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
-		/*
-		 * namecol.setCellValueFactory(new PropertyValueFactory<>("Name"));
-		 * catalogynumbercol.setCellValueFactory(new
-		 * PropertyValueFactory<>("Catalogynumber")); authorcol.setCellValueFactory(new
-		 * PropertyValueFactory<>("Author")); numbercol.setCellValueFactory(new
-		 * PropertyValueFactory<>("Numberofcopys")); subjectcol.setCellValueFactory(new
-		 * PropertyValueFactory<>("Subject")); locationcol.setCellValueFactory(new
-		 * PropertyValueFactory<>("Location"));
-		 * 
-		 * Book book1 = new Book("Harry Potter" ,"J.K.Rolling" ,123456, 7, "Adventure",
-		 * "A6 313"); Book book2 = new Book("Kofiko", "Galila Ron Feder" ,456789, 3,
-		 * "Fun", "A8 949"); ObservableList<Book> list =
-		 * FXCollections.observableArrayList(book1,book2);
-		 * 
-		 * Table2.setItems(list);
-		 */
-
 		pane_home.setVisible(true);
 		pane_searchBook.setVisible(false);
 		pane_viewSubscriberCard.setVisible(false);
@@ -189,7 +133,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		try
 		{
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/SearchBookScreen.fxml"));
-			AnchorPane newLoadedPane = loader.load(); 
+			AnchorPane newLoadedPane = loader.load();
 			searchBookWindowController = loader.getController();
 			searchBookWindowController.setUserLogedIn(userLogedIn);
 			searchBookWindowController.setPopUpMode(false);
@@ -198,8 +142,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
 			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
 			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
-		}
-		catch(Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -216,8 +159,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		{
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			GuiManager.SwitchScene(SCREENS.login); // show login screen
-		}
-		else if (option.get() == ButtonType.CANCEL)
+		} else if (option.get() == ButtonType.CANCEL)
 		{
 			alert.close();
 		}
@@ -226,183 +168,67 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
-		// TODO Auto-generated method stub
-		switch(msg.Action)
+		switch (msg.Action)
 		{
-			case ViewSubscriberCard:
+		case GetAllBooksList:
+			searchBookWindowController.setBookMap((Map<Integer, Book>) msg.Data);
+			break;
+		case ViewSubscriberCard:
+		{
+			Subscriber newSub = (Subscriber) msg.Data;
+			if (newSub == null)
 			{
-				Subscriber newSub = (Subscriber) msg.Data;
-				if (newSub == null)
-				{
-					Platform.runLater(() -> {
-						GuiManager.ShowErrorPopup("Something went wrong\nPlease restart the program.");
-					});
-				} 
-				else
-				{
-					Platform.runLater(() -> {
-						setSubscriberCardDisplay(newSub);
-					});
+				Platform.runLater(() -> {
+					GuiManager.ShowErrorPopup("Something went wrong\nPlease restart the program.");
+				});
+			} else
+			{
+				Platform.runLater(() -> {
+					subscriberLoggedIn = newSub;
+					initialSubscriberCard(newSub);
+					String status = newSub.getStatus().substring(0, 1).toUpperCase() + newSub.getStatus().substring(1);
+					statusLabel.setText("Subscriber card status: " + status);
+				});
 
-				}
-				break;
 			}
-			case GetAllBooksList:
-				searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
-				break;
+			break;
+		}
 		}
 	}
-	
-	private void setSubscriberCardDisplay(Subscriber newSub)
-	{
-		String status = newSub.getStatus().substring(0,1).toUpperCase() + newSub.getStatus().substring(1);
-		statusLabel.setText("Subscriber card status: "+ status);
-	    subscriberNumberField.setText(newSub.getSubscriberNumber());
-	    idNumberField.setText(newSub.getId());
-	    firstNameField.setText(newSub.getFirstName());
-	    lastNameField.setText(newSub.getLastName());
-	    phoneNumberField.setText(newSub.getPhoneNumber());
-	    emailField.setText(newSub.getEmail());
-	    userNameField.setText(newSub.getUserName());
-		
-	}
-	
-    @FXML
-    void btn_EditClick(ActionEvent event) {
-    	GuiManager.preventLettersTypeInTextField(phoneNumberField);
-    	
-    	btn_Edit.setVisible(false);
-    	btn_Cancel.setVisible(true);
-    	btn_Save.setVisible(true);
-    	
-    	firstNameField.setEditable(true);
-    	lastNameField.setEditable(true);
-    	phoneNumberField.setEditable(true);
-    	emailField.setEditable(true);
-    	
-       	firstNameField.setCursor(Cursor.TEXT);
-    	lastNameField.setCursor(Cursor.TEXT);
-    	phoneNumberField.setCursor(Cursor.TEXT);
-    	emailField.setCursor(Cursor.TEXT);
-
-    }
-    
-    @FXML
-    void btn_CancelClick(ActionEvent event) {
-    	setUserLogedIn(userLogedIn);
-    	
-    	btn_Edit.setVisible(true);
-    	btn_Cancel.setVisible(false);
-    	btn_Save.setVisible(false);
-    	
-       	firstNameField.setEditable(false);
-    	lastNameField.setEditable(false);
-    	phoneNumberField.setEditable(false);
-    	emailField.setEditable(false);
-    	
-       	firstNameField.setCursor(Cursor.DEFAULT);
-    	lastNameField.setCursor(Cursor.DEFAULT);
-    	phoneNumberField.setCursor(Cursor.DEFAULT);
-    	emailField.setCursor(Cursor.DEFAULT);
-    	
-    	SuccessLabel.setVisible(false);
-		warningLabel.setVisible(false);
-    }
-    
-    @FXML
-    void btn_SaveClick(ActionEvent event) 
-    {
-    	if(firstNameField.getText().isEmpty())
-    	{
-    		SuccessLabel.setVisible(false);
-    		warningLabel.setVisible(true);
-    		warningLabel.setText("Enter first name please");
-    	}
-    	else if(lastNameField.getText().isEmpty())
-    	{
-    		SuccessLabel.setVisible(false);
-    		warningLabel.setVisible(true);
-    		warningLabel.setText("Enter last name please");
-    	}
-    	else if(phoneNumberField.getText().isEmpty())
-    	{
-    		SuccessLabel.setVisible(false);
-    		warningLabel.setVisible(true);
-    		warningLabel.setText("Enter phone number please");
-    	}
-    	else if(emailField.getText().isEmpty())
-    	{
-    		SuccessLabel.setVisible(false);
-    		warningLabel.setVisible(true);
-    		warningLabel.setText("Enter Email please");
-    	}
-    	else if(!isValidEmailAddress(emailField.getText()))
-    	{
-    		SuccessLabel.setVisible(false);
-    		warningLabel.setVisible(true);
-    		warningLabel.setText("The Email is incorrect");
-    	}
-    	else
-    	{
-    	   	btn_Edit.setVisible(true);
-        	btn_Cancel.setVisible(false);
-        	btn_Save.setVisible(false);
-        	
-           	firstNameField.setEditable(false);
-        	lastNameField.setEditable(false);
-        	phoneNumberField.setEditable(false);
-        	emailField.setEditable(false);
-        	
-           	firstNameField.setCursor(Cursor.DEFAULT);
-        	lastNameField.setCursor(Cursor.DEFAULT);
-        	phoneNumberField.setCursor(Cursor.DEFAULT);
-        	emailField.setCursor(Cursor.DEFAULT);
-        	
-    		Subscriber subscriberToUpdate = new Subscriber(userLogedIn.getId(),firstNameField.getText(),lastNameField.getText(),
-    				phoneNumberField.getText(),emailField.getText(),userLogedIn.getLoginStatus());
-    		GuiManager.client.updateSubscriberDetails(subscriberToUpdate);
-    		subscriberToUpdate.setUserName(userLogedIn.getUserName());
-    		String name = subscriberToUpdate.getFirstName().substring(0, 1).toUpperCase() + subscriberToUpdate.getFirstName().substring(1);		
-    		userWelcomLabel.setText("Hello "+ name);
-    		String userName = subscriberToUpdate.getUserName();
-    		userNameLabel.setText(userName);
-    		SuccessLabel.setVisible(true);
-    		warningLabel.setVisible(false);
-    		SuccessLabel.setText("Changes saved successfully");
-    	}
-    }
 
 	@Override
 	public void setUserLogedIn(User userLoged)
 	{
 		userLogedIn = userLoged;
-		//make the userName start with upper case
-		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);		
-		userWelcomLabel.setText("Hello "+ name);
+		// make the userName start with upper case
+		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
+		userWelcomLabel.setText("Hello " + name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
 		initialSearchWindow();
 		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
 	}
-	
+
 	@Override
 	public User getUserLogedIn()
 	{
 		return userLogedIn;
 	}
-	
-	private static boolean isValidEmailAddress(String email)
+
+	private void initialSubscriberCard(Subscriber subscriber)
 	{
-		boolean result = true;
 		try
 		{
-			InternetAddress emailAddr = new InternetAddress(email);
-			emailAddr.validate();
-		} catch (AddressException ex)
-		{
-			result = false;
-		}
-		return result;
-	}
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/ViewSubscriberCardScreen.fxml"));
+			AnchorPane newLoadedPane = loader.load();
+			viewSubscriberCardController = loader.getController();
+			viewSubscriberCardController.setSubscriberToShow(subscriber);
+			// viewSubscriberCardController.setPopUpMode(false);
 
+			pane_viewSubscriberCard.getChildren().add(newLoadedPane);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }
