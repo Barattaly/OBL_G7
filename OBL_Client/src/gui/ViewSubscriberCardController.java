@@ -54,7 +54,7 @@ public class ViewSubscriberCardController implements  IClientUI
 	    	phoneNumber.setText(subscriberToShow.getPhoneNumber());
 	    	email.setText(subscriberToShow.getEmail());
 	    }
-
+	     
 		
 	    @Override
 		public void getMessageFromServer(DBMessage msg)

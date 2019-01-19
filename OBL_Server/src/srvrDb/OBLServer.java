@@ -126,6 +126,11 @@ public class OBLServer extends AbstractServer
 				searchSubscriberByID((String)dbMessage.Data, client);
 				break;
 			}
+			case UpdateSubscriberCard:
+			{
+				updateSubscriberInformation((Subscriber)dbMessage.Data, client);
+				break;
+			}
 			default:
 				break;
 			}
@@ -142,6 +147,28 @@ public class OBLServer extends AbstractServer
 				e1.printStackTrace();
 			}
 		}
+	}
+	private void updateSubscriberInformation(Subscriber subscriberToUpdate, ConnectionToClient client )throws IOException 
+	{
+	    
+	  
+	    if (subscriberToUpdate == null)
+	    {
+	    	return;
+
+	    }
+	    else
+	    {
+	    	String query=UsersQueries.updateUserInformation(subscriberToUpdate);
+	    	oblDB.executeUpdate(query);
+	         query=SubscribersQueries.updateSubscriberInformation(subscriberToUpdate);
+	    	oblDB.executeUpdate(query);
+	    	
+	    	
+	    }
+	   
+	    	
+	
 	}
 	private void searchSubscriberByID(String subscriberID, ConnectionToClient client) throws IOException 
 	  {
