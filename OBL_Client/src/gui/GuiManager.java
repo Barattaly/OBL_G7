@@ -8,7 +8,6 @@ import com.jfoenix.controls.JFXTextField;
 import client.ClientController;
 import entities.Book;
 import entities.DBMessage;
-import entities.User;
 import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.event.EventHandler;
@@ -174,7 +173,7 @@ public class GuiManager
 		});
 	}
 
-	public static void openBookWindow(Book book,User userLoged)
+	public static void openBookWindow(Book book)
 	{
 		try
 		{
@@ -184,9 +183,8 @@ public class GuiManager
 			Parent root = loader.load();
 			BookInformationController controller = loader.getController();
 			controller.setBookInformation(book);
-			controller.setUserLogedIn(userLoged);
 			Scene scene = new Scene(root);
-			SeondStage.setTitle("Book Page");
+			SeondStage.setTitle("Ort Braude Library");
 			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
 			SeondStage.setScene(scene);
 			SeondStage.showAndWait();

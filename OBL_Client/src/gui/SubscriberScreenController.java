@@ -1,7 +1,7 @@
 package gui;
 
+import java.io.Serializable;
 import java.net.URL;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -11,24 +11,31 @@ import javax.mail.internet.InternetAddress;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 
+import client.ClientController;
 import entities.*;
 import gui.GuiManager.SCREENS;
+import defaultPackage.mainClient;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class SubscriberScreenController implements Initializable, IClientUI
 {
@@ -77,15 +84,11 @@ public class SubscriberScreenController implements Initializable, IClientUI
     private Label SuccessLabel;
     
 	@FXML
-	private Pane pane_home, pane_books, pane_viewSubscriberCard;
-	@FXML
-	private AnchorPane pane_searchBook;
+	private Pane pane_home, pane_books, pane_viewSubscriberCard, pane_searchBook;
 
 	@FXML
 	private ImageView btn_home, btn_books, btn_viewSubscriberCard, btn_searchBook;
-	
-	private SearchBookController searchBookWindowController = null;
-	
+
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
 	{
@@ -97,6 +100,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(1);
 		btn_searchBook.setOpacity(1);
+
 	}
 
 	@FXML
@@ -122,7 +126,8 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_home.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(0.5);
-		btn_searchBook.setOpacity(1);	
+		btn_searchBook.setOpacity(1);
+		
 	}
 
 	@FXML
@@ -136,6 +141,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(1);
 		btn_searchBook.setOpacity(0.5);
+
 	}
 
 	/*
@@ -182,27 +188,11 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(1);
 		btn_searchBook.setOpacity(1);
-	}
+		
+		
 
-	private void initialSearchWindow()
-	{
-		try
-		{
-			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/SearchBookScreen.fxml"));
-			AnchorPane newLoadedPane = loader.load(); 
-			searchBookWindowController = loader.getController();
-			searchBookWindowController.setUserLogedIn(userLogedIn);
-			searchBookWindowController.setPopUpMode(false);
-			pane_searchBook.getChildren().add(newLoadedPane);
-			AnchorPane.setLeftAnchor(newLoadedPane, 0.0);
-			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
-			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
-			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+	
+
 	}
 
 	@FXML
@@ -217,10 +207,13 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			GuiManager.SwitchScene(SCREENS.login); // show login screen
 		}
+
 		else if (option.get() == ButtonType.CANCEL)
 		{
 			alert.close();
+
 		}
+
 	}
 
 	@Override
@@ -246,10 +239,9 @@ public class SubscriberScreenController implements Initializable, IClientUI
 				}
 				break;
 			}
-			case GetAllBooksList:
-				searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
-				break;
+
 		}
+
 	}
 	
 	private void setSubscriberCardDisplay(Subscriber newSub)
@@ -306,11 +298,12 @@ public class SubscriberScreenController implements Initializable, IClientUI
     	
     	SuccessLabel.setVisible(false);
 		warningLabel.setVisible(false);
+
+
     }
     
     @FXML
-    void btn_SaveClick(ActionEvent event) 
-    {
+    void btn_SaveClick(ActionEvent event) {
     	if(firstNameField.getText().isEmpty())
     	{
     		SuccessLabel.setVisible(false);
@@ -368,8 +361,17 @@ public class SubscriberScreenController implements Initializable, IClientUI
     		SuccessLabel.setVisible(true);
     		warningLabel.setVisible(false);
     		SuccessLabel.setText("Changes saved successfully");
+    		
+    		
+    			
+        	
     	}
+    	
+    	
+
     }
+
+
 
 	@Override
 	public void setUserLogedIn(User userLoged)
@@ -380,13 +382,17 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		userWelcomLabel.setText("Hello "+ name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
-		initialSearchWindow();
 		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
+
+		
 	}
 	
+
+
 	@Override
 	public User getUserLogedIn()
 	{
+		// TODO Auto-generated method stub
 		return userLogedIn;
 	}
 	

@@ -12,11 +12,9 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 
 public class BookInformationController implements IClientUI
 {
-	private User userLoggedIn;
 	@FXML
 	private Label bookNameLabel;
 
@@ -25,9 +23,6 @@ public class BookInformationController implements IClientUI
 
 	@FXML
 	private TextArea descreptionPane;
-	
-	@FXML
-	private TextArea moreInformationTextField;
 
 	@FXML
 	private ImageView wantedLogo;
@@ -52,9 +47,6 @@ public class BookInformationController implements IClientUI
 
 	private Book bookToShow;
 
-    @FXML
-    private Label availableLabel;
-
 	public void setBookInformation(Book book)
 	{
 		descreptionPane.setText(book.getDescription());
@@ -73,27 +65,8 @@ public class BookInformationController implements IClientUI
 		} else
 		{
 			wantedBookLabel.setVisible(false);
-			wantedLogo.setVisible(false); 
+			wantedLogo.setVisible(false);
 		}
-		if(book.getMaxCopies()-book.getCurrentNumOfBorrows()>0)//book is available
-		{
-			availableLabel.setText("Available for borrow");
-			availableLabel.setTextFill(Color.web("#12d318"));
-			orderBookBtn.setDisable(true);
-		}
-		else
-		{
-			availableLabel.setText("Not available for borrow");
-			availableLabel.setTextFill(Color.RED);
-			orderBookBtn.setDisable(false);
-		}
-		
-		moreInformationTextField.setText(""
-				+ "Purchase Date: " +book.getPurchaseDate() 
-				+ "\nCurrent Borrows: " +book.getCurrentNumOfBorrows() 
-				+ "\nMax Copies: " +book.getMaxCopies() 
-
-);
 	}
 
 	@Override
@@ -108,47 +81,15 @@ public class BookInformationController implements IClientUI
 	@Override
 	public void setUserLogedIn(User userLoged)
 	{
-		this.userLoggedIn = userLoged;
-		switchWindowPermission();
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public User getUserLogedIn()
 	{
-		return userLoggedIn;
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
-	private void switchWindowPermission()
-	{
-		if(userLoggedIn == null) 
-		{
-			orderBookBtn.setVisible(false);
-			deleteBookBtn.setVisible(false);
-			editDetailsBtn.setVisible(false);
-		}
-		switch(userLoggedIn.getType())
-		{
-			case "subscriber":
-				orderBookBtn.setVisible(true);
-				deleteBookBtn.setVisible(false);
-				editDetailsBtn.setVisible(false);
-				break;
-			case "library manager":
-				orderBookBtn.setVisible(false);
-				deleteBookBtn.setVisible(true);
-				editDetailsBtn.setVisible(true);
-				break;
-			case "librarian":
-				orderBookBtn.setVisible(false);
-				deleteBookBtn.setVisible(true);
-				editDetailsBtn.setVisible(true);
-				break;
-			case "guest":
-				orderBookBtn.setVisible(false);
-				deleteBookBtn.setVisible(false);
-				editDetailsBtn.setVisible(false);
-				break;
-		}
-		
-	}
+
 }

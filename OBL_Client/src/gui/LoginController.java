@@ -76,10 +76,6 @@ public class LoginController implements IClientUI, Initializable
 		if (GuiManager.dbConnected) {
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			GuiManager.SwitchScene(SCREENS.searchBook);
-			User guest = new User();
-			guest.setType("guest");
-			GuiManager.CurrentGuiController.setUserLogedIn(guest);
-			
 		}
 
 	}
