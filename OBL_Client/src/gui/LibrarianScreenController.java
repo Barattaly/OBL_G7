@@ -110,7 +110,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 	private Stage borrowDialog = null;
 	private Stage returnDialog = null;
-	private JFXDatePicker returnDate = null;
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
@@ -250,7 +249,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		GuiManager.limitTextFieldMaxCharacters(subscriberID, 9);
 		Label returnDateLab = new Label("Return date: ");
 		returnDateLab.setStyle("-fx-text-fill: #a0a2ab");
-		returnDate = new JFXDatePicker();
+		JFXDatePicker returnDate = new JFXDatePicker();
 		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
 		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yyyy");
 		returnDate.setDayCellFactory(picker -> new DateCell() 
@@ -344,7 +343,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		returnDialog.getIcons().add(new Image("/resources/Braude.png"));
 		returnDialog.setHeight(250);
 		returnDialog.setWidth(400);
-		Label headline = new Label("Enter book catalog number and book copy id");
+		Label headline = new Label("Enter return details");
 		headline.setStyle("-fx-text-fill: #a0a2ab");
 		headline.setFont(new Font(16));
 		VBox returnDialogVbox = new VBox(10);
@@ -473,13 +472,19 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			else if (newBorrow.getBookCatalogNumber().equals("-2")) 
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the right book catalog number");
+					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
 				});
 			} 
 			else if (newBorrow.getCopyId().equals("0")) 
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
+				});
+			}
+			else if (newBorrow.getCopyId().equals("-1")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("This copy is already borrowed,\nplease check you entered the correct copy ID");
 				});
 			}
 			else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button

@@ -10,6 +10,16 @@ public class CopiesQueries
 						+ "_copies WHERE id = '" + bookToCheck.getCopies().get(0).getId()+ "'";
 		return queryMsg;
 	}
+	
+	public static String getCopyStatus(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT status FROM obl_db.book_" + bookToCheck.getCatalogNumber()
+						+ "_copies WHERE id = '" + bookToCheck.getCopies().get(0).getId()+ "'";
+		return queryMsg;
+	}
+	
 	public static String changeCopyStatus(Book bookToUpdate)
 	{
 		if (bookToUpdate == null)
