@@ -475,6 +475,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
 				});
 			}
+			else if (newBorrow.getCopyId().equals("-1")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("This copy is already borrowed,\nplease check you entered the correct copy ID");
+				});
+			}
 			else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button
 			{
 				Platform.runLater(() -> {
