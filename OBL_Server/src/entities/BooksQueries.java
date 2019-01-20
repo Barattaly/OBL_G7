@@ -78,11 +78,11 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return queryMsg;
 	}
 	
-	public static String getCurrentNumOfBorrows(Book bookToUpdate)
+	public static String getCurrentNumOfBorrows(Book bookToCheck)
 	{
-		if (bookToUpdate == null)
+		if (bookToCheck == null)
 			return null;
-		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.books WHERE books.catalogNumber = '" + bookToUpdate.getCatalogNumber() + "';";
+		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber() + "';";
 		return queryMsg;
 	}
 	
@@ -118,7 +118,6 @@ public static String SelectAllBooksEachRowForNewAuthor()
 						+ "WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
 		return queryMsg;
 	}
-	
 	
 	/*public static String getNowAsString(String format)
 	{

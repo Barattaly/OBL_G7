@@ -85,7 +85,6 @@ public class SubscribersQueries
 		
 	}
 
-	
 	public static String searchSubscriberByID(BorrowACopyOfBook borrowToAdd)
 	{
 		if (borrowToAdd == null)
@@ -107,6 +106,41 @@ public class SubscribersQueries
 		if (subscriberToUpdate == null)
 			return null;
 		String queryMsg = "UPDATE obl_db.subscribers SET currentNumOfBorrows = '" + subscriberToUpdate.getCurrentNumOfBorrows()
+						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
+		return queryMsg;
+	}
+	
+	public static String getSumOfLateReturns(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "SELECT sumOfLateReturns FROM obl_db.subscribers WHERE subscriberID = '" + subscriberToUpdate.getId() + "';";
+		return queryMsg;
+	}
+	
+	public static String updateSumOfLateReturns(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.subscribers SET sumOfLateReturns = '" + subscriberToUpdate.getSumOfLateReturns()
+						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
+		return queryMsg;
+	}
+	
+	public static String updateSubscriberStatusToActive(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.subscribers SET status= '" + subscriberToUpdate.getStatus()
+						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
+		return queryMsg;
+	}
+	
+	public static String updateSubscriberStatusToFrozen(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.subscribers SET status= '" + subscriberToUpdate.getStatus()
 						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
 		return queryMsg;
 	}

@@ -20,12 +20,22 @@ public class CopiesQueries
 		return queryMsg;
 	}
 	
-	public static String changeCopyStatus(Book bookToUpdate)
+	public static String changeCopyStatusToUnavailable(Book bookToUpdate)
 	{
 		if (bookToUpdate == null)
 			return null;
 		String queryMsg = "UPDATE obl_db.book_" + bookToUpdate.getCatalogNumber() 
 						+ "_copies SET status = 'unavailable' WHERE (id = '"
+						+ bookToUpdate.getCopies().get(0).getId() + "');";
+		return queryMsg;
+	}
+	
+	public static String changeCopyStatusToAvailable(Book bookToUpdate)
+	{
+		if (bookToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.book_" + bookToUpdate.getCatalogNumber() 
+						+ "_copies SET status = 'available' WHERE (id = '"
 						+ bookToUpdate.getCopies().get(0).getId() + "');";
 		return queryMsg;
 	}
