@@ -348,6 +348,13 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
+		else if (!isCopyAvailableToBorrow(book))
+		{
+			borrowToAdd.setCopyId("-1");
+			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
+			client.sendToClient(returnMsg);
+			return;
+		}
 		else 
 		{
 			if(getBookClassification(borrowToAdd).equals("ordinary"))
@@ -475,6 +482,7 @@ public class OBLServer extends AbstractServer
 			return null;
 		}
 	}
+	
 	private boolean isCopyExist(Book bookToCheck)
 	{
 		String query = CopiesQueries.getCopyDetails(bookToCheck);// search by copy id
@@ -486,6 +494,26 @@ public class OBLServer extends AbstractServer
 			return true;
 		}
 		return false;
+	}
+	
+	private boolean isCopyAvailableToBorrow(Book bookToCheck)
+	{
+		String query = CopiesQueries.getCopyStatus(bookToCheck);// search by copy id
+		ResultSet rsCopyStatus = oblDB.executeQuery(query);
+
+		try 
+		{
+			rsCopyStatus.next();
+			String copyStatus = rsCopyStatus.getString(1);
+			if(copyStatus.equals("unavailable"))
+				return false;
+			return true;
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	private boolean isSubscriberExist(Subscriber subscriberToCheck)
