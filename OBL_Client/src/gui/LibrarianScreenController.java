@@ -1,8 +1,6 @@
 package gui;
 
 import java.net.URL;
-import java.sql.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.GregorianCalendar;
@@ -11,11 +9,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.chrono.ChronoLocalDate;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
@@ -27,7 +20,6 @@ import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
-import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -106,10 +98,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
     
     public static IClientUI CurrentGuiController;//check
     
-	private SearchBookController searchBookWindowController = null;
+	protected SearchBookController searchBookWindowController = null;
 
 	private Stage borrowDialog = null;
 	private Stage returnDialog = null;
+	private JFXDatePicker returnDate = null;
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
@@ -149,6 +142,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(0.5);
 		btn_searchSubscriberCard.setOpacity(1);
+		searchBookWindowController.refresh();
 	}
 
 	@FXML
@@ -249,7 +243,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		GuiManager.limitTextFieldMaxCharacters(subscriberID, 9);
 		Label returnDateLab = new Label("Return date: ");
 		returnDateLab.setStyle("-fx-text-fill: #a0a2ab");
-		JFXDatePicker returnDate = new JFXDatePicker();
+		returnDate = new JFXDatePicker();
 		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
 		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yyyy");
 		returnDate.setDayCellFactory(picker -> new DateCell() 
@@ -343,7 +337,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		returnDialog.getIcons().add(new Image("/resources/Braude.png"));
 		returnDialog.setHeight(250);
 		returnDialog.setWidth(400);
-		Label headline = new Label("Enter return details");
+		Label headline = new Label("Enter book catalog number and book copy id");
 		headline.setStyle("-fx-text-fill: #a0a2ab");
 		headline.setFont(new Font(16));
 		VBox returnDialogVbox = new VBox(10);
@@ -472,7 +466,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			else if (newBorrow.getBookCatalogNumber().equals("-2")) 
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
+					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the right book catalog number");
 				});
 			} 
 			else if (newBorrow.getCopyId().equals("0")) 
