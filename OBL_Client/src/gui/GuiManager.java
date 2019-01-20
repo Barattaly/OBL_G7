@@ -14,7 +14,6 @@ import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
-import gui.GuiManager.SCREENS;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -78,8 +77,6 @@ public class GuiManager
 		{
 			if (fxmlPath == SCREENS.login && !(CurrentGuiController instanceof SearchBookController))
 				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
-			// if (fxmlPath==SCREENS.viewSubscriberCard)
-
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(fxmlPath)));
 			Parent root = loader.load();
@@ -144,7 +141,6 @@ public class GuiManager
 		{
 			e.printStackTrace();
 		}
-
 	}
 
 	public static enum SCREENS

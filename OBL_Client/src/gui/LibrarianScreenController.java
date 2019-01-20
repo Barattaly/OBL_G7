@@ -98,7 +98,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
     
     public static IClientUI CurrentGuiController;//check
     
-	private SearchBookController searchBookWindowController = null;
+	protected SearchBookController searchBookWindowController = null;
 
 	private Stage borrowDialog = null;
 	private Stage returnDialog = null;

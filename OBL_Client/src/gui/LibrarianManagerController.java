@@ -39,7 +39,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard, btn_employees,
 			btn_reports;
-	private SearchBookController searchBookWindowController = null;
+	//private SearchBookController searchBookWindowController = null;
 
 
 	@FXML
@@ -91,7 +91,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 		btn_searchSubscriberCard.setOpacity(1);
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
-		searchBookWindowController.refresh();
+		this.searchBookWindowController.refresh();
 	}
 
 	@FXML
@@ -166,14 +166,14 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	void btn_createSubscriberCardDisplay(ActionEvent event)
 	{
-		super.btn_createSubscriberCardDisplay(event);
+		//super.btn_createSubscriberCardDisplay(event);
 	}
 
 	@FXML
 	void logOutDisplay(MouseEvent event)
 	{
-		super.logOutDisplay(event);
-		/*Alert alert = new Alert(AlertType.CONFIRMATION);
+		//super.logOutDisplay(event);
+		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("OBL Log Out");
 		alert.setHeaderText("Are you sure you want to log out ?");
 		Optional<ButtonType> option = alert.showAndWait();
@@ -187,7 +187,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 		{
 			alert.close();
 
-		}*/
+		}
 
 	}
 
@@ -237,7 +237,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	protected void btn_viewSubscriberCardClick(ActionEvent event)
 	{
-		super.btn_viewSubscriberCardClick(event);
+		//super.btn_viewSubscriberCardClick(event);
 	}
 
 }

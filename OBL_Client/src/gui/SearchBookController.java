@@ -93,9 +93,9 @@ public class SearchBookController implements Initializable, IClientUI
 	@FXML
 	private Label oblLogoLabel;
 
-    @FXML
-    private JFXButton addNewBookBtn;
-    
+	@FXML
+	private JFXButton addNewBookBtn;
+
 	@FXML
 	private Label headlineLabel;
 
@@ -103,14 +103,14 @@ public class SearchBookController implements Initializable, IClientUI
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
 		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
-		
+
 		namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
 		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
 		locationcol.setCellValueFactory(new PropertyValueFactory<>("location"));
 		catagoriesCol.setCellValueFactory(new PropertyValueFactory<>("catagories"));
 		availableCol.setCellValueFactory(new PropertyValueFactory<>("isAvailableToBorrow"));
-		
+
 		booklist = FXCollections.observableArrayList();
 
 		BookTable.setItems(booklist);
@@ -206,8 +206,7 @@ public class SearchBookController implements Initializable, IClientUI
 				try
 				{
 					cellValue = col.getCellData(data.get(i)).toString();
-				} 
-				catch (NullPointerException ex)
+				} catch (NullPointerException ex)
 				{
 					break;
 				}
@@ -302,31 +301,34 @@ public class SearchBookController implements Initializable, IClientUI
 	}
 
 	// this function is because of the fucking stupid table view of javaFx
-	private void copyBookMapToBookList()
+	private void copyBookMapToBookList()//moving from bookMap of"Book" to list of "ObservableBook"
 	{
 		for (Integer key : bookMap.keySet())
 		{
-			String authors = "";
-			for (String author : bookMap.get(key).getAuthorNameList())
+			if (bookMap.get(key).getIsArchived().equals("no"))
 			{
-				if (authors.isEmpty())
-					authors = author;
-				else
-					authors = authors + ", " + author;
+				String authors = "";
+				for (String author : bookMap.get(key).getAuthorNameList())
+				{
+					if (authors.isEmpty())
+						authors = author;
+					else
+						authors = authors + ", " + author;
+				}
+				String catagories = "";
+				for (String catagory : bookMap.get(key).getCategories())
+				{
+					if (catagories.isEmpty())
+						catagories = catagory;
+					else
+						catagories = catagories + ", " + catagory;
+				}
+				boolean isAvailable = bookMap.get(key).getMaxCopies() - bookMap.get(key).getCurrentNumOfBorrows() > 0;
+				ObservableBook temp = new ObservableBook(bookMap.get(key).getName(), authors,
+						Integer.parseInt(bookMap.get(key).getCatalogNumber()), bookMap.get(key).getLocation(),
+						catagories, isAvailable);
+				booklist.add(temp);
 			}
-			String catagories = "";
-			for (String catagory : bookMap.get(key).getCategories())
-			{
-				if (catagories.isEmpty())
-					catagories = catagory;
-				else
-					catagories = catagories + ", " + catagory;
-			}
-			boolean isAvailable=  bookMap.get(key).getMaxCopies() - bookMap.get(key).getCurrentNumOfBorrows() >0;
-			ObservableBook temp = new ObservableBook(bookMap.get(key).getName(), authors,
-					Integer.parseInt(bookMap.get(key).getCatalogNumber()), 
-					bookMap.get(key).getLocation(), catagories,isAvailable);
-			booklist.add(temp);
 		}
 		BookTable.refresh();
 	}
@@ -335,12 +337,11 @@ public class SearchBookController implements Initializable, IClientUI
 	public void setUserLogedIn(User userLoged)
 	{
 		this.userLogged = userLoged;
-		if(userLoged.getType().equals("librarian")||userLoged.getType().equals("library manager"))
+		if (userLoged.getType().equals("librarian") || userLoged.getType().equals("library manager"))
 		{
 			addNewBookBtn.setVisible(true);
 			headlineLabel.setText("Book Inventory");
-		}
-		else
+		} else
 		{
 			addNewBookBtn.setVisible(false);
 			headlineLabel.setText("Search Book");
@@ -368,22 +369,21 @@ public class SearchBookController implements Initializable, IClientUI
 	// The default is pop up
 	public void setPopUpMode(boolean isPopUp)
 	{
-		if(isPopUp)
+		if (isPopUp)
 		{
 			backToLabel.setVisible(true);
-		    goBackArrowImg.setVisible(true);
-		    oblLogoImg.setVisible(true);
-		    oblLogoLabel.setVisible(true);
-		}
-		else
+			goBackArrowImg.setVisible(true);
+			oblLogoImg.setVisible(true);
+			oblLogoLabel.setVisible(true);
+		} else
 		{
 			backToLabel.setVisible(false);
-		    goBackArrowImg.setVisible(false);
-		    oblLogoImg.setVisible(false);
-		    oblLogoLabel.setVisible(false);
+			goBackArrowImg.setVisible(false);
+			oblLogoImg.setVisible(false);
+			oblLogoLabel.setVisible(false);
 		}
 	}
-	
+
 	public void refresh()
 	{
 		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
