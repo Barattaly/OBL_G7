@@ -48,10 +48,9 @@ public class ServerScreenController implements Initializable
 	{
 		dbNameTextField.setText("obl_db");
 		dbUserNameTextField.setText("root");
-		dbPassTextField.setText("b205469851");
+		dbPassTextField.setText("Group7");
 	}
 
-	
 	@FXML
 	void startServerClicked(ActionEvent event)
 	{

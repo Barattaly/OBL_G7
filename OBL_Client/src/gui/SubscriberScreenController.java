@@ -113,6 +113,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_viewSubscriberCard.setOpacity(1);
 		btn_searchBook.setOpacity(0.5);
+		searchBookWindowController.refresh();
 	}
 
 	@Override

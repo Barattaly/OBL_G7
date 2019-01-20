@@ -102,7 +102,7 @@ public class SearchBookController implements Initializable, IClientUI
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
-		GuiManager.client.getAllBooks();// fill in the table off books from the updated DB book list
+		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
 		
 		namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -181,7 +181,6 @@ public class SearchBookController implements Initializable, IClientUI
 		{
 			searchByFreeText();
 		}
-
 	}
 
 	private void searchBook(TableColumn<ObservableBook, String> col, JFXTextField txtField)
@@ -329,6 +328,7 @@ public class SearchBookController implements Initializable, IClientUI
 					bookMap.get(key).getLocation(), catagories,isAvailable);
 			booklist.add(temp);
 		}
+		BookTable.refresh();
 	}
 
 	@Override
@@ -382,5 +382,10 @@ public class SearchBookController implements Initializable, IClientUI
 		    oblLogoImg.setVisible(false);
 		    oblLogoLabel.setVisible(false);
 		}
+	}
+	
+	public void refresh()
+	{
+		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
 	}
 }

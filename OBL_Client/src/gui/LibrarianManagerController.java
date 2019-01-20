@@ -91,6 +91,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 		btn_searchSubscriberCard.setOpacity(1);
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
+		searchBookWindowController.refresh();
 	}
 
 	@FXML
