@@ -1,7 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
+
 import javafx.scene.shape.Circle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,9 +50,20 @@ public class ServerScreenController implements Initializable
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
+		try
+		{
+			java.util.List<String> password = Files.readAllLines(Paths.get("dbPass.txt"));
+			dbPassTextField.setText(password.get(0));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			dbPassTextField.setText("Group7");
+
+		}
 		dbNameTextField.setText("obl_db");
 		dbUserNameTextField.setText("root");
-		dbPassTextField.setText("Group7");
+		
 	}
 
 	@FXML
@@ -66,6 +81,7 @@ public class ServerScreenController implements Initializable
 			_connectToDBAnchorPane.setVisible(false);
 			_startServerAnchorPane.setVisible(true);
 			_logTextArea.setText("Server Stopped" + System.lineSeparator() + _logTextArea.getText());
+			_logTextArea.setText("All clients disconnected" + System.lineSeparator() + _logTextArea.getText());
 			_startBtn.setText("Start");
 			_dbLedIndicator.setFill(javafx.scene.paint.Color.RED);
 			_connectToDBAnchorPane.setDisable(false);
@@ -80,6 +96,7 @@ public class ServerScreenController implements Initializable
 			_logTextArea.setText("Server running on port "+_serverPortTextField.getText() + System.lineSeparator() + _logTextArea.getText());
 			_serverLedIndicator.setFill(javafx.scene.paint.Color.GREEN);
 			_startBtn.setText("Stop Server");
+			connectBtnClicked(event);//NEED TO BE CHANGED
 		}
 		catch(Exception ex)
 		{
@@ -119,6 +136,7 @@ public class ServerScreenController implements Initializable
 		{
 			if(server != null)
 			{
+				
 				if(server.isListening())server.stopListening();
 				server.close();
 			}
