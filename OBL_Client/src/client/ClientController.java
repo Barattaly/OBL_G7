@@ -15,6 +15,7 @@ import entities.User;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
 import gui.GuiManager;
+import javafx.application.Platform;
 
 public class ClientController extends AbstractClient
 {
@@ -41,6 +42,14 @@ public class ClientController extends AbstractClient
 		case isDBRuning:
 			GuiManager.dbConnected = (boolean) message.Data;
 			break;
+		case ShutDown:
+			Platform.runLater(() -> {
+				GuiManager.ShowErrorPopup("The server was unexpectedly shut down.\n"
+						+ "Please restart your progrem.\n"
+						+ "Everything you do now will not be saved.");
+			});
+			break;
+			
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
 			break;

@@ -17,9 +17,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianScreenController">
+<BorderPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianScreenController">
    <center>
-      <AnchorPane fx:id="AnchorePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="765.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" style="-fx-background-color: #203447;">
+      <AnchorPane fx:id="AnchorePane" prefHeight="611.0" prefWidth="765.0" style="-fx-background-color: #203447;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Pane fx:id="pane_home" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false">
                <children>

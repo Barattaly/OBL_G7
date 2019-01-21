@@ -8,10 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Map;
-
-
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
@@ -56,23 +53,10 @@ public class OBLServer extends AbstractServer
 		logREF = log;
 	}
 
-	public void connectToDB(String dbName, String dbPassword, String userName) throws SQLException
+	public void connectToDB(String dbName, String dbPassword, String userName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		oblDB = new MySQLConnection(dbName, dbPassword, userName);
 	}
-	/*
-	 * if (dbMessage.toString().contains("SELECT *")) { try { ResultSet res =
-	 * oblDB.SelectAllFrom((String) dbMessage); ResultSetMetaData rsmd =
-	 * res.getMetaData(); int columnsNumber = rsmd.getColumnCount(); String
-	 * messageToSend = "SELECTALL-"; while (res.next()) { for (int i = 1; i <=
-	 * columnsNumber; i++) { String columnValue = res.getString(i); messageToSend =
-	 * messageToSend + columnValue + ","; } messageToSend = messageToSend + "-"; }
-	 * client.sendToClient(messageToSend); } catch (Exception e) {
-	 * System.out.println(e.getMessage()); } } else if
-	 * (dbMessage.toString().contains("UPDATE")) { try {
-	 * oblDB.updateStudent(dbMessage.toString()); } catch (Exception e) {
-	 * System.out.println(e.getMessage()); } }
-	 */
 
 	/**
 	 * This method handles any messages received from the client.
@@ -129,9 +113,9 @@ public class OBLServer extends AbstractServer
 				getListOfAllBooks(client);
 				break;
 			}
-			case ViewSubscriberCard: 
+			case ViewSubscriberCard:
 			{
-				searchSubscriberByID((String)dbMessage.Data, client);
+				searchSubscriberByID((String) dbMessage.Data, client);
 				break;
 			}
 			case CreateNewBorrow:
@@ -141,7 +125,7 @@ public class OBLServer extends AbstractServer
 			}
 			case UpdateSubscriberCard:
 			{
-				updateSubscriberInformation((Subscriber)dbMessage.Data, client);
+				updateSubscriberInformation((Subscriber) dbMessage.Data, client);
 				break;
 			}
 			case ReturnBook:
@@ -161,25 +145,25 @@ public class OBLServer extends AbstractServer
 				client.sendToClient(null);
 			} catch (IOException e1)
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
 	}
-	private void updateSubscriberInformation(Subscriber subscriberToUpdate, ConnectionToClient client )throws IOException 
-	{
-	    if (subscriberToUpdate == null)
-	    {
-	    	return;
 
-	    }
-	    else
-	    {
-	    	String query=UsersQueries.updateUserInformation(subscriberToUpdate);
-	    	oblDB.executeUpdate(query);
-	         query=SubscribersQueries.updateSubscriberInformation(subscriberToUpdate);
-	    	oblDB.executeUpdate(query);
-	    }
+	private void updateSubscriberInformation(Subscriber subscriberToUpdate, ConnectionToClient client)
+			throws IOException
+	{
+		if (subscriberToUpdate == null)
+		{
+			return;
+
+		} else
+		{
+			String query = UsersQueries.updateUserInformation(subscriberToUpdate);
+			oblDB.executeUpdate(query);
+			query = SubscribersQueries.updateSubscriberInformation(subscriberToUpdate);
+			oblDB.executeUpdate(query);
+		}
 	}
 	private void searchSubscriberByID(String subscriberID, ConnectionToClient client) throws IOException 
 	  {
@@ -205,9 +189,9 @@ public class OBLServer extends AbstractServer
 	{
 		String query = BooksQueries.SelectAllBooksEachRowForNewAuthor();
 		ResultSet rs = oblDB.executeQuery(query);
-		Map<Integer,Book>  booksList = BooksQueries.CreateBookListFromRS(rs);
-		//now we need to get the authors:
-		for(int key:booksList.keySet())
+		Map<Integer, Book> booksList = BooksQueries.CreateBookListFromRS(rs);
+		// now we need to get the authors:
+		for (int key : booksList.keySet())
 		{
 			query = BooksQueries.getCatagoriesForBookId(booksList.get(key).getCatalogNumber());
 			rs = oblDB.executeQuery(query);
@@ -297,7 +281,7 @@ public class OBLServer extends AbstractServer
 
 		if (numberOfUserNames > 0 || numberOfIDs > 0) // means that the user already exist
 		{
-			return true; 
+			return true;
 		}
 		return false;
 	}
@@ -838,6 +822,7 @@ public class OBLServer extends AbstractServer
 	protected void serverStarted()
 	{
 		System.out.println("Server listening for connections on port " + getPort());
+
 	}
 
 	/**
@@ -847,6 +832,12 @@ public class OBLServer extends AbstractServer
 	protected void serverStopped()
 	{
 		System.out.println("Server has stopped listening for connections.");
+		if (isDBRunning())
+		{
+			// if server was off -> all users are disconnected.
+			oblDB.executeUpdate("UPDATE obl_db.users SET loginStatus = 'off'");
+
+		}
 	}
 
 	public boolean isDBRunning()

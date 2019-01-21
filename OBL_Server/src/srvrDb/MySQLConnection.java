@@ -14,18 +14,12 @@ public class MySQLConnection
 	private Connection conn;
 	public boolean IsConnectionSucceeded = false;
 
-	public MySQLConnection(String dbName, String dbPassword, String userName) throws SQLException
+	public MySQLConnection(String dbName, String dbPassword, String userName)
+			throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/" + dbName, userName, dbPassword);
-			IsConnectionSucceeded = true;
-		} 
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		conn = DriverManager.getConnection("jdbc:mysql://localhost/" + dbName, userName, dbPassword);
+		IsConnectionSucceeded = true;
 	}
 
 	public int executeUpdate(String msg)
@@ -34,8 +28,7 @@ public class MySQLConnection
 		{
 			Statement stmt = conn.createStatement();
 			return stmt.executeUpdate(msg);
-		} 
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return 0;
@@ -49,8 +42,7 @@ public class MySQLConnection
 			Statement statement = conn.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			return rs;
-		} 
-		catch (SQLException e)
+		} catch (SQLException e)
 		{
 			e.printStackTrace();
 			return null;
