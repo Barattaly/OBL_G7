@@ -114,7 +114,9 @@ public class SubscribersQueries
 	{
 		if (subscriberToUpdate == null)
 			return null;
-		String queryMsg = "SELECT sumOfLateReturns FROM obl_db.subscribers WHERE subscriberID = '" + subscriberToUpdate.getId() + "';";
+		String queryMsg = "SELECT count(id) FROM obl_db.borrows "
+						+ "WHERE subscriberID = '" + subscriberToUpdate.getId() 
+						+ "' AND isReturnedLate = 'yes';";
 		return queryMsg;
 	}
 	

@@ -550,7 +550,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			case GetAllBooksList:
 				searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
 			break;			
-			case ReturnBook: 
+			/*case ReturnBook: 
 			{
 				BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
 				if (newBorrow.getBookCatalogNumber().equals("0")) 
@@ -559,12 +559,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 						GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
 					});
 				} 
-				/*else if (newBorrow.getBookCatalogNumber().equals("-2")) 
+				//else if (newBorrow.getBookCatalogNumber().equals("-2")) 
 				{
 						Platform.runLater(() -> {
 							GuiManager.ShowMessagePopup("The book is archived,\nsubscriber can't borrow copies of it.");
 						});
-				}*/ 
+				//} 
 				else if (newBorrow.getBookCatalogNumber().equals("-1")) 
 				{
 					Platform.runLater(() -> {
@@ -591,7 +591,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					});
 				}
 				break;
-			}
+			}*/
 		}
 	}
 

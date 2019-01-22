@@ -67,14 +67,8 @@ public static String SelectAllBooksEachRowForNewAuthor()
 	{
 		if (bookToCheck == null)
 			return null;
-		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
-		return queryMsg;
-	}
-	public static String getClassificationOfBook(BorrowACopyOfBook borrowToAdd)
-	{
-		if (borrowToAdd == null)
-			return null;
-		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '" + borrowToAdd.getBookCatalogNumber()+ "';";
+		String queryMsg = "SELECT classification FROM obl_db.books WHERE books.catalogNumber = '"
+						+ bookToCheck.getCatalogNumber()+ "';";
 		return queryMsg;
 	}
 	
@@ -82,7 +76,19 @@ public static String SelectAllBooksEachRowForNewAuthor()
 	{
 		if (bookToCheck == null)
 			return null;
-		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber() + "';";
+		String queryMsg = "SELECT count(id) FROM obl_db.borrows" 
+						+ "WHERE bookCatalogNumber = '" + bookToCheck.getCatalogNumber()
+						+ "' AND actualReturnDate is null;";
+		return queryMsg;
+	}
+	
+	public static String getCurrentNumOfOrders(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT count(id) FROM obl_db.orders" 
+						+ "WHERE bookCatalogNumber = '" + bookToCheck.getCatalogNumber()
+						+ "' AND status = 'active';";
 		return queryMsg;
 	}
 	
@@ -91,7 +97,7 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		if (bookToUpdate == null)
 			return null;
 		String queryMsg = "UPDATE obl_db.books SET currentNumOfBorrows = '" + bookToUpdate.getCurrentNumOfBorrows()
-						+ "' WHERE (catalogNumber = '" + bookToUpdate.getCatalogNumber() + "');";
+						+ "' WHERE catalogNumber = '" + bookToUpdate.getCatalogNumber() + "';";
 		return queryMsg;
 	}
 	
@@ -110,14 +116,14 @@ public static String SelectAllBooksEachRowForNewAuthor()
 						+ "WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
 		return queryMsg;
 	}
-	public static String getMaxCopiesAndCurrentNumOfBorrows(Book bookToCheck)
+	/*public static String getMaxCopiesAndCurrentNumOfBorrows(Book bookToCheck)
 	{
 		if (bookToCheck == null)
 			return null;
 		String queryMsg = "SELECT maxCopies, currentNumOfBorrows FROM obl_db.books "
 						+ "WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
 		return queryMsg;
-	}
+	}*/
 	
 	/*public static String getNowAsString(String format)
 	{
