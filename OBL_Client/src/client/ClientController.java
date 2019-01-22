@@ -182,7 +182,19 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+	}
+
+	public void getEmployeeList()
+	{
+		DBMessage message = new DBMessage(DBAction.GetEmployeeList, null);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}		
 	}
 }
 //End of ClientController class
