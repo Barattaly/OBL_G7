@@ -3,14 +3,12 @@ package srvrDb;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
-import javax.print.attribute.standard.RequestingUserName;
 
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
@@ -399,23 +397,8 @@ public class OBLServer extends AbstractServer
 				oblDB.executeUpdate(query); // add a new borrow to Borrows table
 
 				
-				query = CopiesQueries.changeCopyStatusToUnavailable(book);
+				query = CopiesQueries.updateCopyStatusToUnavailable(book);
 				oblDB.executeUpdate(query); // update copy status to unavailable
-				 
-
-				//Book bookToUpdate = new Book(borrowToAdd.getBookCatalogNumber());
-				int bookCurrentNumOfBorrows = getBookCurrentNumOfBorrows(book);
-				book.setCurrentNumOfBorrows(bookCurrentNumOfBorrows + 1);
-
-				query = BooksQueries.updateCurrentNumOfBorrows(book);
-				oblDB.executeUpdate(query); // update current number of borrows of the borrowed book
-			
-				//Subscriber subscriberToUpdate = new Subscriber(borrowToAdd.getSubscriberId());
-				//int subscriberCurrentNumOfBorrows = getSubcriberCurrentNumOfBorrows(subscriber);
-				//subscriber.setCurrentNumOfBorrows(subscriberCurrentNumOfBorrows + 1);
-
-				//query = SubscribersQueries.updateCurrentNumOfBorrows(subscriber);
-				//oblDB.executeUpdate(query); // update current number of borrows of the subscriber
 				
 				DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 				client.sendToClient(returnMsg);
@@ -644,7 +627,7 @@ public class OBLServer extends AbstractServer
 		return true;
 	}
 	
-	/*boolean isBookAvailableToReturn(Book bookToCheck)
+	boolean isBookAvailableToReturn(Book bookToCheck)
 	{
 		String query = BooksQueries.getCurrentNumOfBorrows(bookToCheck);// search by book catalog number
 		ResultSet rsCurrentNumOfBorrows = oblDB.executeQuery(query);
@@ -661,7 +644,7 @@ public class OBLServer extends AbstractServer
 			e.printStackTrace();
 			return false;
 		}
-	}*/
+	}
 	
 	private String getBookClassification(Book bookToCheck)
 	{
@@ -775,7 +758,7 @@ public class OBLServer extends AbstractServer
 		borrowToAdd.setExpectedReturnDate("" + year1 + monthDay);
 	}
 	
-	private int getBookCurrentNumOfBorrows(Book bookToUpdate)
+	/*private int getBookCurrentNumOfBorrows(Book bookToUpdate)
 	{
 		String query = BooksQueries.getCurrentNumOfBorrows(bookToUpdate);// search by book catalog number
 		ResultSet rsBookCurrentNumOfBorrows = oblDB.executeQuery(query);

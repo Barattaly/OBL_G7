@@ -61,7 +61,7 @@ public class CopiesQueries
 		return queryMsg;
 	}
 	
-	public static String changeCopyStatusToUnavailable(Book bookToUpdate)
+	public static String updateCopyStatusToUnavailable(Book bookToUpdate)
 	{
 		if (bookToUpdate == null)
 			return null;
@@ -70,7 +70,7 @@ public class CopiesQueries
 		return queryMsg;
 	}
 	
-	public static String changeCopyStatusToAvailable(Book bookToUpdate)
+	public static String updateCopyStatusToAvailable(Book bookToUpdate)
 	{
 		if (bookToUpdate == null)
 			return null;

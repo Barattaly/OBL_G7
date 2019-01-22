@@ -109,16 +109,7 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 	
-	/*public static String updateCurrentNumOfBorrows(Subscriber subscriberToUpdate)
-	{
-		if (subscriberToUpdate == null)
-			return null;
-		String queryMsg = "UPDATE obl_db.subscribers SET currentNumOfBorrows = '" + subscriberToUpdate.getCurrentNumOfBorrows()
-						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
-		return queryMsg;
-	}*/
-	
-	public static String getSumOfLateReturns(Subscriber subscriberToUpdate)
+	public static String getNumOfLateReturns(Subscriber subscriberToUpdate)
 	{
 		if (subscriberToUpdate == null)
 			return null;
@@ -127,15 +118,6 @@ public class SubscribersQueries
 						+ "' AND isReturnedLate = 'yes';";
 		return queryMsg;
 	}
-	
-	/*public static String updateSumOfLateReturns(Subscriber subscriberToUpdate)
-	{
-		if (subscriberToUpdate == null)
-			return null;
-		String queryMsg = "UPDATE obl_db.subscribers SET sumOfLateReturns = '" + subscriberToUpdate.getSumOfLateReturns()
-						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
-		return queryMsg;
-	}*/
 	
 	public static String updateSubscriberStatusToActive(Subscriber subscriberToUpdate)
 	{
