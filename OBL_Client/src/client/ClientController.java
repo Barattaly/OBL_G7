@@ -52,7 +52,7 @@ public class ClientController extends AbstractClient
 			
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
-			break;
+			break; 
 
 		}
 	}

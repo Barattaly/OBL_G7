@@ -98,13 +98,13 @@ public class LibrarianManagerController extends LibrarianScreenController
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
 
-		empNumColumn.setCellValueFactory(new PropertyValueFactory<>(""));
-		empIDColumn.setCellValueFactory(new PropertyValueFactory<>(""));
-		empFirstNameColumn.setCellValueFactory(new PropertyValueFactory<>(""));
-		empLastNameColumn.setCellValueFactory(new PropertyValueFactory<>(""));
-		empEmailColumn.setCellValueFactory(new PropertyValueFactory<>(""));
-		empRoleColumn.setCellValueFactory(new PropertyValueFactory<>(""));
-		empDepartmentColumn.setCellValueFactory(new PropertyValueFactory<>(""));
+		empNumColumn.setCellValueFactory(new PropertyValueFactory<>("empNumber"));
+		empIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+		empFirstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		empLastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+		empEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+		empRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+		empDepartmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
 
 		empList = FXCollections.observableArrayList();
 
