@@ -184,7 +184,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 				});
 			} else
 			{
-				Platform.runLater(() -> {
+				Platform.runLater(() -> { 
 					subscriberLoggedIn = newSub;
 					initialSubscriberCard(newSub);
 					String status = newSub.getStatus().substring(0, 1).toUpperCase() + newSub.getStatus().substring(1);

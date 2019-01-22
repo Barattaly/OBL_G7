@@ -17,12 +17,15 @@ public class BooksQueries
 {
 public static String SelectAllBooksEachRowForNewAuthor()
 	{
-		String queryMsg = "SELECT * FROM obl_db.books " + "INNER JOIN obl_db.books_authors ON "
+		String queryMsg = "SELECT  catalogNumber,name,purchaseDate,"
+				+ "classification,description,location,"
+				+ "editionNumber,publicationYear,tableOfContentPath,"
+				+ "archived,authorName FROM obl_db.books " + "INNER JOIN obl_db.books_authors ON "
 				+ "obl_db.books.catalogNumber = obl_db.books_authors.bookCatalogNumber;";
 		return queryMsg;
 	}
 	
-	public static String getCatagoriesForBookId(String catalogNumber)
+	public static String getCategoriesForBookId(String catalogNumber)
 	{
 		String queryMsg = "SELECT categoryName FROM obl_db.books " 
 				+"INNER JOIN obl_db.books_categories ON "
@@ -38,11 +41,17 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		{
 			while (rs.next())
 			{
-				// for each author we have a different row!
-				Book temp = new Book(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getInt(6), rs.getString(7), rs.getInt(8), rs.getInt(9), rs.getString(10),
-						rs.getString(11));
-				String author = rs.getString(13);// 12 is the id again
+				/*Book(String catalogNumber, String name, String purchaseDate,
+				String classification, String description, String location,
+				String editionNumber,String publicationYear,
+				String tableOfContenPath, String isArchived)*/
+				
+				Book temp = new Book(rs.getString(1),rs.getString(2), rs.getString(3), 
+						rs.getString(4),rs.getString(5), 
+						rs.getString(6), rs.getString(7), 
+						rs.getString(8), rs.getString(9), 
+						rs.getString(10));
+				String author = rs.getString(11);// 11 is the author name
 				temp.setAuthorNameList(new ArrayList<>());
 				int tempCatNum = Integer.parseInt(temp.getCatalogNumber());
 				if(Books.containsKey(tempCatNum))
@@ -77,7 +86,7 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		if (bookToCheck == null)
 			return null;
 		String queryMsg = "SELECT count(id) FROM obl_db.borrows" 
-						+ "WHERE bookCatalogNumber = '" + bookToCheck.getCatalogNumber()
+						+ " WHERE bookCatalogNumber = '" + bookToCheck.getCatalogNumber()
 						+ "' AND actualReturnDate is null;";
 		return queryMsg;
 	}
@@ -87,7 +96,7 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		if (bookToCheck == null)
 			return null;
 		String queryMsg = "SELECT count(id) FROM obl_db.orders" 
-						+ "WHERE bookCatalogNumber = '" + bookToCheck.getCatalogNumber()
+						+ " WHERE bookCatalogNumber = '" + bookToCheck.getCatalogNumber()
 						+ "' AND status = 'active';";
 		return queryMsg;
 	}

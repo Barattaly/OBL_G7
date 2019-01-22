@@ -10,10 +10,8 @@ public class Book implements Serializable
 	private String purchaseDate;
 	private String classification;
 	private String description;
-	private int maxCopies;
 	private String location;
-	private int currentNumOfBorrows;
-	private int currentNumOfOrders;
+
 	private String editionNumber;
 	private String publicationYear;
 	private String tableOfContenPath;
@@ -22,23 +20,25 @@ public class Book implements Serializable
 	private ArrayList<String> authorNameList;
 	private ArrayList<String> categories;
 
+	private int maxCopies;
+	private int currentNumOfBorrows;
+	private int currentNumOfOrders;
 	
 	public Book(String catalogNumber, String name, String purchaseDate,
-				String classification, String description, int maxCopies, String location,
-				int currentNumOfBorrows, int currentNumOfOrders,String tableOfContenPath, String isArchived)
+				String classification, String description, String location,
+				String editionNumber,String publicationYear,
+				String tableOfContenPath, String isArchived)
 	{
 		this.catalogNumber =catalogNumber;
 		this.name = name;
 		this.purchaseDate= purchaseDate;
 		this.classification = classification;
 		this.description = description;
-		this.maxCopies = maxCopies;
 		this.location = location;
-		this.currentNumOfBorrows = currentNumOfBorrows;
-		this.currentNumOfOrders = currentNumOfOrders;
+		this.editionNumber = editionNumber;
+		this.publicationYear = publicationYear;
 		this.tableOfContenPath = tableOfContenPath;
 		this.isArchived = isArchived;
-
 	}
 	
 	
