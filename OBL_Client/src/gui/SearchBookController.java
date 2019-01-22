@@ -113,7 +113,7 @@ public class SearchBookController implements Initializable, IClientUI
 
 		booklist = FXCollections.observableArrayList();
 
-		BookTable.setItems(booklist);
+		BookTable.setItems(booklist); 
 
 		BookTable.setRowFactory(tv -> { // press on row in book table to open book information
 			TableRow<ObservableBook> row = new TableRow<>();

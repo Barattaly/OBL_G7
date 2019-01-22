@@ -18,6 +18,8 @@ import entities.CopyOfBook;
 import entities.Book;
 import entities.BooksQueries;
 import entities.DBMessage;
+import entities.Employee;
+import entities.EmployeeQueries;
 import entities.Subscriber;
 import entities.SubscribersQueries;
 import entities.DBMessage.DBAction;
@@ -133,7 +135,12 @@ public class OBLServer extends AbstractServer
 			{
 				returnBook((BorrowACopyOfBook) dbMessage.Data, client);
 				break;
-			}*/			
+			}*/
+			case GetEmployeeList:
+			{
+				getEmployeeList(client);
+				break;
+			}
 			default:
 				break;
 			}
@@ -190,7 +197,7 @@ public class OBLServer extends AbstractServer
 	{
 		String query = BooksQueries.SelectAllBooksEachRowForNewAuthor();
 		ResultSet rs = oblDB.executeQuery(query);
-		Map<Integer, Book> booksList = BooksQueries.CreateBookListFromRS(rs);
+		Map<Integer, Book> booksList = BooksQueries.createBookListFromRS(rs);
 		// now we need to get the categories:
 		for (int key : booksList.keySet())//for each book - find the categories + maxCopies  + currentNumOfBorrows
 		{
@@ -748,6 +755,7 @@ public class OBLServer extends AbstractServer
 			return false;
 		}
 	}
+	
 	private void updateDateFormat(BorrowACopyOfBook borrowToAdd) 
 	{
 		String year = borrowToAdd.getExpectedReturnDate();
@@ -915,4 +923,14 @@ public class OBLServer extends AbstractServer
 		String string = format.format(calendar.getTime());
 		return string;
 	}
+	
+	private void getEmployeeList(ConnectionToClient client) throws SQLException, IOException 
+	{
+		String query = EmployeeQueries.SelectAllEmployees();
+		ResultSet rs = oblDB.executeQuery(query);
+		ArrayList<Employee> empList = EmployeeQueries.createEmpListFromRS(rs);
+		
+		client.sendToClient(new DBMessage(DBAction.GetEmployeeList, empList));
+	}
+
 }
