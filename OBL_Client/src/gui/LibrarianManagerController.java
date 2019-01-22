@@ -45,7 +45,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
 	{
-		pane_home.setVisible(true);
+		pane_home.setVisible(true); 
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
 		pane_searchSubscriberCard.setVisible(false);

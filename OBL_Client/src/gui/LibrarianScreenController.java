@@ -412,9 +412,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	private Subscriber createSubscriberFromTextFields()
-	{
-		Subscriber subscriber = new Subscriber(userNameTextfield.getText(), passwordTextfield.getText(),
-				idNumberTextfield.getText(), firstNameTextfield.getText(), lastNameTextfield.getText());
+	{ 
+		/*public Subscriber (String idNumber,String firstName,String lastName,String phoneNumber,String email,String status)  */
+
+		Subscriber subscriber = new Subscriber(idNumberTextfield.getText(),firstNameTextfield.getText(), lastNameTextfield.getText(),
+				"0","","active");//phone and email default values at first
+		subscriber.setUserName(userNameTextfield.getText());	
+		subscriber.setPassword(passwordTextfield.getText());	
 		String warningMessage = "";
 		// input checks:
 		if (!phoneNumberTextfield.getText().isEmpty())

@@ -9,9 +9,9 @@ public class SubscribersQueries
 		if (subscriber == null)
 			return null;
 		String queryMsg ="INSERT INTO obl_db.subscribers "
-		+ "(subscriberID, phoneNumber, emailAddress,status,currentNumOfBorrows,currentNumOfOrders) VALUES"
+		+ "(subscriberID, phoneNumber, emailAddress,status) VALUES"
 		+ "('"+subscriber.getId() +"','"+ subscriber.getPhoneNumber()+"','"+subscriber.getEmail()+"','"
-		+subscriber.getStatus()+"',"+ subscriber.getCurrentNumOfBorrows()+","+subscriber.getCurrentNumOfOrders()+");";
+		+subscriber.getStatus()+"');";
 		return queryMsg;
 	}
 	public static String searchSubscriberByID(Subscriber subscriber)
@@ -30,14 +30,16 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 	
-	public static Subscriber CreateSubscriberFromRS(ResultSet rs)
+	public static Subscriber createSubscriberFromRS(ResultSet rs)
 	{
 		Subscriber subscriberToCreate = null;
 		try
 		{
 			rs.next();
-			subscriberToCreate = new Subscriber(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-					rs.getInt(6), rs.getInt(7));
+			//Subscriber(String subscriberNum, String id, String phone, String email, String status)
+			
+			subscriberToCreate = new Subscriber(rs.getString(1), rs.getString(2), 
+					rs.getString(3), rs.getString(4), rs.getString(5));
 
 		} catch (Exception e)
 		{
@@ -50,21 +52,27 @@ public class SubscribersQueries
 	  {
 	    if (subscriberID == null)
 	      return null;
-	    String queryMsg ="SELECT * FROM obl_db.users INNER JOIN obl_db.subscribers"
+	    String queryMsg ="SELECT userName,password,id,firstName,lastName,phoneNumber,"
+	    		+ "emailAddress,subscriberNumber,status "
+	    		+ "FROM obl_db.users INNER JOIN obl_db.subscribers"
 	        + " ON obl_db.subscribers.subscriberID = obl_db.users.id "
 	        + "WHERE obl_db.users.id='"+subscriberID+"';";
 	    return queryMsg;
 	  }
 	
-	public static Subscriber CreateSubscriberFromFullInformationRS(ResultSet rs)
+	public static Subscriber createSubscriberFromFullInformationRS(ResultSet rs)
 	  {
 	    Subscriber subscriberToCreate = null;
 	    try
 	    {
 	      rs.next();
-	      subscriberToCreate = new Subscriber(rs.getString(8),rs.getString(10),rs.getString(11),
-	    		  rs.getString(12),rs.getInt(13),rs.getInt(14),rs.getString(2),rs.getString(1),
-	    		  rs.getString(4),rs.getString(5));
+	      /*Subscriber(String uName, String pass, String idNum, 
+	       * String first, String last, String phone, String mail,
+			String subsNumber,String status)*/
+	      subscriberToCreate = new Subscriber(rs.getString(1),rs.getString(2),rs.getString(3),
+	    		  rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),
+	    		  rs.getString(9));
+	      System.out.println(rs.getString(9));
 
 	    } catch (Exception e)
 	    {
@@ -101,14 +109,14 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 	
-	public static String updateCurrentNumOfBorrows(Subscriber subscriberToUpdate)
+	/*public static String updateCurrentNumOfBorrows(Subscriber subscriberToUpdate)
 	{
 		if (subscriberToUpdate == null)
 			return null;
 		String queryMsg = "UPDATE obl_db.subscribers SET currentNumOfBorrows = '" + subscriberToUpdate.getCurrentNumOfBorrows()
 						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
 		return queryMsg;
-	}
+	}*/
 	
 	public static String getSumOfLateReturns(Subscriber subscriberToUpdate)
 	{
@@ -120,14 +128,14 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 	
-	public static String updateSumOfLateReturns(Subscriber subscriberToUpdate)
+	/*public static String updateSumOfLateReturns(Subscriber subscriberToUpdate)
 	{
 		if (subscriberToUpdate == null)
 			return null;
 		String queryMsg = "UPDATE obl_db.subscribers SET sumOfLateReturns = '" + subscriberToUpdate.getSumOfLateReturns()
 						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
 		return queryMsg;
-	}
+	}*/
 	
 	public static String updateSubscriberStatusToActive(Subscriber subscriberToUpdate)
 	{

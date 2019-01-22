@@ -181,7 +181,7 @@ public class OBLServer extends AbstractServer
 	    }
 	    else
 	    { //return the subscriber we found to the client
-	      Subscriber subscriber=SubscribersQueries.CreateSubscriberFromFullInformationRS(rs);
+	      Subscriber subscriber=SubscribersQueries.createSubscriberFromFullInformationRS(rs);
 	      DBMessage returnMsg = new DBMessage(DBAction.ViewSubscriberCard, subscriber);
 	      client.sendToClient(returnMsg);
 	    } 
@@ -193,16 +193,31 @@ public class OBLServer extends AbstractServer
 		String query = BooksQueries.SelectAllBooksEachRowForNewAuthor();
 		ResultSet rs = oblDB.executeQuery(query);
 		Map<Integer, Book> booksList = BooksQueries.CreateBookListFromRS(rs);
-		// now we need to get the authors:
-		for (int key : booksList.keySet())
+		// now we need to get the categories:
+		for (int key : booksList.keySet())//for each book - find the categories + maxCopies  + currentNumOfBorrows
 		{
-			query = BooksQueries.getCatagoriesForBookId(booksList.get(key).getCatalogNumber());
+			query = BooksQueries.getCategoriesForBookId(booksList.get(key).getCatalogNumber());
 			rs = oblDB.executeQuery(query);
 			booksList.get(key).setCategories(new ArrayList<>());
 			while(rs.next())
 			{
 				booksList.get(key).getCategories().add(rs.getString(1));
 			}
+			//update max copies:
+			query = CopiesQueries.getBookMaxCopies(booksList.get(key));
+			rs = oblDB.executeQuery(query);
+			rs.next();
+			booksList.get(key).setMaxCopies(rs.getInt(1));
+			//update current num of borrows:
+			query = BooksQueries.getCurrentNumOfBorrows(booksList.get(key));
+			rs = oblDB.executeQuery(query);
+			rs.next();
+			//update current num of orders:
+			booksList.get(key).setCurrentNumOfBorrows(rs.getInt(1));
+			query = BooksQueries.getCurrentNumOfOrders(booksList.get(key));
+			rs = oblDB.executeQuery(query);
+			rs.next();
+			booksList.get(key).setCurrentNumOfOrders(rs.getInt(1));		
 		}
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
 	}
@@ -259,12 +274,13 @@ public class OBLServer extends AbstractServer
 		userToCheck.setType("subscriber");
 		String query = UsersQueries.createSubscriberUser(userToCheck);
 		oblDB.executeUpdate(query);// add to Users table
+		subscriberToCreate.setStatus("active");
 		query = SubscribersQueries.createSubscriber(subscriberToCreate);
 		oblDB.executeUpdate(query);// add to Subscribers table
 
 		query = SubscribersQueries.searchSubscriberByID(subscriberToCreate);
 		ResultSet rs = oblDB.executeQuery(query);
-		subscriberToCreate = SubscribersQueries.CreateSubscriberFromRS(rs);
+		subscriberToCreate = SubscribersQueries.createSubscriberFromRS(rs);
 		subscriberToCreate.FillInformationFromUser(userToCheck);
 
 		DBMessage returnMsg = new DBMessage(DBAction.CreateSubscriber, subscriberToCreate);
@@ -289,11 +305,6 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 
-	/** This method add new borrow at borrows table, and update all of the relevant fields at the DB.
-	 *
-	 * @param borrowToAdd 	The borrow details that entered by the librarian.
-	 * @param client		The connection from which the message originated.
-	 */
 	private void createNewBorrow(BorrowACopyOfBook borrowToAdd, ConnectionToClient client) throws IOException
 	{
 		Book book = new Book(borrowToAdd.getBookCatalogNumber());
@@ -400,11 +411,11 @@ public class OBLServer extends AbstractServer
 				oblDB.executeUpdate(query); // update current number of borrows of the borrowed book
 			
 				//Subscriber subscriberToUpdate = new Subscriber(borrowToAdd.getSubscriberId());
-				int subscriberCurrentNumOfBorrows = getSubcriberCurrentNumOfBorrows(subscriber);
-				subscriber.setCurrentNumOfBorrows(subscriberCurrentNumOfBorrows + 1);
+				//int subscriberCurrentNumOfBorrows = getSubcriberCurrentNumOfBorrows(subscriber);
+				//subscriber.setCurrentNumOfBorrows(subscriberCurrentNumOfBorrows + 1);
 
-				query = SubscribersQueries.updateCurrentNumOfBorrows(subscriber);
-				oblDB.executeUpdate(query); // update current number of borrows of the subscriber
+				//query = SubscribersQueries.updateCurrentNumOfBorrows(subscriber);
+				//oblDB.executeUpdate(query); // update current number of borrows of the subscriber
 				
 				DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 				client.sendToClient(returnMsg);
@@ -565,6 +576,7 @@ public class OBLServer extends AbstractServer
 				return;
 		}	
 	}*/
+	
 	private boolean isBookExist(Book bookToCheck)
 	{
 		String query = BooksQueries.searchBookByCatalogNumber(bookToCheck);// search by book catalog number

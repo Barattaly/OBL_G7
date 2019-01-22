@@ -6,49 +6,44 @@ public class Subscriber extends User
 	private String phoneNumber;
 	private String email;
 	private String status;
-	private int currentNumOfBorrows = 0;
-	private int currentNumOfOrders = 0;
-	private int sumOfLateReturns = 0;
 
-	public Subscriber(String subscriberNum, String id, String phone, String email, String status,int numOfBorrow, int numofOrders)
+	public Subscriber(String subscriberNum, String id, String phone, String email, String status)
 	{
 		super();
 		  subscriberNumber = subscriberNum;
 		  this.idNumber = id;
-		  phoneNumber = phone;
+		  this.phoneNumber = phone;
 		  this.email = email;
 		  this.status = status;
-		  currentNumOfBorrows = numOfBorrow;
-		  currentNumOfOrders = numofOrders;
+
 	}
 
 	public Subscriber(String uName, String pass, String idNum, String first, String last, String phone, String mail,
-			String subsNumber)
+			String subsNumber,String status)
 	{
 		super(uName, pass, idNum, first, last);
-		subscriberNumber = subsNumber;
-		status = "active";
-		email = mail;
-		phoneNumber = phone;
+		this.subscriberNumber = subsNumber;
+		this.status = status;
+		this.email = mail;
+		this.phoneNumber = phone;
 	}
 
-	public Subscriber(String uName, String pass, String idNum, String first, String last)
+	/*public Subscriber(String uName, String pass, String idNum, String first, String last,String status)
 	{
 		super(uName, pass, idNum, first, last);
 		status = "active";
 		email = null;
 		phoneNumber = null;
 	}
-	public Subscriber(String subscriberNumber,String phoneNumber,String email,String status,int currentNumOfBorrows, int currentNumOfOrders ,String userName,String idNumber,String firstName,String lastName) //tal cons
+	/*public Subscriber(String subscriberNumber,String phoneNumber,String email,String status ,String userName,String idNumber,String firstName,String lastName) //tal cons
 	{
 		super(userName,idNumber,firstName,lastName);
 		this.subscriberNumber=subscriberNumber;
 		this.phoneNumber=phoneNumber;
 		this.email=email;
 		this.status=status;
-		this.currentNumOfBorrows=currentNumOfBorrows;
-		this.currentNumOfOrders=currentNumOfOrders;
-	}
+
+	}*/
 	
 	public Subscriber (String idNumber,String firstName,String lastName,String phoneNumber,String email,String status)  //only update information constructor
 	{
@@ -83,15 +78,6 @@ public class Subscriber extends User
 		return status;
 	}
 
-	public int getCurrentNumOfBorrows()
-	{
-		return currentNumOfBorrows;
-	}
-
-	public int getCurrentNumOfOrders()
-	{
-		return currentNumOfOrders;
-	}
 
 	public void setSubscriberNumber(String subscriberId)
 	{
@@ -113,25 +99,7 @@ public class Subscriber extends User
 		this.status = status;
 	}
 
-	public void setCurrentNumOfBorrows(int currentNumOfBorrows)
-	{
-		this.currentNumOfBorrows = currentNumOfBorrows;
-	}
 
-	public void setCurrentNumOfOrders(int currentNumOfOrders)
-	{
-		this.currentNumOfOrders = currentNumOfOrders;
-	}
-
-	public int getSumOfLateReturns()
-	{
-		return sumOfLateReturns;
-	}
-
-	public void setSumOfLateReturns(int sumOfLateReturns)
-	{
-		this.sumOfLateReturns = sumOfLateReturns;
-	}
 	public void FillInformationFromUser(User userToCheck)
 	{
 		this.userName = userToCheck.userName;
