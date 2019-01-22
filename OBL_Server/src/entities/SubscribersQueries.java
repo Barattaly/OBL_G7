@@ -97,35 +97,19 @@ public class SubscribersQueries
 	{
 		if (subscriberToUpdate == null)
 			return null;
-		String queryMsg = "SELECT currentNumOfBorrows FROM obl_db.subscribers WHERE subscriberID = '" + subscriberToUpdate.getId() + "';";
+		String queryMsg = "SELECT count(id) FROM obl_db.borrows"  
+						+ "WHERE subscriberID = '" + subscriberToUpdate.getId()
+						+ "' AND actualReturnDate is null;";
 		return queryMsg;
 	}
-	
-	public static String updateCurrentNumOfBorrows(Subscriber subscriberToUpdate)
-	{
-		if (subscriberToUpdate == null)
-			return null;
-		String queryMsg = "UPDATE obl_db.subscribers SET currentNumOfBorrows = '" + subscriberToUpdate.getCurrentNumOfBorrows()
-						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
-		return queryMsg;
-	}
-	
-	public static String getSumOfLateReturns(Subscriber subscriberToUpdate)
+
+	public static String getNumOfLateReturns(Subscriber subscriberToUpdate)
 	{
 		if (subscriberToUpdate == null)
 			return null;
 		String queryMsg = "SELECT count(id) FROM obl_db.borrows "
 						+ "WHERE subscriberID = '" + subscriberToUpdate.getId() 
 						+ "' AND isReturnedLate = 'yes';";
-		return queryMsg;
-	}
-	
-	public static String updateSumOfLateReturns(Subscriber subscriberToUpdate)
-	{
-		if (subscriberToUpdate == null)
-			return null;
-		String queryMsg = "UPDATE obl_db.subscribers SET sumOfLateReturns = '" + subscriberToUpdate.getSumOfLateReturns()
-						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
 		return queryMsg;
 	}
 	
