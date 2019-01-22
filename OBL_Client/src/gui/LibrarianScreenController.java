@@ -521,15 +521,14 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			else if (newBorrow.getExpectedReturnDate().equals("1")) // after press on "borrow button
 			{
 				Platform.runLater(() -> {
-					GuiManager
-							.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
+					GuiManager.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
 				});
 			} 
 			else 
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Borrow executed Successfully!");
-					borrowDialog.close();
+					returnDialog.close();
 				});
 			}
 			break;
@@ -551,51 +550,44 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
-			case GetAllBooksList:
-				searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
+		case GetAllBooksList:
+			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
 			break;			
-			/*case ReturnBook: 
+		case ReturnBook: 
+		{
+			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
+			if (newBorrow.getBookCatalogNumber().equals("0")) {
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
+				});
+			}
+			else if (newBorrow.getBookCatalogNumber().equals("-1")) 
 			{
-				BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
-				if (newBorrow.getBookCatalogNumber().equals("0")) 
-				{
-					Platform.runLater(() -> {
-						GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
-					});
-				} 
-				//else if (newBorrow.getBookCatalogNumber().equals("-2")) 
-				{
-						Platform.runLater(() -> {
-							GuiManager.ShowMessagePopup("The book is archived,\nsubscriber can't borrow copies of it.");
-						});
-				//} 
-				else if (newBorrow.getBookCatalogNumber().equals("-1")) 
-				{
-					Platform.runLater(() -> {
-						GuiManager.ShowMessagePopup("None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
-					});
-				} 
-				else if (newBorrow.getCopyId().equals("0")) 
-				{
-					Platform.runLater(() -> {
-						GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
-					});
-				}
-				else if (newBorrow.getCopyId().equals("-1")) 
-				{
-					Platform.runLater(() -> {
-						GuiManager.ShowMessagePopup("This copy is not currently borrow,\nplease check you entered the correct copy ID");
-					});
-				}
-				else 
-				{
-					Platform.runLater(() -> {
-						GuiManager.ShowMessagePopup("Return executed Successfully!");
-						borrowDialog.close();
-					});
-				}
-				break;
-			}*/
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
+				});
+			} 
+			else if (newBorrow.getCopyId().equals("0")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
+				});
+			} 
+			else if (newBorrow.getCopyId().equals("-1")) 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("This copy is not currently borrow,\nplease check you entered the correct copy ID");
+				});
+			} 
+			else 
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Return executed Successfully!");
+					returnDialog.close();
+				});
+			}
+			break;
+		}
 		}
 	}
 

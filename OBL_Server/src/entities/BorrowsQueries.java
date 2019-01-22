@@ -27,6 +27,13 @@ public class BorrowsQueries
 		return queryMsg;
 	}
 	
+	public static String getCurrentBorrowsTable()
+	{
+		String queryMsg = "SELECT * FROM obl_db.borrows" 
+						+ " WHERE actualReturnDate is null;";
+		return queryMsg;
+	}
+	
 	public static BorrowACopyOfBook searchSpecificBorrow(ResultSet rs, BorrowACopyOfBook borrowToSearch)
 	{
 		BorrowACopyOfBook borrowToClose = new BorrowACopyOfBook();
@@ -42,6 +49,8 @@ public class BorrowsQueries
 					borrowToClose.setId(rs.getString(1));
 					borrowToClose.setSubscriberId(rs.getString(2));
 					borrowToClose.setBorrowDate(rs.getString(3));
+					borrowToClose.setExpectedReturnDate(rs.getString(4));
+					borrowToClose.setIsReturnedLate(rs.getString(6));
 				}
 			}
 
@@ -83,13 +92,13 @@ public class BorrowsQueries
 		return string;
 	}
 	
-	public static String getIsReturnedLate(BorrowACopyOfBook borrowToClose)
+	public static String getIsReturnedLate(BorrowACopyOfBook borrow)
 	{
-		if (borrowToClose == null)
+		if (borrow == null)
 			return null;
 		
-		String queryMsg = "SELECT isReturnedLate FROM obl_db.borrows WHERE (id = '" + borrowToClose.getId() 
-						+ "') and (subscriberID = '" + borrowToClose.getSubscriberId() + "');";
+		String queryMsg = "SELECT isReturnedLate FROM obl_db.borrows WHERE (id = '" + borrow.getId() 
+						+ "') and (subscriberID = '" + borrow.getSubscriberId() + "');";
 		return queryMsg;
 	}
 }

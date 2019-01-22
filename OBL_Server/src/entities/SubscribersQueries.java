@@ -135,4 +135,12 @@ public class SubscribersQueries
 						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
 		return queryMsg;
 	}
+	
+
+	public static String getSubscriberCurrentBorrowsTable(Subscriber subscriberToUpdate)
+	{
+		String queryMsg = "SELECT * FROM obl_db.borrows" 
+						+ " WHERE subscriberID = '" + subscriberToUpdate.getId() + "' AND actualReturnDate is null;";
+		return queryMsg;
+	}
 }
