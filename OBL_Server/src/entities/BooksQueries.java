@@ -38,10 +38,19 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		{
 			while (rs.next())
 			{
+				/*String catalogNumber,
+				 *  String name, String purchaseDate,
+				 *  String classification, String description, 
+				 *  int maxCopies, String location,
+				 *   int currentNumOfBorrows, int currentNumOfOrders, 
+				 *   String tableOfContenPath, String isArchived)*/
 				// for each author we have a different row!
-				Book temp = new Book(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getInt(6), rs.getString(7), rs.getInt(8), rs.getInt(9), rs.getString(10),
-						rs.getString(11));
+				Book temp = new Book(rs.getString(1),
+						rs.getString(2), rs.getString(3), 
+						rs.getString(4),rs.getString(5), 
+						rs.getInt(6), rs.getString(7), 
+						rs.getInt(8), rs.getInt(9), 
+						rs.getString(10), rs.getString(11));
 				String author = rs.getString(13);// 12 is the id again
 				temp.setAuthorNameList(new ArrayList<>());
 				int tempCatNum = Integer.parseInt(temp.getCatalogNumber());
