@@ -8,6 +8,7 @@ public class Subscriber extends User
 	private String status;
 	private int currentNumOfBorrows = 0;
 	private int currentNumOfOrders = 0;
+	private int sumOfLateReturns = 0;
 
 	public Subscriber(String subscriberNum, String id, String phone, String email, String status,int numOfBorrow, int numofOrders)
 	{
@@ -122,6 +123,15 @@ public class Subscriber extends User
 		this.currentNumOfOrders = currentNumOfOrders;
 	}
 
+	public int getSumOfLateReturns()
+	{
+		return sumOfLateReturns;
+	}
+
+	public void setSumOfLateReturns(int sumOfLateReturns)
+	{
+		this.sumOfLateReturns = sumOfLateReturns;
+	}
 	public void FillInformationFromUser(User userToCheck)
 	{
 		this.userName = userToCheck.userName;
@@ -131,5 +141,5 @@ public class Subscriber extends User
 		this.lastName = userToCheck.lastName;
 		this.loginStatus = userToCheck.loginStatus;
 		this.type = userToCheck.type;
-		}
+	}
 }

@@ -14,6 +14,8 @@ public class Book implements Serializable
 	private String location;
 	private int currentNumOfBorrows;
 	private int currentNumOfOrders;
+	private String editionNumber;
+	private String publicationYear;
 	private String tableOfContenPath;
 	private String isArchived;
 	private ArrayList<CopyOfBook> copies;
@@ -22,8 +24,8 @@ public class Book implements Serializable
 
 	
 	public Book(String catalogNumber, String name, String purchaseDate,
-			String classification, String description, int maxCopies, String location,
-	 int currentNumOfBorrows, int currentNumOfOrders, String tableOfContenPath, String isArchived)
+				String classification, String description, int maxCopies, String location,
+				int currentNumOfBorrows, int currentNumOfOrders,String tableOfContenPath, String isArchived)
 	{
 		this.catalogNumber =catalogNumber;
 		this.name = name;
@@ -40,9 +42,9 @@ public class Book implements Serializable
 	}
 	
 	
-	public Book(String catalogNumber, String name, String purchaseDate, String classification, String description,
-			int maxCopies, int currentNumOfBorrows, int currentNumOfOrders, String tableOfContenPath, String isArchived,
-			ArrayList<CopyOfBook> copies) 
+	public Book(String catalogNumber, String name, String purchaseDate, String classification,
+				String description, int maxCopies, int currentNumOfBorrows, int currentNumOfOrders,
+				String tableOfContenPath, String isArchived, ArrayList<CopyOfBook> copies) 
 	{
 		this.catalogNumber = catalogNumber;
 		this.name = name;
@@ -125,6 +127,22 @@ public class Book implements Serializable
 	public void setCurrentNumOfOrders(int currentNumOfOrders) 
 	{
 		this.currentNumOfOrders = currentNumOfOrders;
+	}
+	public String getEditionNumber() 
+	{
+		return editionNumber;
+	}
+	public void setEditionNumber(String editionNumber) 
+	{
+		this.editionNumber = editionNumber;
+	}
+	public String getPublicationYear() 
+	{
+		return publicationYear;
+	}
+	public void setPublicationYear(String publicationYear) 
+	{
+		this.publicationYear = publicationYear;
 	}
 	public String getTableOfContenPath() 
 	{

@@ -171,6 +171,18 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
-
+	
+	public void returnBook(BorrowACopyOfBook borrowToClose)
+	{
+		DBMessage message = new DBMessage(DBAction.ReturnBook, borrowToClose);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
 }
 //End of ClientController class

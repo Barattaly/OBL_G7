@@ -11,11 +11,13 @@ public class BorrowACopyOfBook implements Serializable
 	private String actualReturnDate;
 	private String isReturnedLate;
 	private String bookCatalogNumber;
-	private String copyId; 
+	private String copyId;
+	private boolean flag;
 	
 	public BorrowACopyOfBook() {}
 	public BorrowACopyOfBook(String id, String subscriberId, String borrowDate, String expectedReturnDate,
-			String actualReturnDate, String isReturnedLate, String bookCatalogNumber) {
+			String actualReturnDate, String isReturnedLate, String bookCatalogNumber) 
+	{
 		this.id = id;
 		this.subscriberId = subscriberId;
 		this.borrowDate = borrowDate;
@@ -38,7 +40,6 @@ public class BorrowACopyOfBook implements Serializable
 	
 	public BorrowACopyOfBook(String subscriberId, String bookCatalogNumber, String copyId) 
 	{
-
 		this.subscriberId = subscriberId;
 		this.bookCatalogNumber = bookCatalogNumber;
 		this.copyId = copyId;
@@ -51,7 +52,14 @@ public class BorrowACopyOfBook implements Serializable
 		this.bookCatalogNumber = bookCatalogNumber;
 		this.copyId = copyId;
 	}
-
+	
+	public BorrowACopyOfBook(String actualReturnDate, String bookCatalogNumber, String copyId, boolean flag) 
+	{
+		this.actualReturnDate = actualReturnDate;
+		this.bookCatalogNumber = bookCatalogNumber;
+		this.copyId = copyId;
+		this.flag = flag;
+	}
 	public String getId() 
 	{
 		return id;
@@ -131,7 +139,13 @@ public class BorrowACopyOfBook implements Serializable
 	{
 		this.copyId = copyId;
 	}
+	public boolean isFlag() 
+	{
+		return flag;
+	}
 	
-	
-	
+	public void setFlag(boolean flag) 
+	{
+		this.flag = flag;
+	}
 }
