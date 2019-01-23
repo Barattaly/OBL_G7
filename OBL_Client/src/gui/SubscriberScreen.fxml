@@ -2,8 +2,6 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -91,41 +89,8 @@
                   </TitledPane>
                </children>
             </Pane>
-            <Pane fx:id="pane_books" layoutX="40.0" layoutY="1.0" prefHeight="586.0" prefWidth="650.0" visible="false">
-               <children>
-                  <Label layoutX="186.0" layoutY="64.0" text="Current borrowed books" textFill="#a0a2ab">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <TableView editable="true" layoutX="24.0" layoutY="172.0" prefHeight="200.0" prefWidth="625.0">
-                     <columns>
-                        <TableColumn prefWidth="109.0" text="Borrowed date" />
-                        <TableColumn prefWidth="112.0" text="Return date" />
-                        <TableColumn prefWidth="82.4000244140625" text="Copy number" />
-                        <TableColumn prefWidth="108.0" text="Book name" />
-                        <TableColumn prefWidth="139.19998168945312" text="Authors" />
-                        <TableColumn minWidth="0.0" prefWidth="72.20001220703125" />
-                     </columns>
-                  </TableView>
-                  <Label layoutX="24.0" layoutY="435.0" text="*The book is wanted - can't extend this book return date" textFill="GREY">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="24.0" layoutY="412.0" text="*One day before return date / return date" textFill="GREEN">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="24.0" layoutY="389.0" text="*Return date has passed, you're late! " textFill="RED">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-            <AnchorPane fx:id="pane_searchBook" layoutX="306.0" layoutY="194.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Pane fx:id="pane_books" layoutX="1.0" layoutY="55.0" prefHeight="516.0" prefWidth="756.0" visible="false" />
+            <AnchorPane fx:id="pane_searchBook" layoutX="306.0" layoutY="194.0" prefHeight="576.0" prefWidth="757.0" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Label fx:id="statusLabel" layoutX="268.0" layoutY="578.0" prefHeight="18.0" prefWidth="230.0" text="Subscriber card status: " textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />

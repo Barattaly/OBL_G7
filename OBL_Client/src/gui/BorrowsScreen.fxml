@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="512.0" prefWidth="756.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BorrowsScreenController">
+   <children>
+      <Label alignment="TOP_CENTER" layoutX="231.0" layoutY="23.0" text="Current borrowed books" textFill="#a0a2ab" AnchorPane.topAnchor="23.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TableView fx:id="borrowsTable" layoutX="4.0" layoutY="123.0" prefHeight="358.0" prefWidth="736.0" style="-fx-background-color: #a0a2ab;" AnchorPane.bottomAnchor="79.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="75.0">
+         <columns>
+            <TableColumn fx:id="borrowNumberColumn" minWidth="0.0" prefWidth="97.0" text="Borrow number" />
+            <TableColumn fx:id="borrowDateColumn" prefWidth="145.0" text="Borrowed date" />
+            <TableColumn fx:id="returnDateColumn" prefWidth="112.0" text="Expected return date" />
+            <TableColumn fx:id="copyNumberColumn" prefWidth="101.0" text="Copy number" />
+            <TableColumn fx:id="catalogNumberColumn" prefWidth="145.0" text="Book Catalog Number" />
+            <TableColumn fx:id="subscriberIDColumn" prefWidth="147.0" text="Subscriber ID" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Label disable="true" layoutX="37.0" layoutY="430.0" text="*The book is wanted - can't extend this book return date" textFill="GREY" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="37.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label disable="true" layoutX="37.0" layoutY="456.0" text="*One day before return date / return date" textFill="GREEN" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="37.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label disable="true" layoutX="37.0" layoutY="482.0" text="*Return date has passed, you're late! " textFill="RED" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="37.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
