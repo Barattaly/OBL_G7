@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 public class BookInformationController implements IClientUI
 {
 	private User userLoggedIn;
+	
+	private Subscriber subscriberLoggedIn;
 	@FXML
 	private Label bookNameLabel;
 
@@ -28,9 +30,6 @@ public class BookInformationController implements IClientUI
 	@FXML
 	private TextArea descreptionPane;
 	
-	@FXML
-	private TextArea moreInformationTextField;
-
 	@FXML
 	private ImageView wantedLogo;
 
@@ -81,21 +80,21 @@ public class BookInformationController implements IClientUI
 		{
 			availableLabel.setText("Available for borrow");
 			availableLabel.setTextFill(Color.web("#12d318"));
-			orderBookBtn.setDisable(false);
+			orderBookBtn.setDisable(true);
 		}
 		else
 		{
 			availableLabel.setText("Not available for borrow"); // book is available for order
 			availableLabel.setTextFill(Color.RED);
-			orderBookBtn.setDisable(true);
+			orderBookBtn.setDisable(false);
 		}
 		
-		moreInformationTextField.setText(""
+		/*moreInformationTextField.setText(""
 				+ "Purchase Date: " +book.getPurchaseDate() 
 				+ "\nCurrent Borrows: " +book.getCurrentNumOfBorrows() 
 				+ "\nMax Copies: " +book.getMaxCopies() 
 
-				);
+				);*/
 	}
 
 	
@@ -166,5 +165,17 @@ public class BookInformationController implements IClientUI
 				break;
 		}
 		
+	}
+
+
+	public void setSubscriber(Subscriber subscriberLogged)
+	{
+		subscriberLoggedIn = subscriberLogged;
+		if(!subscriberLoggedIn.getStatus().equals("active"))
+		{
+			orderBookBtn.setDisable(true);
+		}
+		else
+			orderBookBtn.setDisable(false);
 	}
 }

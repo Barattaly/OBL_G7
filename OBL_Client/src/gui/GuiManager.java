@@ -178,29 +178,6 @@ public class GuiManager
 		});
 	}
 
-	public static void openBookWindow(Book book, User userLoged)
-	{
-		try
-		{
-			Stage SeondStage = new Stage();
-			FXMLLoader loader = new FXMLLoader(
-					GuiManager.class.getResource(availableFXML.get(SCREENS.bookInformation)));
-			Parent root = loader.load();
-			BookInformationController controller = loader.getController();
-			controller.setBookInformation(book);
-			controller.setUserLogedIn(userLoged);
-			Scene scene = new Scene(root);
-			SeondStage.setTitle("Book Page");
-			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
-			SeondStage.setScene(scene);
-			SeondStage.showAndWait();
-
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	public static void openSubscriberCard(Subscriber newSub)
 	{
 		try

@@ -12,8 +12,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
@@ -25,12 +28,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 public class SearchBookController implements Initializable, IClientUI
 {
-	private User userLogged;
+	private User userLogged = null;
+	
+	private Subscriber subscriberLogged = null;
 	@FXML
 	private JFXTextField bookNameTextField;
 
@@ -98,6 +105,8 @@ public class SearchBookController implements Initializable, IClientUI
 
 	@FXML
 	private Label headlineLabel;
+	
+	private BookInformationController bookInformationController;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -122,7 +131,7 @@ public class SearchBookController implements Initializable, IClientUI
 				{
 					ObservableBook rowData = row.getItem();
 					int bookCatNum = rowData.getCatalognumber();
-					GuiManager.openBookWindow(bookMap.get(bookCatNum), getUserLogedIn());
+					openBookWindow(bookMap.get(bookCatNum), getUserLogedIn());
 				}
 			});
 			return row;
@@ -130,6 +139,34 @@ public class SearchBookController implements Initializable, IClientUI
 
 	}
 
+	private void openBookWindow(Book book, User userLoged)
+	{
+		try
+		{
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(
+					GuiManager.class.getResource("/gui/BookInformationScreen.fxml"));
+			Parent root = loader.load();
+			bookInformationController = loader.getController();
+			bookInformationController.setBookInformation(book);
+			bookInformationController.setUserLogedIn(userLoged);
+			if(subscriberLogged != null)
+			{
+				bookInformationController.setSubscriber(subscriberLogged);
+			}
+			Scene scene = new Scene(root);
+			SeondStage.setTitle("Book Page");
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	
 	@FXML
 	void radioBtnClicked(ActionEvent event)
 	{
@@ -387,5 +424,10 @@ public class SearchBookController implements Initializable, IClientUI
 	public void refresh()
 	{
 		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
+	}
+
+	public void setSubscriber(Subscriber subscriberLoggedIn)
+	{
+		subscriberLogged = subscriberLoggedIn;
 	}
 }
