@@ -103,7 +103,7 @@ public class SearchBookController implements Initializable, IClientUI
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
 		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
-
+		
 		namecol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		authorcol.setCellValueFactory(new PropertyValueFactory<>("author"));
 		catalognumbercol.setCellValueFactory(new PropertyValueFactory<>("catalognumber"));
@@ -114,7 +114,7 @@ public class SearchBookController implements Initializable, IClientUI
 		booklist = FXCollections.observableArrayList();
 
 		BookTable.setItems(booklist); 
-
+ 
 		BookTable.setRowFactory(tv -> { // press on row in book table to open book information
 			TableRow<ObservableBook> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {

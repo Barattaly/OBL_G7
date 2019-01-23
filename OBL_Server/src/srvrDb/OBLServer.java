@@ -7,11 +7,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
@@ -64,8 +64,6 @@ public class OBLServer extends AbstractServer
 	public void connectToDB(String dbName, String dbPassword, String userName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		oblDB = new MySQLConnection(dbName, dbPassword, userName);
-		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 1, TimeUnit.MINUTES);
 	}
 
 	/**
@@ -153,6 +151,16 @@ public class OBLServer extends AbstractServer
 				createNewOrder((BookOrder) dbMessage.Data, client);
 				break;
 			}*/
+			case GetCurrentBorrowsForSubID:
+			{
+				getCurrentBorrowForSubscriberID((String) dbMessage.Data,client);
+				break;
+			}
+			case GetCurrentBorrows:
+			{
+				getCurrentBorrow(client);
+				break;
+			}
 			default:
 				break;
 			}
@@ -373,7 +381,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isCopyAvailableToBorrow(book)) // check if the copy status is unavailable
+		else if (!ifCopyIsAvailable(book)) // check if the copy status is unavailable
 		{
 			borrowToAdd.setCopyId("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
@@ -455,7 +463,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isCopyAvailableToReturn(book)) // check if the copy status is available
+		else if (!ifCopyIsUnavailable(book)) // check if the copy status is available
 		{
 			borrowToClose.setCopyId("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
@@ -660,7 +668,7 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 	
-	private boolean isCopyAvailableToBorrow(Book bookToCheck)
+	private boolean ifCopyIsAvailable(Book bookToCheck)
 	{
 		String query = CopiesQueries.getCopyStatus(bookToCheck);// search by copy id
 		ResultSet rsCopyStatus = oblDB.executeQuery(query);
@@ -680,7 +688,7 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	private boolean isCopyAvailableToReturn(Book bookToCheck)
+	private boolean ifCopyIsUnavailable(Book bookToCheck)
 	{
 		String query = CopiesQueries.getCopyStatus(bookToCheck);// search by copy id
 		ResultSet rsCopyStatus = oblDB.executeQuery(query);
@@ -975,5 +983,22 @@ public class OBLServer extends AbstractServer
 		
 		client.sendToClient(new DBMessage(DBAction.GetEmployeeList, empList));
 	}
-
+	
+	private void getCurrentBorrowForSubscriberID(String id, ConnectionToClient client) throws IOException
+	{
+		String query = BorrowsQueries.getCurrentBorrowsForSubscriberID(id);
+		ResultSet rs = oblDB.executeQuery(query);
+		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createBorrowListFromRS(rs);
+		
+		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrowsForSubID, borrowList));
+	}
+	
+	private void getCurrentBorrow(ConnectionToClient client) throws IOException
+	{
+		String query = BorrowsQueries.getCurrentBorrows();
+		ResultSet rs = oblDB.executeQuery(query);
+		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createBorrowListFromRS(rs);
+		
+		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrows, borrowList));
+	}
 }

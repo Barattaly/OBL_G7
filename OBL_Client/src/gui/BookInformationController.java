@@ -121,8 +121,6 @@ public class BookInformationController implements IClientUI
 		}
 	}
 	
-
-
 	@Override
 	public void setUserLogedIn(User userLoged)
 	{

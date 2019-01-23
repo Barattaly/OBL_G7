@@ -210,5 +210,31 @@ public class ClientController extends AbstractClient
 		}
 		
 	}
+
+	public void getCurrentBorrowsForSubscriberID(String id)
+	{
+		DBMessage message = new DBMessage(DBAction.GetCurrentBorrowsForSubID, id);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public void getAllCurrentBorrows()
+	{
+		DBMessage message = new DBMessage(DBAction.GetCurrentBorrows, null);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 }
 //End of ClientController class
