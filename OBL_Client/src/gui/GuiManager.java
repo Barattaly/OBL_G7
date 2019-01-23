@@ -32,7 +32,7 @@ public class GuiManager
 
 	public static Map<String, SCREENS> userTypeFromString = new HashMap<String, SCREENS>()
 	{
-		{
+		{ 
 			put("librarian", SCREENS.librarian);
 			put("subscriber", SCREENS.subscriber);
 			put("library manager", SCREENS.librarianManager);

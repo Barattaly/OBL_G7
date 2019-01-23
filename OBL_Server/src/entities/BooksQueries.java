@@ -34,7 +34,7 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return queryMsg;
 	}
 	
-	public static Map<Integer,Book> CreateBookListFromRS(ResultSet rs)
+	public static Map<Integer,Book> createBookListFromRS(ResultSet rs)
 	{
 		Map<Integer,Book> Books = new HashMap<Integer,Book>();
 		try
