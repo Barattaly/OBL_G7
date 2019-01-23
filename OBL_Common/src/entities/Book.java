@@ -2,6 +2,7 @@ package entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Book implements Serializable
 {
@@ -19,6 +20,7 @@ public class Book implements Serializable
 	private ArrayList<CopyOfBook> copies;
 	private ArrayList<String> authorNameList;
 	private ArrayList<String> categories;
+	private ArrayBlockingQueue<BookOrder> orders;
 
 	private int maxCopies;
 	private int currentNumOfBorrows;
@@ -201,6 +203,18 @@ public class Book implements Serializable
 	public void setCategories(ArrayList<String> categories)
 	{
 		this.categories = categories;
+	}
+
+
+	public ArrayBlockingQueue<BookOrder> getOrders() 
+	{
+		return orders;
+	}
+
+
+	public void setOrders(ArrayBlockingQueue<BookOrder> orders) 
+	{
+		this.orders = orders;
 	}
 	
 	

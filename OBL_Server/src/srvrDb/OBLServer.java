@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
@@ -17,10 +19,12 @@ import entities.BorrowsQueries;
 import entities.CopiesQueries;
 import entities.CopyOfBook;
 import entities.Book;
+import entities.BookOrder;
 import entities.BooksQueries;
 import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
+import entities.OrdersQueries;
 import entities.Subscriber;
 import entities.SubscribersQueries;
 import entities.DBMessage.DBAction;
@@ -60,6 +64,8 @@ public class OBLServer extends AbstractServer
 	public void connectToDB(String dbName, String dbPassword, String userName) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		oblDB = new MySQLConnection(dbName, dbPassword, userName);
+		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 1, TimeUnit.MINUTES);
 	}
 
 	/**
@@ -142,6 +148,11 @@ public class OBLServer extends AbstractServer
 				getEmployeeList(client);
 				break;
 			}
+			/*case CreateNewOrder:
+			{
+				createNewOrder((BookOrder) dbMessage.Data, client);
+				break;
+			}*/
 			default:
 				break;
 			}
@@ -333,7 +344,7 @@ public class OBLServer extends AbstractServer
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 			client.sendToClient(returnMsg);
 			return;
-		}		
+		}	
 		else if (!isBookExist(book)) // check if the book catalog number doesn't exist
 		{
 			borrowToAdd.setBookCatalogNumber("0");
@@ -348,7 +359,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isBookAvailableToBorrow(book)) // check if all of the copies of the book are unavailable
+		else if (!ifAllBookCopiesAreUnavailable(book)) // check if all of the copies of the book are unavailable
 		{
 			borrowToAdd.setBookCatalogNumber("-2");
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
@@ -430,7 +441,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isBookAvailableToReturn(book)) // check if all of the copies of the book are available
+		else if (!ifAllBookCopiesAreAvailable(book)) // check if all of the copies of the book are available
 		{
 			borrowToClose.setBookCatalogNumber("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
@@ -502,8 +513,38 @@ public class OBLServer extends AbstractServer
 				DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
 				client.sendToClient(returnMsg);
 				return;
-		}	
+		}
 	}
+	
+	/*private void createNewOrder(BookOrder bookOrder, ConnectionToClient client) throws IOException
+	{
+		Book book = new Book(bookOrder.getBookCatalogNumber());
+		ArrayBlockingQueue<BookOrder> orders;
+		int maxCopies = 0, bookCurrentNumOfOrders;
+		String query = CopiesQueries.getBookMaxCopies(book);
+		ResultSet rsMaxCopies = oblDB.executeQuery(query); // get max copies of the ordered book
+		try 
+		{
+			rsMaxCopies.next();
+			maxCopies = rsMaxCopies.getInt(1);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		orders = new ArrayBlockingQueue<>(maxCopies);
+		bookCurrentNumOfOrders = getBookCurrentNumOfOrders(book);
+
+		
+		String query = OrdersQueries.addNewOrder(bookOrder);
+		oblDB.executeUpdate(query); // add a new borrow to Borrows table
+
+
+		DBMessage returnMsg = new DBMessage(DBAction.CreateNewOrder, bookOrder);
+		client.sendToClient(returnMsg);
+		return;
+
+	}*/
 	
 	private boolean isBookExist(Book bookToCheck)
 	{
@@ -537,7 +578,7 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	private boolean isBookAvailableToBorrow(Book bookToCheck)
+	private boolean ifAllBookCopiesAreUnavailable(Book bookToCheck)
 	{
 		int maxCopies, numOfUnavailableCopies;
 		String query = CopiesQueries.getBookMaxCopies(bookToCheck); // search by copy ID
@@ -571,7 +612,7 @@ public class OBLServer extends AbstractServer
 		return true;
 	}
 	
-	private boolean isBookAvailableToReturn(Book bookToCheck)
+	private boolean ifAllBookCopiesAreAvailable(Book bookToCheck)
 	{
 		String query = BooksQueries.getCurrentNumOfBorrows(bookToCheck);// search by book catalog number
 		ResultSet rsCurrentNumOfBorrows = oblDB.executeQuery(query);
@@ -703,23 +744,21 @@ public class OBLServer extends AbstractServer
 		borrowToAdd.setExpectedReturnDate("" + year1 + monthDay);
 	}
 	
-	/*private int getBookCurrentNumOfBorrows(Book bookToUpdate)
+	private int getBookCurrentNumOfOrders(Book book)
 	{
-		String query = BooksQueries.getCurrentNumOfBorrows(bookToUpdate);// search by book catalog number
-		ResultSet rsBookCurrentNumOfBorrows = oblDB.executeQuery(query);
-		int currentNumOfBorrows;
+		String query = BooksQueries.getCurrentNumOfOrders(book);// search by book catalog number
+		ResultSet rsBookCurrentNumOfOrders = oblDB.executeQuery(query);
 		try 
 		{
-			rsBookCurrentNumOfBorrows.next();
-			currentNumOfBorrows = rsBookCurrentNumOfBorrows.getInt(1);
-			return currentNumOfBorrows;
+			rsBookCurrentNumOfOrders.next();
+			return rsBookCurrentNumOfOrders.getInt(1);
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
 			return -1;
 		}
-	}*/
+	}
 	
 	/*private int getSubcriberCurrentNumOfBorrows(Subscriber subscriberToUpdate)
 	{
@@ -754,25 +793,6 @@ public class OBLServer extends AbstractServer
 			return -1;
 		}
 	}
-	
-	/*private boolean getIsReturnedLate(BorrowACopyOfBook borrowToClose)
-	{
-		String query = BorrowsQueries.getIsReturnedLate(borrowToClose);
-		ResultSet rsIsReturnedLate = oblDB.executeQuery(query);// get the status of the borrow - if the subscriber is late at return
-		try 
-		{
-			rsIsReturnedLate.next();
-			String isReturnedLate = rsIsReturnedLate.getString(1);
-			if(isReturnedLate.equals("yes"))
-				return true;
-			return false;
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}*/
 	
 	private boolean ifSubscriberLateAnotherReturn(BorrowACopyOfBook borrowToClose)
 	{
@@ -812,7 +832,7 @@ public class OBLServer extends AbstractServer
 		String query = BorrowsQueries.getCurrentBorrowsTable();
 		ResultSet rsCurrentBorrowsTable = oblDB.executeQuery(query); // get current borrows table
 		BorrowACopyOfBook borrowFromBorrowsTable = new BorrowACopyOfBook();
-		Map<Subscriber,Integer> subscribersLateReturnsAtListThreeTimes = new HashMap<Subscriber,Integer>();
+		ArrayList<Subscriber> subscribersLateReturnsAtListThreeTimes = new ArrayList<Subscriber>();
 		try 
 		{
 			while (rsCurrentBorrowsTable.next()) 
@@ -832,7 +852,7 @@ public class OBLServer extends AbstractServer
 					lateReturnsCount++;
 					if(lateReturnsCount >= 3)
 					{
-						subscribersLateReturnsAtListThreeTimes.put(subscriberToUpdate, lateReturnsCount);
+						subscribersLateReturnsAtListThreeTimes.add(subscriberToUpdate);
 						
 					}
 					query = BorrowsQueries.getIsReturnedLate(borrowFromBorrowsTable);
@@ -946,4 +966,14 @@ public class OBLServer extends AbstractServer
 		String string = format.format(calendar.getTime());
 		return string;
 	}
+	
+	private void getEmployeeList(ConnectionToClient client) throws SQLException, IOException 
+	{
+		String query = EmployeeQueries.SelectAllEmployees();
+		ResultSet rs = oblDB.executeQuery(query);
+		ArrayList<Employee> empList = EmployeeQueries.createEmpListFromRS(rs);
+		
+		client.sendToClient(new DBMessage(DBAction.GetEmployeeList, empList));
+	}
+
 }
