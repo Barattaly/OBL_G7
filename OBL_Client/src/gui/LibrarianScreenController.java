@@ -54,7 +54,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class LibrarianScreenController implements Initializable, IClientUI
-{
+{ 
 	private User userLogedIn;
 	@FXML
 	private Label userWelcomLabel;
@@ -101,8 +101,14 @@ public class LibrarianScreenController implements Initializable, IClientUI
     public static IClientUI CurrentGuiController;//check
     
 	protected SearchBookController searchBookWindowController = null;
+	
+	protected BorrowsScreenController borrowsWindowController = null; 
+
+    @FXML
+    private AnchorPane borrowsPane;
 
 	private Stage borrowDialog = null;
+	
 	private Stage returnDialog = null;
 
 	@FXML
@@ -116,7 +122,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
-
 	}
 
 	@FXML
@@ -173,6 +178,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
+		
 
 	}
 
@@ -552,8 +558,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			break;
 		}
 			case GetAllBooksList:
-				searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
+				searchBookWindowController.getMessageFromServer(msg);
 			break;			
+			case GetCurrentBorrows:
+				borrowsWindowController.getMessageFromServer(msg);
+				break;
 			/*case ReturnBook: 
 			{
 				BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
@@ -610,6 +619,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
 		initialSearchWindow();
+		initialBorrowsWindow();		
 	}
 
 	@Override
@@ -664,5 +674,25 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String string = format.format(calendar.getTime());
 		return string;
+	}
+	
+	private void initialBorrowsWindow()
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/BorrowsScreen.fxml"));
+			AnchorPane newLoadedPane = loader.load();
+			borrowsWindowController = loader.getController();
+			borrowsWindowController.setUserLogedIn(userLogedIn);
+			borrowsPane.getChildren().add(newLoadedPane);
+			AnchorPane.setLeftAnchor(newLoadedPane, 0.0);
+			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
+			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
+			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

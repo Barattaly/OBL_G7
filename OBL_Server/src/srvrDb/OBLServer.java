@@ -141,6 +141,16 @@ public class OBLServer extends AbstractServer
 				getEmployeeList(client);
 				break;
 			}
+			case GetCurrentBorrowsForSubID:
+			{
+				getCurrentBorrowForSubscriberID((String) dbMessage.Data,client);
+				break;
+			}
+			case GetCurrentBorrows:
+			{
+				getCurrentBorrow(client);
+				break;
+			}
 			default:
 				break;
 			}
@@ -932,5 +942,22 @@ public class OBLServer extends AbstractServer
 		
 		client.sendToClient(new DBMessage(DBAction.GetEmployeeList, empList));
 	}
-
+	
+	private void getCurrentBorrowForSubscriberID(String id, ConnectionToClient client) throws IOException
+	{
+		String query = BorrowsQueries.getCurrentBorrowsForSubscriberID(id);
+		ResultSet rs = oblDB.executeQuery(query);
+		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createBorrowListFromRS(rs);
+		
+		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrowsForSubID, borrowList));
+	}
+	
+	private void getCurrentBorrow(ConnectionToClient client) throws IOException
+	{
+		String query = BorrowsQueries.getCurrentBorrows();
+		ResultSet rs = oblDB.executeQuery(query);
+		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createBorrowListFromRS(rs);
+		
+		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrows, borrowList));
+	}
 }

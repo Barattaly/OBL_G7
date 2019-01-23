@@ -99,7 +99,7 @@ public class LoginController implements IClientUI, Initializable
 							warningLabel.setText("User already connected");
 						});
 					} else
-					{
+					{ 
 						;
 						// Avoid throwing IllegalStateException by running from a non-JavaFX thread.
 						Platform.runLater(() -> {

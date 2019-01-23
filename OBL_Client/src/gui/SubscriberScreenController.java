@@ -53,8 +53,10 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	@FXML
 	private ImageView btn_home, btn_books, btn_viewSubscriberCard, btn_searchBook;
 
-	private SearchBookController searchBookWindowController = null;
-
+	private SearchBookController searchBookWindowController = null; 
+	
+	private BorrowsScreenController borrowsWindowController = null; 
+	
 	private ViewSubscriberCardController viewSubscriberCardController = null;
 
 	@FXML
@@ -148,6 +150,26 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			e.printStackTrace();
 		}
 	}
+	
+	private void initialBorrowsWindow()
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/BorrowsScreen.fxml"));
+			AnchorPane newLoadedPane = loader.load();
+			borrowsWindowController = loader.getController();
+			borrowsWindowController.setUserLogedIn(userLogedIn);
+			pane_books.getChildren().add(newLoadedPane);
+			AnchorPane.setLeftAnchor(newLoadedPane, 0.0);
+			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
+			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
+			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	@FXML
 	void logOutDisplay(MouseEvent event)
@@ -172,7 +194,10 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		switch (msg.Action)
 		{
 		case GetAllBooksList:
-			searchBookWindowController.setBookMap((Map<Integer, Book>) msg.Data);
+			searchBookWindowController.getMessageFromServer(msg);
+			break;
+		case GetCurrentBorrowsForSubID:
+			borrowsWindowController.getMessageFromServer(msg);
 			break;
 		case ViewSubscriberCard:
 		{
@@ -207,6 +232,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
 		initialSearchWindow();
+		initialBorrowsWindow();
 		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
 	}
 
