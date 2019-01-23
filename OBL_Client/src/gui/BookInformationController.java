@@ -1,9 +1,11 @@
 package gui;
 
 import entities.Book;
+import entities.BookOrder;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import java.util.ArrayList;
@@ -75,17 +77,17 @@ public class BookInformationController implements IClientUI
 			wantedBookLabel.setVisible(false);
 			wantedLogo.setVisible(false); 
 		}
-		if(book.getMaxCopies()-book.getCurrentNumOfBorrows()>0)//book is available
+		if(book.getMaxCopies()-book.getCurrentNumOfBorrows()>0) // book is available for borrow
 		{
 			availableLabel.setText("Available for borrow");
 			availableLabel.setTextFill(Color.web("#12d318"));
-			orderBookBtn.setDisable(true);
+			orderBookBtn.setDisable(false);
 		}
 		else
 		{
-			availableLabel.setText("Not available for borrow");
+			availableLabel.setText("Not available for borrow"); // book is available for order
 			availableLabel.setTextFill(Color.RED);
-			orderBookBtn.setDisable(false);
+			orderBookBtn.setDisable(true);
 		}
 		
 		moreInformationTextField.setText(""
@@ -93,14 +95,30 @@ public class BookInformationController implements IClientUI
 				+ "\nCurrent Borrows: " +book.getCurrentNumOfBorrows() 
 				+ "\nMax Copies: " +book.getMaxCopies() 
 
-);
+				);
 	}
 
+	
+	@FXML
+    void btn_orderBookClick(ActionEvent event) 
+	{
+		BookOrder newOrder = new BookOrder(userLoggedIn.getId(), catNumLabel.getText());
+		
+		GuiManager.client.createNewOrder(newOrder);
+    }
+	
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
-		// TODO Auto-generated method stub
-
+		switch (msg.Action)
+		{
+		case CreateNewOrder:
+		{
+			break;
+		}
+		default:
+			break;
+		}
 	}
 	
 	@Override

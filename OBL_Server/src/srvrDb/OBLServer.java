@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 import entities.UsersQueries;
@@ -16,10 +19,12 @@ import entities.BorrowsQueries;
 import entities.CopiesQueries;
 import entities.CopyOfBook;
 import entities.Book;
+import entities.BookOrder;
 import entities.BooksQueries;
 import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
+import entities.OrdersQueries;
 import entities.Subscriber;
 import entities.SubscribersQueries;
 import entities.DBMessage.DBAction;
@@ -131,16 +136,21 @@ public class OBLServer extends AbstractServer
 				updateSubscriberInformation((Subscriber) dbMessage.Data, client);
 				break;
 			}
-			/*case ReturnBook:
+			case ReturnBook:
 			{
 				returnBook((BorrowACopyOfBook) dbMessage.Data, client);
 				break;
-			}*/
+			}		
 			case GetEmployeeList:
 			{
 				getEmployeeList(client);
 				break;
 			}
+			/*case CreateNewOrder:
+			{
+				createNewOrder((BookOrder) dbMessage.Data, client);
+				break;
+			}*/
 			case GetCurrentBorrowsForSubID:
 			{
 				getCurrentBorrowForSubscriberID((String) dbMessage.Data,client);
@@ -342,7 +352,7 @@ public class OBLServer extends AbstractServer
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 			client.sendToClient(returnMsg);
 			return;
-		}		
+		}	
 		else if (!isBookExist(book)) // check if the book catalog number doesn't exist
 		{
 			borrowToAdd.setBookCatalogNumber("0");
@@ -357,7 +367,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isBookAvailableToBorrow(book)) // check if all of the copies of the book are unavailable
+		else if (!ifAllBookCopiesAreUnavailable(book)) // check if all of the copies of the book are unavailable
 		{
 			borrowToAdd.setBookCatalogNumber("-2");
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
@@ -371,7 +381,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isCopyAvailableToBorrow(book)) // check if the copy status is unavailable
+		else if (!isCopyIsAvailable(book)) // check if the copy status is unavailable
 		{
 			borrowToAdd.setCopyId("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
@@ -424,43 +434,36 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	/*private void returnBook(BorrowACopyOfBook borrowToClose, ConnectionToClient client) throws IOException
+	private void returnBook(BorrowACopyOfBook borrowToClose, ConnectionToClient client) throws IOException
 	{
 		Book book = new Book(borrowToClose.getBookCatalogNumber());
 		CopyOfBook copyOfBook = new CopyOfBook(borrowToClose.getCopyId());
 		ArrayList<CopyOfBook> copies = new ArrayList<>();
 		copies.add(copyOfBook);
 		book.setCopies(copies);
-		boolean isReturnedLate = false;
-		if (!isBookExist(book))
+		
+		if (!isBookExist(book)) // check if the book catalog number doesn't exist
 		{
 			borrowToClose.setBookCatalogNumber("0");
 			DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
 			client.sendToClient(returnMsg);
 			return;
 		}
-		//else if (isBookArchived(book))
-		{
-			borrowToClose.setBookCatalogNumber("-2");
-			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToClose);
-			client.sendToClient(returnMsg);
-			return;
-		//}
-		else if (!isBookAvailableToReturn(book))
+		else if (!ifAllBookCopiesAreAvailable(book)) // check if all of the copies of the book are available
 		{
 			borrowToClose.setBookCatalogNumber("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isCopyExist(book))
+		else if (!isCopyExist(book)) // check if the copy id doesn't exist
 		{
 			borrowToClose.setCopyId("0");
 			DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!isCopyAvailableToReturn(book))
+		else if (!isCopyIsUnavailable(book)) // check if the copy status is available
 		{
 			borrowToClose.setCopyId("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
@@ -469,112 +472,86 @@ public class OBLServer extends AbstractServer
 		}
 		else 
 		{
-				String query = BorrowsQueries.getBorrowsTable();
+				String query = BorrowsQueries.getCurrentBorrowsTable();
 				ResultSet rsBorrowsTable = oblDB.executeQuery(query); // get borrows table
 				
-				// find the borrow we want to close from the borrows table. 
-				// close = update actual return date and update if the copy was returned late
+				// find the borrow we want to update actual return date from the borrows table. 
 				BorrowACopyOfBook borrowFromBorrowsTable = BorrowsQueries.searchSpecificBorrow(rsBorrowsTable, borrowToClose);
 				
 				borrowToClose.setId(borrowFromBorrowsTable.getId());
 				borrowToClose.setSubscriberId(borrowFromBorrowsTable.getSubscriberId());
-				//borrowToClose.setBorrowDate(borrowFromBorrowsTable.getBorrowDate());
-				borrowToClose.setIsReturnedLate("no");
-				
-				String borrowDate = borrowFromBorrowsTable.getBorrowDate();
-				borrowDate.substring(0, 10);
-				String returnDate = borrowToClose.getActualReturnDate();
-				returnDate.substring(0, 10);
-				
+				borrowToClose.setBorrowDate(borrowFromBorrowsTable.getBorrowDate());
+				borrowToClose.setExpectedReturnDate(borrowFromBorrowsTable.getExpectedReturnDate());
+				/* if a subscriber is late at return, the server's daily check of late returns
+				 * will change his borrow "isLateReturn" status to "yes"*/
+				borrowToClose.setIsReturnedLate(borrowFromBorrowsTable.getIsReturnedLate()); 
 				Subscriber subscriberToUpdate = new Subscriber(borrowToClose.getSubscriberId());
 				
-				isReturnedLate = getIsReturnedLate(borrowToClose);
-		
-				if(isReturnedLate)
+				query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
+				ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // get borrows table
+				try 
 				{
-					int subscriberNumOfLateReturns = getSubcriberSumOfLateReturns(subscriberToUpdate);
-					subscriberToUpdate.setSumOfLateReturns(subscriberNumOfLateReturns + 1);
-					
-					
-					if(subscriberNumOfLateReturns >= 3)
+					rsSubscriberStatus.next();
+					String subscriberStatus = rsSubscriberStatus.getString(1);
+					if(subscriberStatus.equals("frozen"))
 					{
-						//send message to the library manager in order to approve deep freeze of the subscriber card
-					}
-					
-					
-					//This code suppose to be in an automatic method, which will be execute every day
-					  on specific time we will define.
-					
-					if(getBookClassification(borrowToClose).equals("ordinary"))
-					{
-						if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(borrowDate).plusDays(13)))
+						/*search in borrows table if the subscriber is late at return another book
+						if exist: subscriber status doesn't change, stay frozen*/
+						if(!ifSubscriberLateAnotherReturn(borrowToClose)) 	
 						{
-							borrowToClose.setIsReturnedLate("yes");
-							isReturnedLate = true;
-						}
-					}
-					else if (getBookClassification(borrowToClose).equals("wanted")) 
-					{
-						if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(borrowDate).plusDays(2)))
-						{
-							borrowToClose.setIsReturnedLate("yes");
-							isReturnedLate = true;
-						}
-					}
-					
-					if(isReturnedLate)
-					{
-						query = BorrowsQueries.updateIsReturnedLateToYes(borrowToUpdate);
-						oblDB.executeUpdate(query); // update the borrow if the subscriber returned the copy late
-					
-						query = SubscribersQueries.updateSumOfLateReturns(subscriberToUpdate);
-						oblDB.executeUpdate(query); // update sum of late returns of the subscriber
-					
-						subscriberToUpdate.setStatus("frozen");
-						query = SubscribersQueries.updateSubscriberStatusToFrozen(subscriberToUpdate);
-						oblDB.executeUpdate(query); // update sum of late returns of the subscriber
-				//}
-					
+							subscriberToUpdate.setStatus("active");
+							query = SubscribersQueries.updateSubscriberStatusToActive(subscriberToUpdate);
+							oblDB.executeUpdate(query); // update subscriber status to active
+						}	
+					}		
+				} 
+				catch (Exception e) 
+				{
+					e.printStackTrace();
 				}
 				
-				String subscriberStatus = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
-				if(subscriberStatus.equals("frozen"))
-				{
-					// search in borrows table if the subscriber is late to return another books
-					//if exist: subscriber status doesn't change, stay frozen
-					//if(!isAnotherLateReturnExist(subscriberToUpdate)) 	
-					{
-						subscriberToUpdate.setStatus("active");
-						query = SubscribersQueries.updateSubscriberStatusToActive(subscriberToUpdate);
-						oblDB.executeUpdate(query); // update subscriber status to active
-					}
-					
-				}
 				 
-				
 				query = BorrowsQueries.updateReturnDate(borrowToClose);
 				oblDB.executeUpdate(query); // update actual return date
 				
-				query = CopiesQueries.changeCopyStatusToAvailable(book);
+				query = CopiesQueries.updateCopyStatusToAvailable(book);
 				oblDB.executeUpdate(query); // update copy status to available
 				 
-				Book bookToUpdate = new Book(borrowToClose.getBookCatalogNumber());
-				int bookCurrentNumOfBorrows = getBookCurrentNumOfBorrows(bookToUpdate);
-				bookToUpdate.setCurrentNumOfBorrows(bookCurrentNumOfBorrows - 1);
-
-				query = BooksQueries.updateCurrentNumOfBorrows(bookToUpdate);
-				oblDB.executeUpdate(query); // update current number of borrows of the borrowed book
-			
-				int subscriberCurrentNumOfBorrows = getSubcriberCurrentNumOfBorrows(subscriberToUpdate);
-				subscriberToUpdate.setCurrentNumOfBorrows(subscriberCurrentNumOfBorrows - 1);
-
-				query = SubscribersQueries.updateCurrentNumOfBorrows(subscriberToUpdate);
-				oblDB.executeUpdate(query); // update current number of borrows of the subscriber
 				
 				DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
 				client.sendToClient(returnMsg);
 				return;
-		}	
+		}
+	}
+	
+	/*private void createNewOrder(BookOrder bookOrder, ConnectionToClient client) throws IOException
+	{
+		Book book = new Book(bookOrder.getBookCatalogNumber());
+		ArrayBlockingQueue<BookOrder> orders;
+		int maxCopies = 0, bookCurrentNumOfOrders;
+		String query = CopiesQueries.getBookMaxCopies(book);
+		ResultSet rsMaxCopies = oblDB.executeQuery(query); // get max copies of the ordered book
+		try 
+		{
+			rsMaxCopies.next();
+			maxCopies = rsMaxCopies.getInt(1);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		orders = new ArrayBlockingQueue<>(maxCopies);
+		bookCurrentNumOfOrders = getBookCurrentNumOfOrders(book);
+
+		
+		String query = OrdersQueries.addNewOrder(bookOrder);
+		oblDB.executeUpdate(query); // add a new borrow to Borrows table
+
+
+		DBMessage returnMsg = new DBMessage(DBAction.CreateNewOrder, bookOrder);
+		client.sendToClient(returnMsg);
+		return;
+
 	}*/
 	
 	private boolean isBookExist(Book bookToCheck)
@@ -590,7 +567,7 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 	
-	boolean isBookArchived(Book bookToCheck)
+	private boolean isBookArchived(Book bookToCheck)
 	{
 		String query = BooksQueries.getArchiveStatus(bookToCheck);// search by book catalog number
 		ResultSet rsArchiveStatus = oblDB.executeQuery(query);
@@ -609,7 +586,7 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	boolean isBookAvailableToBorrow(Book bookToCheck)
+	private boolean ifAllBookCopiesAreUnavailable(Book bookToCheck)
 	{
 		int maxCopies, numOfUnavailableCopies;
 		String query = CopiesQueries.getBookMaxCopies(bookToCheck); // search by copy ID
@@ -617,8 +594,7 @@ public class OBLServer extends AbstractServer
 		try 
 		{
 			rsBookMaxCopies.next();
-			maxCopies = Integer.parseInt(rsBookMaxCopies.getString(1));
-
+			maxCopies = rsBookMaxCopies.getInt(1);
 		} 
 		catch (Exception e) 
 		{
@@ -630,7 +606,7 @@ public class OBLServer extends AbstractServer
 		try 
 		{
 			rsSumOfUnavailableCopies.next();
-			numOfUnavailableCopies = Integer.parseInt(rsSumOfUnavailableCopies.getString(1));
+			numOfUnavailableCopies = rsSumOfUnavailableCopies.getInt(1);
 		} 
 		catch (Exception e) 
 		{
@@ -644,14 +620,14 @@ public class OBLServer extends AbstractServer
 		return true;
 	}
 	
-	boolean isBookAvailableToReturn(Book bookToCheck)
+	private boolean ifAllBookCopiesAreAvailable(Book bookToCheck)
 	{
 		String query = BooksQueries.getCurrentNumOfBorrows(bookToCheck);// search by book catalog number
 		ResultSet rsCurrentNumOfBorrows = oblDB.executeQuery(query);
 		try 
 		{
 			rsCurrentNumOfBorrows.next();
-			int currentNumOfBorrows = Integer.parseInt(rsCurrentNumOfBorrows.getString(1));
+			int currentNumOfBorrows = rsCurrentNumOfBorrows.getInt(1);
 			if(currentNumOfBorrows == 0)
 				return false;
 			return true;
@@ -692,7 +668,7 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 	
-	private boolean isCopyAvailableToBorrow(Book bookToCheck)
+	private boolean isCopyIsAvailable(Book bookToCheck)
 	{
 		String query = CopiesQueries.getCopyStatus(bookToCheck);// search by copy id
 		ResultSet rsCopyStatus = oblDB.executeQuery(query);
@@ -712,7 +688,7 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	/*private boolean isCopyAvailableToReturn(Book bookToCheck)
+	private boolean isCopyIsUnavailable(Book bookToCheck)
 	{
 		String query = CopiesQueries.getCopyStatus(bookToCheck);// search by copy id
 		ResultSet rsCopyStatus = oblDB.executeQuery(query);
@@ -730,7 +706,7 @@ public class OBLServer extends AbstractServer
 			e.printStackTrace();
 			return false;
 		}
-	}*/
+	}
 	
 	private boolean isSubscriberExist(Subscriber subscriberToCheck)
 	{
@@ -776,16 +752,14 @@ public class OBLServer extends AbstractServer
 		borrowToAdd.setExpectedReturnDate("" + year1 + monthDay);
 	}
 	
-	/*private int getBookCurrentNumOfBorrows(Book bookToUpdate)
+	private int getBookCurrentNumOfOrders(Book book)
 	{
-		String query = BooksQueries.getCurrentNumOfBorrows(bookToUpdate);// search by book catalog number
-		ResultSet rsBookCurrentNumOfBorrows = oblDB.executeQuery(query);
-		int currentNumOfBorrows;
+		String query = BooksQueries.getCurrentNumOfOrders(book);// search by book catalog number
+		ResultSet rsBookCurrentNumOfOrders = oblDB.executeQuery(query);
 		try 
 		{
-			rsBookCurrentNumOfBorrows.next();
-			currentNumOfBorrows = Integer.parseInt(rsBookCurrentNumOfBorrows.getString(1));
-			return currentNumOfBorrows;
+			rsBookCurrentNumOfOrders.next();
+			return rsBookCurrentNumOfOrders.getInt(1);
 		} 
 		catch (Exception e) 
 		{
@@ -794,7 +768,7 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	private int getSubcriberCurrentNumOfBorrows(Subscriber subscriberToUpdate)
+	/*private int getSubcriberCurrentNumOfBorrows(Subscriber subscriberToUpdate)
 	{
 		String query = SubscribersQueries.getCurrentNumOfBorrows(subscriberToUpdate);// search by subscriber ID
 		ResultSet rsCurrentNumOfBorrows = oblDB.executeQuery(query);
@@ -802,71 +776,138 @@ public class OBLServer extends AbstractServer
 		try 
 		{
 			rsCurrentNumOfBorrows.next();
-			currentNumOfBorrows = Integer.parseInt(rsCurrentNumOfBorrows.getString(1));
+			currentNumOfBorrows = rsCurrentNumOfBorrows.getInt(1);
 			return currentNumOfBorrows;
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
 			return -1;
-		}
-	}
-	
-	private int getSubcriberNumOfLateReturns(Subscriber subscriberToUpdate)
-	{
-		String query = SubscribersQueries.getCurrentNumOfBorrows(subscriberToUpdate);// search by subscriber ID
-		ResultSet rsCurrentNumOfBorrows = oblDB.executeQuery(query);
-		int currentNumOfBorrows;
-		try 
-		{
-			rsCurrentNumOfBorrows.next();
-			currentNumOfBorrows = Integer.parseInt(rsCurrentNumOfBorrows.getString(1));
-			return currentNumOfBorrows;
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			return -1;
-		}
-	}
-	
-	private boolean getIsReturnedLate(BorrowACopyOfBook borrowToClose)
-	{
-		String query = BorrowsQueries.getIsReturnedLate(borrowToClose);
-		ResultSet rsIsReturnedLate = oblDB.executeQuery(query);// get the status of the borrow - if the subscriber is late at return
-		try 
-		{
-			rsIsReturnedLate.next();
-			String isReturnedLate = rsIsReturnedLate.getString(1);
-			if(isReturnedLate.equals("yes"))
-				return true;
-			return false;
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	private boolean isAnotherLateReturnExist(BorrowACopyOfBook borrowToClose)
-	{
-		String query = BorrowsQueries.getIsReturnedLate(borrowToClose);
-		ResultSet rsIsReturnedLate = oblDB.executeQuery(query);// get the status of the borrow - if the subscriber is late at return
-		try 
-		{
-			rsIsReturnedLate.next();
-			String isReturnedLate = rsIsReturnedLate.getString(1);
-			if(isReturnedLate.equals("yes"))
-				return true;
-			return false;
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			return false;
 		}
 	}*/
+	
+	private int getSubscriberNumOfLateReturns(Subscriber subscriberToUpdate)
+	{
+		String query = SubscribersQueries.getNumOfLateReturns(subscriberToUpdate);// search by subscriber ID
+		ResultSet rsCurrentNumOfLateReturns = oblDB.executeQuery(query);
+		try 
+		{
+			rsCurrentNumOfLateReturns.next();
+			return rsCurrentNumOfLateReturns.getInt(1);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	private boolean ifSubscriberLateAnotherReturn(BorrowACopyOfBook borrowToClose)
+	{
+		Subscriber subscriberToUpdate = new Subscriber(borrowToClose.getSubscriberId());
+		String query = SubscribersQueries.getSubscriberCurrentBorrowsTable(subscriberToUpdate);
+		ResultSet rsSubscriberCurrentBorrowsTable = oblDB.executeQuery(query); // get subscriber's current borrows table
+		try 
+		{
+			while (rsSubscriberCurrentBorrowsTable.next()) 
+			{
+				// check all of the current borrows except the borrow we want to close
+				if (!rsSubscriberCurrentBorrowsTable.getString(1).equals(borrowToClose.getId())) 
+				{
+					/* if exist a borrow with "isReturnedLate" = "yes" below the
+					borrow we want to close, than he is steel late at return => status will remain frozen*/
+					if (rsSubscriberCurrentBorrowsTable.getString(6).equals("yes")) 
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/*This method suppose to run automatically every 24 hours.
+	 *If subscriber is late at return a copy of a book,
+	 *his status will change to "frozen", 
+	 *and the borrow "isReturnedLate" flag will change to "yes".*/
+	private void checkAndUpdateLateReturns() 
+	{
+		String query = BorrowsQueries.getCurrentBorrowsTable();
+		ResultSet rsCurrentBorrowsTable = oblDB.executeQuery(query); // get current borrows table
+		BorrowACopyOfBook borrowFromBorrowsTable = new BorrowACopyOfBook();
+		ArrayList<Subscriber> subscribersLateReturnsAtListThreeTimes = new ArrayList<Subscriber>();
+		try 
+		{
+			while (rsCurrentBorrowsTable.next()) 
+			{
+				borrowFromBorrowsTable.setId(rsCurrentBorrowsTable.getString(1));
+				borrowFromBorrowsTable.setSubscriberId(rsCurrentBorrowsTable.getString(2));
+				borrowFromBorrowsTable.setExpectedReturnDate(rsCurrentBorrowsTable.getString(4));
+				
+				String expectedBorrowDate = borrowFromBorrowsTable.getExpectedReturnDate();
+				String returnDate = getCurrentDateAsString();
+				
+				Subscriber subscriberToUpdate = new Subscriber(borrowFromBorrowsTable.getSubscriberId());
+				int lateReturnsCount = getSubscriberNumOfLateReturns(subscriberToUpdate);
+				
+				if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(expectedBorrowDate))) // check if the subscriber is late at return
+				{
+					lateReturnsCount++;
+					if(lateReturnsCount >= 3)
+					{
+						subscribersLateReturnsAtListThreeTimes.add(subscriberToUpdate);
+						
+					}
+					query = BorrowsQueries.getIsReturnedLate(borrowFromBorrowsTable);
+					ResultSet rsIsReturnedLate = oblDB.executeQuery(query); // get the value of "isReturnedLate" flag
+					try 
+					{
+						rsIsReturnedLate.next();
+						if(rsIsReturnedLate.getString(1).equals("no"))
+						{
+							borrowFromBorrowsTable.setIsReturnedLate("yes");
+							query = BorrowsQueries.updateIsReturnedLateToYes(borrowFromBorrowsTable);
+							oblDB.executeUpdate(query); // update the flag at the borrow if the subscriber returned the copy late	
+						}
+					}
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+					}
+					//Subscriber subscriberToUpdate = new Subscriber(borrowFromBorrowsTable.getSubscriberId());
+					subscriberToUpdate.setStatus("frozen");
+					query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
+					ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // update subscriber's status to frozen
+					try 
+					{
+						rsSubscriberStatus.next();
+						if(rsSubscriberStatus.getString(1).equals("active"))
+						{
+							query = SubscribersQueries.updateSubscriberStatusToFrozen(subscriberToUpdate);
+							oblDB.executeUpdate(query); // update subscriber's status to frozen	
+						}
+					}
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+		/*Send message to the library manager in order to approve deep freeze of the subscriber card
+		 *the message will include the hashMap: subscribersLateReturnsAtListThreeTimes
+		 */
+	}
 	
 	/**
 	 * This method overrides the one in the superclass. Called when the server

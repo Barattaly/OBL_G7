@@ -17,6 +17,6 @@ public class DBMessage implements Serializable
 	{
 		UpdateUserLogout,CheckUser,isDBRuning,CreateSubscriber,
 		GetAllBooksList,CreateNewBorrow, ViewSubscriberCard,UpdateSubscriberCard,
-		ShutDown, ReturnBook, GetEmployeeList,GetCurrentBorrowsForSubID,GetCurrentBorrows; 
+		ShutDown, ReturnBook, GetEmployeeList,GetCurrentBorrowsForSubID,GetCurrentBorrows, CreateNewOrder; 
 	}
 }

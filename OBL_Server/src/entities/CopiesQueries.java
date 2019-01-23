@@ -74,9 +74,8 @@ public class CopiesQueries
 	{
 		if (bookToUpdate == null)
 			return null;
-		String queryMsg = "UPDATE obl_db.book_" + bookToUpdate.getCatalogNumber() 
-						+ "_copies SET status = 'available' WHERE (id = '"
-						+ bookToUpdate.getCopies().get(0).getId() + "');";
+		String queryMsg = "UPDATE obl_db.books_copies SET status = 'available' WHERE id = '"
+						+ bookToUpdate.getCopies().get(0).getId() + "';";
 		return queryMsg;
 	}
 }
