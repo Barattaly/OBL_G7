@@ -556,7 +556,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 		case GetAllBooksList:
 			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
-			break;			
+			break;	
+		case GetCurrentBorrows:
+			borrowsWindowController.getMessageFromServer(msg);
+			break;
 		case ReturnBook: 
 		{
 			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;

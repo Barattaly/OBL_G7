@@ -381,7 +381,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!ifCopyIsAvailable(book)) // check if the copy status is unavailable
+		else if (!isCopyIsAvailable(book)) // check if the copy status is unavailable
 		{
 			borrowToAdd.setCopyId("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
@@ -463,7 +463,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 			return;
 		}
-		else if (!ifCopyIsUnavailable(book)) // check if the copy status is available
+		else if (!isCopyIsUnavailable(book)) // check if the copy status is available
 		{
 			borrowToClose.setCopyId("-1");
 			DBMessage returnMsg = new DBMessage(DBAction.ReturnBook, borrowToClose);
@@ -668,7 +668,7 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 	
-	private boolean ifCopyIsAvailable(Book bookToCheck)
+	private boolean isCopyIsAvailable(Book bookToCheck)
 	{
 		String query = CopiesQueries.getCopyStatus(bookToCheck);// search by copy id
 		ResultSet rsCopyStatus = oblDB.executeQuery(query);
@@ -688,7 +688,7 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	private boolean ifCopyIsUnavailable(Book bookToCheck)
+	private boolean isCopyIsUnavailable(Book bookToCheck)
 	{
 		String query = CopiesQueries.getCopyStatus(bookToCheck);// search by copy id
 		ResultSet rsCopyStatus = oblDB.executeQuery(query);
