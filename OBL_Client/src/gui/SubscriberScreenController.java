@@ -35,7 +35,6 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	private User userLogedIn;
 
 	private Subscriber subscriberLoggedIn;
-
 	@FXML
 	private Label userWelcomLabel;
 	@FXML
@@ -211,6 +210,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			{
 				Platform.runLater(() -> { 
 					subscriberLoggedIn = newSub;
+					if(searchBookWindowController!=null)searchBookWindowController.setSubscriber(subscriberLoggedIn);
 					initialSubscriberCard(newSub);
 					String status = newSub.getStatus().substring(0, 1).toUpperCase() + newSub.getStatus().substring(1);
 					statusLabel.setText("Subscriber card status: " + status);
@@ -231,9 +231,9 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		userWelcomLabel.setText("Hello " + name);
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
+		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
 		initialSearchWindow();
 		initialBorrowsWindow();
-		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
 	}
 
 	@Override

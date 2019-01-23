@@ -4,6 +4,8 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
@@ -14,7 +16,7 @@
 
 <BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BookInformationController">
    <top>
-      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="723.0" style="-fx-background-color: #203447;" BorderPane.alignment="CENTER">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="761.0" style="-fx-background-color: #203447;" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -41,7 +43,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <JFXButton layoutX="53.0" layoutY="439.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="View table of content" textFill="WHITE">
+            <JFXButton layoutX="53.0" layoutY="569.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="View table of content" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -50,17 +52,17 @@
                </font>
             </JFXButton>
             <ImageView fitHeight="229.0" fitWidth="187.0" layoutX="516.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="wantedBookLabel" layoutX="488.0" layoutY="384.0" text="This book is wanted!" textFill="#a0a2ab">
+            <Label fx:id="wantedBookLabel" layoutX="488.0" layoutY="514.0" text="This book is wanted!" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="451.0" layoutY="379.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="451.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/warning.png" />
                </image>
             </ImageView>
-            <JFXButton fx:id="editDetailsBtn" layoutX="474.0" layoutY="434.0" onAction="#btn_orderBookClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
+            <JFXButton fx:id="editDetailsBtn" layoutX="474.0" layoutY="564.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -68,7 +70,7 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="deleteBookBtn" layoutX="474.0" layoutY="479.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Move to archive" textFill="WHITE">
+            <JFXButton fx:id="deleteBookBtn" layoutX="474.0" layoutY="609.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Move to archive" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -76,7 +78,7 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="orderBookBtn" layoutX="53.0" layoutY="484.0" onAction="#btn_orderBookClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Order book" textFill="WHITE">
+            <JFXButton fx:id="orderBookBtn" layoutX="53.0" layoutY="614.0" onAction="#btn_orderBookClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Order book" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -116,19 +118,7 @@
             </Label>
             <Accordion layoutX="451.0" layoutY="65.0">
                <panes>
-                  <TitledPane style="-fx-background-color: #203447;" stylesheets="@../resources/titledpane.css" text="More information" textFill="#a0a2ab">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="250.0">
-                           <children>
-                              <TextArea fx:id="moreInformationTextField" editable="false" layoutX="-1.0" prefHeight="182.0" prefWidth="252.0" wrapText="true" />
-                           </children>
-                        </AnchorPane>
-                    </content>
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </TitledPane>
-                  <TitledPane lineSpacing="2.0" prefHeight="252.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
+                  <TitledPane lineSpacing="2.0" prefHeight="200.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
                     <content>
                       <AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -141,17 +131,52 @@
                         </AnchorPane>
                     </content>
                      <font>
-                        <Font size="24.0" />
+                        <Font size="19.0" />
+                     </font>
+                  </TitledPane>
+                  <TitledPane expanded="false" prefHeight="200.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../resources/titledpane.css" text="Copies" textFill="#a0a2ab">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView layoutX="-1.0" prefHeight="160.0" prefWidth="251.0">
+                                <columns>
+                                  <TableColumn prefWidth="86.0" text="Copy id" />
+                                  <TableColumn prefWidth="163.0" text="Availabilty" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                     <font>
+                        <Font size="19.0" />
                      </font>
                   </TitledPane>
                </panes>
             </Accordion>
-            <Label fx:id="availableLabel" layoutX="50.0" layoutY="392.0" prefHeight="36.0" prefWidth="264.0" text="The book available for borrow" textFill="#12d318">
+            <Label fx:id="availableLabel" layoutX="50.0" layoutY="522.0" prefHeight="36.0" prefWidth="264.0" text="The book available for borrow" textFill="#12d318">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="returnDateLabel" layoutX="327.0" layoutY="431.0" text="TO DO - RETURN DATE" textFill="WHITE" />
+            <Label fx:id="returnDateLabel" layoutX="327.0" layoutY="561.0" text="TO DO - RETURN DATE" textFill="WHITE" />
+            <Label layoutX="60.0" layoutY="381.0" prefHeight="35.0" prefWidth="181.0" text="Publication Year:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="428.0" prefHeight="35.0" prefWidth="184.0" text="Edition Number:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="469.0" prefHeight="35.0" prefWidth="109.0" text="Location:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </top>

@@ -242,7 +242,13 @@ public class OBLServer extends AbstractServer
 			query = BooksQueries.getCurrentNumOfOrders(booksList.get(key));
 			rs = oblDB.executeQuery(query);
 			rs.next();
-			booksList.get(key).setCurrentNumOfOrders(rs.getInt(1));		
+			booksList.get(key).setCurrentNumOfOrders(rs.getInt(1));	
+			//update copies list
+			/*.........BAR NEED TO UPDATE......*/
+			
+			//update order list
+			/*.........BAR NEED TO UPDATE......*/
+			
 		}
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
 	}
