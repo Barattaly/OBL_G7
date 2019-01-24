@@ -6,6 +6,7 @@ package client;
 
 import ocsf.client.*;
 
+import java.awt.Desktop;
 import java.io.*;
 
 import entities.Book;
@@ -14,6 +15,7 @@ import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
+import entities.MyFile;
 import entities.Subscriber;
 import gui.GuiManager;
 import javafx.application.Platform;
@@ -50,7 +52,19 @@ public class ClientController extends AbstractClient
 						+ "Everything you do now will not be saved.");
 			});
 			break;
-			
+		case ViewTableOfContent:
+			if(Desktop.isDesktopSupported()) {
+				try {
+					 MyFile msgServer =((MyFile)msg);
+				     File outputFile = new File ("tableOfContent.txt");
+				     FileOutputStream fos=fos = new FileOutputStream(outputFile);
+				     
+				    //to be continued...		     
+				} catch (Exception ex){
+					ex.printStackTrace();
+				}
+			}
+			break;
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
 			break; 
@@ -243,6 +257,18 @@ public class ClientController extends AbstractClient
 		{
 			sendToServer(message);  
 		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	public void viewTableOfContent(Book bookCatalogNumber)
+	{
+		DBMessage message = new DBMessage(DBAction.ViewTableOfContent, bookCatalogNumber);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}

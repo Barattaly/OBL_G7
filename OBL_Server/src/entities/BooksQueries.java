@@ -126,6 +126,14 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		String dateTimeString = dateFormat.format(startDate);
 		return dateTimeString;
 	}*/
+
 	
+	public static String getPdfPath(Book bookCatalogNumber) //in this function we want to get the path of the PDF file 
+	{
+		String queryMsg= "SELECT tableOfContentPath FROM obl_db.books" 
+				+ "WHERE books.catalogNumber = '" + bookCatalogNumber.getCatalogNumber()+ "';";					
+		return queryMsg;
+		
+	}
 	
 }
