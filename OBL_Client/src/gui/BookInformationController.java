@@ -2,6 +2,7 @@ package gui;
 
 import entities.Book;
 import entities.BookOrder;
+import entities.CopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
@@ -10,26 +11,32 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import java.util.ArrayList;
 
+import javax.swing.text.DefaultEditorKit.CopyAction;
+
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class BookInformationController implements IClientUI
 {
 	private User userLoggedIn;
-	
+
 	private Subscriber subscriberLoggedIn;
-	@FXML
-	private Label bookNameLabel;
+	
+    @FXML
+    private JFXTextArea bookNameTextArea;
 
 	@FXML
 	private Label wantedBookLabel;
 
 	@FXML
 	private TextArea descreptionPane;
-	
+
 	@FXML
 	private ImageView wantedLogo;
 
@@ -43,30 +50,45 @@ public class BookInformationController implements IClientUI
 	private JFXButton orderBookBtn;
 
 	@FXML
-	private Label authorLabel;
+	private JFXTextArea authorTextArea;
 
 	@FXML
-	private Label categoriesLabel;
+	private JFXTextArea categoriesTextArea;
 
 	@FXML
-	private Label catNumLabel;
+	private JFXTextField catNumTextField;
+
+	@FXML
+	private JFXTextField publicationYearTextField;
+
+	@FXML
+	private JFXTextField editionNumTextField;
+
+	@FXML
+	private JFXTextField locationTextField;
 
 	private Book bookToShow;
+	
+    @FXML
+    private TitledPane copiesTitlePane;
 
     @FXML
-    private Label availableLabel;
+    private TextArea copiesTextArea;
+	
+    @FXML
+	private Label availableLabel;
 
 	public void setBookInformation(Book book)
 	{
 		descreptionPane.setText(book.getDescription());
 		bookToShow = book;
-		bookNameLabel.setText(book.getName());
+		bookNameTextArea.setText(book.getName());
 		String authors = book.getAuthorNameList().toString().replace("[", "").replace("]", "");
-		authorLabel.setText(authors);
+		authorTextArea.setText(authors);
 		String categories = book.getCategories().toString().replace("[", "").replace("]", "");
-		categoriesLabel.setText(categories);
-		
-		catNumLabel.setText(book.getCatalogNumber());
+		categoriesTextArea.setText(categories);
+
+		catNumTextField.setText(book.getCatalogNumber());
 		if (book.getClassification().equals("wanted"))
 		{
 			wantedBookLabel.setVisible(true);
@@ -74,38 +96,41 @@ public class BookInformationController implements IClientUI
 		} else
 		{
 			wantedBookLabel.setVisible(false);
-			wantedLogo.setVisible(false); 
+			wantedLogo.setVisible(false);
 		}
-		if(book.getMaxCopies()-book.getCurrentNumOfBorrows()>0) // book is available for borrow
+		if (book.getMaxCopies() - book.getCurrentNumOfBorrows() > 0) // book is available for borrow
 		{
 			availableLabel.setText("Available for borrow");
 			availableLabel.setTextFill(Color.web("#12d318"));
 			orderBookBtn.setDisable(true);
-		}
-		else
+		} else
 		{
 			availableLabel.setText("Not available for borrow"); // book is available for order
 			availableLabel.setTextFill(Color.RED);
 			orderBookBtn.setDisable(false);
 		}
-		
-		/*moreInformationTextField.setText(""
-				+ "Purchase Date: " +book.getPurchaseDate() 
-				+ "\nCurrent Borrows: " +book.getCurrentNumOfBorrows() 
-				+ "\nMax Copies: " +book.getMaxCopies() 
-
-				);*/
+		publicationYearTextField.setText(book.getPublicationYear());
+		editionNumTextField.setText(book.getEditionNumber());
+		locationTextField.setText(book.getLocation());
+		if(book.getCopies()!=null)
+		{
+			String copies = "";
+			for(CopyOfBook copy:book.getCopies())
+			{
+				copies = copies + System.lineSeparator() + copy.getId() + copy.getStatus();
+			}
+			copiesTextArea.setText("The book's copies are:\n"+"Copy ID" + "Status"+ copies);
+		}
 	}
 
-	
 	@FXML
-    void btn_orderBookClick(ActionEvent event) 
+	void btn_orderBookClick(ActionEvent event)
 	{
-		BookOrder newOrder = new BookOrder(userLoggedIn.getId(), catNumLabel.getText());
-		
+		BookOrder newOrder = new BookOrder(userLoggedIn.getId(), catNumTextField.getText());
+
 		GuiManager.client.createNewOrder(newOrder);
-    }
-	
+	}
+
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
@@ -119,7 +144,7 @@ public class BookInformationController implements IClientUI
 			break;
 		}
 	}
-	
+
 	@Override
 	public void setUserLogedIn(User userLoged)
 	{
@@ -132,50 +157,48 @@ public class BookInformationController implements IClientUI
 	{
 		return userLoggedIn;
 	}
-	
+
 	private void switchWindowPermission()
 	{
-		if(userLoggedIn == null) 
+		if (userLoggedIn == null)
 		{
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
 		}
-		switch(userLoggedIn.getType())
+		switch (userLoggedIn.getType())
 		{
-			case "subscriber":
-				orderBookBtn.setVisible(true);
-				deleteBookBtn.setVisible(false);
-				editDetailsBtn.setVisible(false);
-				break;
-			case "library manager":
-				orderBookBtn.setVisible(false);
-				deleteBookBtn.setVisible(true);
-				editDetailsBtn.setVisible(true);
-				break;
-			case "librarian":
-				orderBookBtn.setVisible(false);
-				deleteBookBtn.setVisible(true);
-				editDetailsBtn.setVisible(true);
-				break;
-			case "guest":
-				orderBookBtn.setVisible(false);
-				deleteBookBtn.setVisible(false);
-				editDetailsBtn.setVisible(false);
-				break;
+		case "subscriber":
+			orderBookBtn.setVisible(true);
+			deleteBookBtn.setVisible(false);
+			editDetailsBtn.setVisible(false);
+			break;
+		case "library manager":
+			orderBookBtn.setVisible(false);
+			deleteBookBtn.setVisible(true);
+			editDetailsBtn.setVisible(true);
+			break;
+		case "librarian":
+			orderBookBtn.setVisible(false);
+			deleteBookBtn.setVisible(true);
+			editDetailsBtn.setVisible(true);
+			break;
+		case "guest":
+			orderBookBtn.setVisible(false);
+			deleteBookBtn.setVisible(false);
+			editDetailsBtn.setVisible(false);
+			break;
 		}
-		
-	}
 
+	}
 
 	public void setSubscriber(Subscriber subscriberLogged)
 	{
 		subscriberLoggedIn = subscriberLogged;
-		if(!subscriberLoggedIn.getStatus().equals("active"))
+		if (!subscriberLoggedIn.getStatus().equals("active"))
 		{
 			orderBookBtn.setDisable(true);
-		}
-		else
+		} else
 			orderBookBtn.setDisable(false);
 	}
 }
