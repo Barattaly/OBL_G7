@@ -10,6 +10,7 @@ public class BookOrder implements Serializable
 	private String status;
 	private String bookArriveDate;
 	private String bookCatalogNumber;
+	private boolean flag;
 	
 	public BookOrder(String id, String subscriberId, String orderDate, String status, String bookArriveDate,
 			String bookCatalogNumber) 
@@ -27,10 +28,19 @@ public class BookOrder implements Serializable
 		this.subscriberId = subscriberId;
 		this.bookCatalogNumber = bookCatalogNumber;
 	}
-
+	
 	public BookOrder(String subscriberId) 
 	{
 		this.subscriberId = subscriberId;
+	}
+
+	
+	
+	public BookOrder(String subscriberId, String status, boolean flag) 
+	{
+		this.subscriberId = subscriberId;
+		this.status = status;
+		this.flag = flag;
 	}
 
 	public String getId() 

@@ -146,11 +146,11 @@ public class OBLServer extends AbstractServer
 				getEmployeeList(client);
 				break;
 			}
-			/*case CreateNewOrder:
+			case CreateNewOrder:
 			{
 				createNewOrder((BookOrder) dbMessage.Data, client);
 				break;
-			}*/
+			}
 			case GetCurrentBorrowsForSubID:
 			{
 				getCurrentBorrowForSubscriberID((String) dbMessage.Data,client);
@@ -217,6 +217,7 @@ public class OBLServer extends AbstractServer
 	{
 		String query = BooksQueries.SelectAllBooksEachRowForNewAuthor();
 		ResultSet rs = oblDB.executeQuery(query);
+		ArrayList<CopyOfBook> copies = new ArrayList<>();
 		Map<Integer, Book> booksList = BooksQueries.createBookListFromRS(rs);
 		// now we need to get the categories:
 		for (int key : booksList.keySet())//for each book - find the categories + maxCopies  + currentNumOfBorrows
@@ -233,21 +234,60 @@ public class OBLServer extends AbstractServer
 			rs = oblDB.executeQuery(query);
 			rs.next();
 			booksList.get(key).setMaxCopies(rs.getInt(1));
-			//update current num of borrows:
+			//ArrayBlockingQueue<BookOrder> orders = new ArrayBlockingQueue<BookOrder>(rs.getInt(1));
+			ArrayList<BookOrder> arrayList = new ArrayList<BookOrder>();
+			//update current number of borrows:
 			query = BooksQueries.getCurrentNumOfBorrows(booksList.get(key));
 			rs = oblDB.executeQuery(query);
 			rs.next();
-			//update current num of orders:
 			booksList.get(key).setCurrentNumOfBorrows(rs.getInt(1));
+			//update current number of orders:
 			query = BooksQueries.getCurrentNumOfOrders(booksList.get(key));
 			rs = oblDB.executeQuery(query);
 			rs.next();
 			booksList.get(key).setCurrentNumOfOrders(rs.getInt(1));	
 			//update copies list
-			/*.........BAR NEED TO UPDATE......*/
-			
+			query = CopiesQueries.getBookCopiesDetails(booksList.get(key));
+			ResultSet rsBookCopies = oblDB.executeQuery(query);
+			try 
+			{
+				while(rsBookCopies.next())
+				{				
+				CopyOfBook copyOfBook = new CopyOfBook(rsBookCopies.getString(1), rsBookCopies.getString(2));
+				copies.add(copyOfBook);				
+				}
+				booksList.get(key).setCopies(copies);	
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
 			//update order list
-			/*.........BAR NEED TO UPDATE......*/
+			query = OrdersQueries.getBookCurrentOrders(booksList.get(key));
+			ResultSet rsBookOrders = oblDB.executeQuery(query);
+			try 
+			{
+				while(rsBookOrders.next())
+				{				
+					BookOrder bookOrder = new BookOrder(rsBookOrders.getString(1), rsBookOrders.getString(2),
+							rsBookOrders.getString(3), rsBookOrders.getString(4), rsBookOrders.getString(5), 
+							rsBookOrders.getString(6));
+					try 
+					{
+						//orders.add(bookOrder);
+						arrayList.add(bookOrder);
+					}
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+					}
+				}
+				booksList.get(key).setOrders(arrayList);	
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
 			
 		}
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
@@ -530,35 +570,15 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	/*private void createNewOrder(BookOrder bookOrder, ConnectionToClient client) throws IOException
+	private void createNewOrder(BookOrder bookOrder, ConnectionToClient client) throws IOException
 	{
-		Book book = new Book(bookOrder.getBookCatalogNumber());
-		ArrayBlockingQueue<BookOrder> orders;
-		int maxCopies = 0, bookCurrentNumOfOrders;
-		String query = CopiesQueries.getBookMaxCopies(book);
-		ResultSet rsMaxCopies = oblDB.executeQuery(query); // get max copies of the ordered book
-		try 
-		{
-			rsMaxCopies.next();
-			maxCopies = rsMaxCopies.getInt(1);
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		orders = new ArrayBlockingQueue<>(maxCopies);
-		bookCurrentNumOfOrders = getBookCurrentNumOfOrders(book);
-
-		
 		String query = OrdersQueries.addNewOrder(bookOrder);
-		oblDB.executeUpdate(query); // add a new borrow to Borrows table
-
+		oblDB.executeUpdate(query); // add a new order to Orders table
 
 		DBMessage returnMsg = new DBMessage(DBAction.CreateNewOrder, bookOrder);
 		client.sendToClient(returnMsg);
 		return;
-
-	}*/
+	}
 	
 	private boolean isBookExist(Book bookToCheck)
 	{

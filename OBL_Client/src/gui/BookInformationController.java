@@ -5,10 +5,12 @@ import entities.BookOrder;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import com.jfoenix.controls.JFXButton;
 
@@ -65,8 +67,8 @@ public class BookInformationController implements IClientUI
 		authorLabel.setText(authors);
 		String categories = book.getCategories().toString().replace("[", "").replace("]", "");
 		categoriesLabel.setText(categories);
-		
 		catNumLabel.setText(book.getCatalogNumber());
+		boolean isOrderExist = false;
 		if (book.getClassification().equals("wanted"))
 		{
 			wantedBookLabel.setVisible(true);
@@ -76,17 +78,49 @@ public class BookInformationController implements IClientUI
 			wantedBookLabel.setVisible(false);
 			wantedLogo.setVisible(false); 
 		}
-		if(book.getMaxCopies()-book.getCurrentNumOfBorrows()>0) // book is available for borrow
+		if(!subscriberLoggedIn.getStatus().equals("active"))
 		{
-			availableLabel.setText("Available for borrow");
-			availableLabel.setTextFill(Color.web("#12d318"));
+			availableLabel.setText("Card status isn't active"); // book is available for order
+			availableLabel.setTextFill(Color.RED);
 			orderBookBtn.setDisable(true);
 		}
 		else
 		{
-			availableLabel.setText("Not available for borrow"); // book is available for order
-			availableLabel.setTextFill(Color.RED);
-			orderBookBtn.setDisable(false);
+
+			if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
+			{
+				availableLabel.setText("Available for borrow");
+				availableLabel.setTextFill(Color.web("#12d318"));
+				orderBookBtn.setDisable(true);
+			} 
+			else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
+			{
+				availableLabel.setText("Not available for borrow"); // book is available for order
+				availableLabel.setTextFill(Color.RED);
+				// orderBookBtn.setDisable(true);
+
+				if (book.getCurrentNumOfOrders() < book.getMaxCopies()) 
+				{
+					for (BookOrder order : book.getOrders()) 
+					{
+						// check if the subscriber already ordered this book
+						if (order.getSubscriberId().equals(userLoggedIn.getId())) 
+						{
+							isOrderExist = true;
+						}
+					}
+					if (isOrderExist) 
+					{
+						availableLabel.setText("Already ordered this book"); // book is available for order
+						availableLabel.setTextFill(Color.RED);
+						orderBookBtn.setDisable(true);
+					}
+				} 
+				else 
+				{
+					orderBookBtn.setDisable(true);
+				}
+			}
 		}
 		
 		/*moreInformationTextField.setText(""
@@ -112,7 +146,13 @@ public class BookInformationController implements IClientUI
 		switch (msg.Action)
 		{
 		case CreateNewOrder:
-		{
+		{	
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Order executed Successfully!");
+					orderBookBtn.setDisable(true);
+				});
+			}
 			break;
 		}
 		default:
@@ -171,11 +211,6 @@ public class BookInformationController implements IClientUI
 	public void setSubscriber(Subscriber subscriberLogged)
 	{
 		subscriberLoggedIn = subscriberLogged;
-		if(!subscriberLoggedIn.getStatus().equals("active"))
-		{
-			orderBookBtn.setDisable(true);
-		}
-		else
-			orderBookBtn.setDisable(false);
+		
 	}
 }

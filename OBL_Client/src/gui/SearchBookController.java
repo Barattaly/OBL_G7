@@ -148,12 +148,12 @@ public class SearchBookController implements Initializable, IClientUI
 					GuiManager.class.getResource("/gui/BookInformationScreen.fxml"));
 			Parent root = loader.load();
 			bookInformationController = loader.getController();
-			bookInformationController.setBookInformation(book);
 			bookInformationController.setUserLogedIn(userLoged);
 			if(subscriberLogged != null)
 			{
 				bookInformationController.setSubscriber(subscriberLogged);
 			}
+			bookInformationController.setBookInformation(book);
 			Scene scene = new Scene(root);
 			SeondStage.setTitle("Book Page");
 			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
@@ -330,6 +330,12 @@ public class SearchBookController implements Initializable, IClientUI
 		{
 			bookMap = (Map<Integer, Book>) msg.Data;
 			copyBookMapToBookList();
+			break;
+		}
+		case CreateNewOrder:
+		{
+			bookInformationController.getMessageFromServer(msg);
+			break;
 		}
 		default:
 			break;
