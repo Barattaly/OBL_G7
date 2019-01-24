@@ -24,7 +24,7 @@ public class OrdersQueries
 			return null;
 		String queryMsg = "SELECT id, subscriberID, orderDate, status, bookArriveDate, bookCatalogNumber " 
 						+ "FROM obl_db.orders " 
-						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "';";
+						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' AND status ='active';";
 		return queryMsg;
 	}
 	

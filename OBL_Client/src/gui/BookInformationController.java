@@ -97,50 +97,68 @@ public class BookInformationController implements IClientUI
 			wantedBookLabel.setVisible(false);
 			wantedLogo.setVisible(false);
 		}
-		if (subscriberLoggedIn != null)
+		/*if (userLoggedIn != null)
 		{
-			if (!subscriberLoggedIn.getStatus().equals("active"))
-			{
-				availableLabel.setText("Card status isn't active"); // book is available for order
-				availableLabel.setTextFill(Color.RED);
-				orderBookBtn.setDisable(true);
-			} else
-			{
-
+			if (subscriberLoggedIn != null) 
+			{*/
+				 
+			/*}
+			else
+			{*/
 				if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
 				{
 					availableLabel.setText("Available for borrow");
 					availableLabel.setTextFill(Color.web("#12d318"));
 					orderBookBtn.setDisable(true);
-				} else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
+				} 
+				else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 				{
 					availableLabel.setText("Not available for borrow"); // book is available for order
 					availableLabel.setTextFill(Color.RED);
-					// orderBookBtn.setDisable(true);
-
-					if (book.getCurrentNumOfOrders() < book.getMaxCopies())
+					if (book.getCurrentNumOfOrders() == book.getMaxCopies())
 					{
+						if(subscriberLoggedIn != null)
+						{
+							availableLabel.setText("Orders queue is full"); // book is available for order
+						}
+						else
+						{
+							availableLabel.setText("Not available for order"); // book is available for order
+						}
+						availableLabel.setTextFill(Color.RED);
+						orderBookBtn.setDisable(true);
+					}
+					//book.getCurrentNumOfOrders() < book.getMaxCopies() && 
+					//else 
+					if (subscriberLoggedIn != null)
+					{
+						int i = 1, positionInQueue = 0;
 						for (BookOrder order : book.getOrders())
 						{
 							// check if the subscriber already ordered this book
-							if (order.getSubscriberId().equals(userLoggedIn.getId()))
+							if (order.getSubscriberId().equals(subscriberLoggedIn.getId()))
 							{
 								isOrderExist = true;
+								positionInQueue = i;
 							}
+							i++;
 						}
 						if (isOrderExist)
 						{
-							availableLabel.setText("Already ordered this book"); // book is available for order
-							availableLabel.setTextFill(Color.RED);
+							availableLabel.setText("Your position in orders queue: " + positionInQueue); // book is available for order
+							availableLabel.setTextFill(Color.web("#12d318"));
 							orderBookBtn.setDisable(true);
-						}
-					} else
-					{
-						orderBookBtn.setDisable(true);
+						}						
 					}
+				} 
+				if (subscriberLoggedIn != null && !subscriberLoggedIn.getStatus().equals("active")) 
+				{
+					availableLabel.setText("Card status is not active"); // book is available for order
+					availableLabel.setTextFill(Color.RED);
+					orderBookBtn.setDisable(true);
 				}
-			}
-		}
+			//}
+		//}
 		publicationYearTextField.setText(book.getPublicationYear());
 		editionNumTextField.setText(book.getEditionNumber());
 		locationTextField.setText(book.getLocation());

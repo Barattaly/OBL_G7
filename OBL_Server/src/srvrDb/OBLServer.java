@@ -235,7 +235,6 @@ public class OBLServer extends AbstractServer
 			booksList.get(key).setMaxCopies(rs.getInt(1));
 			// ArrayBlockingQueue<BookOrder> orders = new
 			// ArrayBlockingQueue<BookOrder>(rs.getInt(1));
-			ArrayList<BookOrder> arrayList = new ArrayList<BookOrder>();
 			// update current number of borrows:
 			query = BooksQueries.getCurrentNumOfBorrows(booksList.get(key));
 			rs = oblDB.executeQuery(query);
@@ -267,6 +266,7 @@ public class OBLServer extends AbstractServer
 			ResultSet rsBookOrders = oblDB.executeQuery(query);
 			try
 			{
+				ArrayList<BookOrder> arrayList = new ArrayList<BookOrder>();
 				while (rsBookOrders.next())
 				{
 					BookOrder bookOrder = new BookOrder(rsBookOrders.getString(1), rsBookOrders.getString(2),
