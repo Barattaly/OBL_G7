@@ -236,5 +236,16 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
+	public void getActivityLogFromDB(String id)
+	{
+		DBMessage message = new DBMessage(DBAction.GetActivityLog, id);
+		try
+		{
+			sendToServer(message);  
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 }
 //End of ClientController class

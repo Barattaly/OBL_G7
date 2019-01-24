@@ -1,21 +1,44 @@
 package gui;
 
+import java.util.ArrayList;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-
+import entities.ActivityLog;
 import entities.DBMessage;
+import entities.ObservableActivityLog;
 import entities.Subscriber;
 import entities.User;
-import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ViewSubscriberCardController implements IClientUI
 {
 
 	private Subscriber subscriberToShow;
+
+	private ObservableList<ObservableActivityLog> activitylist;// for table view...
+
+	@FXML
+	private TableView<ObservableActivityLog> activityTable;
+
+	@FXML
+	private TableColumn<ObservableActivityLog, String> activitycol;
+
+	@FXML
+	private TableColumn<ObservableActivityLog, String> booknamecol;
+
+	@FXML
+	private TableColumn<ObservableActivityLog, String> datecol;
+
+	@FXML
+	private TableColumn<ObservableActivityLog, String> commentscol;
 
 	@FXML
 	private JFXTextField subscriberNumberField;
@@ -103,6 +126,9 @@ public class ViewSubscriberCardController implements IClientUI
 	@FXML
 	void btn_CancelClick(ActionEvent event)
 	{
+		GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
+		GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
+
 		btn_Edit.setVisible(true);
 		btn_Cancel.setVisible(false);
 		btn_Save.setVisible(false);
@@ -182,6 +208,34 @@ public class ViewSubscriberCardController implements IClientUI
 	public JFXTextField getFirstNameField()
 	{
 		return firstNameField;
+	}
+
+	public void setActivityLogList(ArrayList<ActivityLog> activityList)
+	{
+
+		activitycol.setCellValueFactory(new PropertyValueFactory<>("activity"));
+		booknamecol.setCellValueFactory(new PropertyValueFactory<>("bookname"));
+		datecol.setCellValueFactory(new PropertyValueFactory<>("date"));
+		commentscol.setCellValueFactory(new PropertyValueFactory<>("comments"));
+		activitylist = FXCollections.observableArrayList();
+
+		for (ActivityLog activity : activityList)
+		{
+			if (activity.getActivity().equals("Return") && activity.getDate() == null)
+				continue;
+			else if (activity.getActivity().equals("Return") && activity.getComments().equals("no"))
+				activity.setComments("The book was returned late");
+			else if (activity.getActivity().equals("Return") && activity.getComments().equals("yes"))
+				activity.setComments("The book was returned on time");
+
+			if (activity.getActivity().equals("Order"))
+				activity.setComments("Order status: " + activity.getComments());
+
+			ObservableActivityLog temp = new ObservableActivityLog(activity.getActivity(), activity.getBookname(),
+					activity.getDate(), activity.getComments());
+			activitylist.add(temp);
+			activityTable.setItems(activitylist);
+		}
 	}
 
 }
