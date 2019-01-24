@@ -3,16 +3,23 @@ package gui;
 import java.util.List;
 import java.util.Map;
 
+import com.jfoenix.controls.JFXTextField;
+
 import entities.Book;
 import entities.BorrowACopyOfBook;
 import entities.DBMessage;
+import entities.ObservableBook;
 import entities.ObservableBorrow;
 import entities.ObservableEmployee;
 import entities.User;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -43,7 +50,63 @@ public class BorrowsScreenController implements IClientUI
 	private TableColumn<ObservableBorrow, String> subscriberIDColumn;
 
 	private ObservableList<ObservableBorrow> observableBorrowsList;// for table view...
+    
+	@FXML
+    private JFXTextField searchTextField;
+	//this is the search function, it is in listener for text inside the textfield
+	private InvalidationListener onSearchStart = new InvalidationListener()
+	{
+		
+		@Override
+		public void invalidated(Observable arg0)
+		{
 
+            if(searchTextField.textProperty().get().isEmpty()) {
+
+            	borrowsTable.setItems(observableBorrowsList);
+
+                return;
+
+            }
+
+            ObservableList<ObservableBorrow> tableItems = FXCollections.observableArrayList();
+
+            ObservableList<TableColumn<ObservableBorrow, ?>> cols = borrowsTable.getColumns();
+
+            for(int i=0; i<observableBorrowsList.size(); i++) {
+
+                
+
+                for(int j=0; j<cols.size(); j++) {
+
+                    TableColumn col = cols.get(j);
+					String cellValue = null;
+                    try
+					{
+						cellValue = col.getCellData(observableBorrowsList.get(i)).toString();
+					} catch (NullPointerException ex)
+					{
+						break;
+					}
+
+                    cellValue = cellValue.toLowerCase();
+
+                    if(cellValue.contains(searchTextField.textProperty().get().toLowerCase())) {
+
+                        tableItems.add(observableBorrowsList.get(i));
+
+                        break;
+
+                    }                        
+
+                }
+
+
+            }
+
+            borrowsTable.setItems(tableItems);	
+		}
+	};
 	
 	@Override
 	public User getUserLogedIn()
@@ -55,6 +118,7 @@ public class BorrowsScreenController implements IClientUI
 	public void setUserLogedIn(User userLoged)
 	{
 		userLoggedIn = userLoged;
+		searchTextField.textProperty().addListener(onSearchStart);
 		switch (userLoggedIn.getType())
 		{
 		case "subscriber":
@@ -67,6 +131,7 @@ public class BorrowsScreenController implements IClientUI
 		}
 	}
 
+
 	private void initialLibrarianView()
 	{
 		borrowNumberColumn.setCellValueFactory(new PropertyValueFactory<>("borrowId"));
@@ -77,6 +142,19 @@ public class BorrowsScreenController implements IClientUI
 		subscriberIDColumn.setCellValueFactory(new PropertyValueFactory<>("subscriberId"));
 		
 		observableBorrowsList = FXCollections.observableArrayList();
+		borrowsTable.setRowFactory(tv -> { // press on row in borrow table to do what ever we want
+			TableRow<ObservableBorrow> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty()))
+				{
+					ObservableBorrow rowData = row.getItem();
+					System.out.println("Librarian pressed on: "+ rowData.getBorrowId()+" Borrow ID");
+					
+				}
+			});
+			return row;
+		});
+
 		GuiManager.client.getAllCurrentBorrows();		
 	}
 
@@ -88,7 +166,18 @@ public class BorrowsScreenController implements IClientUI
 		copyNumberColumn.setCellValueFactory(new PropertyValueFactory<>("copyId"));
 		catalogNumberColumn.setCellValueFactory(new PropertyValueFactory<>("catalogNumber"));
 		subscriberIDColumn.setVisible(false);
-		
+		borrowsTable.setRowFactory(tv -> { // press on row in borrow table to do what ever we want
+			TableRow<ObservableBorrow> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty()))
+				{
+					ObservableBorrow rowData = row.getItem();
+					System.out.println("subscriber pressed on: "+ rowData.getBorrowId()+" Borrow ID");
+					
+				}
+			});
+			return row;
+		});
 		observableBorrowsList = FXCollections.observableArrayList();
 		GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
 	}
@@ -118,5 +207,5 @@ public class BorrowsScreenController implements IClientUI
 		}
 		borrowsTable.setItems(observableBorrowsList);
 	}
-
+	
 }

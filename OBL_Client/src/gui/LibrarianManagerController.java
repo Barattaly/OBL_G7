@@ -6,15 +6,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXTextField;
+
 import entities.Book;
 import entities.DBMessage;
 import entities.Employee;
 import entities.ObservableBook;
+import entities.ObservableBorrow;
 import entities.ObservableEmployee;
 import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -76,13 +81,71 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard, btn_employees,
 			btn_reports;
+
+	@FXML
+	private JFXTextField searchTextField;
+	// this is the search function, it is in listener for text inside the textfield
+	private InvalidationListener onSearchStart = new InvalidationListener()
+	{
+
+		@Override
+		public void invalidated(Observable arg0)
+		{
+
+			if (searchTextField.textProperty().get().isEmpty())
+			{
+
+				emplyeeTableView.setItems(empList);
+
+				return;
+
+			}
+
+			ObservableList<ObservableEmployee> tableItems = FXCollections.observableArrayList();
+
+			ObservableList<TableColumn<ObservableEmployee, ?>> cols = emplyeeTableView.getColumns();
+
+			for (int i = 0; i < empList.size(); i++)
+			{
+
+				for (int j = 0; j < cols.size(); j++)
+				{
+
+					TableColumn col = cols.get(j);
+					String cellValue = null;
+					try
+					{
+						cellValue = col.getCellData(empList.get(i)).toString();
+					} catch (NullPointerException ex)
+					{
+						break;
+					}
+
+					cellValue = cellValue.toLowerCase();
+
+					if (cellValue.contains(searchTextField.textProperty().get().toLowerCase()))
+					{
+
+						tableItems.add(empList.get(i));
+
+						break;
+
+					}
+
+				}
+
+			}
+
+			emplyeeTableView.setItems(tableItems);
+		}
+	};
 	// private SearchBookController searchBookWindowController = null;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
 		GuiManager.client.getEmployeeList();
-
+		searchTextField.textProperty().addListener(onSearchStart);
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -272,11 +335,10 @@ public class LibrarianManagerController extends LibrarianScreenController
 
 	private void updateEmpList(ArrayList<Employee> data)
 	{
-		for(Employee employee : data)
+		for (Employee employee : data)
 		{
-			empList.add(new ObservableEmployee(employee.getEmpNumber(), employee.getId(), 
-					employee.getFirstName(), employee.getLastName(), employee.getEmail()
-					, employee.getRole(), employee.getDepartment()));
+			empList.add(new ObservableEmployee(employee.getEmpNumber(), employee.getId(), employee.getFirstName(),
+					employee.getLastName(), employee.getEmail(), employee.getRole(), employee.getDepartment()));
 		}
 		emplyeeTableView.setItems(empList);
 
