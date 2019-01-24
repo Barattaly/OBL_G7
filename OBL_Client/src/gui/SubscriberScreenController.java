@@ -198,6 +198,9 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		case GetCurrentBorrowsForSubID:
 			borrowsWindowController.getMessageFromServer(msg);
 			break;
+		case CreateNewOrder:
+			searchBookWindowController.getMessageFromServer(msg);
+			break;
 		case ViewSubscriberCard:
 		{
 			Subscriber newSub = (Subscriber) msg.Data;

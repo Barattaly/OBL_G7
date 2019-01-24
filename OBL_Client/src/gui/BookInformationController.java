@@ -6,12 +6,10 @@ import entities.CopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import java.util.ArrayList;
-
-import javax.swing.text.DefaultEditorKit.CopyAction;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -27,9 +25,9 @@ public class BookInformationController implements IClientUI
 	private User userLoggedIn;
 
 	private Subscriber subscriberLoggedIn;
-	
-    @FXML
-    private JFXTextArea bookNameTextArea;
+
+	@FXML
+	private JFXTextArea bookNameTextArea;
 
 	@FXML
 	private Label wantedBookLabel;
@@ -68,14 +66,14 @@ public class BookInformationController implements IClientUI
 	private JFXTextField locationTextField;
 
 	private Book bookToShow;
-	
-    @FXML
-    private TitledPane copiesTitlePane;
 
-    @FXML
-    private TextArea copiesTextArea;
-	
-    @FXML
+	@FXML
+	private TitledPane copiesTitlePane;
+
+	@FXML
+	private TextArea copiesTextArea;
+
+	@FXML
 	private Label availableLabel;
 
 	public void setBookInformation(Book book)
@@ -89,6 +87,7 @@ public class BookInformationController implements IClientUI
 		categoriesTextArea.setText(categories);
 
 		catNumTextField.setText(book.getCatalogNumber());
+		boolean isOrderExist = false;
 		if (book.getClassification().equals("wanted"))
 		{
 			wantedBookLabel.setVisible(true);
@@ -98,28 +97,61 @@ public class BookInformationController implements IClientUI
 			wantedBookLabel.setVisible(false);
 			wantedLogo.setVisible(false);
 		}
-		if (book.getMaxCopies() - book.getCurrentNumOfBorrows() > 0) // book is available for borrow
+		if (subscriberLoggedIn != null)
 		{
-			availableLabel.setText("Available for borrow");
-			availableLabel.setTextFill(Color.web("#12d318"));
-			orderBookBtn.setDisable(true);
-		} else
-		{
-			availableLabel.setText("Not available for borrow"); // book is available for order
-			availableLabel.setTextFill(Color.RED);
-			orderBookBtn.setDisable(false);
+			if (!subscriberLoggedIn.getStatus().equals("active"))
+			{
+				availableLabel.setText("Card status isn't active"); // book is available for order
+				availableLabel.setTextFill(Color.RED);
+				orderBookBtn.setDisable(true);
+			} else
+			{
+
+				if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
+				{
+					availableLabel.setText("Available for borrow");
+					availableLabel.setTextFill(Color.web("#12d318"));
+					orderBookBtn.setDisable(true);
+				} else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
+				{
+					availableLabel.setText("Not available for borrow"); // book is available for order
+					availableLabel.setTextFill(Color.RED);
+					// orderBookBtn.setDisable(true);
+
+					if (book.getCurrentNumOfOrders() < book.getMaxCopies())
+					{
+						for (BookOrder order : book.getOrders())
+						{
+							// check if the subscriber already ordered this book
+							if (order.getSubscriberId().equals(userLoggedIn.getId()))
+							{
+								isOrderExist = true;
+							}
+						}
+						if (isOrderExist)
+						{
+							availableLabel.setText("Already ordered this book"); // book is available for order
+							availableLabel.setTextFill(Color.RED);
+							orderBookBtn.setDisable(true);
+						}
+					} else
+					{
+						orderBookBtn.setDisable(true);
+					}
+				}
+			}
 		}
 		publicationYearTextField.setText(book.getPublicationYear());
 		editionNumTextField.setText(book.getEditionNumber());
 		locationTextField.setText(book.getLocation());
-		if(book.getCopies()!=null)
+		if (book.getCopies() != null)
 		{
 			String copies = "";
-			for(CopyOfBook copy:book.getCopies())
+			for (CopyOfBook copy : book.getCopies())
 			{
-				copies = copies + System.lineSeparator() + copy.getId() + copy.getStatus();
+				copies = copies + System.lineSeparator() + copy.getId() + "              " + copy.getStatus();
 			}
-			copiesTextArea.setText("The book's copies are:\n"+"Copy ID" + "Status"+ copies);
+			copiesTextArea.setText("The book's copies are:\n" + "Copy ID   " + "Status" + copies);
 		}
 	}
 
@@ -138,6 +170,12 @@ public class BookInformationController implements IClientUI
 		{
 		case CreateNewOrder:
 		{
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Order executed Successfully!");
+					orderBookBtn.setDisable(true);
+				});
+			}
 			break;
 		}
 		default:
@@ -172,21 +210,25 @@ public class BookInformationController implements IClientUI
 			orderBookBtn.setVisible(true);
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
+			copiesTitlePane.setVisible(false);
 			break;
 		case "library manager":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(true);
 			editDetailsBtn.setVisible(true);
+			copiesTitlePane.setVisible(true);
 			break;
 		case "librarian":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(true);
 			editDetailsBtn.setVisible(true);
+			copiesTitlePane.setVisible(true);
 			break;
 		case "guest":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
+			copiesTitlePane.setVisible(false);
 			break;
 		}
 
