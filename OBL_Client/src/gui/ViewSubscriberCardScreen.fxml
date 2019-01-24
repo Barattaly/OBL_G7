@@ -39,12 +39,12 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <children>
-                        <TableView layoutY="1.0" prefHeight="284.0" prefWidth="413.0">
+                        <TableView fx:id="activityTable" layoutY="1.0" prefHeight="284.0" prefWidth="413.0">
                            <columns>
-                              <TableColumn prefWidth="99.0" text="Activity" />
-                              <TableColumn prefWidth="98.0" text="Book name" />
-                              <TableColumn prefWidth="84.0" text="Date" />
-                              <TableColumn prefWidth="127.0" text="comments" />
+                              <TableColumn fx:id="activitycol" prefWidth="99.0" text="Activity" />
+                              <TableColumn fx:id="booknamecol" prefWidth="98.0" text="Book name" />
+                              <TableColumn fx:id="datecol" prefWidth="84.0" text="Date" />
+                              <TableColumn fx:id="commentscol" prefWidth="127.0" text="comments" />
                            </columns>
                         </TableView>
                      </children>

@@ -140,4 +140,72 @@ public class BorrowsQueries
 		}
 		return borrowList;
 	}
+	
+	public static String searchBorrowExtensionFromSubscriberID(String subscriberID)
+	{
+		if (subscriberID == null)
+			return null;
+		String queryMsg = "SELECT bookName, extensionDate, type , userID"
+						+" FROM(SELECT borrows.id AS borrowID, borrows.subscriberID, books.name AS bookName"
+					    +" FROM obl_db.books"
+						+" inner join borrows ON books.catalogNumber = borrows.BookCatalogNumber"
+					    +" WHERE borrows.subscriberID = '" + subscriberID +"') AS borrowBookName"
+					    +" INNER JOIN borrow_extension ON borrowBookName.borrowID = borrow_extension.borrowID";
+		return queryMsg;
+	}
+	
+	public static ArrayList<ActivityLog> CreateBorrowExtensionListFromRS(ResultSet rs)
+	{
+		ArrayList<ActivityLog> logs = new ArrayList<ActivityLog>();
+		ActivityLog temp;
+		try
+		{
+			while (rs.next())
+			{
+				if(rs.getString(3).equals("manually"))
+				{
+					
+					temp = new ActivityLog("Borrow Extension",rs.getString(1),rs.getString(2),rs.getString(3) + " by " + rs.getString(4));
+				}
+				else
+					temp = new ActivityLog("Borrow Extension",rs.getString(1),rs.getString(2),rs.getString(3));
+				
+				logs.add(temp);
+				
+			}
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return logs;
+	}
+	public static String searchBorrowFromSubscriberID(String subscriberID)
+	{
+		if (subscriberID == null)
+			return null;
+		String queryMsg = "SELECT borrowDate, name"  
+				+" FROM obl_db.borrows INNER JOIN obl_db.books ON borrows.bookCatalogNumber = books.catalogNumber"
+				+" WHERE borrows.subscriberID ='"+ subscriberID +"';";
+		return queryMsg;
+	}
+	
+	public static ArrayList<ActivityLog> CreateBorrowListFromRS(ResultSet rs)
+	{
+		ArrayList<ActivityLog> logs = new ArrayList<ActivityLog>();
+		try
+		{
+			while (rs.next())
+			{
+				ActivityLog temp = new ActivityLog("Borrow",rs.getString(2),rs.getString(1)," ");
+				logs.add(temp);
+				
+			}
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return logs;
+	}	
 }

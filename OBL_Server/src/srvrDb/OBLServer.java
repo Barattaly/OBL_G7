@@ -17,6 +17,7 @@ import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
 import entities.CopiesQueries;
 import entities.CopyOfBook;
+import entities.ActivityLog;
 import entities.Book;
 import entities.BookOrder;
 import entities.BooksQueries;
@@ -24,6 +25,7 @@ import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
 import entities.OrdersQueries;
+import entities.ReturnesQueries;
 import entities.Subscriber;
 import entities.SubscribersQueries;
 import entities.DBMessage.DBAction;
@@ -37,6 +39,7 @@ public class OBLServer extends AbstractServer
 
 	public TextArea logREF = null;
 	private MySQLConnection oblDB;
+	ArrayList<ActivityLog> activityLogList;
 
 	/**
 	 * Constructs an instance of the echo server.
@@ -161,6 +164,12 @@ public class OBLServer extends AbstractServer
 				getCurrentBorrow(client);
 				break;
 			}
+			case GetActivityLog:
+			{
+				getActivityLog((String)dbMessage.Data, client);
+				break;
+			}
+			
 			default:
 				break;
 			}
@@ -309,6 +318,7 @@ public class OBLServer extends AbstractServer
 		{
 			rs.next();
 			User user = UsersQueries.CreateUserFromRS(rs);
+			if(isUserLocked(userToCheck, client)) return;
 			DBMessage returnMsg;
 			if (user.getLoginStatus().equals("on"))
 			{
@@ -329,6 +339,27 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 		}
 
+	}
+	/*
+	 * The function check if the user is locked and if yes she send the message for the client
+	 */
+	private boolean isUserLocked(User userToCheck, ConnectionToClient client) throws SQLException, IOException
+	{
+		String query = SubscribersQueries.getSubscriberStatusByUserName(userToCheck.getUserName());
+		ResultSet rs2 = oblDB.executeQuery(query);
+		int rowsNumber = getRowCount(rs2);
+		if (rowsNumber == 1)
+		{
+			rs2.next();
+			DBMessage returnMsg2;
+			if(rs2.getString(1).equals("locked"))
+			{
+				returnMsg2=new DBMessage(DBAction.CheckUser, "locked");
+				client.sendToClient(returnMsg2);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void createSubscriber(Subscriber subscriberToCreate, ConnectionToClient client) throws IOException
@@ -1000,4 +1031,110 @@ public class OBLServer extends AbstractServer
 
 		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrows, borrowList));
 	}
+	private void getActivityLog(String subscriberID, ConnectionToClient client )throws IOException 
+	{
+		activityLogList = new ArrayList<ActivityLog>();
+		ArrayList<ActivityLog> temp = getOrderActivityLog(subscriberID);
+		if (temp != null)
+			activityLogList.addAll(temp);
+		temp = getReturnActivityLog(subscriberID);
+		if (temp != null)
+			activityLogList.addAll(temp);
+		temp = getBorrowActivityLog(subscriberID);
+		if (temp != null)
+			activityLogList.addAll(temp);
+		temp = getBorrowExtensionActivityLog(subscriberID);
+		if (temp != null)
+			activityLogList.addAll(temp);
+		
+		if (activityLogList == null)
+		{
+			 DBMessage returnMsg = new DBMessage(DBAction.GetActivityLog, null);
+		      client.sendToClient(returnMsg);
+		      return;
+		}
+		
+	     DBMessage returnMsg = new DBMessage(DBAction.GetActivityLog, activityLogList);
+	     client.sendToClient(returnMsg);
+	}
+	
+	private ArrayList<ActivityLog> getBorrowExtensionActivityLog(String subscriberID)throws IOException 
+	{
+		
+	    String query =BorrowsQueries.searchBorrowExtensionFromSubscriberID(subscriberID);
+	    ResultSet rs = oblDB.executeQuery(query); 
+	    int rowCount = getRowCount(rs);
+	    if(rowCount == 0)
+	    {
+	      return null;
+	    }
+	    else
+	    { 
+
+	      ArrayList<ActivityLog> temp=BorrowsQueries.CreateBorrowExtensionListFromRS(rs);
+	      return temp;
+	    } 
+
+
+	}
+	
+	private ArrayList<ActivityLog> getOrderActivityLog(String subscriberID)throws IOException 
+	{
+		
+	    String query =OrdersQueries.searchOrdersFromSubscriberID(subscriberID);
+	    ResultSet rs = oblDB.executeQuery(query); 
+	    int rowCount = getRowCount(rs);
+	    if(rowCount == 0)
+	    {
+	      return null;
+	    }
+	    else
+	    { 
+
+	      ArrayList<ActivityLog> temp=OrdersQueries.CreateOrdersListFromRS(rs);
+	      return temp;
+	    } 
+
+
+	}
+
+	private ArrayList<ActivityLog> getReturnActivityLog(String subscriberID)throws IOException 
+	{
+		
+	    String query = ReturnesQueries.searchReturnFromSubscriberID(subscriberID);
+	    ResultSet rs = oblDB.executeQuery(query); 
+	    int rowCount = getRowCount(rs);
+	    if(rowCount == 0)
+	    {
+	      return null;
+	    }
+	    else
+	    { 
+	      ArrayList<ActivityLog> temp=ReturnesQueries.CreateReturnListFromRS(rs);
+	      return temp;
+	    } 
+
+
+	}
+	
+	private ArrayList<ActivityLog> getBorrowActivityLog(String subscriberID)throws IOException 
+	{
+		
+	    String query = BorrowsQueries.searchBorrowFromSubscriberID(subscriberID);
+	    ResultSet rs = oblDB.executeQuery(query); 
+	    int rowCount = getRowCount(rs);
+	    if(rowCount == 0)
+	    {
+	      return null;
+	    }
+	    else
+	    { 
+
+	      ArrayList<ActivityLog> temp=BorrowsQueries.CreateBorrowListFromRS(rs);
+	      return temp;
+	    } 
+
+
+	}
+	
 }

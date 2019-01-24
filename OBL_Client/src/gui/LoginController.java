@@ -28,7 +28,6 @@ public class LoginController implements IClientUI, Initializable
 	private Node thisNode;
 	@FXML
 	private JFXTextField userNameTextField;
-
 	@FXML
 	private Label warningLabel;
 	@FXML
@@ -45,8 +44,7 @@ public class LoginController implements IClientUI, Initializable
 			loginBtn.setDisable(true);
 			userNameTextField.setDisable(true);
 			passwordTextFIeld.setDisable(true);
-		}
-		else if(!GuiManager.dbConnected)
+		} else if (!GuiManager.dbConnected)
 		{
 			warningLabel.setText("Error connecting to database\nPlease check server.");
 			loginBtn.setDisable(true);
@@ -72,14 +70,15 @@ public class LoginController implements IClientUI, Initializable
 	@FXML
 	void openSearchScreen(MouseEvent event) throws IOException
 	{
-		
-		if (GuiManager.dbConnected) {
+
+		if (GuiManager.dbConnected)
+		{
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			GuiManager.SwitchScene(SCREENS.searchBook);
 			User guest = new User();
 			guest.setType("guest");
 			GuiManager.CurrentGuiController.setUserLogedIn(guest);
-			
+
 		}
 
 	}
@@ -91,16 +90,22 @@ public class LoginController implements IClientUI, Initializable
 		{
 			if (msg.Action == DBAction.CheckUser)
 			{
-				if (((User) msg.Data) != null)// if the user exist
+				if (msg.Data == null)
+				{
+					Platform.runLater(() -> {
+						warningLabel.setText("Wrong user userName or password.");
+					});
+				} else if (msg.Data instanceof User)
 				{
 					if (((User) msg.Data).getUserName() == null)// if the user already connected
 					{
 						Platform.runLater(() -> {
 							warningLabel.setText("User already connected");
 						});
+
 					} else
-					{ 
-						;
+					{
+
 						// Avoid throwing IllegalStateException by running from a non-JavaFX thread.
 						Platform.runLater(() -> {
 							thisNode.getScene().getWindow().hide();
@@ -108,11 +113,17 @@ public class LoginController implements IClientUI, Initializable
 							GuiManager.CurrentGuiController.setUserLogedIn(((User) msg.Data));
 						});
 					}
-				} else
+
+				} else if (msg.Data instanceof String)
 				{
-					Platform.runLater(() -> {
-						warningLabel.setText("Wrong user userName or password.");
-					});
+					if (((String) msg.Data).equals("locked")) // if the user lock
+					{
+						Platform.runLater(() -> {
+							warningLabel.setText("User is locked");
+
+						});
+					}
+
 				}
 			}
 		} catch (Exception ex)
@@ -134,7 +145,5 @@ public class LoginController implements IClientUI, Initializable
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-
 
 }

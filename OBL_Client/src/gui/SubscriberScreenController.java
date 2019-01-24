@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -222,6 +223,20 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case GetActivityLog:
+		{
+			ArrayList<ActivityLog> activityList= (ArrayList<ActivityLog>) msg.Data;
+			if(activityList == null)
+				break;
+			else
+			{
+				Platform.runLater(() -> {
+					viewSubscriberCardController.setActivityLogList(activityList);
+				});
+			}
+
+			break;  
+		}
 		}
 	}
 
@@ -235,6 +250,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
 		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
+		GuiManager.client.getActivityLogFromDB(userLogedIn.getId());
 		initialSearchWindow();
 		initialBorrowsWindow();
 	}
