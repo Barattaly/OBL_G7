@@ -12,6 +12,15 @@ public class CopiesQueries
 		return queryMsg;
 	}
 	
+	public static String getBookCopiesDetails(Book book)
+	{
+		if (book == null)
+			return null;
+		String queryMsg = "SELECT id, status FROM obl_db.books_copies "
+						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "';";
+		return queryMsg;
+	}
+	
 	public static String getCopyStatus(Book bookToCheck)
 	{
 		if (bookToCheck == null)

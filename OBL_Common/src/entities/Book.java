@@ -20,7 +20,7 @@ public class Book implements Serializable
 	private ArrayList<CopyOfBook> copies;
 	private ArrayList<String> authorNameList;
 	private ArrayList<String> categories;
-	private ArrayBlockingQueue<BookOrder> orders;
+	private ArrayList<BookOrder> orders;
 
 	private int maxCopies;
 	private int currentNumOfBorrows;
@@ -206,13 +206,13 @@ public class Book implements Serializable
 	}
 
 
-	public ArrayBlockingQueue<BookOrder> getOrders() 
+	public ArrayList<BookOrder> getOrders() 
 	{
 		return orders;
 	}
 
 
-	public void setOrders(ArrayBlockingQueue<BookOrder> orders) 
+	public void setOrders(ArrayList<BookOrder> orders) 
 	{
 		this.orders = orders;
 	}

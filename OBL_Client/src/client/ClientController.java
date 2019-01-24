@@ -200,7 +200,7 @@ public class ClientController extends AbstractClient
 	
 	public void createNewOrder(BookOrder newOrder)
 	{
-		DBMessage message = new DBMessage(DBAction.CreateNewBorrow, newOrder);
+		DBMessage message = new DBMessage(DBAction.CreateNewOrder, newOrder);
 		try
 		{
 			sendToServer(message);
