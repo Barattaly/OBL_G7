@@ -135,5 +135,14 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return queryMsg;
 		
 	}
+
+
+	
+	public static String updateBookArciveStatus(String catalogNumber) //shiranush new query
+	{
+		String queryMsg = "UPDATE obl_db.books SET archived = 'yes' WHERE books.catalogNumber = '"
+						+ catalogNumber + "';";
+		return queryMsg;
+	}
 	
 }

@@ -9,7 +9,12 @@ import entities.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+
+import java.util.Optional;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -75,6 +80,7 @@ public class BookInformationController implements IClientUI
 
 	@FXML
 	private Label availableLabel;
+
 
 	public void setBookInformation(Book book)
 	{
@@ -243,4 +249,26 @@ public class BookInformationController implements IClientUI
 		} else
 			orderBookBtn.setDisable(false);
 	}
-}
+	
+	   @FXML
+	    void moveToArchiveClick(ActionEvent event) {
+
+		   String bookID= catNumTextField.getText();
+		   
+		   Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("OBL Log Out");
+			alert.setHeaderText("Are you sure you want to delete this book?");
+			Optional<ButtonType> option = alert.showAndWait();
+			if (option.get() == ButtonType.OK)
+			{
+				GuiManager.client.moveBookToArchive(bookID);
+				 GuiManager.ShowMessagePopup("The book with catalog number :" + bookID + "  moved to the archive" );
+			} else if (option.get() == ButtonType.CANCEL)
+			{
+				alert.close();
+			}  
+	    }
+
+	    }
+
+

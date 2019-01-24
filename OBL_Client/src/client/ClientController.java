@@ -273,5 +273,17 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
+	public void moveBookToArchive (String catalogNumber)
+	{
+		DBMessage message = new DBMessage(DBAction.MoveBookToArchive, catalogNumber);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 }
 //End of ClientController class

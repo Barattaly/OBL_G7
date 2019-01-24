@@ -169,7 +169,9 @@ public class OBLServer extends AbstractServer
 				getActivityLog((String)dbMessage.Data, client);
 				break;
 			}
-			
+			case MoveBookToArchive:
+				moveBookToArchive((String)dbMessage.Data,client);
+				break;
 			default:
 				break;
 			}
@@ -1133,8 +1135,10 @@ public class OBLServer extends AbstractServer
 	      ArrayList<ActivityLog> temp=BorrowsQueries.CreateBorrowListFromRS(rs);
 	      return temp;
 	    } 
-
-
 	}
-	
+	private void moveBookToArchive(String catalogNumber,ConnectionToClient client)throws IOException 
+	{
+	String query=BooksQueries.updateBookArciveStatus(catalogNumber);
+	oblDB.executeUpdate(query);
+	}
 }
