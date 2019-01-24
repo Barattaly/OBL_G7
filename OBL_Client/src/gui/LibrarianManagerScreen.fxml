@@ -308,7 +308,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <JFXTextField focusColor="#a0a2ab" labelFloat="true" layoutX="121.0" layoutY="142.0" prefHeight="39.0" prefWidth="440.0" promptText="Search by Name, ID, Emplyee number, etc..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+                  <JFXTextField fx:id="searchTextField" focusColor="#a0a2ab" labelFloat="true" layoutX="121.0" layoutY="142.0" prefHeight="39.0" prefWidth="440.0" promptText="Search by Name, ID, Emplyee number, etc..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
                      <font>
                         <Font size="18.0" />
                      </font>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -8,12 +9,12 @@
 
 <AnchorPane prefHeight="512.0" prefWidth="756.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BorrowsScreenController">
    <children>
-      <Label alignment="TOP_CENTER" layoutX="231.0" layoutY="23.0" text="Current borrowed books" textFill="#a0a2ab" AnchorPane.topAnchor="23.0">
+      <Label alignment="TOP_CENTER" layoutX="231.0" layoutY="11.0" text="Current borrowed books" textFill="#a0a2ab" AnchorPane.topAnchor="11.0">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <TableView fx:id="borrowsTable" layoutX="4.0" layoutY="123.0" prefHeight="358.0" prefWidth="736.0" style="-fx-background-color: #a0a2ab;" AnchorPane.bottomAnchor="79.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="75.0">
+      <TableView fx:id="borrowsTable" layoutX="10.0" layoutY="93.0" prefHeight="358.0" prefWidth="736.0" style="-fx-background-color: #a0a2ab;" AnchorPane.bottomAnchor="61.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="93.0">
          <columns>
             <TableColumn fx:id="borrowNumberColumn" minWidth="0.0" prefWidth="97.0" text="Borrow number" />
             <TableColumn fx:id="borrowDateColumn" prefWidth="145.0" text="Borrowed date" />
@@ -26,11 +27,6 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label disable="true" layoutX="37.0" layoutY="430.0" text="*The book is wanted - can't extend this book return date" textFill="GREY" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="37.0">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
       <Label disable="true" layoutX="37.0" layoutY="456.0" text="*One day before return date / return date" textFill="GREEN" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="37.0">
          <font>
             <Font size="14.0" />
@@ -41,5 +37,10 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <JFXTextField fx:id="searchTextField" focusColor="#a0a2ab" labelFloat="true" layoutX="131.0" layoutY="54.0" prefHeight="0.0" prefWidth="440.0" promptText="Search by borrow number,subscriber id, book catalog number, etc..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </JFXTextField>
    </children>
 </AnchorPane>
