@@ -14,6 +14,7 @@ import entities.DBMessage;
 import entities.ObservableBook;
 import entities.ObservableBorrow;
 import entities.ObservableEmployee;
+import entities.Subscriber;
 import entities.User;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -28,11 +29,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 public class BorrowsScreenController implements IClientUI
 {
-	//NEED TO ADD REFRESH FUNCTION
-	
 	User userLoggedIn;
 	@FXML
 	private TableView<ObservableBorrow> borrowsTable;
@@ -58,8 +59,10 @@ public class BorrowsScreenController implements IClientUI
 	private ObservableList<ObservableBorrow> observableBorrowsList;// for table view...
     
 	@FXML
-    private JFXTextField searchTextField;
-	//this is the search function, it is in listener for text inside the textfield
+	private ImageView refreshBtn;
+	@FXML
+	private JFXTextField searchTextField;
+	// this is the search function, it is in listener for text inside the textfield
 	private InvalidationListener onSearchStart = new InvalidationListener()
 	{
 		
@@ -77,12 +80,13 @@ public class BorrowsScreenController implements IClientUI
 
             ObservableList<TableColumn<ObservableBorrow, ?>> cols = borrowsTable.getColumns();
 
-            for(int i=0; i<observableBorrowsList.size(); i++) 
-            {
-                for(int j=0; j<cols.size(); j++) 
-                {
+            for (int i = 0; i < observableBorrowsList.size(); i++)
+			{
 
-                    TableColumn col = cols.get(j);
+				for (int j = 0; j < cols.size(); j++)
+				{
+
+					TableColumn col = cols.get(j);
 					String cellValue = null;
                     try
 					{
@@ -142,21 +146,20 @@ public class BorrowsScreenController implements IClientUI
 		subscriberIDColumn.setCellValueFactory(new PropertyValueFactory<>("subscriberId"));
 		updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
-				
 		borrowsTable.setRowFactory(tv -> { // press on row in borrow table to do what ever we want
 			TableRow<ObservableBorrow> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
 					ObservableBorrow rowData = row.getItem();
-					System.out.println("Librarian pressed on: "+ rowData.getBorrowId()+" Borrow ID");
-					
+					System.out.println("Librarian pressed on: " + rowData.getBorrowId() + " Borrow ID");
+
 				}
 			});
 			return row;
 		});
 
-		GuiManager.client.getAllCurrentBorrows();		
+		GuiManager.client.getAllCurrentBorrows();
 	}
 
 	private void initialSubscriberView()
@@ -173,8 +176,8 @@ public class BorrowsScreenController implements IClientUI
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
 					ObservableBorrow rowData = row.getItem();
-					System.out.println("subscriber pressed on: "+ rowData.getBorrowId()+" Borrow ID");
-					
+					System.out.println("subscriber pressed on: " + rowData.getBorrowId() + " Borrow ID");
+
 				}
 			});
 			return row;
@@ -189,7 +192,8 @@ public class BorrowsScreenController implements IClientUI
 	{
 		switch (msg.Action)
 		{
-		case GetCurrentBorrowsForSubID:case GetCurrentBorrows:
+		case GetCurrentBorrowsForSubID:
+		case GetCurrentBorrows:
 		{
 			updateBorrowTable((List<BorrowACopyOfBook>)msg.Data);
 		}
@@ -200,16 +204,38 @@ public class BorrowsScreenController implements IClientUI
 
 	private void updateBorrowTable(List<BorrowACopyOfBook> borrowList)
 	{
-		for(BorrowACopyOfBook borrow: borrowList)
+		observableBorrowsList.clear();
+		for (BorrowACopyOfBook borrow : borrowList)
 		{
 			ObservableBorrow temp = new ObservableBorrow(borrow.getId(), borrow.getBorrowDate(),
 					borrow.getExpectedReturnDate(), borrow.getCopyId(), borrow.getBookCatalogNumber(),
 					borrow.getSubscriberId());
 			observableBorrowsList.add(temp);
 		}
-		
 		borrowsTable.setItems(observableBorrowsList);
 	}
+	
+	@FXML
+	void refreshBtnClicked(MouseEvent event)
+	{
+		if(userLoggedIn instanceof Subscriber)
+			GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
+		else
+			GuiManager.client.getAllCurrentBorrows();	
+	}
+	
+	@FXML
+	void pressRefresh(MouseEvent event)
+	{
+		refreshBtn.setOpacity(0.5);
+	}
+
+	@FXML
+	void releasedRefresh(MouseEvent event)
+	{
+		refreshBtn.setOpacity(1);
+	}
+	
 	
 	private void updateReturnDatesColors(TableColumn<ObservableBorrow, String> column) 
 	{

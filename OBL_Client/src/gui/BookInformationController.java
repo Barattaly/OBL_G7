@@ -132,8 +132,10 @@ public class BookInformationController implements IClientUI
 			{
 				if (subscriberLoggedIn != null) 
 				{
-					availableLabel.setText("Orders queue is full"); // book is available for order
-				} else {
+					availableLabel.setText("Orders queue is full");
+				} 
+				else 
+				{
 					availableLabel.setText("Not available for order"); // book is available for order
 				}
 				availableLabel.setTextFill(Color.RED);

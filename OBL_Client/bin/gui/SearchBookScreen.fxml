@@ -22,7 +22,7 @@
 	<children>
 				<HBox alignment="CENTER" prefHeight="426.0" prefWidth="733.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="14.0">
 					<children>
-						<Pane fx:id="searchBookPane" prefHeight="380.0" prefWidth="734.0">
+						<Pane fx:id="searchBookPane" prefHeight="470.0" prefWidth="734.0">
 							<children>
 								<Label fx:id="headlineLabel" layoutX="272.0" layoutY="58.0" text="Search Book" textFill="#a0a2ab">
 									<font>
@@ -108,12 +108,20 @@
 										<Cursor fx:constant="HAND" />
 									</cursor>
 								</JFXButton>
-                  <JFXButton fx:id="addNewBookBtn" buttonType="RAISED" layoutX="552.0" layoutY="313.0" prefHeight="30.0" prefWidth="148.0" style="-fx-background-color: #3C58FA;" text="Add a new book" textFill="WHITE" />
+                  <JFXButton fx:id="addNewBookBtn" buttonType="RAISED" layoutX="471.0" layoutY="313.0" prefHeight="30.0" prefWidth="148.0" style="-fx-background-color: #3C58FA;" text="Add a new book" textFill="WHITE" />
+                  <ImageView fx:id="refreshBtn" fitHeight="35.0" fitWidth="46.0" layoutX="702.0" layoutY="353.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" preserveRatio="true">
+                     <image>
+                        <Image url="@../../bin/resources/refresh.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
 							</children>
 						</Pane>
 					</children>
 				</HBox>
-		<TableView fx:id="BookTable" layoutX="17.0" layoutY="410.0" prefHeight="180.0" prefWidth="733.0" style="-fx-background-color: #a0a2ab;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="410.0">
+		<TableView fx:id="BookTable" layoutX="17.0" layoutY="410.0" prefHeight="180.0" prefWidth="733.0" style="-fx-background-color: #a0a2ab;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="410.0">
 			<columns>
 				<TableColumn fx:id="catalognumbercol" prefWidth="100.0" text="Catalog Number" />
 				<TableColumn fx:id="namecol" prefWidth="144.0" text="Name" />

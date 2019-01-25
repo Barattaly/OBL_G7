@@ -4,12 +4,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="512.0" prefWidth="756.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BorrowsScreenController">
    <children>
-      <Label alignment="TOP_CENTER" layoutX="231.0" layoutY="11.0" text="Current borrowed books" textFill="#a0a2ab" AnchorPane.topAnchor="11.0">
+      <Label alignment="TOP_CENTER" layoutX="244.0" layoutY="11.0" text="Current borrowed books" textFill="#a0a2ab" AnchorPane.topAnchor="11.0">
          <font>
             <Font size="24.0" />
          </font>
@@ -37,10 +39,15 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="searchTextField" focusColor="#a0a2ab" labelFloat="true" layoutX="131.0" layoutY="54.0" prefHeight="0.0" prefWidth="440.0" promptText="Search by borrow number,subscriber id, book catalog number, etc..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+      <JFXTextField fx:id="searchTextField" focusColor="#a0a2ab" labelFloat="true" layoutX="162.0" layoutY="54.0" prefHeight="0.0" prefWidth="440.0" promptText="Search by borrow number,subscriber id, book catalog number, etc..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>
       </JFXTextField>
+      <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="705.0" layoutY="43.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/resources/refresh.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
