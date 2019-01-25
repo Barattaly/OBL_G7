@@ -68,6 +68,8 @@ public class SearchBookController implements Initializable, IClientUI
 	private TableColumn<ObservableBook, String> catagoriesCol;
 	@FXML
 	private TableColumn<ObservableBook, String> availableCol;
+	@FXML
+	private ImageView refreshBtn;
 
 	@FXML
 	private JFXRadioButton bookNameRadioBtn;
@@ -346,6 +348,7 @@ public class SearchBookController implements Initializable, IClientUI
 	// this function is because of the fucking stupid table view of javaFx
 	private void copyBookMapToBookList()//moving from bookMap of"Book" to list of "ObservableBook"
 	{
+		booklist.clear();//if we dont clear it will just add more and more books. we want to refresh it.
 		for (Integer key : bookMap.keySet())
 		{
 			if (bookMap.get(key).getIsArchived().equals("no"))
@@ -426,14 +429,26 @@ public class SearchBookController implements Initializable, IClientUI
 			oblLogoLabel.setVisible(false);
 		}
 	}
-
-	public void refresh()
-	{
-		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
-	}
-
 	public void setSubscriber(Subscriber subscriberLoggedIn)
 	{
 		subscriberLogged = subscriberLoggedIn;
+	}
+	
+    @FXML
+    void refreshBtnClicked(MouseEvent event) 
+    {
+		GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
+    }
+
+	@FXML
+	void pressRefresh(MouseEvent event)
+	{
+		refreshBtn.setOpacity(0.5);
+	}
+
+	@FXML
+	void releasedRefresh(MouseEvent event)
+	{
+		refreshBtn.setOpacity(1);
 	}
 }
