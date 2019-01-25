@@ -55,9 +55,16 @@ public class ClientController extends AbstractClient
 		case ViewTableOfContent:
 			if(Desktop.isDesktopSupported()) {
 				try {
+					 InputStream is = new ByteArrayInputStream(((MyFile)msg).getMybytearray());
 					 MyFile msgServer =((MyFile)msg);
-				     File outputFile = new File ("tableOfContent.txt");
+					 int fileSize =((MyFile)msg).getSize(); 
+				     File outputFile = new File ("tableOfContent.pdf");
 				     FileOutputStream fos=fos = new FileOutputStream(outputFile);
+				     BufferedOutputStream bos=new BufferedOutputStream(fos);
+				     bos.write(msgServer.getMybytearray(),0,fileSize);
+				     Desktop.getDesktop().open(outputFile);
+				     bos.flush();
+				     fos.flush();
 				     
 				    //to be continued...		     
 				} catch (Exception ex){

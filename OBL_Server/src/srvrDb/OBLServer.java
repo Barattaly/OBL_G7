@@ -1,5 +1,8 @@
 package srvrDb;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +27,7 @@ import entities.BooksQueries;
 import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
+import entities.MyFile;
 import entities.OrdersQueries;
 import entities.ReturnesQueries;
 import entities.Subscriber;
@@ -171,6 +175,9 @@ public class OBLServer extends AbstractServer
 			}
 			case MoveBookToArchive:
 				moveBookToArchive((String)dbMessage.Data,client);
+				break;
+			case ViewTableOfContent:
+				sendPDFtoClient((Book)dbMessage.Data,client);
 				break;
 			default:
 				break;
@@ -1141,4 +1148,35 @@ public class OBLServer extends AbstractServer
 	String query=BooksQueries.updateBookArciveStatus(catalogNumber);
 	oblDB.executeUpdate(query);
 	}
+	
+	private void sendPDFtoClient(Book catalogNumber,ConnectionToClient client )throws IOException 
+	
+	{
+		String query=BooksQueries.getPdfPath(catalogNumber);
+		ResultSet rs = oblDB.executeQuery(query);
+		
+		try
+		{
+			rs.next();
+			String localPath=new String(rs.getString(1));
+			MyFile msg= new MyFile(localPath);
+			File newFile = new File (localPath);
+			byte [] mybytearray  = new byte [(int)newFile.length()];	//byte array of file
+		    FileInputStream fis = new FileInputStream(newFile);		//input from file
+		    BufferedInputStream bis = new BufferedInputStream(fis);	//buffer input		  
+		    msg.initArray(mybytearray.length);
+		    msg.setSize(mybytearray.length);
+		    bis.read(msg.getMybytearray(),0,mybytearray.length);	
+		    DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
+		    client.sendToClient(returnMsg);
+			
+		}catch (SQLException exp)
+		{
+			exp.printStackTrace();
+		}
+	}
+	
+	
+	
+	
 }

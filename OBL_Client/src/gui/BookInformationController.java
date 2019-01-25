@@ -81,7 +81,9 @@ public class BookInformationController implements IClientUI
 	@FXML
 	private Label availableLabel;
 
-
+    @FXML
+    private JFXButton viewTOC_btn;
+    
 	public void setBookInformation(Book book)
 	{
 		descreptionPane.setText(book.getDescription());
@@ -267,6 +269,12 @@ public class BookInformationController implements IClientUI
 			{
 				alert.close();
 			}  
+	    }
+	   @FXML
+	    void viewTableOfContentClick(ActionEvent event) {
+		   Book bookToSend=new Book(catNumTextField.getText());
+		   GuiManager.client.viewTableOfContent(bookToSend);
+		   
 	    }
 
 	    }
