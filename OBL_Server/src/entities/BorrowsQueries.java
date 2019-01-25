@@ -35,6 +35,7 @@ public class BorrowsQueries
 		return queryMsg;
 	}
 	
+	
 	public static BorrowACopyOfBook searchSpecificBorrow(ResultSet rs, BorrowACopyOfBook borrowToSearch)
 	{
 		BorrowACopyOfBook borrowToClose = new BorrowACopyOfBook();
@@ -207,5 +208,15 @@ public class BorrowsQueries
 			e.printStackTrace();
 		}
 		return logs;
-	}	
+	}
+	
+	public static String getBookCurrentBorrows(Book book)
+	{
+		if (book == null)
+			return null;
+		String queryMsg = "SELECT id, subscriberID, borrowDate, expectedReturnDate, isReturnedLate, bookCatalogNumber, copyID " 
+						+ "FROM obl_db.borrows " 
+						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' AND actualReturnDate is null;";
+		return queryMsg;
+	}
 }

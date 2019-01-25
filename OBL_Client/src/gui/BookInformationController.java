@@ -2,6 +2,7 @@ package gui;
 
 import entities.Book;
 import entities.BookOrder;
+import entities.BorrowACopyOfBook;
 import entities.CopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
@@ -10,6 +11,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+
+import java.lang.invoke.StringConcatFactory;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -64,6 +69,9 @@ public class BookInformationController implements IClientUI
 
 	@FXML
 	private JFXTextField locationTextField;
+	
+	@FXML
+	private JFXTextField returnDateTextField;
 
 	private Book bookToShow;
 
@@ -75,6 +83,14 @@ public class BookInformationController implements IClientUI
 
 	@FXML
 	private Label availableLabel;
+	
+	@FXML
+	private Label returnDateLabel;
+
+	@FXML
+	private Label locationLabel;
+	
+	
 
 	public void setBookInformation(Book book)
 	{
@@ -102,11 +118,16 @@ public class BookInformationController implements IClientUI
 			availableLabel.setText("Available for borrow");
 			availableLabel.setTextFill(Color.web("#12d318"));
 			orderBookBtn.setDisable(true);
+			returnDateLabel.setVisible(false);
+			returnDateTextField.setVisible(false);
 		} 
 		else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 		{
 			availableLabel.setText("Not available for borrow"); // book is available for order
 			availableLabel.setTextFill(Color.RED);
+			locationLabel.setVisible(false);
+			locationTextField.setVisible(false);
+			
 			if (book.getCurrentNumOfOrders() == book.getMaxCopies()) 
 			{
 				if (subscriberLoggedIn != null) 
@@ -118,7 +139,8 @@ public class BookInformationController implements IClientUI
 				availableLabel.setTextFill(Color.RED);
 				orderBookBtn.setDisable(true);
 			}
-			if (subscriberLoggedIn != null) {
+			if (subscriberLoggedIn != null) 
+			{
 				int i = 1, positionInQueue = 0;
 				for (BookOrder order : book.getOrders()) 
 				{
@@ -132,16 +154,26 @@ public class BookInformationController implements IClientUI
 				}
 				if (isOrderExist) 
 				{
-					availableLabel.setText("Your position in orders queue: " + positionInQueue); // book is available
-																									// for order
+					availableLabel.setText("Your position in orders queue: " + positionInQueue);
 					availableLabel.setTextFill(Color.web("#12d318"));
 					orderBookBtn.setDisable(true);
 				}
 			}
+			// check what is the closest expected return date
+			String closestReturnDate = book.getBorrows().get(1).getExpectedReturnDate();
+			for (BorrowACopyOfBook borrow : book.getBorrows()) 
+			{
+				// if the current expected return date is before the previous date
+				if (LocalDate.parse(borrow.getExpectedReturnDate()).isBefore((LocalDate.parse(closestReturnDate))))
+				{
+					closestReturnDate = borrow.getExpectedReturnDate();
+				}
+			}
+			returnDateTextField.setText(closestReturnDate);
 		}
 		if (subscriberLoggedIn != null && !subscriberLoggedIn.getStatus().equals("active")) 
 		{
-			availableLabel.setText("Card status is not active"); // book is available for order
+			availableLabel.setText("Card status is not active");
 			availableLabel.setTextFill(Color.RED);
 			orderBookBtn.setDisable(true);
 		}

@@ -16,7 +16,7 @@ public class BorrowACopyOfBook implements Serializable
 	
 	public BorrowACopyOfBook() {}
 	public BorrowACopyOfBook(String id, String subscriberId, String borrowDate, String expectedReturnDate,
-			String actualReturnDate, String isReturnedLate, String bookCatalogNumber) 
+			String actualReturnDate, String isReturnedLate, String bookCatalogNumber, String copyId) 
 	{
 		this.id = id;
 		this.subscriberId = subscriberId;
@@ -25,10 +25,11 @@ public class BorrowACopyOfBook implements Serializable
 		this.actualReturnDate = actualReturnDate;
 		this.isReturnedLate = isReturnedLate;
 		this.bookCatalogNumber = bookCatalogNumber;
+		this.copyId = copyId;
 	}
 	
 	public BorrowACopyOfBook(String subscriberId, String borrowDate, String expectedReturnDate,
-			String actualReturnDate, String isReturnedLate, String bookCatalogNumber) 
+							String actualReturnDate, String isReturnedLate, String bookCatalogNumber) 
 	{
 		this.subscriberId = subscriberId;
 		this.borrowDate = borrowDate;
@@ -45,7 +46,8 @@ public class BorrowACopyOfBook implements Serializable
 		this.copyId = copyId;
 	}
 	
-	public BorrowACopyOfBook(String subscriberId, String expectedReturnDate, String bookCatalogNumber, String copyId) 
+	public BorrowACopyOfBook(String subscriberId, String expectedReturnDate,
+							String bookCatalogNumber,String copyId) 
 	{
 		this.subscriberId = subscriberId;
 		this.expectedReturnDate = expectedReturnDate;
@@ -59,6 +61,18 @@ public class BorrowACopyOfBook implements Serializable
 		this.bookCatalogNumber = bookCatalogNumber;
 		this.copyId = copyId;
 		this.flag = flag;
+	}
+	
+	public BorrowACopyOfBook(String id, String subscriberId, String borrowDate, String expectedReturnDate,
+							String isReturnedLate, String bookCatalogNumber, String copyId) 
+	{
+		this.id = id;
+		this.subscriberId = subscriberId;
+		this.borrowDate = borrowDate;
+		this.expectedReturnDate = expectedReturnDate;
+		this.isReturnedLate = isReturnedLate;
+		this.bookCatalogNumber = bookCatalogNumber;
+		this.copyId = copyId;
 	}
 	public String getId() 
 	{

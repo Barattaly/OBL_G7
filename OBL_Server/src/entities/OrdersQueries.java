@@ -66,4 +66,15 @@ public class OrdersQueries
 		}
 		return logs;
 	}
+	
+	public static String updateBookArriveDate(BookOrder orderToUpdate)
+	{
+		if (orderToUpdate == null)
+			return null;		
+		String queryMsg = "UPDATE obl_db.orders SET bookArriveDate = '" + orderToUpdate.getBookArriveDate() 
+						+ "' WHERE (id = " + orderToUpdate.getId() +") and (subscriberID = '" 
+						+ orderToUpdate.getSubscriberId() + "');";
+		return queryMsg;
+	}
+	
 }

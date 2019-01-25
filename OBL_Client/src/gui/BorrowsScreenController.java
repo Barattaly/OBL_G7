@@ -1,5 +1,8 @@
 package gui;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +21,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 
 public class BorrowsScreenController implements IClientUI
 {
@@ -61,49 +67,43 @@ public class BorrowsScreenController implements IClientUI
 		public void invalidated(Observable arg0)
 		{
 
-            if(searchTextField.textProperty().get().isEmpty()) {
-
+            if(searchTextField.textProperty().get().isEmpty()) 
+            {
             	borrowsTable.setItems(observableBorrowsList);
-
                 return;
-
             }
 
             ObservableList<ObservableBorrow> tableItems = FXCollections.observableArrayList();
 
             ObservableList<TableColumn<ObservableBorrow, ?>> cols = borrowsTable.getColumns();
 
-            for(int i=0; i<observableBorrowsList.size(); i++) {
-
-                
-
-                for(int j=0; j<cols.size(); j++) {
+            for(int i=0; i<observableBorrowsList.size(); i++) 
+            {
+                for(int j=0; j<cols.size(); j++) 
+                {
 
                     TableColumn col = cols.get(j);
 					String cellValue = null;
                     try
 					{
 						cellValue = col.getCellData(observableBorrowsList.get(i)).toString();
-					} catch (NullPointerException ex)
+					} 
+                    catch (NullPointerException ex)
 					{
 						break;
 					}
 
                     cellValue = cellValue.toLowerCase();
 
-                    if(cellValue.contains(searchTextField.textProperty().get().toLowerCase())) {
+                    if(cellValue.contains(searchTextField.textProperty().get().toLowerCase())) 
+                    {
 
                         tableItems.add(observableBorrowsList.get(i));
 
                         break;
-
                     }                        
-
                 }
-
-
             }
-
             borrowsTable.setItems(tableItems);	
 		}
 	};
@@ -140,8 +140,9 @@ public class BorrowsScreenController implements IClientUI
 		copyNumberColumn.setCellValueFactory(new PropertyValueFactory<>("copyId"));
 		catalogNumberColumn.setCellValueFactory(new PropertyValueFactory<>("catalogNumber"));
 		subscriberIDColumn.setCellValueFactory(new PropertyValueFactory<>("subscriberId"));
-		
+		updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
+				
 		borrowsTable.setRowFactory(tv -> { // press on row in borrow table to do what ever we want
 			TableRow<ObservableBorrow> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
@@ -178,6 +179,7 @@ public class BorrowsScreenController implements IClientUI
 			});
 			return row;
 		});
+		updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
 		GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
 	}
@@ -205,7 +207,66 @@ public class BorrowsScreenController implements IClientUI
 					borrow.getSubscriberId());
 			observableBorrowsList.add(temp);
 		}
+		
 		borrowsTable.setItems(observableBorrowsList);
+	}
+	
+	private void updateReturnDatesColors(TableColumn<ObservableBorrow, String> column) 
+	{
+		returnDateColumn.setCellFactory(
+				new Callback<TableColumn<ObservableBorrow, String>, TableCell<ObservableBorrow, String>>() 
+				{
+					public TableCell call(TableColumn param) 
+					{
+						return new TableCell<ObservableBorrow, String>() 
+						{
+							@Override
+							public void updateItem(String item, boolean empty) 
+							{
+								super.updateItem(item, empty);
+
+								if (item != null) 
+								{
+
+									if (item.length() == 10) // expected return date column
+									{
+										if ((LocalDate.parse(getCurrentDateAsString())
+												.isAfter(LocalDate.parse(item)))) 
+										{
+											setTextFill(Color.RED);
+											setStyle("-fx-font-weight: bold");
+											setText(item);
+										} 
+										else if ((LocalDate.parse(getCurrentDateAsString())
+												.isEqual(LocalDate.parse(item))) // return day
+												|| (LocalDate.parse(getCurrentDateAsString()).plusDays(1))
+														.isEqual(LocalDate.parse(item))) // one day before return date
+										{
+											setTextFill(Color.GREEN);
+											setStyle("-fx-font-weight: bold");
+											setText(item);
+										} 
+										else 
+										{
+											setTextFill(Color.BLACK);
+											setStyle("-fx-font-weight: lighter");
+											setText(item);
+										}
+
+									}
+								}
+							}
+						};
+					}
+				});
+	}
+	
+	public static String getCurrentDateAsString()
+	{
+		GregorianCalendar calendar = new GregorianCalendar();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String string = format.format(calendar.getTime());
+		return string;
 	}
 	
 }

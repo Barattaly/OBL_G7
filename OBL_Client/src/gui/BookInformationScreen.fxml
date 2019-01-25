@@ -132,7 +132,6 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="returnDateLabel" layoutX="327.0" layoutY="561.0" text="TO DO - RETURN DATE" textFill="WHITE" />
             <Label layoutX="60.0" layoutY="381.0" prefHeight="35.0" prefWidth="181.0" text="Publication Year:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
@@ -143,7 +142,12 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label layoutX="60.0" layoutY="469.0" prefHeight="35.0" prefWidth="109.0" text="Location:" textFill="#a0a2ab" underline="true">
+            <Label fx:id="locationLabel" layoutX="60.0" layoutY="469.0" prefHeight="35.0" prefWidth="109.0" text="Location:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="returnDateLabel" layoutX="60.0" layoutY="469.0" prefHeight="35.0" prefWidth="214.0" text="Closest return date:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
@@ -179,6 +183,11 @@
                </font>
             </JFXTextField>
             <JFXTextField fx:id="locationTextField" editable="false" focusColor="#203447" layoutX="163.0" layoutY="471.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="returnDateTextField" editable="false" focusColor="#203447" layoutX="273.0" layoutY="470.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
