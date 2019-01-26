@@ -109,7 +109,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 	protected Stage returnDialog = null;
 
+<<<<<<< HEAD
 	@FXML void btn_homeDisplay(MouseEvent event)
+=======
+	@FXML
+	protected void btn_homeDisplay(MouseEvent event)
+>>>>>>> refs/remotes/origin/master
 	{
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -134,7 +139,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_searchSubscriberCard.setOpacity(1);
 	}
 
+<<<<<<< HEAD
 	@FXML void btn_booksDisplay(MouseEvent event)
+=======
+	@FXML
+	protected void btn_booksDisplay(MouseEvent event)
+>>>>>>> refs/remotes/origin/master
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
