@@ -57,62 +57,59 @@ public class LibrarianScreenController implements Initializable, IClientUI
 {
 	private User userLogedIn;
 	@FXML
-	private Label userWelcomLabel;
+	protected Label userWelcomLabel;
 	@FXML
-	private Label userNameLabel;
+	protected Label userNameLabel;
 	@FXML
-	private Pane pane_home, pane_createNewSubscriberCard,pane_searchSubscriberCard;
+	protected Pane pane_home, pane_createNewSubscriberCard, pane_searchSubscriberCard;
 	@FXML
-	private AnchorPane pane_searchBook;
+	protected AnchorPane pane_searchBook;
 	@FXML
-	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard;
+	protected ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard;
 
 	@FXML
-	private JFXTextField userNameTextfield;
+	protected JFXTextField userNameTextfield;
 
 	@FXML
-	private JFXTextField idNumberTextfield;
+	protected JFXTextField idNumberTextfield;
 
 	@FXML
-	private JFXTextField firstNameTextfield;
+	protected JFXTextField firstNameTextfield;
 
 	@FXML
-	private JFXTextField lastNameTextfield;
+	protected JFXTextField lastNameTextfield;
 
 	@FXML
-	private JFXTextField phoneNumberTextfield;
+	protected JFXTextField phoneNumberTextfield;
 
 	@FXML
-	private JFXTextField emailTextfield;
+	protected JFXTextField emailTextfield;
 
 	@FXML
-	private JFXPasswordField passwordTextfield;
-	
-    @FXML
-    private JFXTextField txt_subscriberID;
+	protected JFXPasswordField passwordTextfield;
 
 	@FXML
-	private Label warningLabel;
-    @FXML
-    private JFXButton btn_viewSubscriberCard;
-    
-    private ViewSubscriberCardController controller;  //check
-    
-    public static IClientUI CurrentGuiController;//check
-    
+	protected JFXTextField txt_subscriberID;
+
+	@FXML
+	protected Label warningLabel;
+	@FXML
+	protected JFXButton btn_viewSubscriberCard;
+
+	// protected ViewSubscriberCardController controller; //check
+
 	protected SearchBookController searchBookWindowController = null;
-	
-	protected BorrowsScreenController borrowsWindowController = null; 
 
-    @FXML
-    private AnchorPane borrowsPane;
-
-	private Stage borrowDialog = null;
-	
-	private Stage returnDialog = null;
+	protected BorrowsScreenController borrowsWindowController = null;
 
 	@FXML
-	void btn_homeDisplay(MouseEvent event)
+	protected AnchorPane borrowsPane;
+
+	protected Stage borrowDialog = null;
+
+	protected Stage returnDialog = null;
+
+	@FXML void btn_homeDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -137,8 +134,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_searchSubscriberCard.setOpacity(1);
 	}
 
-	@FXML
-	void btn_booksDisplay(MouseEvent event)
+	@FXML void btn_booksDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -148,11 +144,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(0.5);
 		btn_searchSubscriberCard.setOpacity(1);
-		searchBookWindowController.refresh();
 	}
 
 	@FXML
-	void btn_searchSubscriberCardDisplay(MouseEvent event)
+	protected void btn_searchSubscriberCardDisplay(MouseEvent event)
 	{
 		pane_home.setVisible(false);
 		pane_createNewSubscriberCard.setVisible(false);
@@ -181,7 +176,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void logOutDisplay(MouseEvent event)
+	protected void logOutDisplay(MouseEvent event)
 	{ // logout
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -202,7 +197,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_createSubscriberCardDisplay(ActionEvent event)
+	protected void btn_createSubscriberCardDisplay(ActionEvent event)
 	{
 		warningLabel.setText("");
 		if (idNumberTextfield.getText().isEmpty() || userNameTextfield.getText().isEmpty()
@@ -213,12 +208,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			return;
 		}
 		Subscriber newSubscriberToCreate = createSubscriberFromTextFields();
-		
+
 		GuiManager.client.CreateSubscriber(newSubscriberToCreate);
 	}
 
-@FXML
-	void btn_borrowClick(ActionEvent event)
+	@FXML
+	protected void btn_borrowClick(ActionEvent event)
 	{
 		borrowDialog = new Stage();
 		borrowDialog.initModality(Modality.APPLICATION_MODAL);
@@ -251,16 +246,17 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		JFXDatePicker returnDate = new JFXDatePicker();
 		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
 		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yyyy");
-		returnDate.setDayCellFactory(picker -> new DateCell() 
+		returnDate.setDayCellFactory(picker -> new DateCell()
 		{
-	        public void updateItem(LocalDate date, boolean empty) 
-	        {
-	            super.updateItem(date, empty);
-	            LocalDate today = LocalDate.now();
-	            setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.compareTo(today) < 0 || date.compareTo(today.plusDays(13)) > 0);
-	        }
+			public void updateItem(LocalDate date, boolean empty)
+			{
+				super.updateItem(date, empty);
+				LocalDate today = LocalDate.now();
+				setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.compareTo(today) < 0
+						|| date.compareTo(today.plusDays(13)) > 0);
+			}
 		});
-		
+
 		GridPane grid = new GridPane();
 		grid.add(bookCatalogNumberLabel, 1, 1);
 		grid.add(bookCatalogNumber, 2, 1);
@@ -278,47 +274,41 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		warningMessageLabel.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
 		JFXButton borrowBtn = new JFXButton("Borrow");
 		borrowBtn.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
-		borrowDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;"); 
-		
-		borrowBtn.setOnMouseClicked(new EventHandler<Event>() 
+		borrowDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
+
+		borrowBtn.setOnMouseClicked(new EventHandler<Event>()
 		{
 			@Override
-			public void handle(Event e) 
+			public void handle(Event e)
 			{
 				String warningMessage = "";
 				warningMessageLabel.setText(warningMessage);
 				if (bookCatalogNumber.getText().isEmpty() && bookCopyId.getText().isEmpty()
-						&& subscriberID.getText().isEmpty() && (returnDate.getValue() == null)) 
+						&& subscriberID.getText().isEmpty() && (returnDate.getValue() == null))
 				{
 					warningMessage = "Please fill all of the fields";
-				} 
-				else if (bookCatalogNumber.getText().isEmpty()) 
+				} else if (bookCatalogNumber.getText().isEmpty())
 				{
 					warningMessage = "Please enter book catalog number";
-				} 
-				else if (bookCopyId.getText().isEmpty()) 
+				} else if (bookCopyId.getText().isEmpty())
 				{
 					warningMessage = "Please enter book copy id";
-				} 
-				else if (subscriberID.getText().isEmpty()) 
+				} else if (subscriberID.getText().isEmpty())
 				{
 					warningMessage = "Please enter subscriber id";
-				} 
-				else if (returnDate.getValue() == null) 
+				} else if (returnDate.getValue() == null)
 				{
 					warningMessage = "Please enter return date";
-				}
-				else 
+				} else
 				{
-					try 
+					try
 					{
 						String retDate = returnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-						
+
 						BorrowACopyOfBook newBorrow = new BorrowACopyOfBook(subscriberID.getText(), retDate,
 								bookCatalogNumber.getText(), bookCopyId.getText());
 						GuiManager.client.createNewBorrow(newBorrow);
-					} 
-					catch (Exception ex) 
+					} catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
@@ -334,7 +324,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	}
 
 	@FXML
-	void btn_ReturnClick(ActionEvent event) 
+	protected void btn_ReturnClick(ActionEvent event)
 	{
 		returnDialog = new Stage();
 		returnDialog.initModality(Modality.APPLICATION_MODAL);
@@ -370,36 +360,32 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		JFXButton returnButton = new JFXButton("Return");
 		returnButton.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
 		returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-		returnButton.setOnMouseClicked(new EventHandler<Event>() 
+		returnButton.setOnMouseClicked(new EventHandler<Event>()
 		{
 			@Override
 			public void handle(Event e)
 			{
 				String warningMessage = "";
 				warningMessageLabel.setText(warningMessage);
-				if (bookCatalogNumber.getText().isEmpty() && bookCopyId.getText().isEmpty()) 
+				if (bookCatalogNumber.getText().isEmpty() && bookCopyId.getText().isEmpty())
 				{
 					warningMessage = "Please fill all of the fields";
-				} 
-				else if (bookCatalogNumber.getText().isEmpty()) 
+				} else if (bookCatalogNumber.getText().isEmpty())
 				{
 					warningMessage = "Please enter book catalog number";
-				} 
-				else if (bookCopyId.getText().isEmpty()) 
+				} else if (bookCopyId.getText().isEmpty())
 				{
 					warningMessage = "Please enter book copy id";
-				}
-				else 
+				} else
 				{
-					try 
+					try
 					{
 						String returnDateTime = getCurrentDateTimeAsString();
-						
+
 						BorrowACopyOfBook borrowToClose = new BorrowACopyOfBook(returnDateTime,
 								bookCatalogNumber.getText(), bookCopyId.getText(), true);
 						GuiManager.client.returnBook(borrowToClose);
-					} 
-					catch (Exception ex) 
+					} catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
@@ -408,21 +394,24 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					warningMessageLabel.setText(warningMessage);
 			}
 		});
-		
+
 		returnDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, returnButton);
 		Scene returnDialogScene = new Scene(returnDialogVbox, 300, 200);
 		returnDialog.setScene(returnDialogScene);
 		returnDialog.showAndWait();
 	}
 
-	private Subscriber createSubscriberFromTextFields()
-	{ 
-		/*public Subscriber (String idNumber,String firstName,String lastName,String phoneNumber,String email,String status)  */
+	protected Subscriber createSubscriberFromTextFields()
+	{
+		/*
+		 * public Subscriber (String idNumber,String firstName,String lastName,String
+		 * phoneNumber,String email,String status)
+		 */
 
-		Subscriber subscriber = new Subscriber(idNumberTextfield.getText(),firstNameTextfield.getText(), lastNameTextfield.getText(),
-				"0","","active");//phone and email default values at first
-		subscriber.setUserName(userNameTextfield.getText());	
-		subscriber.setPassword(passwordTextfield.getText());	
+		Subscriber subscriber = new Subscriber(idNumberTextfield.getText(), firstNameTextfield.getText(),
+				lastNameTextfield.getText(), "0", "", "active");// phone and email default values at first
+		subscriber.setUserName(userNameTextfield.getText());
+		subscriber.setPassword(passwordTextfield.getText());
 		String warningMessage = "";
 		// input checks:
 		if (!phoneNumberTextfield.getText().isEmpty())
@@ -471,64 +460,59 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
-		case CreateNewBorrow: 
+		case CreateNewBorrow:
 		{
 			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
-			if (newBorrow.getSubscriberId().equals("0")) 
+			if (newBorrow.getSubscriberId().equals("0"))
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Subscriber ID doesn't exist!");
 				});
-			}
-			else if (newBorrow.getSubscriberId().equals("1")) 
+			} else if (newBorrow.getSubscriberId().equals("1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("The subscriber card status is not active,\nthis subscriber can't borrow new books!");
+					GuiManager.ShowMessagePopup(
+							"The subscriber card status is not active,\nthis subscriber can't borrow new books!");
 				});
-			}
-			else if (newBorrow.getBookCatalogNumber().equals("0")) 
+			} else if (newBorrow.getBookCatalogNumber().equals("0"))
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
 				});
-			} 
-			else if (newBorrow.getBookCatalogNumber().equals("-1")) 
-				{
-					Platform.runLater(() -> {
-						GuiManager.ShowMessagePopup("The book is archived,\nsubscriber can't borrow copies of it.");
-					});
-				} 
-			else if (newBorrow.getBookCatalogNumber().equals("-2")) 
+			} else if (newBorrow.getBookCatalogNumber().equals("-1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
+					GuiManager.ShowMessagePopup("The book is archived,\nsubscriber can't borrow copies of it.");
 				});
-			} 
-			else if (newBorrow.getCopyId().equals("0")) 
+			} else if (newBorrow.getBookCatalogNumber().equals("-2"))
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup(
+							"All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
+				});
+			} else if (newBorrow.getCopyId().equals("0"))
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
 				});
-			}
-			else if (newBorrow.getCopyId().equals("-1")) 
+			} else if (newBorrow.getCopyId().equals("-1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("This copy is already borrowed,\nplease check you entered the correct copy ID");
+					GuiManager.ShowMessagePopup(
+							"This copy is already borrowed,\nplease check you entered the correct copy ID");
 				});
-			}
-			else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button
+			} else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Wrong return date, please enter date up to 14 days from today");
 				});
-			} 
-			else if (newBorrow.getExpectedReturnDate().equals("1")) // after press on "borrow button
+			} else if (newBorrow.getExpectedReturnDate().equals("1")) // after press on "borrow button
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
+					GuiManager
+							.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
 				});
-			} 
-			else 
+			} else
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Borrow executed Successfully!");
@@ -544,49 +528,47 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				Platform.runLater(() -> {
 					GuiManager.ShowErrorPopup("This subscriber doesnt exist!");
 				});
-			}
-			else
+			} else
 			{
 				Subscriber newSub = (Subscriber) msg.Data;
 				Platform.runLater(() -> {
 					GuiManager.openSubscriberCard(newSub);
-			});
+				});
 			}
 			break;
 		}
 		case GetAllBooksList:
-			searchBookWindowController.setBookMap((Map<Integer, Book>)msg.Data);
-			break;	
+			searchBookWindowController.setBookMap((Map<Integer, Book>) msg.Data);
+			break;
 		case GetCurrentBorrows:
 			borrowsWindowController.getMessageFromServer(msg);
 			break;
-		case ReturnBook: 
+		case ReturnBook:
 		{
 			BorrowACopyOfBook newBorrow = (BorrowACopyOfBook) msg.Data;
-			if (newBorrow.getBookCatalogNumber().equals("0")) {
+			if (newBorrow.getBookCatalogNumber().equals("0"))
+			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
 				});
-			}
-			else if (newBorrow.getBookCatalogNumber().equals("-1")) 
+			} else if (newBorrow.getBookCatalogNumber().equals("-1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
+					GuiManager.ShowMessagePopup(
+							"None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
 				});
-			} 
-			else if (newBorrow.getCopyId().equals("0")) 
+			} else if (newBorrow.getCopyId().equals("0"))
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
 				});
-			} 
-			else if (newBorrow.getCopyId().equals("-1")) 
+			} else if (newBorrow.getCopyId().equals("-1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup("This copy is not currently borrow,\nplease check you entered the correct copy ID");
+					GuiManager.ShowMessagePopup(
+							"This copy is not currently borrow,\nplease check you entered the correct copy ID");
 				});
-			} 
-			else 
+			} else
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Return executed Successfully!");
@@ -598,7 +580,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 	}
 
-
 	@Override
 	public void setUserLogedIn(User userLoged)
 	{
@@ -609,7 +590,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
 		initialSearchWindow();
-		initialBorrowsWindow();		
+		initialBorrowsWindow();
 	}
 
 	@Override
@@ -618,33 +599,32 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		return userLogedIn;
 	}
 
-    @FXML
-    protected void btn_viewSubscriberCardClick(ActionEvent event)
-    {
-    	if (txt_subscriberID.getText().isEmpty())
+	@FXML
+	protected void btn_viewSubscriberCardClick(ActionEvent event)
+	{
+		if (txt_subscriberID.getText().isEmpty())
 		{
 			GuiManager.ShowErrorPopup("Subscriber ID can't be empty");
 		}
-		
+
 		else
 		{
 			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
-		}  	
-    }
+		}
+	}
 
-	private void initialSearchWindow()
+	protected void initialSearchWindow()
 	{
 		try
 		{
 			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/SearchBookScreen.fxml"));
-			AnchorPane newLoadedPane = loader.load(); 
+			AnchorPane newLoadedPane = loader.load();
 			searchBookWindowController = loader.getController();
 			searchBookWindowController.setUserLogedIn(userLogedIn);
 			searchBookWindowController.setPopUpMode(false);
-			
+
 			pane_searchBook.getChildren().add(newLoadedPane);
-		}
-		catch(Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -657,7 +637,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		String string = format.format(calendar.getTime());
 		return string;
 	}
-	
+
 	public static String getCurrentDateTimeAsString()
 	{
 		GregorianCalendar calendar = new GregorianCalendar();
@@ -665,8 +645,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		String string = format.format(calendar.getTime());
 		return string;
 	}
-	
-	private void initialBorrowsWindow()
+
+	protected void initialBorrowsWindow()
 	{
 		try
 		{
@@ -679,7 +659,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
 			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
 			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
-			
+
 		} catch (Exception e)
 		{
 			e.printStackTrace();

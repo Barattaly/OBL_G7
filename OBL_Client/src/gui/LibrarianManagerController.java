@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Book;
@@ -14,6 +17,7 @@ import entities.Employee;
 import entities.ObservableBook;
 import entities.ObservableBorrow;
 import entities.ObservableEmployee;
+import entities.Report_BorrowDurationInfo;
 import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
@@ -26,23 +30,29 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class LibrarianManagerController extends LibrarianScreenController
 {
-
+	private Reports_BorrowsController borrowReportControler;
 	@FXML
 	private TableView<ObservableEmployee> emplyeeTableView;
 
@@ -67,23 +77,32 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	private TableColumn<ObservableEmployee, String> empDepartmentColumn;
 
+    @FXML
+    private JFXSpinner thinkSpinner;
+	
+	@FXML
+	private HBox reportsDatesPane;
+
 	private ObservableList<ObservableEmployee> empList;// for table view...
 
-	private User userLogedIn;
 	@FXML
-	private Label userWelcomLabel;
-	@FXML
-	private Label userNameLabel;
+	private Pane pane_employees, pane_reports;
 
 	@FXML
-	private Pane pane_home, pane_createNewSubscriberCard, pane_searchBook, pane_searchSubscriberCard, pane_employees,
-			pane_reports;
-	@FXML
-	private ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard, btn_employees,
-			btn_reports;
+	private ImageView btn_employees, btn_reports;
 
 	@FXML
-	private JFXTextField searchTextField;
+	private JFXTextField searchTextField;// Search employee
+
+	@FXML
+	private ImageView refreshBtn;
+
+	@FXML
+	private JFXButton generateReportBtn;
+
+	@FXML
+	private ToggleGroup reportToggleGroup;
+
 	// this is the search function, it is in listener for text inside the textfield
 	private InvalidationListener onSearchStart = new InvalidationListener()
 	{
@@ -144,18 +163,12 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
+		super.initialize(arg0, arg1);
 		GuiManager.client.getEmployeeList();
 		searchTextField.textProperty().addListener(onSearchStart);
-		pane_home.setVisible(true);
-		pane_createNewSubscriberCard.setVisible(false);
-		pane_searchBook.setVisible(false);
-		pane_searchSubscriberCard.setVisible(false);
+
 		pane_employees.setVisible(false);
 		pane_reports.setVisible(false);
-		btn_home.setOpacity(0.5);
-		btn_createNewSubscriberCard.setOpacity(1);
-		btn_books.setOpacity(1);
-		btn_searchSubscriberCard.setOpacity(1);
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
 
@@ -172,18 +185,11 @@ public class LibrarianManagerController extends LibrarianScreenController
 	}
 
 	@FXML
-	void btn_homeDisplay(MouseEvent event)
+	protected void btn_homeDisplay(MouseEvent event)
 	{
-		pane_home.setVisible(true);
-		pane_createNewSubscriberCard.setVisible(false);
-		pane_searchBook.setVisible(false);
-		pane_searchSubscriberCard.setVisible(false);
+		super.btn_homeDisplay(event);
 		pane_employees.setVisible(false);
 		pane_reports.setVisible(false);
-		btn_home.setOpacity(0.5);
-		btn_createNewSubscriberCard.setOpacity(1);
-		btn_books.setOpacity(1);
-		btn_searchSubscriberCard.setOpacity(1);
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
 	}
@@ -191,51 +197,28 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	protected void btn_createNewSubscriberCardDisplay(MouseEvent event)
 	{
-		pane_home.setVisible(false);
-		pane_createNewSubscriberCard.setVisible(true);
-		pane_searchBook.setVisible(false);
-		pane_searchSubscriberCard.setVisible(false);
-		pane_employees.setVisible(false);
+		super.btn_createNewSubscriberCardDisplay(event);
 		pane_reports.setVisible(false);
-		btn_home.setOpacity(1);
-		btn_createNewSubscriberCard.setOpacity(0.5);
-		btn_books.setOpacity(1);
-		btn_searchSubscriberCard.setOpacity(1);
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
 	}
 
 	@FXML
-	void btn_booksDisplay(MouseEvent event)
+	protected void btn_booksDisplay(MouseEvent event)
 	{
-		pane_home.setVisible(false);
-		pane_createNewSubscriberCard.setVisible(false);
-		pane_searchBook.setVisible(true);
-		pane_searchSubscriberCard.setVisible(false);
+		super.btn_booksDisplay(event);
 		pane_employees.setVisible(false);
 		pane_reports.setVisible(false);
-		btn_home.setOpacity(1);
-		btn_createNewSubscriberCard.setOpacity(1);
-		btn_books.setOpacity(0.5);
-		btn_searchSubscriberCard.setOpacity(1);
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
-		this.searchBookWindowController.refresh();
 	}
 
 	@FXML
-	void btn_searchSubscriberCardDisplay(MouseEvent event)
+	protected void btn_searchSubscriberCardDisplay(MouseEvent event)
 	{
-		pane_home.setVisible(false);
-		pane_createNewSubscriberCard.setVisible(false);
-		pane_searchBook.setVisible(false);
-		pane_searchSubscriberCard.setVisible(true);
+		super.btn_searchSubscriberCardDisplay(event);
 		pane_employees.setVisible(false);
 		pane_reports.setVisible(false);
-		btn_home.setOpacity(1);
-		btn_createNewSubscriberCard.setOpacity(1);
-		btn_books.setOpacity(1);
-		btn_searchSubscriberCard.setOpacity(0.5);
 		btn_employees.setOpacity(1);
 		btn_reports.setOpacity(1);
 	}
@@ -274,52 +257,6 @@ public class LibrarianManagerController extends LibrarianScreenController
 		btn_reports.setOpacity(0.5);
 	}
 
-	@FXML
-	void btn_createSubscriberCardDisplay(ActionEvent event)
-	{
-		// super.btn_createSubscriberCardDisplay(event);
-	}
-
-	@FXML
-	void logOutDisplay(MouseEvent event)
-	{
-		// super.logOutDisplay(event);
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("OBL Log Out");
-		alert.setHeaderText("Are you sure you want to log out ?");
-		Optional<ButtonType> option = alert.showAndWait();
-		if (option.get() == ButtonType.OK)
-		{
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			GuiManager.SwitchScene(SCREENS.login); // show login screen
-		}
-
-		else if (option.get() == ButtonType.CANCEL)
-		{
-			alert.close();
-
-		}
-
-	}
-
-	@Override
-	public void setUserLogedIn(User userLoged)
-	{
-		userLogedIn = userLoged;
-		// make the userName start with upper case
-		String name = userLoged.getFirstName().substring(0, 1).toUpperCase() + userLoged.getFirstName().substring(1);
-		userWelcomLabel.setText("Hello " + name);
-		String userName = userLoged.getUserName();
-		userNameLabel.setText(userName);
-		initialSearchWindow();
-	}
-
-	@Override
-	public User getUserLogedIn()
-	{
-		return userLogedIn;
-	}
-
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
@@ -330,47 +267,106 @@ public class LibrarianManagerController extends LibrarianScreenController
 			updateEmpList((ArrayList<Employee>) msg.Data);
 			break;
 		}
+		case Reports_getAvarageBorrows:
+		{
+			Platform.runLater(() -> {
+				thinkSpinner.setVisible(false);
+				openBorrowReport((Report_BorrowDurationInfo) msg.Data);
+			});
+			
+			break;
+		}
+		default:
+			super.getMessageFromServer(msg);
 		}
 	}
 
 	private void updateEmpList(ArrayList<Employee> data)
 	{
+		empList.clear();
 		for (Employee employee : data)
 		{
 			empList.add(new ObservableEmployee(employee.getEmpNumber(), employee.getId(), employee.getFirstName(),
 					employee.getLastName(), employee.getEmail(), employee.getRole(), employee.getDepartment()));
 		}
 		emplyeeTableView.setItems(empList);
-
 	}
 
 	@FXML
-	void btn_borrowClickOfManager(ActionEvent event)
+	void refreshBtnClicked(MouseEvent event)
 	{
-		this.btn_borrowClick(event);
+		GuiManager.client.getEmployeeList();
 	}
 
-	private void initialSearchWindow()
+	@FXML
+	void pressRefresh(MouseEvent event)
+	{
+		refreshBtn.setOpacity(0.5);
+	}
+
+	@FXML
+	void releasedRefresh(MouseEvent event)
+	{
+		refreshBtn.setOpacity(1);
+	}
+
+	@FXML
+	void generateReportClicked(ActionEvent event)
+	{
+		thinkSpinner.setVisible(true);
+		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
+		{
+		case "Activity":
+
+			break;
+		case "Borrows Duration":
+			GuiManager.client.report_getBorrowDurationInfo();
+			break;
+		case "Late Returns":
+			break;
+		}		
+
+	}
+
+	private void openBorrowReport(Report_BorrowDurationInfo info)
 	{
 		try
 		{
-			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/SearchBookScreen.fxml"));
-			AnchorPane newLoadedPane = loader.load();
-			searchBookWindowController = loader.getController();
-			searchBookWindowController.setUserLogedIn(userLogedIn);
-			searchBookWindowController.setPopUpMode(false);
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/Reports_BorrowsDuration.fxml"));
+			Parent root = loader.load();
+			borrowReportControler = loader.getController();
+			borrowReportControler.setReportInformation(info);
+			Scene scene = new Scene(root);
+			SeondStage.setTitle("Borrows Duration");
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
 
-			pane_searchBook.getChildren().add(newLoadedPane);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+
 	}
 
 	@FXML
-	protected void btn_viewSubscriberCardClick(ActionEvent event)
+	void radioBtnClicked(ActionEvent event)
 	{
-		// super.btn_viewSubscriberCardClick(event);
+		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
+		{
+		case "Activity":
+			generateReportBtn.setDisable(true);
+			reportsDatesPane.setVisible(true);
+			break;
+		case "Borrows Duration":
+			generateReportBtn.setDisable(false);
+			reportsDatesPane.setVisible(false);
+			break;
+		case "Late Returns":
+			generateReportBtn.setDisable(false);
+			reportsDatesPane.setVisible(false);
+			break;
+		}
 	}
-
 }
