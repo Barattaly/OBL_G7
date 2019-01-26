@@ -15,7 +15,6 @@ import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
-import entities.MyFile;
 import entities.Subscriber;
 import gui.GuiManager;
 import javafx.application.Platform;
@@ -55,13 +54,12 @@ public class ClientController extends AbstractClient
 		case ViewTableOfContent:
 			if(Desktop.isDesktopSupported()) {
 				try {
-					 InputStream is = new ByteArrayInputStream(((MyFile)msg).getMybytearray());
-					 MyFile msgServer =((MyFile)msg);
-					 int fileSize =((MyFile)msg).getSize(); 
-				     File outputFile = new File ("tableOfContent.pdf");
-				     FileOutputStream fos=fos = new FileOutputStream(outputFile);
+					 //InputStream is = new ByteArrayInputStream(((MyFile)msg).getMybytearray());
+					// int fileSize =((MyFile)msg).getSize(); 
+				     File outputFile = new File ("C:\\Users\\Shiran\\git\\OBL_G7\\OBL_Server\\src\\resources\\try.pdf");
+				     FileOutputStream fos= new FileOutputStream(outputFile);
 				     BufferedOutputStream bos=new BufferedOutputStream(fos);
-				     bos.write(msgServer.getMybytearray(),0,fileSize);
+				    // bos.write(msgServer.getMybytearray(),0,fileSize);
 				     Desktop.getDesktop().open(outputFile);
 				     bos.flush();
 				     fos.flush();

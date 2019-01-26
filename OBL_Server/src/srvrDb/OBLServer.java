@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -27,7 +28,6 @@ import entities.BooksQueries;
 import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
-import entities.MyFile;
 import entities.OrdersQueries;
 import entities.ReturnesQueries;
 import entities.Subscriber;
@@ -1159,14 +1159,7 @@ public class OBLServer extends AbstractServer
 		{
 			rs.next();
 			String localPath=new String(rs.getString(1));
-			MyFile msg= new MyFile(localPath);
-			File newFile = new File (localPath);
-			byte [] mybytearray  = new byte [(int)newFile.length()];	//byte array of file
-		    FileInputStream fis = new FileInputStream(newFile);		//input from file
-		    BufferedInputStream bis = new BufferedInputStream(fis);	//buffer input		  
-		    msg.initArray(mybytearray.length);
-		    msg.setSize(mybytearray.length);
-		    bis.read(msg.getMybytearray(),0,mybytearray.length);	
+			byte[] mybytearray=getByteArrayFromFilePath("C:\\Users\\Shiran\\git\\OBL_G7\\OBL_Server\\src\\resources\\try.pdf");
 		    DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
 		    client.sendToClient(returnMsg);
 			
@@ -1175,8 +1168,28 @@ public class OBLServer extends AbstractServer
 			exp.printStackTrace();
 		}
 	}
-	
-	
-	
-	
+	 public static byte[] getByteArrayFromFilePath(String path) 
+	 {
+	  if (path == null)
+	  {
+	   return null;
+	  }
+
+	  byte[] byteArray = null;
+	  try
+	  {
+	   File file = new File(path);
+	   FileInputStream fis = new FileInputStream(file);
+	   BufferedInputStream bis = new BufferedInputStream(fis);
+	   byteArray = new byte[(int) file.length()];
+	   //bis.read(byteArray);
+	   bis.read(byteArray,0,byteArray.length);
+	   bis.close();
+	  } catch (Exception e) {
+	       // TODO: handle exception
+	   e.printStackTrace();
+	  }
+	  return byteArray;
+	 }
+	 
 }
