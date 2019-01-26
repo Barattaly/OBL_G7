@@ -4,13 +4,15 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -29,6 +31,7 @@ import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
 import entities.OrdersQueries;
+import entities.Report_BorrowDurationInfo;
 import entities.ReturnesQueries;
 import entities.Subscriber;
 import entities.SubscribersQueries;
@@ -125,7 +128,7 @@ public class OBLServer extends AbstractServer
 			}
 			case GetAllBooksList:
 			{
-				getListOfAllBooks(client);
+				sendListOfAllBooks(client);
 				break;
 			}
 			case ViewSubscriberCard:
@@ -170,7 +173,12 @@ public class OBLServer extends AbstractServer
 			}
 			case GetActivityLog:
 			{
-				getActivityLog((String)dbMessage.Data, client);
+				getActivityLog((String) dbMessage.Data, client);
+				break;
+			}
+			case Reports_getAvarageBorrows:
+			{
+				reports_getAvarageBorrows(client);
 				break;
 			}
 			case MoveBookToArchive:
@@ -231,7 +239,8 @@ public class OBLServer extends AbstractServer
 		}
 	}
 
-	private void getListOfAllBooks(ConnectionToClient client) throws SQLException, IOException
+
+	private Map<Integer, Book> createAlistOfAllBooks() throws SQLException
 	{
 		String query = BooksQueries.SelectAllBooksEachRowForNewAuthor();
 		ResultSet rs = oblDB.executeQuery(query);
@@ -304,8 +313,12 @@ public class OBLServer extends AbstractServer
 			{
 				e.printStackTrace();
 			}
-
 		}
+		return booksList;
+	}
+	private void sendListOfAllBooks(ConnectionToClient client) throws SQLException, IOException
+	{
+		Map<Integer, Book> booksList = createAlistOfAllBooks();
 		client.sendToClient(new DBMessage(DBAction.GetAllBooksList, booksList));
 	}
 
@@ -327,7 +340,8 @@ public class OBLServer extends AbstractServer
 		{
 			rs.next();
 			User user = UsersQueries.CreateUserFromRS(rs);
-			if(isUserLocked(userToCheck, client)) return;
+			if(isUserLocked(userToCheck, client)) 
+				return;
 			DBMessage returnMsg;
 			if (user.getLoginStatus().equals("on"))
 			{
@@ -350,7 +364,8 @@ public class OBLServer extends AbstractServer
 
 	}
 	/*
-	 * The function check if the user is locked and if yes she send the message for the client
+	 * The function check if the user is locked and if yes she send the message for
+	 * the client
 	 */
 	private boolean isUserLocked(User userToCheck, ConnectionToClient client) throws SQLException, IOException
 	{
@@ -361,9 +376,9 @@ public class OBLServer extends AbstractServer
 		{
 			rs2.next();
 			DBMessage returnMsg2;
-			if(rs2.getString(1).equals("locked"))
+			if (rs2.getString(1).equals("locked"))
 			{
-				returnMsg2=new DBMessage(DBAction.CheckUser, "locked");
+				returnMsg2 = new DBMessage(DBAction.CheckUser, "locked");
 				client.sendToClient(returnMsg2);
 				return true;
 			}
@@ -1027,20 +1042,20 @@ public class OBLServer extends AbstractServer
 	{
 		String query = BorrowsQueries.getCurrentBorrowsForSubscriberID(id);
 		ResultSet rs = oblDB.executeQuery(query);
-		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createBorrowListFromRS(rs);
+		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createSpecificBorrowListFromRS(rs);
 
 		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrowsForSubID, borrowList));
 	}
-
 	private void getCurrentBorrow(ConnectionToClient client) throws IOException
 	{
 		String query = BorrowsQueries.getCurrentBorrows();
 		ResultSet rs = oblDB.executeQuery(query);
-		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createBorrowListFromRS(rs);
+		ArrayList<BorrowACopyOfBook> borrowList = BorrowsQueries.createSpecificBorrowListFromRS(rs);
 
 		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrows, borrowList));
 	}
-	private void getActivityLog(String subscriberID, ConnectionToClient client )throws IOException 
+
+	private void getActivityLog(String subscriberID, ConnectionToClient client) throws IOException
 	{
 		activityLogList = new ArrayList<ActivityLog>();
 		ArrayList<ActivityLog> temp = getOrderActivityLog(subscriberID);
@@ -1055,93 +1070,132 @@ public class OBLServer extends AbstractServer
 		temp = getBorrowExtensionActivityLog(subscriberID);
 		if (temp != null)
 			activityLogList.addAll(temp);
-		
+
 		if (activityLogList == null)
 		{
-			 DBMessage returnMsg = new DBMessage(DBAction.GetActivityLog, null);
-		      client.sendToClient(returnMsg);
-		      return;
+			DBMessage returnMsg = new DBMessage(DBAction.GetActivityLog, null);
+			client.sendToClient(returnMsg);
+			return;
 		}
-		
-	     DBMessage returnMsg = new DBMessage(DBAction.GetActivityLog, activityLogList);
-	     client.sendToClient(returnMsg);
-	}
-	
-	private ArrayList<ActivityLog> getBorrowExtensionActivityLog(String subscriberID)throws IOException 
-	{
-		
-	    String query =BorrowsQueries.searchBorrowExtensionFromSubscriberID(subscriberID);
-	    ResultSet rs = oblDB.executeQuery(query); 
-	    int rowCount = getRowCount(rs);
-	    if(rowCount == 0)
-	    {
-	      return null;
-	    }
-	    else
-	    { 
 
-	      ArrayList<ActivityLog> temp=BorrowsQueries.CreateBorrowExtensionListFromRS(rs);
-	      return temp;
-	    } 
-
-
-	}
-	
-	private ArrayList<ActivityLog> getOrderActivityLog(String subscriberID)throws IOException 
-	{
-		
-	    String query =OrdersQueries.searchOrdersFromSubscriberID(subscriberID);
-	    ResultSet rs = oblDB.executeQuery(query); 
-	    int rowCount = getRowCount(rs);
-	    if(rowCount == 0)
-	    {
-	      return null;
-	    }
-	    else
-	    { 
-
-	      ArrayList<ActivityLog> temp=OrdersQueries.CreateOrdersListFromRS(rs);
-	      return temp;
-	    } 
-
-
+		DBMessage returnMsg = new DBMessage(DBAction.GetActivityLog, activityLogList);
+		client.sendToClient(returnMsg);
 	}
 
-	private ArrayList<ActivityLog> getReturnActivityLog(String subscriberID)throws IOException 
+	private ArrayList<ActivityLog> getBorrowExtensionActivityLog(String subscriberID) throws IOException
 	{
-		
-	    String query = ReturnesQueries.searchReturnFromSubscriberID(subscriberID);
-	    ResultSet rs = oblDB.executeQuery(query); 
-	    int rowCount = getRowCount(rs);
-	    if(rowCount == 0)
-	    {
-	      return null;
-	    }
-	    else
-	    { 
-	      ArrayList<ActivityLog> temp=ReturnesQueries.CreateReturnListFromRS(rs);
-	      return temp;
-	    } 
 
+		String query = BorrowsQueries.searchBorrowExtensionFromSubscriberID(subscriberID);
+		ResultSet rs = oblDB.executeQuery(query);
+		int rowCount = getRowCount(rs);
+		if (rowCount == 0)
+		{
+			return null;
+		} else
+		{
 
+			ArrayList<ActivityLog> temp = BorrowsQueries.CreateBorrowExtensionListFromRS(rs);
+			return temp;
+		}
 	}
-	
-	private ArrayList<ActivityLog> getBorrowActivityLog(String subscriberID)throws IOException 
-	{
-		
-	    String query = BorrowsQueries.searchBorrowFromSubscriberID(subscriberID);
-	    ResultSet rs = oblDB.executeQuery(query); 
-	    int rowCount = getRowCount(rs);
-	    if(rowCount == 0)
-	    {
-	      return null;
-	    }
-	    else
-	    { 
 
-	      ArrayList<ActivityLog> temp=BorrowsQueries.CreateBorrowListFromRS(rs);
-	      return temp;
-	    } 
+	private ArrayList<ActivityLog> getOrderActivityLog(String subscriberID) throws IOException
+	{
+
+		String query = OrdersQueries.searchOrdersFromSubscriberID(subscriberID);
+		ResultSet rs = oblDB.executeQuery(query);
+		int rowCount = getRowCount(rs);
+		if (rowCount == 0)
+		{
+			return null;
+		} else
+		{
+
+			ArrayList<ActivityLog> temp = OrdersQueries.CreateOrdersListFromRS(rs);
+			return temp;
+		}
+	}
+
+	private ArrayList<ActivityLog> getReturnActivityLog(String subscriberID) throws IOException
+	{
+
+		String query = ReturnesQueries.searchReturnFromSubscriberID(subscriberID);
+		ResultSet rs = oblDB.executeQuery(query);
+		int rowCount = getRowCount(rs);
+		if (rowCount == 0)
+		{
+			return null;
+		} else
+		{
+			ArrayList<ActivityLog> temp = ReturnesQueries.CreateReturnListFromRS(rs);
+			return temp;
+		}
+	}
+
+	private ArrayList<ActivityLog> getBorrowActivityLog(String subscriberID) throws IOException
+	{
+		String query = BorrowsQueries.searchBorrowFromSubscriberID(subscriberID);
+		ResultSet rs = oblDB.executeQuery(query);
+		int rowCount = getRowCount(rs);
+		if (rowCount == 0)
+		{
+			return null;
+		} else
+		{
+
+			ArrayList<ActivityLog> temp = BorrowsQueries.CreateBorrowListFromRS(rs);
+			return temp;
+		}
+	}
+
+	private void reports_getAvarageBorrows(ConnectionToClient client) throws SQLException, IOException
+	{
+		// book id -> book
+		Map<Integer, Book> booksList = createAlistOfAllBooks();
+		ArrayList<BorrowACopyOfBook> borrowList;
+		String query = BorrowsQueries.getBorrowsTable();
+		ResultSet rs = oblDB.executeQuery(query);
+		borrowList = BorrowsQueries.createBorrowListFromSelectAllRS(rs);
+		Report_BorrowDurationInfo data = new Report_BorrowDurationInfo();
+		Map<String, Integer> wantedBooks = new HashMap<String, Integer>();
+		Map<String, Integer> regularBooks = new HashMap<String, Integer>();
+		for (Integer key : booksList.keySet())
+		{
+			int average = 0;
+			int count = 0;
+			for (BorrowACopyOfBook borrow : borrowList)
+			{
+				if (borrow.getActualReturnDate()!= null && borrow.getBookCatalogNumber().equals(key.toString()))
+				{
+					
+					SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+					String borrowDate = borrow.getBorrowDate().substring(0,10);
+					String returnDate = borrow.getActualReturnDate().substring(0, 10);
+					try {
+					    Date date1 = myFormat.parse(borrowDate);
+					    Date date2 = myFormat.parse(returnDate);
+					    long diff = date2.getTime() - date1.getTime();
+					    long diffInDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+					    average += diffInDays;
+					    count++;
+					} catch (ParseException e) {
+					    e.printStackTrace();
+					}
+					
+				}
+			}
+			if (count != 0)
+				average = average / count;
+			if (booksList.get(key).getClassification().equals("wanted"))
+			{
+				wantedBooks.put(booksList.get(key).getCatalogNumber(), average);
+			} else
+				regularBooks.put(booksList.get(key).getCatalogNumber(), average);
+		}
+		data.setRegularBooks(regularBooks);
+		data.setWantedBooks(wantedBooks);
+		DBMessage returnMsg = new DBMessage(DBAction.Reports_getAvarageBorrows,data);
+		client.sendToClient(returnMsg);
 	}
 	private void moveBookToArchive(String catalogNumber,ConnectionToClient client)throws IOException 
 	{

@@ -120,7 +120,7 @@ public class BorrowsQueries
 	}
 
 
-	public static ArrayList<BorrowACopyOfBook> createBorrowListFromRS(ResultSet rs)
+	public static ArrayList<BorrowACopyOfBook> createSpecificBorrowListFromRS(ResultSet rs)
 	{
 		ArrayList<BorrowACopyOfBook> borrowList = new ArrayList<>();
 		try
@@ -207,5 +207,24 @@ public class BorrowsQueries
 			e.printStackTrace();
 		}
 		return logs;
-	}	
+	}
+	public static ArrayList<BorrowACopyOfBook> createBorrowListFromSelectAllRS(ResultSet rs)
+	{
+		ArrayList<BorrowACopyOfBook> borrowList = new ArrayList<>();
+		try
+		{
+			while (rs.next())
+			{
+				//just used an existing constructor and used setter for the rest. only needed info for table view
+				BorrowACopyOfBook temp = new BorrowACopyOfBook(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), 
+						rs.getString(5), rs.getString(6), rs.getString(7));
+				temp.setCopyId(rs.getString(8));
+				borrowList.add(temp);
+			}
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return borrowList;
+	}
 }
