@@ -14,6 +14,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXProgressBar;
+import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Book;
@@ -108,6 +110,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	protected Stage borrowDialog = null;
 
 	protected Stage returnDialog = null;
+	
+	protected JFXProgressBar progressBar = null;
 
 	@FXML
 	protected void btn_homeDisplay(MouseEvent event)
@@ -361,6 +365,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		warningMessageLabel.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
 		JFXButton returnButton = new JFXButton("Return");
 		returnButton.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
+		progressBar = new JFXProgressBar();
+		progressBar.setVisible(false);
+		JFXSpinner spinner = new JFXSpinner();
 		returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
 		returnButton.setOnMouseClicked(new EventHandler<Event>()
 		{
@@ -386,6 +393,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 						BorrowACopyOfBook borrowToClose = new BorrowACopyOfBook(returnDateTime,
 								bookCatalogNumber.getText(), bookCopyId.getText(), true);
+						progressBar.setVisible(true);
 						GuiManager.client.returnBook(borrowToClose);
 					} catch (Exception ex)
 					{
@@ -397,7 +405,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 		});
 
-		returnDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, returnButton);
+		returnDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, returnButton, progressBar);
 		Scene returnDialogScene = new Scene(returnDialogVbox, 300, 200);
 		returnDialog.setScene(returnDialogScene);
 		returnDialog.showAndWait();
@@ -440,6 +448,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		return subscriber;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
@@ -492,6 +501,12 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.ShowMessagePopup(
 							"All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
 				});
+			} else if (newBorrow.getBookCatalogNumber().equals("-3"))
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup(
+							"This subscriber is currently borrowing a copy of this book");
+				});
 			} else if (newBorrow.getCopyId().equals("0"))
 			{
 				Platform.runLater(() -> {
@@ -540,8 +555,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			break;
 		}
 		case GetAllBooksList:
+		{
 			searchBookWindowController.setBookMap((Map<Integer, Book>) msg.Data);
 			break;
+		}
 		case GetCurrentBorrows:
 			borrowsWindowController.getMessageFromServer(msg);
 			break;
@@ -573,6 +590,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			} else
 			{
 				Platform.runLater(() -> {
+					progressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Return executed Successfully!");
 					returnDialog.close();
 				});
@@ -624,7 +642,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			searchBookWindowController = loader.getController();
 			searchBookWindowController.setUserLogedIn(userLogedIn);
 			searchBookWindowController.setPopUpMode(false);
-
+			
 			pane_searchBook.getChildren().add(newLoadedPane);
 		} catch (Exception e)
 		{

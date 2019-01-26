@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Book;
@@ -31,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class BorrowsScreenController implements IClientUI
 {
@@ -57,7 +59,14 @@ public class BorrowsScreenController implements IClientUI
 	private TableColumn<ObservableBorrow, String> subscriberIDColumn;
 
 	private ObservableList<ObservableBorrow> observableBorrowsList;// for table view...
-    
+	
+	@FXML
+	private AnchorPane spinnerAnchorPane;
+
+	@FXML
+	private JFXSpinner spinner;
+	
+	
 	@FXML
 	private ImageView refreshBtn;
 	@FXML
@@ -158,7 +167,6 @@ public class BorrowsScreenController implements IClientUI
 			});
 			return row;
 		});
-
 		GuiManager.client.getAllCurrentBorrows();
 	}
 
@@ -196,6 +204,8 @@ public class BorrowsScreenController implements IClientUI
 		case GetCurrentBorrows:
 		{
 			updateBorrowTable((List<BorrowACopyOfBook>)msg.Data);
+			spinnerAnchorPane.setVisible(false);
+			spinner.setVisible(false);
 		}
 		default:
 			break;
