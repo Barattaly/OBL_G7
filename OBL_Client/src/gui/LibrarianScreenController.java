@@ -111,7 +111,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 	protected Stage returnDialog = null;
 	
-	protected JFXProgressBar progressBar = null;
+	protected JFXProgressBar returnDialogProgressBar = null;
+	
+	protected JFXProgressBar borrowDialogProgressBar = null;
 
 	@FXML
 	protected void btn_homeDisplay(MouseEvent event)
@@ -281,7 +283,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		JFXButton borrowBtn = new JFXButton("Borrow");
 		borrowBtn.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
 		borrowDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
-
+		borrowDialogProgressBar = new JFXProgressBar();
+		borrowDialogProgressBar.setVisible(false);
 		borrowBtn.setOnMouseClicked(new EventHandler<Event>()
 		{
 			@Override
@@ -313,6 +316,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 						BorrowACopyOfBook newBorrow = new BorrowACopyOfBook(subscriberID.getText(), retDate,
 								bookCatalogNumber.getText(), bookCopyId.getText());
+						borrowDialogProgressBar.setVisible(true);
 						GuiManager.client.createNewBorrow(newBorrow);
 					} catch (Exception ex)
 					{
@@ -323,7 +327,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					warningMessageLabel.setText(warningMessage);
 			}
 		});
-		borrowDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, borrowBtn);
+		borrowDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, borrowBtn, borrowDialogProgressBar);
 		Scene borrowDialogScene = new Scene(borrowDialogVbox, 300, 200);
 		borrowDialog.setScene(borrowDialogScene);
 		borrowDialog.showAndWait();
@@ -365,9 +369,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		warningMessageLabel.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
 		JFXButton returnButton = new JFXButton("Return");
 		returnButton.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
-		progressBar = new JFXProgressBar();
-		progressBar.setVisible(false);
-		JFXSpinner spinner = new JFXSpinner();
+		returnDialogProgressBar = new JFXProgressBar();
+		returnDialogProgressBar.setVisible(false);
 		returnDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
 		returnButton.setOnMouseClicked(new EventHandler<Event>()
 		{
@@ -393,7 +396,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 						BorrowACopyOfBook borrowToClose = new BorrowACopyOfBook(returnDateTime,
 								bookCatalogNumber.getText(), bookCopyId.getText(), true);
-						progressBar.setVisible(true);
+						returnDialogProgressBar.setVisible(true);
 						GuiManager.client.returnBook(borrowToClose);
 					} catch (Exception ex)
 					{
@@ -405,7 +408,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 		});
 
-		returnDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, returnButton, progressBar);
+		returnDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, returnButton, returnDialogProgressBar);
 		Scene returnDialogScene = new Scene(returnDialogVbox, 300, 200);
 		returnDialog.setScene(returnDialogScene);
 		returnDialog.showAndWait();
@@ -532,6 +535,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			} else
 			{
 				Platform.runLater(() -> {
+					borrowDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Borrow executed Successfully!");
 					borrowDialog.close();
 				});
@@ -590,7 +594,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			} else
 			{
 				Platform.runLater(() -> {
-					progressBar.setVisible(false);
+					returnDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Return executed Successfully!");
 					returnDialog.close();
 				});
