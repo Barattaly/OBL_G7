@@ -126,6 +126,23 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		String dateTimeString = dateFormat.format(startDate);
 		return dateTimeString;
 	}*/
+
 	
+	public static String getPdfPath(Book bookCatalogNumber) //in this function we want to get the path of the PDF file 
+	{
+		String queryMsg= "SELECT tableOfContentPath FROM obl_db.books" 
+				+ " WHERE books.catalogNumber = '" + bookCatalogNumber.getCatalogNumber()+ "';";					
+		return queryMsg;
+		
+	}
+
+
+	
+	public static String updateBookArciveStatus(String catalogNumber) //shiranush new query
+	{
+		String queryMsg = "UPDATE obl_db.books SET archived = 'yes' WHERE books.catalogNumber = '"
+						+ catalogNumber + "';";
+		return queryMsg;
+	}
 	
 }
