@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Book;
@@ -14,6 +17,7 @@ import entities.Employee;
 import entities.ObservableBook;
 import entities.ObservableBorrow;
 import entities.ObservableEmployee;
+import entities.Report_BorrowDurationInfo;
 import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
@@ -26,22 +30,29 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class LibrarianManagerController extends LibrarianScreenController
 {
+	private Reports_BorrowsController borrowReportControler;
 	@FXML
 	private TableView<ObservableEmployee> emplyeeTableView;
 
@@ -66,20 +77,32 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	private TableColumn<ObservableEmployee, String> empDepartmentColumn;
 
+    @FXML
+    private JFXSpinner thinkSpinner;
+	
+	@FXML
+	private HBox reportsDatesPane;
+
 	private ObservableList<ObservableEmployee> empList;// for table view...
 
 	@FXML
-	private Pane pane_employees,pane_reports;
+	private Pane pane_employees, pane_reports;
 
 	@FXML
-	private ImageView btn_employees,	btn_reports;
+	private ImageView btn_employees, btn_reports;
 
 	@FXML
-	private JFXTextField searchTextField;//Search employee
-	
+	private JFXTextField searchTextField;// Search employee
+
 	@FXML
 	private ImageView refreshBtn;
-	
+
+	@FXML
+	private JFXButton generateReportBtn;
+
+	@FXML
+	private ToggleGroup reportToggleGroup;
+
 	// this is the search function, it is in listener for text inside the textfield
 	private InvalidationListener onSearchStart = new InvalidationListener()
 	{
@@ -143,7 +166,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 		super.initialize(arg0, arg1);
 		GuiManager.client.getEmployeeList();
 		searchTextField.textProperty().addListener(onSearchStart);
-		
+
 		pane_employees.setVisible(false);
 		pane_reports.setVisible(false);
 		btn_employees.setOpacity(1);
@@ -234,7 +257,6 @@ public class LibrarianManagerController extends LibrarianScreenController
 		btn_reports.setOpacity(0.5);
 	}
 
-
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
@@ -243,6 +265,15 @@ public class LibrarianManagerController extends LibrarianScreenController
 		case GetEmployeeList:
 		{
 			updateEmpList((ArrayList<Employee>) msg.Data);
+			break;
+		}
+		case Reports_getAvarageBorrows:
+		{
+			Platform.runLater(() -> {
+				thinkSpinner.setVisible(false);
+				openBorrowReport((Report_BorrowDurationInfo) msg.Data);
+			});
+			
 			break;
 		}
 		default:
@@ -260,12 +291,12 @@ public class LibrarianManagerController extends LibrarianScreenController
 		}
 		emplyeeTableView.setItems(empList);
 	}
-	
-    @FXML
-    void refreshBtnClicked(MouseEvent event) 
-    {
+
+	@FXML
+	void refreshBtnClicked(MouseEvent event)
+	{
 		GuiManager.client.getEmployeeList();
-    }
+	}
 
 	@FXML
 	void pressRefresh(MouseEvent event)
@@ -279,4 +310,63 @@ public class LibrarianManagerController extends LibrarianScreenController
 		refreshBtn.setOpacity(1);
 	}
 
+	@FXML
+	void generateReportClicked(ActionEvent event)
+	{
+		thinkSpinner.setVisible(true);
+		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
+		{
+		case "Activity":
+
+			break;
+		case "Borrows Duration":
+			GuiManager.client.report_getBorrowDurationInfo();
+			break;
+		case "Late Returns":
+			break;
+		}		
+
+	}
+
+	private void openBorrowReport(Report_BorrowDurationInfo info)
+	{
+		try
+		{
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/Reports_BorrowsDuration.fxml"));
+			Parent root = loader.load();
+			borrowReportControler = loader.getController();
+			borrowReportControler.setReportInformation(info);
+			Scene scene = new Scene(root);
+			SeondStage.setTitle("Borrows Duration");
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	@FXML
+	void radioBtnClicked(ActionEvent event)
+	{
+		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
+		{
+		case "Activity":
+			generateReportBtn.setDisable(true);
+			reportsDatesPane.setVisible(true);
+			break;
+		case "Borrows Duration":
+			generateReportBtn.setDisable(false);
+			reportsDatesPane.setVisible(false);
+			break;
+		case "Late Returns":
+			generateReportBtn.setDisable(false);
+			reportsDatesPane.setVisible(false);
+			break;
+		}
+	}
 }
