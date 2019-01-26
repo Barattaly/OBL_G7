@@ -1,5 +1,7 @@
 package srvrDb;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Map;
+
+
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
@@ -125,6 +129,11 @@ public class OBLServer extends AbstractServer
 			case UpdateSubscriberCard:
 			{
 				updateSubscriberInformation((Subscriber) dbMessage.Data, client);
+				break;
+			}
+			case openPdf:
+			{
+				openPdfTableOfContent((Book) dbMessage.Data, client);
 				break;
 			}
 			default:
@@ -625,5 +634,34 @@ public class OBLServer extends AbstractServer
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String string = format.format(calendar.getTime());
 		return string;
+	}
+	
+	private int openPdfTableOfContent(Book book, ConnectionToClient client)
+	{
+		String query = BooksQueries.searchBookToOpenPdf(book);// search by book catalog number
+		ResultSet rsOpenPdf = oblDB.executeQuery(query);
+
+		int rsNumberOfRows = getRowCount(rsOpenPdf);
+		if (rsNumberOfRows > 0) // means that the book pdf is exist
+		{
+			try {
+		        if ((new File("SELECT upload_file FROM obl_db.pdf WHERE books.catalogNumber = 2;'").exists())) {
+
+		            Process p = Runtime
+		               .getRuntime()
+		               .exec("rundll32 url.dll,FileProtocolHandler searchBookToOpenPdf");
+		            p.waitFor();
+
+		        } else {
+
+		            System.out.println("File does not exist");
+
+		        }
+
+		      } catch (Exception ex) {
+		        ex.printStackTrace();
+		      }
+		}
+		return 0;
 	}
 }

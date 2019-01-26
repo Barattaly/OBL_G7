@@ -12,6 +12,7 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class BookInformationController implements IClientUI
@@ -54,6 +55,14 @@ public class BookInformationController implements IClientUI
 
     @FXML
     private Label availableLabel;
+    
+
+    @FXML
+    void btn_viewTableOfContent(MouseEvent event)
+    {
+		this.btn_viewTableOfContent(event);
+
+    }
 
 	public void setBookInformation(Book book)
 	{

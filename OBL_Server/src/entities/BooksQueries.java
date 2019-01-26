@@ -130,5 +130,12 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return dateTimeString;
 	}*/
 	
+	public static String searchBookToOpenPdf(Book bookToCheck)
+	{
+		if (bookToCheck == null)
+			return null;
+		String queryMsg = "SELECT upload_file FROM obl_db.pdf WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		return queryMsg;
+	}
 	
 }

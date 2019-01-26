@@ -172,5 +172,17 @@ public class ClientController extends AbstractClient
 		
 	}
 
+	public void viewTableOfContent(Book book)
+	{
+		DBMessage message = new DBMessage(DBAction.openPdf, book);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
 }
 //End of ClientController class
