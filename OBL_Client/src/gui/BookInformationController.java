@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import java.util.ArrayList;
 
 import com.jfoenix.controls.JFXButton;
-
+ 
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
