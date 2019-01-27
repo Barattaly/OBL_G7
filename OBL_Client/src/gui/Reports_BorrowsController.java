@@ -17,7 +17,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.PieChart.Data;
 
-public class Reports_BorrowsController implements Initializable
+public class Reports_BorrowsController
 {
 	@FXML
 	private JFXTextField regularBooksAvarageTextField;
@@ -36,12 +36,6 @@ public class Reports_BorrowsController implements Initializable
 	private JFXTextField wantedBooksMedianTextField;
 
 	private Report_BorrowDurationInfo data = null;
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1)
-	{
-
-	}
 
 	public void setReportInformation(Report_BorrowDurationInfo info)
 	{
@@ -102,22 +96,32 @@ public class Reports_BorrowsController implements Initializable
 	private void setAvrages()
 	{
 		float average = 0;
+		int count = 0;
 		String averageString;
 		for (String catNum : data.getRegularBooks().keySet())
 		{
-			average += data.getRegularBooks().get(catNum);
+			if (data.getRegularBooks().get(catNum) != 0)
+			{
+				average += data.getRegularBooks().get(catNum);
+				count++;
+			}
 		}
-		average = average / data.getRegularBooks().keySet().size();
+		average = average / count;
 		averageString = String.valueOf(average);
 		if (averageString.length() > 4)
 			averageString = averageString.substring(0, 4);
 		regularBooksAvarageTextField.setText(averageString);
-
+		average =0;
+		count = 0;
 		for (String catNum : data.getWantedBooks().keySet())
 		{
-			average += data.getWantedBooks().get(catNum);
+			if (data.getWantedBooks().get(catNum) != 0)
+			{
+				average += data.getWantedBooks().get(catNum);
+				count++;
+			}
 		}
-		average = average / data.getWantedBooks().keySet().size();
+		average = average / count;
 		averageString = String.valueOf(average);
 		if (averageString.length() > 4)
 			averageString = averageString.substring(0, 4);
@@ -130,6 +134,7 @@ public class Reports_BorrowsController implements Initializable
 		XYChart.Series regular = new XYChart.Series();
 		XYChart.Series wanted = new XYChart.Series();
 		int[] histogram;
+		
 		int[] regularDurations = Arrays.stream(data.getRegularBooks().values().toArray()).mapToInt(o -> (int) o)
 				.toArray();
 		int[] wantedDurations = Arrays.stream(data.getWantedBooks().values().toArray()).mapToInt(o -> (int) o)
@@ -140,11 +145,11 @@ public class Reports_BorrowsController implements Initializable
 		wantedBookGraph.getYAxis().setLabel("Amount of books");
 		regular.setName("Regular Books");
 		wanted.setName("Wanted Books");
-		
+
 		Arrays.sort(regularDurations);
 		Arrays.sort(wantedDurations);
 		int max = regularDurations[regularDurations.length - 1];
-		
+
 		int amount;
 		ranges = getDaysRange(max);
 		if (max > 10)
@@ -169,28 +174,13 @@ public class Reports_BorrowsController implements Initializable
 		ranges = new String[]
 		{ "1", "2", "3" };
 
-		histogram = calcHistogram(regularDurations, 1, 4, 3);
+		histogram = calcHistogram(wantedDurations, 1, 4, 3);
 		for (int i = 0; i < 3; i++)
 		{
 			wanted.getData().add(new XYChart.Data(ranges[i], histogram[i]));
 		}
 
 		wantedBookGraph.getData().add(wanted);
-
-		/*
-		 * int sizeOfXjump = maxDuration/9; for(int i=0; i<10;i++) { int x=0,y=0;
-		 * regular.getData().add(new XYChart.Data(x,y)); } 0-2 | 2-4 | 4-6 | 6-8 |8-10 |
-		 * 10-12 | 12-14 | 14-16 | 16-17
-		 */
-		/*
-		 * for(String catNum : data.getRegularBooks().keySet()) {
-		 * regular.getData().add(new XYChart.Data(catNum,
-		 * data.getRegularBooks().get(catNum))); }
-		 * 
-		 * for(String catNum : data.getWantedBooks().keySet()) {
-		 * wanted.getData().add(new XYChart.Data(catNum,
-		 * data.getWantedBooks().get(catNum))); }
-		 */
 
 	}
 

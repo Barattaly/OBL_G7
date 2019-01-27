@@ -64,15 +64,15 @@ public class BorrowACopyOfBook implements Serializable
 	}
 	
 	public BorrowACopyOfBook(String id, String subscriberId, String borrowDate, String expectedReturnDate,
-							String isReturnedLate, String bookCatalogNumber, String copyId) 
+			String actualReturnDate, String isReturnedLate, String bookCatalogNumber) 
 	{
 		this.id = id;
 		this.subscriberId = subscriberId;
 		this.borrowDate = borrowDate;
 		this.expectedReturnDate = expectedReturnDate;
+		this.actualReturnDate = actualReturnDate;
 		this.isReturnedLate = isReturnedLate;
 		this.bookCatalogNumber = bookCatalogNumber;
-		this.copyId = copyId;
 	}
 	public String getId() 
 	{

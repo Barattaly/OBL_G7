@@ -17,6 +17,7 @@ import entities.Employee;
 import entities.ObservableBook;
 import entities.ObservableBorrow;
 import entities.ObservableEmployee;
+import entities.Report_Activity;
 import entities.Report_BorrowDurationInfo;
 import entities.Subscriber;
 import entities.User;
@@ -53,6 +54,8 @@ import javafx.stage.Stage;
 public class LibrarianManagerController extends LibrarianScreenController
 {
 	private Reports_BorrowsController borrowReportControler;
+	private Reports_ActivityController activityReportController;
+
 	@FXML
 	private TableView<ObservableEmployee> emplyeeTableView;
 
@@ -77,15 +80,15 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	private TableColumn<ObservableEmployee, String> empDepartmentColumn;
 
-    @FXML
-    private AnchorPane employeesSpinnerAnchorPane;
+	@FXML
+	private AnchorPane employeesSpinnerAnchorPane;
 
-    @FXML
-    private JFXSpinner employeesSpinner;
-	
-    @FXML
-    private JFXSpinner thinkSpinner;
-	
+	@FXML
+	private JFXSpinner employeesSpinner;
+
+	@FXML
+	private JFXSpinner thinkSpinner;
+
 	@FXML
 	private HBox reportsDatesPane;
 
@@ -281,7 +284,16 @@ public class LibrarianManagerController extends LibrarianScreenController
 				thinkSpinner.setVisible(false);
 				openBorrowReport((Report_BorrowDurationInfo) msg.Data);
 			});
-			
+
+			break;
+		}
+		case Reports_Activity:
+		{
+			Platform.runLater(() -> {
+				thinkSpinner.setVisible(false);
+				openActivityReport((Report_Activity) msg.Data);
+			});
+
 			break;
 		}
 		default:
@@ -319,20 +331,40 @@ public class LibrarianManagerController extends LibrarianScreenController
 	}
 
 	@FXML
+	void radioBtnClicked(ActionEvent event)
+	{
+		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
+		{
+		case "Activity":
+			generateReportBtn.setDisable(false);
+			reportsDatesPane.setVisible(false);
+			break;
+		case "Borrows Duration":
+			generateReportBtn.setDisable(false);
+			reportsDatesPane.setVisible(false);
+			break;
+		case "Late Returns":
+			generateReportBtn.setDisable(false);
+			reportsDatesPane.setVisible(false);
+			break;
+		}
+	}
+
+	@FXML
 	void generateReportClicked(ActionEvent event)
 	{
 		thinkSpinner.setVisible(true);
 		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
 		{
 		case "Activity":
-
+			GuiManager.client.report_ActivityInfo();
 			break;
 		case "Borrows Duration":
 			GuiManager.client.report_getBorrowDurationInfo();
 			break;
 		case "Late Returns":
 			break;
-		}		
+		}
 
 	}
 
@@ -358,23 +390,26 @@ public class LibrarianManagerController extends LibrarianScreenController
 
 	}
 
-	@FXML
-	void radioBtnClicked(ActionEvent event)
+	private void openActivityReport(Report_Activity info)
 	{
-		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
+		try
 		{
-		case "Activity":
-			generateReportBtn.setDisable(true);
-			reportsDatesPane.setVisible(true);
-			break;
-		case "Borrows Duration":
-			generateReportBtn.setDisable(false);
-			reportsDatesPane.setVisible(false);
-			break;
-		case "Late Returns":
-			generateReportBtn.setDisable(false);
-			reportsDatesPane.setVisible(false);
-			break;
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/Reports_Activity.fxml"));
+			Parent root = loader.load();
+			activityReportController = loader.getController();
+			activityReportController.setReportInformation(info);
+			Scene scene = new Scene(root);
+			SeondStage.setTitle("Activity Report");
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
+
 	}
+
 }

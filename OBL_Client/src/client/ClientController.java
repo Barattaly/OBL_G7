@@ -261,7 +261,6 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
 	}
 	
 	public void viewTableOfContent(Book bookCatalogNumber)
@@ -305,6 +304,18 @@ public class ClientController extends AbstractClient
 			catch (Exception ex){
 				ex.printStackTrace();
 			}
+		}
+	}
+
+	public void report_ActivityInfo()
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_Activity, null);
+		try
+		{
+			sendToServer(message);  
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
 		}
 	}
 }
