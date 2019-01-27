@@ -288,7 +288,7 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-	
+	/*in this function we get byte array from the server and we open it as pdf file*/
 	private void openTableOfContentPDF(DBMessage message) 
 	{
 		byte[] myByteArray = (byte[])message.Data;
@@ -296,7 +296,8 @@ public class ClientController extends AbstractClient
 		{
 			try 
 			{
-				File outputFile = new File("C:\\Users\\Shiran\\Desktop\\try.pdf");
+				//need to put the path to your desktop
+				File outputFile = new File("C:\\Users\\Shiran\\Desktop\\tableOfContent.pdf");
 				FileOutputStream fos= new FileOutputStream(outputFile);
 				 fos.write(myByteArray);
 			     Desktop.getDesktop().open(outputFile);
