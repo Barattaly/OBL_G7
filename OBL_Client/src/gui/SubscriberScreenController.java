@@ -249,7 +249,6 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		String userName = userLoged.getUserName();
 		userNameLabel.setText(userName);
 		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
-		GuiManager.client.getActivityLogFromDB(userLogedIn.getId());
 		initialSearchWindow();
 		initialBorrowsWindow();
 	}
@@ -269,6 +268,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			viewSubscriberCardController = loader.getController();
 			viewSubscriberCardController.setSubscriberToShow(subscriber);
 			// viewSubscriberCardController.setPopUpMode(false);
+			
 
 			pane_viewSubscriberCard.getChildren().add(newLoadedPane);
 		} catch (Exception e)

@@ -1,5 +1,7 @@
 package gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
+import entities.ActivityLog;
 import entities.Book;
 import entities.DBMessage;
 import entities.User;
@@ -22,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class GuiManager
@@ -29,6 +33,7 @@ public class GuiManager
 	public static ClientController client;
 	public static IClientUI CurrentGuiController;
 	public static boolean dbConnected = false;
+	public static ViewSubscriberCardController subscriberCardController = null;
 
 	public static Map<String, SCREENS> userTypeFromString = new HashMap<String, SCREENS>()
 	{
@@ -186,8 +191,11 @@ public class GuiManager
 			FXMLLoader loader = new FXMLLoader(
 					GuiManager.class.getResource(availableFXML.get(SCREENS.viewSubscriberCard)));
 			Parent root = loader.load();
-			ViewSubscriberCardController controller = loader.getController();
-			controller.setSubscriberToShow(newSub);
+			subscriberCardController = loader.getController();
+			if(subscriberCardController != null)
+				subscriberCardController.setSubscriberToShow(newSub);
+			else
+				ShowErrorPopup("Somthing get wrong , please restart the system");
 			Scene scene = new Scene(root);
 			SeondStage.setResizable(false);
 			SeondStage.setTitle("Subscriber Card");
@@ -201,6 +209,24 @@ public class GuiManager
 		}
 	}
 	
+	public static void openActvityLog(ArrayList<ActivityLog> activityList)
+	{
+		try
+		{
+			if(subscriberCardController != null)
+				subscriberCardController.setActivityLogList(activityList);
+			else
+				ShowErrorPopup("Somthing get wrong , please restart the system");
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+
+	
+
 	public static boolean isValidEmailAddress(String email)
 	{
 		boolean result = true;
