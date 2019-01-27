@@ -38,7 +38,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <JFXButton fx:id="viewTOC_btn" layoutX="53.0" layoutY="608.0" onAction="#viewTableOfContentClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="View book's table of content" textFill="WHITE">
+            <JFXButton fx:id="viewTOC_btn" layoutX="59.0" layoutY="620.0" onAction="#viewTableOfContentClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="View book's table of content" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -46,17 +46,17 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <Label fx:id="wantedBookLabel" layoutX="488.0" layoutY="514.0" text="This book is wanted!" textFill="#a0a2ab">
+            <Label fx:id="wantedBookLabel" layoutX="512.0" layoutY="514.0" text="This book is wanted!" textFill="#a0a2ab">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="451.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="475.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../bin/resources/warning.png" />
                </image>
             </ImageView>
-            <JFXButton fx:id="editDetailsBtn" layoutX="474.0" layoutY="564.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
+            <JFXButton fx:id="editDetailsBtn" layoutX="474.0" layoutY="575.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -64,7 +64,7 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="deleteBookBtn" layoutX="474.0" layoutY="609.0" onAction="#moveToArchiveClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Move to archive" textFill="WHITE">
+            <JFXButton fx:id="deleteBookBtn" layoutX="474.0" layoutY="620.0" onAction="#moveToArchiveClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Move to archive" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -72,7 +72,7 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="orderBookBtn" layoutX="54.0" layoutY="565.0" onAction="#btn_orderBookClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Order book" textFill="WHITE">
+            <JFXButton fx:id="orderBookBtn" layoutX="60.0" layoutY="577.0" onAction="#btn_orderBookClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Order book" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -127,7 +127,7 @@
                   </TitledPane>
                </panes>
             </Accordion>
-            <Label fx:id="availableLabel" layoutX="50.0" layoutY="522.0" prefHeight="36.0" prefWidth="264.0" text="The book available for borrow" textFill="#12d318">
+            <Label fx:id="availableLabel" layoutX="60.0" layoutY="512.0" prefHeight="62.0" prefWidth="354.0" text="The book available for borrow" textFill="#12d318">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

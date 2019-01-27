@@ -480,57 +480,68 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			if (newBorrow.getSubscriberId().equals("0"))
 			{
 				Platform.runLater(() -> {
+					borrowDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Subscriber ID doesn't exist!");
 				});
 			} else if (newBorrow.getSubscriberId().equals("1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup(
-							"The subscriber card status is not active,\nthis subscriber can't borrow new books!");
+					borrowDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("This book has been ordered by another subscriber,\nthis subscriber can't borrow this book.");
+				});
+			} else if (newBorrow.getSubscriberId().equals("2"))
+			{
+				Platform.runLater(() -> {
+					borrowDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("The subscriber card status is not active,\nthis subscriber can't borrow new books!");
 				});
 			} else if (newBorrow.getBookCatalogNumber().equals("0"))
 			{
 				Platform.runLater(() -> {
+					borrowDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
 				});
 			} else if (newBorrow.getBookCatalogNumber().equals("-1"))
 			{
 				Platform.runLater(() -> {
+					borrowDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("The book is archived,\nsubscriber can't borrow copies of it.");
 				});
 			} else if (newBorrow.getBookCatalogNumber().equals("-2"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup(
-							"All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
+					borrowDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
 				});
 			} else if (newBorrow.getBookCatalogNumber().equals("-3"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup(
-							"This subscriber is currently borrowing a copy of this book");
+					borrowDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("This subscriber is currently borrowing a copy of this book");
 				});
 			} else if (newBorrow.getCopyId().equals("0"))
 			{
 				Platform.runLater(() -> {
+					borrowDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
 				});
 			} else if (newBorrow.getCopyId().equals("-1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup(
-							"This copy is already borrowed,\nplease check you entered the correct copy ID");
+					borrowDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("This copy is already borrowed,\nplease check you entered the correct copy ID");
 				});
 			} else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button
 			{
 				Platform.runLater(() -> {
+					borrowDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Wrong return date, please enter date up to 14 days from today");
 				});
 			} else if (newBorrow.getExpectedReturnDate().equals("1")) // after press on "borrow button
 			{
 				Platform.runLater(() -> {
-					GuiManager
-							.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
+					borrowDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
 				});
 			} else
 			{
@@ -572,24 +583,26 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			if (newBorrow.getBookCatalogNumber().equals("0"))
 			{
 				Platform.runLater(() -> {
+					returnDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Book catalog number doesn't exist!");
 				});
 			} else if (newBorrow.getBookCatalogNumber().equals("-1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup(
-							"None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
+					returnDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
 				});
 			} else if (newBorrow.getCopyId().equals("0"))
 			{
 				Platform.runLater(() -> {
+					returnDialogProgressBar.setVisible(false);
 					GuiManager.ShowMessagePopup("Copy ID doesn't exist!");
 				});
 			} else if (newBorrow.getCopyId().equals("-1"))
 			{
 				Platform.runLater(() -> {
-					GuiManager.ShowMessagePopup(
-							"This copy is not currently borrow,\nplease check you entered the correct copy ID");
+					returnDialogProgressBar.setVisible(false);
+					GuiManager.ShowMessagePopup("This copy is not currently borrow,\nplease check you entered the correct copy ID");
 				});
 			} else
 			{

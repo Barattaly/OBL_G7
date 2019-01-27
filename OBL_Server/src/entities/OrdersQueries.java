@@ -77,4 +77,14 @@ public class OrdersQueries
 		return queryMsg;
 	}
 	
+	public static String updateOrderStatus(BookOrder orderToUpdate)
+	{
+		if (orderToUpdate == null)
+			return null;		
+		String queryMsg = "UPDATE obl_db.orders SET status = '" + orderToUpdate.getStatus() 
+						+ "' WHERE (id = " + orderToUpdate.getId() +") and (subscriberID = '" 
+						+ orderToUpdate.getSubscriberId() + "');";
+		return queryMsg;
+	}
+	
 }

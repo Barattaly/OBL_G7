@@ -131,12 +131,11 @@ public class BookInformationController implements IClientUI
 		} 
 		else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 		{
-			availableLabel.setText("Not available for borrow"); // book is available for order
+			availableLabel.setText("Not available for borrow"); // means that the book is available for order
 			availableLabel.setTextFill(Color.RED);
 			locationLabel.setVisible(false);
 			locationTextField.setVisible(false);
-			
-			if (book.getCurrentNumOfOrders() == book.getMaxCopies()) 
+			if (book.getCurrentNumOfOrders() == book.getMaxCopies()) // if orders queue is full
 			{
 				if (subscriberLoggedIn != null) 
 				{
@@ -144,13 +143,26 @@ public class BookInformationController implements IClientUI
 				} 
 				else 
 				{
-					availableLabel.setText("Not available for order"); // book is available for order
+					availableLabel.setText("Not available for order");
 				}
 				availableLabel.setTextFill(Color.RED);
 				orderBookBtn.setDisable(true);
 			}
 			if (subscriberLoggedIn != null) 
 			{
+				/* if the subscriber is currently borrow one of the copies of this book,
+				 * than we need to prevent the option to order this book */
+				for (BorrowACopyOfBook borrow : book.getBorrows()) 
+				{
+					if (borrow.getSubscriberId().equals(subscriberLoggedIn.getId()))
+					{
+						availableLabel.setText("You cant order a book that\nyou are currently borrowing");
+						availableLabel.setTextFill(Color.RED);
+						orderBookBtn.setDisable(true);
+					}
+				}
+				/* if the subscriber is currently order the book,
+				 * than we need to show the location in orders queue*/
 				int i = 1, positionInQueue = 0;
 				for (BookOrder order : book.getOrders()) 
 				{
