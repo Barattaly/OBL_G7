@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -11,7 +12,7 @@
 
 <AnchorPane prefHeight="512.0" prefWidth="756.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BorrowsScreenController">
    <children>
-      <Label alignment="TOP_CENTER" layoutX="231.0" layoutY="11.0" text="Current borrowed books" textFill="#a0a2ab" AnchorPane.topAnchor="11.0">
+      <Label alignment="TOP_CENTER" layoutX="244.0" layoutY="11.0" text="Current borrowed books" textFill="#a0a2ab" AnchorPane.topAnchor="11.0">
          <font>
             <Font size="24.0" />
          </font>
@@ -29,25 +30,30 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label disable="true" layoutX="37.0" layoutY="456.0" text="*One day before return date / return date" textFill="GREEN" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="37.0">
+      <Label layoutX="37.0" layoutY="456.0" style="-fx-font-weight: BOLD;" text="*One day before return date / return date" textFill="GREEN" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="37.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label disable="true" layoutX="37.0" layoutY="482.0" text="*Return date has passed, you're late! " textFill="RED" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="37.0">
+      <Label layoutX="37.0" layoutY="482.0" style="-fx-font-weight: BOLD;" text="*Return date has passed, you're late! " textFill="RED" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="37.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="searchTextField" focusColor="#a0a2ab" labelFloat="true" layoutX="131.0" layoutY="54.0" prefHeight="0.0" prefWidth="440.0" promptText="Search by borrow number,subscriber id, book catalog number, etc..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+      <JFXTextField fx:id="searchTextField" focusColor="#a0a2ab" labelFloat="true" layoutX="162.0" layoutY="54.0" prefHeight="0.0" prefWidth="440.0" promptText="Search by borrow number,subscriber id, book catalog number, etc..." style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
          <font>
             <Font size="14.0" />
          </font>
       </JFXTextField>
-      <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="664.0" layoutY="40.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="705.0" layoutY="43.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../bin/resources/refresh.png" />
          </image>
       </ImageView>
+      <AnchorPane fx:id="spinnerAnchorPane" layoutX="281.0" layoutY="131.0" prefHeight="162.0" prefWidth="194.0" style="-fx-background-color: #a0a2ab;">
+         <children>
+            <JFXSpinner fx:id="spinner" layoutX="64.0" layoutY="71.0" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

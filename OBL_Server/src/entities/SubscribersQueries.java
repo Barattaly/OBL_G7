@@ -92,13 +92,13 @@ public class SubscribersQueries
 		
 	}
 
-	public static String searchSubscriberByID(BorrowACopyOfBook borrowToAdd)
+	/*public static String searchSubscriberByID(BorrowACopyOfBook borrowToAdd)
 	{
 		if (borrowToAdd == null)
 			return null;
 		String queryMsg ="SELECT * FROM obl_db.subscribers WHERE subscriberID ='" +borrowToAdd.getSubscriberId() + "'";
 		return queryMsg;
-	}
+	}*/
 	
 	public static String getCurrentNumOfBorrows(Subscriber subscriberToUpdate)
 	{

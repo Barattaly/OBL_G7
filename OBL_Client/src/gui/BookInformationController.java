@@ -2,6 +2,7 @@ package gui;
 
 import entities.Book;
 import entities.BookOrder;
+import entities.BorrowACopyOfBook;
 import entities.CopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
@@ -13,6 +14,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+
+import java.lang.invoke.StringConcatFactory;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import java.util.Optional;
 
@@ -70,6 +75,9 @@ public class BookInformationController implements IClientUI
 
 	@FXML
 	private JFXTextField locationTextField;
+	
+	@FXML
+	private JFXTextField returnDateTextField;
 
 	private Book bookToShow;
 
@@ -81,6 +89,14 @@ public class BookInformationController implements IClientUI
 
 	@FXML
 	private Label availableLabel;
+	
+	@FXML
+	private Label returnDateLabel;
+
+	@FXML
+	private Label locationLabel;
+	
+	
 
     @FXML
     private JFXButton viewTOC_btn;
@@ -106,50 +122,83 @@ public class BookInformationController implements IClientUI
 			wantedBookLabel.setVisible(false);
 			wantedLogo.setVisible(false);
 		}
-		if (subscriberLoggedIn != null)
+		if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
 		{
-			if (!subscriberLoggedIn.getStatus().equals("active"))
+			availableLabel.setText("Available for borrow");
+			availableLabel.setTextFill(Color.web("#12d318"));
+			orderBookBtn.setDisable(true);
+			returnDateLabel.setVisible(false);
+			returnDateTextField.setVisible(false);
+		} 
+		else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
+		{
+			availableLabel.setText("Not available for borrow"); // means that the book is available for order
+			availableLabel.setTextFill(Color.RED);
+			locationLabel.setVisible(false);
+			locationTextField.setVisible(false);
+			if (book.getCurrentNumOfOrders() == book.getMaxCopies()) // if orders queue is full
 			{
-				availableLabel.setText("Card status isn't active"); // book is available for order
+				if (subscriberLoggedIn != null) 
+				{
+					availableLabel.setText("Orders queue is full");
+				} 
+				else 
+				{
+					availableLabel.setText("Not available for order");
+				}
 				availableLabel.setTextFill(Color.RED);
 				orderBookBtn.setDisable(true);
-			} else
+			}
+			if (subscriberLoggedIn != null) 
 			{
-
-				if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
+				/* if the subscriber is currently borrow one of the copies of this book,
+				 * than we need to prevent the option to order this book */
+				for (BorrowACopyOfBook borrow : book.getBorrows()) 
 				{
-					availableLabel.setText("Available for borrow");
-					availableLabel.setTextFill(Color.web("#12d318"));
-					orderBookBtn.setDisable(true);
-				} else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
-				{
-					availableLabel.setText("Not available for borrow"); // book is available for order
-					availableLabel.setTextFill(Color.RED);
-					// orderBookBtn.setDisable(true);
-
-					if (book.getCurrentNumOfOrders() < book.getMaxCopies())
+					if (borrow.getSubscriberId().equals(subscriberLoggedIn.getId()))
 					{
-						for (BookOrder order : book.getOrders())
-						{
-							// check if the subscriber already ordered this book
-							if (order.getSubscriberId().equals(userLoggedIn.getId()))
-							{
-								isOrderExist = true;
-							}
-						}
-						if (isOrderExist)
-						{
-							availableLabel.setText("Already ordered this book"); // book is available for order
-							availableLabel.setTextFill(Color.RED);
-							orderBookBtn.setDisable(true);
-						}
-					} else
-					{
+						availableLabel.setText("You cant order a book that\nyou are currently borrowing");
+						availableLabel.setTextFill(Color.RED);
 						orderBookBtn.setDisable(true);
 					}
 				}
+				/* if the subscriber is currently order the book,
+				 * than we need to show the location in orders queue*/
+				int i = 1, positionInQueue = 0;
+				for (BookOrder order : book.getOrders()) 
+				{
+					// check if the subscriber already ordered this book
+					if (order.getSubscriberId().equals(subscriberLoggedIn.getId())) 
+					{
+						isOrderExist = true;
+						positionInQueue = i;
+					}
+					i++;
+				}
+				if (isOrderExist) 
+				{
+					availableLabel.setText("Your position in orders queue: " + positionInQueue);
+					availableLabel.setTextFill(Color.web("#12d318"));
+					orderBookBtn.setDisable(true);
+				}
 			}
-			book.getTableOfContenPath();
+			// check what is the closest expected return date
+			String closestReturnDate = book.getBorrows().get(1).getExpectedReturnDate();
+			for (BorrowACopyOfBook borrow : book.getBorrows()) 
+			{
+				// if the current expected return date is before the previous date
+				if (LocalDate.parse(borrow.getExpectedReturnDate()).isBefore((LocalDate.parse(closestReturnDate))))
+				{
+					closestReturnDate = borrow.getExpectedReturnDate();
+				}
+			}
+			returnDateTextField.setText(closestReturnDate);
+		}
+		if (subscriberLoggedIn != null && !subscriberLoggedIn.getStatus().equals("active")) 
+		{
+			availableLabel.setText("Card status is not active");
+			availableLabel.setTextFill(Color.RED);
+			orderBookBtn.setDisable(true);
 		}
 		publicationYearTextField.setText(book.getPublicationYear());
 		editionNumTextField.setText(book.getEditionNumber());
@@ -253,27 +302,26 @@ public class BookInformationController implements IClientUI
 		} else
 			orderBookBtn.setDisable(false);
 	}
-	
-	   @FXML
-	    void moveToArchiveClick(ActionEvent event) 
-	   {
-		   String bookID= catNumTextField.getText();   
-		   Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("OBL Log Out");
-			alert.setHeaderText("Are you sure you want to delete this book?");
-			Optional<ButtonType> option = alert.showAndWait();
-			if (option.get() == ButtonType.OK)
-			{
-				GuiManager.client.moveBookToArchive(bookID);
-				GuiManager.ShowMessagePopup("The book with catalog number :" + bookID + "  moved to the archive" );
+	@FXML
+	void moveToArchiveClick(ActionEvent event) 
+	{
+		String bookID= catNumTextField.getText();   
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Warning");
+		alert.setHeaderText("Are you sure you want to delete this book?");
+		Optional<ButtonType> option = alert.showAndWait();
+		if (option.get() == ButtonType.OK)
+		{
+			GuiManager.client.moveBookToArchive(bookID);
+			GuiManager.ShowMessagePopup("The book with catalog number :" + bookID + "  moved to the archive" );
 				 
-			} else if (option.get() == ButtonType.CANCEL)
-			{
-				alert.close();
-			}
+		} else if (option.get() == ButtonType.CANCEL)
+		{
+			alert.close();
+		}
 		Stage stage = (Stage) deleteBookBtn.getScene().getWindow();//we want to close the stage where the delete button is
 		    // do what you have to do
-		  stage.close();
+		 stage.close();
 	    }
 	   @FXML
 	    void viewTableOfContentClick(ActionEvent event) 
@@ -281,8 +329,5 @@ public class BookInformationController implements IClientUI
 		   Book bookToSend=new Book(catNumTextField.getText());
 		   GuiManager.client.viewTableOfContent(bookToSend);
 		   
-	    }
-
-	    }
-
-
+	   }
+}

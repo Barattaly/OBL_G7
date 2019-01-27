@@ -78,6 +78,12 @@ public class LibrarianManagerController extends LibrarianScreenController
 	private TableColumn<ObservableEmployee, String> empDepartmentColumn;
 
     @FXML
+    private AnchorPane employeesSpinnerAnchorPane;
+
+    @FXML
+    private JFXSpinner employeesSpinner;
+	
+    @FXML
     private JFXSpinner thinkSpinner;
 	
 	@FXML
@@ -265,6 +271,8 @@ public class LibrarianManagerController extends LibrarianScreenController
 		case GetEmployeeList:
 		{
 			updateEmpList((ArrayList<Employee>) msg.Data);
+			employeesSpinnerAnchorPane.setVisible(false);
+			employeesSpinner.setVisible(false);
 			break;
 		}
 		case Reports_getAvarageBorrows:

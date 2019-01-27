@@ -26,7 +26,7 @@ public class OrdersQueries
 			return null;
 		String queryMsg = "SELECT id, subscriberID, orderDate, status, bookArriveDate, bookCatalogNumber " 
 						+ "FROM obl_db.orders " 
-						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "';";
+						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' AND status ='active';";
 		return queryMsg;
 	}
 	
@@ -66,4 +66,25 @@ public class OrdersQueries
 		}
 		return logs;
 	}
+	
+	public static String updateBookArriveDate(BookOrder orderToUpdate)
+	{
+		if (orderToUpdate == null)
+			return null;		
+		String queryMsg = "UPDATE obl_db.orders SET bookArriveDate = '" + orderToUpdate.getBookArriveDate() 
+						+ "' WHERE (id = " + orderToUpdate.getId() +") and (subscriberID = '" 
+						+ orderToUpdate.getSubscriberId() + "');";
+		return queryMsg;
+	}
+	
+	public static String updateOrderStatus(BookOrder orderToUpdate)
+	{
+		if (orderToUpdate == null)
+			return null;		
+		String queryMsg = "UPDATE obl_db.orders SET status = '" + orderToUpdate.getStatus() 
+						+ "' WHERE (id = " + orderToUpdate.getId() +") and (subscriberID = '" 
+						+ orderToUpdate.getSubscriberId() + "');";
+		return queryMsg;
+	}
+	
 }

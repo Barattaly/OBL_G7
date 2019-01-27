@@ -256,14 +256,14 @@
                   <AnchorPane fx:id="borrowsPane" layoutX="-1.0" layoutY="255.0" prefHeight="357.0" prefWidth="806.0" />
                </children>
             </Pane>
-            <Pane fx:id="pane_employees" layoutX="40.0" layoutY="1.0" prefHeight="644.0" prefWidth="650.0" visible="false">
+            <Pane fx:id="pane_employees" layoutX="40.0" layoutY="1.0" prefHeight="644.0" prefWidth="650.0">
                <children>
                   <Label alignment="TOP_CENTER" layoutX="245.0" layoutY="74.0" text="Employees List" textAlignment="CENTER" textFill="#a0a2ab">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="emplyeeTableView" editable="true" layoutX="7.0" layoutY="201.0" prefHeight="400.0" prefWidth="636.0" style="-fx-background-color: #a0a2ab;" tableMenuButtonVisible="true">
+                  <TableView fx:id="emplyeeTableView" editable="true" layoutX="7.0" layoutY="201.0" prefHeight="400.0" prefWidth="636.0" style="-fx-background-color: #a0a2ab;">
                      <columns>
                         <TableColumn fx:id="empNumColumn" prefWidth="115.0" text="Employee number" />
                         <TableColumn fx:id="empIDColumn" prefWidth="81.0" text="ID" />
@@ -282,15 +282,20 @@
                         <Font size="18.0" />
                      </font>
                   </JFXTextField>
-                  <Label layoutX="14.0" layoutY="613.0" text="*All data provided here is by third party software, in case of an error please check with Emplyees Managment Software" textFill="#655c5c" />
-                  <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="579.0" layoutY="144.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
+                  <Label layoutX="14.0" layoutY="613.0" text="*All data provided here is by third party software, in case of an error please check with Emplyees Managment Software" textFill="#a0a2ab" />
+                  <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="602.0" layoutY="144.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../bin/resources/refresh.png" />
                      </image>
                   </ImageView>
+                  <AnchorPane fx:id="employeesSpinnerAnchorPane" layoutX="214.0" layoutY="250.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #a0a2ab;">
+                     <children>
+                        <JFXSpinner fx:id="employeesSpinner" layoutX="54.0" layoutY="112.0" prefHeight="59.0" prefWidth="70.0" />
+                     </children>
+                  </AnchorPane>
                </children>
             </Pane>
-            <Pane fx:id="pane_reports" layoutY="56.0" prefHeight="588.0" prefWidth="767.0">
+            <Pane fx:id="pane_reports" layoutY="56.0" prefHeight="588.0" prefWidth="767.0" visible="false">
                <children>
                   <HBox fx:id="reportsDatesPane" layoutX="191.0" layoutY="209.0" prefHeight="68.0" prefWidth="385.0" spacing="15.0" visible="false">
                      <children>

@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import entities.SendEmail;
 import javafx.scene.shape.Circle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -105,6 +106,7 @@ public class ServerScreenController implements Initializable
 			_logTextArea.setText(ex.getMessage() + System.lineSeparator() + _logTextArea.getText());
 			_serverLedIndicator.setFill(javafx.scene.paint.Color.RED);
 		}
+
 	}
 
 	@FXML

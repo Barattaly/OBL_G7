@@ -233,7 +233,7 @@ public class ViewSubscriberCardController implements IClientUI
 			else if (activity.getActivity().equals("Return") && activity.getComments().equals("no"))
 				activity.setComments("The book was returned late");
 			else if (activity.getActivity().equals("Return") && activity.getComments().equals("yes"))
-				activity.setComments("The book was returned in time");
+				activity.setComments("The book was returned on time");
 
 			if (activity.getActivity().equals("Order"))
 				activity.setComments("Order status: " + activity.getComments());
