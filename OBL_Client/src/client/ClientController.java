@@ -291,22 +291,18 @@ public class ClientController extends AbstractClient
 	
 	private void openTableOfContentPDF(DBMessage message) 
 	{
-		Byte[] myByteArray = (Byte[])message.Data;
+		byte[] myByteArray = (byte[])message.Data;
 		if(Desktop.isDesktopSupported()) 
 		{
 			try 
 			{
-				 //InputStream is = new ByteArrayInputStream(((MyFile)msg).getMybytearray());
-				// int fileSize =((MyFile)msg).getSize(); 
-			     File outputFile = new File ("C:\\Users\\Shiran\\git\\OBL_G7\\OBL_Server\\src\\resources\\try.pdf");
-			     FileOutputStream fos= new FileOutputStream(outputFile);
-			     BufferedOutputStream bos=new BufferedOutputStream(fos);
-			    // bos.write(msgServer.getMybytearray(),0,fileSize);
-			     Desktop.getDesktop().open(outputFile);
-			     bos.flush();
-			     fos.flush();
+				
+				File outputFile = new File("C:\\Users\\Shiran\\Desktop\\try.pdf");
+				FileOutputStream fos= new FileOutputStream(outputFile);
 			     
-			    //to be continued...		     
+				 fos.write(myByteArray);
+			     Desktop.getDesktop().open(outputFile);
+			     fos.close();
 			} 
 			catch (Exception ex){
 				ex.printStackTrace();

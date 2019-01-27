@@ -20,16 +20,4 @@
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/resources/Table of content - Linear algebra.pdf</name>
-			<type>1</type>
-			<locationURI>PARENT-2-WORKSPACE_LOC/Table%20of%20content%20-%20Linear%20algebra.pdf</locationURI>
-		</link>
-		<link>
-			<name>src/resources/Table of contents - Algorithms.pdf</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Desktop/Table%20of%20contents%20-%20Algorithms.pdf</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>
