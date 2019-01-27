@@ -463,4 +463,10 @@ public class SearchBookController implements Initializable, IClientUI
 	{
 		refreshBtn.setOpacity(1);
 	}
+	
+    @FXML
+    void addNewBookBtnClick(ActionEvent event) {
+    	GuiManager.openAddNewBook();
+
+    }
 }

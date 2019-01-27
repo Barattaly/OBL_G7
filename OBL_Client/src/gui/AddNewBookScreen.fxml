@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
@@ -12,8 +16,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BookInformationController">
-   <top>
+<BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddNewBookController">
+   <center>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="761.0" style="-fx-background-color: #203447;" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
@@ -31,21 +35,6 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label layoutX="60.0" layoutY="330.0" text="Catalog number:" textFill="#a0a2ab" underline="true">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            <Label fx:id="wantedBookLabel" layoutX="488.0" layoutY="514.0" text="This book is wanted!" textFill="#a0a2ab">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="451.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../bin/resources/warning.png" />
-               </image>
-            </ImageView>
             <Label layoutX="42.0" layoutY="90.0" text="OBL" textFill="#a0a2ab">
                <font>
                   <Font name="System Bold" size="24.0" />
@@ -79,76 +68,102 @@
                         <Font size="19.0" />
                      </font>
                   </TitledPane>
-                  <TitledPane fx:id="copiesTitlePane" expanded="false" prefHeight="200.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../resources/titledpane.css" text="Copies" textFill="#a0a2ab">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TextArea fx:id="copiesTextArea" editable="false" prefHeight="164.0" prefWidth="244.0" />
-                           </children>
-                        </AnchorPane>
-                     </content>
-                     <font>
-                        <Font size="19.0" />
-                     </font>
-                  </TitledPane>
                </panes>
             </Accordion>
-            <Label fx:id="availableLabel" layoutX="50.0" layoutY="522.0" prefHeight="36.0" prefWidth="288.0" text="The book available for borrow" textFill="#12d318">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <Label layoutX="60.0" layoutY="381.0" prefHeight="35.0" prefWidth="181.0" text="Publication Year:" textFill="#a0a2ab" underline="true">
+            <Label layoutX="60.0" layoutY="327.0" prefHeight="35.0" prefWidth="181.0" text="Publication Year:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label layoutX="60.0" layoutY="428.0" prefHeight="35.0" prefWidth="184.0" text="Edition Number:" textFill="#a0a2ab" underline="true">
+            <Label layoutX="60.0" layoutY="394.0" prefHeight="35.0" prefWidth="184.0" text="Edition Number:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label layoutX="60.0" layoutY="469.0" prefHeight="35.0" prefWidth="109.0" text="Location:" textFill="#a0a2ab" underline="true">
+            <Label layoutX="60.0" layoutY="455.0" prefHeight="35.0" prefWidth="109.0" text="Location:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <JFXTextArea fx:id="bookNameTextArea" editable="false" focusColor="#203447" layoutX="134.0" layoutY="140.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXTextArea fx:id="bookNameTextArea" focusColor="#203447" layoutX="134.0" layoutY="140.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
             </JFXTextArea>
-            <JFXTextArea fx:id="authorTextArea" editable="false" focusColor="#203447" layoutX="144.0" layoutY="199.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXTextArea fx:id="authorTextArea" focusColor="#203447" layoutX="144.0" layoutY="199.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
             </JFXTextArea>
-            <JFXTextArea fx:id="categoriesTextArea" editable="false" focusColor="#203447" layoutX="184.0" layoutY="265.0" prefHeight="67.0" prefWidth="247.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXTextArea fx:id="categoriesTextArea" focusColor="#203447" layoutX="184.0" layoutY="265.0" prefHeight="67.0" prefWidth="247.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
             </JFXTextArea>
-            <JFXTextField fx:id="catNumTextField" editable="false" focusColor="#203447" layoutX="242.0" layoutY="330.0" prefHeight="39.0" prefWidth="166.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXTextField fx:id="publicationYearTextField" focusColor="#203447" layoutX="244.0" layoutY="327.0" prefHeight="39.0" prefWidth="185.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
             </JFXTextField>
-            <JFXTextField fx:id="publicationYearTextField" editable="false" focusColor="#203447" layoutX="244.0" layoutY="381.0" prefHeight="39.0" prefWidth="185.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXTextField fx:id="editionNumTextField" focusColor="#203447" layoutX="237.0" layoutY="395.0" prefHeight="39.0" prefWidth="192.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
             </JFXTextField>
-            <JFXTextField fx:id="editionNumTextField" editable="false" focusColor="#203447" layoutX="237.0" layoutY="429.0" prefHeight="39.0" prefWidth="192.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXTextField fx:id="locationTextField" focusColor="#203447" layoutX="163.0" layoutY="457.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
             </JFXTextField>
-            <JFXTextField fx:id="locationTextField" editable="false" focusColor="#203447" layoutX="163.0" layoutY="471.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXButton fx:id="btnAddBook" layoutX="311.0" layoutY="595.0" onAction="#btnAddBookClick" prefHeight="58.0" prefWidth="139.0" style="-fx-background-color: #3C58FA;" text="Add Book" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
+            <Label layoutX="450.0" layoutY="302.0" text="Number of copies:" textFill="#a0a2ab" underline="true">
                <font>
-                  <Font size="18.0" />
+                  <Font size="24.0" />
                </font>
-            </JFXTextField>
+            </Label>
+            <Spinner fx:id="copiesSpinner" editable="true" layoutX="658.0" layoutY="306.0" prefHeight="14.0" prefWidth="76.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Spinner>
+            <Label alignment="BOTTOM_RIGHT" layoutX="29.0" layoutY="129.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label alignment="BOTTOM_RIGHT" layoutX="29.0" layoutY="255.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label alignment="BOTTOM_RIGHT" layoutX="419.0" layoutY="292.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="warningLabel" layoutX="295.0" layoutY="572.0" text="Label">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <JFXCheckBox fx:id="wantedBook" layoutX="447.0" layoutY="366.0" text="This book is wanted?" textFill="#a0a2ab" unCheckedColor="#a0a2ab">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXCheckBox>
+            <Label alignment="BOTTOM_RIGHT" layoutX="29.0" layoutY="189.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
-   </top>
+   </center>
 </BorderPane>
