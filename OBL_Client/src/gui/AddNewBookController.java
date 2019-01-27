@@ -1,6 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
@@ -10,6 +16,7 @@ import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
+import entities.Book;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -102,6 +109,14 @@ public class AddNewBookController implements Initializable
 	    copiesSpinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, enterKeyEventHandler);
 
 	}
+	
+	public static String getCurrentDateAsString()
+	{
+		GregorianCalendar calendar = new GregorianCalendar();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String string = format.format(calendar.getTime());
+		return string;
+	}
 
 	@FXML
 	void btnAddBookClick(ActionEvent event)
@@ -115,7 +130,22 @@ public class AddNewBookController implements Initializable
 			warningLabel.setText("Please fill all the requierd field.");
 			return;
 		}
-			
+		else
+		{
+			 Calendar now = Calendar.getInstance();
+			 String purchaseDate = getCurrentDateAsString();
+			 System.out.println(purchaseDate);
+			 
+			 List<String> authorNameList = new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
+			 
+			 List<String> categories = new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
+			 
+			 
+			Book tempbook = New Book(bookNameTextArea.getText(),purchaseDate, authorNameList,
+					categories, String publicationYear, String editionNumber ,
+					String location,String description,
+					int maxCopies,  String classification,String tableOfContenPath);
+		}
 
 	}
 

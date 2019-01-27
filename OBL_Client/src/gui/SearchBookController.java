@@ -104,8 +104,9 @@ public class SearchBookController implements Initializable, IClientUI
 	@FXML
 	private Label oblLogoLabel;
 
-	@FXML
-	private JFXButton addNewBookBtn;
+
+    @FXML
+    private JFXButton addNewBookBtn;
 
 	@FXML
 	private Label headlineLabel;
