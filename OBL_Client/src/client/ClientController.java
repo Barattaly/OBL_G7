@@ -296,7 +296,7 @@ public class ClientController extends AbstractClient
 		{
 			try 
 			{
-				File outputFile = new File("tableOfContent.pdf");
+				File outputFile = new File("tableOfContentTempFile.pdf");
 				FileOutputStream fos= new FileOutputStream(outputFile);
 				 fos.write(myByteArray);
 			     Desktop.getDesktop().open(outputFile);
