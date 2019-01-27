@@ -5,15 +5,17 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="839.0" prefWidth="708.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Reports_BorrowsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="952.0" prefWidth="728.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Reports_BorrowsController">
    <children>
-      <GridPane layoutX="25.0" layoutY="125.0" prefHeight="103.0" prefWidth="168.0">
+      <GridPane layoutX="25.0" layoutY="217.0" prefHeight="103.0" prefWidth="168.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -44,7 +46,7 @@
             </JFXTextField>
          </children>
       </GridPane>
-      <BarChart fx:id="regularBooksGraph" alternativeColumnFillVisible="true" layoutX="228.0" layoutY="118.0" prefHeight="324.0" prefWidth="464.0" style="-fx-background-color: #a0a2ab;" title="Decimal distribution" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="118.0">
+      <BarChart fx:id="regularBooksGraph" alternativeColumnFillVisible="true" layoutX="228.0" layoutY="197.0" legendVisible="false" prefHeight="324.0" prefWidth="464.0" style="-fx-background-color: #a0a2ab;" title="Regular books borrow duration" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="197.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -52,17 +54,17 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
-      <Label layoutX="195.0" layoutY="14.0" text="Borrows Duration" textFill="#a0a2ab">
+      <Label layoutX="198.0" layoutY="42.0" text="Borrows Duration" textFill="#a0a2ab">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Label layoutX="25.0" layoutY="74.0" text="Regular books:" textFill="#a0a2ab" underline="true">
+      <Label layoutX="25.0" layoutY="166.0" text="Regular books:" textFill="#a0a2ab" underline="true">
          <font>
             <Font size="21.0" />
          </font>
       </Label>
-      <GridPane layoutX="24.0" layoutY="493.0" prefHeight="103.0" prefWidth="168.0">
+      <GridPane layoutX="24.0" layoutY="585.0" prefHeight="103.0" prefWidth="168.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -94,7 +96,7 @@
             </JFXTextField>
          </children>
       </GridPane>
-      <BarChart fx:id="wantedBookGraph" layoutX="227.0" layoutY="486.0" legendVisible="false" prefHeight="324.0" prefWidth="464.0" style="-fx-background-color: #a0a2ab;" title="Decimal distribution" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="486.0">
+      <BarChart fx:id="wantedBookGraph" layoutX="227.0" layoutY="584.0" legendVisible="false" prefHeight="339.0" prefWidth="464.0" style="-fx-background-color: #a0a2ab;" title="Wanted books borrow duration" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="584.0">
          <xAxis>
             <CategoryAxis side="BOTTOM" />
          </xAxis>
@@ -102,14 +104,24 @@
             <NumberAxis side="LEFT" />
          </yAxis>
       </BarChart>
-      <Label layoutX="24.0" layoutY="442.0" text="Wanted books:" textFill="#a0a2ab" underline="true">
+      <Label layoutX="24.0" layoutY="534.0" text="Wanted books:" textFill="#a0a2ab" underline="true">
          <font>
             <Font size="21.0" />
          </font>
       </Label>
-      <Label layoutX="168.0" layoutY="147.0" text="[days]" textFill="#a0a2ab" />
-      <Label layoutX="168.0" layoutY="197.0" text="[days]" textFill="#a0a2ab" />
-      <Label layoutX="168.0" layoutY="517.0" text="[days]" textFill="#a0a2ab" />
-      <Label layoutX="168.0" layoutY="567.0" text="[days]" textFill="#a0a2ab" />
+      <Label layoutX="168.0" layoutY="239.0" text="[days]" textFill="#a0a2ab" />
+      <Label layoutX="168.0" layoutY="289.0" text="[days]" textFill="#a0a2ab" />
+      <Label layoutX="168.0" layoutY="609.0" text="[days]" textFill="#a0a2ab" />
+      <Label layoutX="168.0" layoutY="659.0" text="[days]" textFill="#a0a2ab" />
+      <Label layoutX="37.0" layoutY="90.0" text="OBL" textFill="#a0a2ab">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="78.0" fitWidth="116.0" layoutX="14.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/resources/Logo.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
