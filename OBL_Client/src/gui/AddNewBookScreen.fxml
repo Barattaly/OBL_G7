@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BookInformationController">
+   <top>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="761.0" style="-fx-background-color: #203447;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../bin/resources/Logo.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="60.0" layoutY="199.0" text="Author:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="265.0" text="Categories:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="330.0" text="Catalog number:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="wantedBookLabel" layoutX="488.0" layoutY="514.0" text="This book is wanted!" textFill="#a0a2ab">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="451.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../bin/resources/warning.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="42.0" layoutY="90.0" text="OBL" textFill="#a0a2ab">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="296.0" layoutY="19.0" text="Add New Book" textFill="#a0a2ab">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="141.0" text="Name:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Accordion layoutX="451.0" layoutY="65.0">
+               <panes>
+                  <TitledPane lineSpacing="2.0" prefHeight="200.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
+                     <content>
+                        <AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="descreptionPane" focusTraversable="false" prefHeight="200.0" prefWidth="250.0" wrapText="true">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextArea>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </TitledPane>
+                  <TitledPane fx:id="copiesTitlePane" expanded="false" prefHeight="200.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../resources/titledpane.css" text="Copies" textFill="#a0a2ab">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="copiesTextArea" editable="false" prefHeight="164.0" prefWidth="244.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </TitledPane>
+               </panes>
+            </Accordion>
+            <Label fx:id="availableLabel" layoutX="50.0" layoutY="522.0" prefHeight="36.0" prefWidth="288.0" text="The book available for borrow" textFill="#12d318">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="381.0" prefHeight="35.0" prefWidth="181.0" text="Publication Year:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="428.0" prefHeight="35.0" prefWidth="184.0" text="Edition Number:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="60.0" layoutY="469.0" prefHeight="35.0" prefWidth="109.0" text="Location:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <JFXTextArea fx:id="bookNameTextArea" editable="false" focusColor="#203447" layoutX="134.0" layoutY="140.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextArea>
+            <JFXTextArea fx:id="authorTextArea" editable="false" focusColor="#203447" layoutX="144.0" layoutY="199.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextArea>
+            <JFXTextArea fx:id="categoriesTextArea" editable="false" focusColor="#203447" layoutX="184.0" layoutY="265.0" prefHeight="67.0" prefWidth="247.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextArea>
+            <JFXTextField fx:id="catNumTextField" editable="false" focusColor="#203447" layoutX="242.0" layoutY="330.0" prefHeight="39.0" prefWidth="166.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="publicationYearTextField" editable="false" focusColor="#203447" layoutX="244.0" layoutY="381.0" prefHeight="39.0" prefWidth="185.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="editionNumTextField" editable="false" focusColor="#203447" layoutX="237.0" layoutY="429.0" prefHeight="39.0" prefWidth="192.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="locationTextField" editable="false" focusColor="#203447" layoutX="163.0" layoutY="471.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXTextField>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>
