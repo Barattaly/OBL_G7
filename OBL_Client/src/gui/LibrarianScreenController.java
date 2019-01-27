@@ -1,8 +1,10 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +20,7 @@ import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
+import entities.ActivityLog;
 import entities.Book;
 import entities.BorrowACopyOfBook;
 import entities.DBMessage;
@@ -34,6 +37,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -98,7 +102,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	protected JFXButton btn_viewSubscriberCard;
 
-	// protected ViewSubscriberCardController controller; //check
+	 protected ViewSubscriberCardController controller; 
 
 	protected SearchBookController searchBookWindowController = null;
 
@@ -569,6 +573,22 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case GetActivityLog:
+		{
+			ArrayList<ActivityLog> activityList = (ArrayList<ActivityLog>) msg.Data;
+			if (activityList == null)
+				break;
+			else
+			{
+				Platform.runLater(() -> {
+					GuiManager.openActvityLog(activityList);
+				});
+			}
+
+			break;
+		}
+
+	
 		case GetAllBooksList:
 		{
 			searchBookWindowController.setBookMap((Map<Integer, Book>) msg.Data);
@@ -647,8 +667,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		else
 		{
 			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
+			
 		}
 	}
+
 
 	protected void initialSearchWindow()
 	{

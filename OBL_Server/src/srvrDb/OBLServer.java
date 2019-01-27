@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -47,7 +48,7 @@ public class OBLServer extends AbstractServer
 
 	public TextArea logREF = null;
 	private MySQLConnection oblDB;
-	ArrayList<ActivityLog> activityLogList;
+	
 
 	/**
 	 * Constructs an instance of the echo server.
@@ -185,9 +186,9 @@ public class OBLServer extends AbstractServer
 			case MoveBookToArchive:
 				moveBookToArchive((String)dbMessage.Data,client);
 				break;
-			/*case ViewTableOfContent:
+			case ViewTableOfContent:
 				sendPDFtoClient((Book)dbMessage.Data,client);
-				break;*/
+				break;
 			default:
 				break;
 			}
@@ -252,7 +253,8 @@ public class OBLServer extends AbstractServer
 			query = BooksQueries.getCategoriesForBookId(booksList.get(key).getCatalogNumber());
 			rs = oblDB.executeQuery(query);
 			booksList.get(key).setCategories(new ArrayList<>());
-			while (rs.next()) {
+			while (rs.next())
+			{
 				booksList.get(key).getCategories().add(rs.getString(1));
 			}
 			// update max copies:
@@ -392,11 +394,11 @@ public class OBLServer extends AbstractServer
 		String query = SubscribersQueries.getSubscriberStatusByUserName(userToCheck.getUserName());
 		ResultSet rs2 = oblDB.executeQuery(query);
 		int rowsNumber = getRowCount(rs2);
-		if(rowsNumber == 1)
+		if (rowsNumber == 1)
 		{
 			rs2.next();
 			DBMessage returnMsg2;
-			if(rs2.getString(1).equals("locked")) 
+			if (rs2.getString(1).equals("locked"))
 			{
 				returnMsg2 = new DBMessage(DBAction.CheckUser, "locked");
 				client.sendToClient(returnMsg2);
@@ -1185,7 +1187,8 @@ public class OBLServer extends AbstractServer
 		{
 			return 0;
 		}
-		try {
+		try 
+		{
 			resultSet.last();
 			return resultSet.getRow();
 		} catch (SQLException exp)
@@ -1240,6 +1243,7 @@ public class OBLServer extends AbstractServer
 
 	private void getActivityLog(String subscriberID, ConnectionToClient client) throws IOException
 	{
+		ArrayList<ActivityLog> activityLogList;
 		activityLogList = new ArrayList<ActivityLog>();
 		ArrayList<ActivityLog> temp = getOrderActivityLog(subscriberID);
 		if (temp != null)
@@ -1254,7 +1258,7 @@ public class OBLServer extends AbstractServer
 		if (temp != null)
 			activityLogList.addAll(temp);
 
-		if (activityLogList == null) 
+		if (activityLogList.isEmpty())
 		{
 			DBMessage returnMsg = new DBMessage(DBAction.GetActivityLog, null);
 			client.sendToClient(returnMsg);
@@ -1289,16 +1293,15 @@ public class OBLServer extends AbstractServer
 		String query = OrdersQueries.searchOrdersFromSubscriberID(subscriberID);
 		ResultSet rs = oblDB.executeQuery(query);
 		int rowCount = getRowCount(rs);
-		if (rowCount == 0) 
+		if (rowCount == 0)
 		{
 			return null;
-		} else 
+		} else
 		{
 
 			ArrayList<ActivityLog> temp = OrdersQueries.CreateOrdersListFromRS(rs);
 			return temp;
 		}
-
 	}
 
 	private ArrayList<ActivityLog> getReturnActivityLog(String subscriberID) throws IOException 
@@ -1307,10 +1310,10 @@ public class OBLServer extends AbstractServer
 		String query = ReturnesQueries.searchReturnFromSubscriberID(subscriberID);
 		ResultSet rs = oblDB.executeQuery(query);
 		int rowCount = getRowCount(rs);
-		if (rowCount == 0) 
+		if (rowCount == 0)
 		{
 			return null;
-		} else 
+		} else
 		{
 			ArrayList<ActivityLog> temp = ReturnesQueries.CreateReturnListFromRS(rs);
 			return temp;
@@ -1320,20 +1323,18 @@ public class OBLServer extends AbstractServer
 
 	private ArrayList<ActivityLog> getBorrowActivityLog(String subscriberID) throws IOException 
 	{
-
 		String query = BorrowsQueries.searchBorrowFromSubscriberID(subscriberID);
 		ResultSet rs = oblDB.executeQuery(query);
 		int rowCount = getRowCount(rs);
-		if (rowCount == 0) 
+		if (rowCount == 0)
 		{
 			return null;
-		} else 
+		} else
 		{
 
 			ArrayList<ActivityLog> temp = BorrowsQueries.CreateBorrowListFromRS(rs);
 			return temp;
 		}
-
 	}
 	
 	private void reports_getAvarageBorrows(ConnectionToClient client) throws SQLException, IOException
@@ -1390,18 +1391,20 @@ public class OBLServer extends AbstractServer
 	String query=BooksQueries.updateBookArciveStatus(catalogNumber);
 	oblDB.executeUpdate(query);
 	}
-	
+	/*
+	 * in this function we get book catalog number and pull the path from db, then move the file 
+	 * to byte array and send it to the client 
+	 * */
 	private void sendPDFtoClient(Book catalogNumber,ConnectionToClient client )throws IOException 
-	
 	{
-		String query=BooksQueries.getPdfPath(catalogNumber);
+		String query=BooksQueries.searchBookByCatalogNumber(catalogNumber);
 		ResultSet rs = oblDB.executeQuery(query);
-		
 		try
 		{
 			rs.next();
-			String localPath=new String(rs.getString(1));
-			byte[] mybytearray=getByteArrayFromFilePath("C:\\Users\\Shiran\\git\\OBL_G7\\OBL_Server\\src\\resources\\try.pdf");
+			String localPath=new String(rs.getString(9));
+			File file=new File(localPath);
+			byte[] mybytearray = Files.readAllBytes(file.toPath());
 		    DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
 		    client.sendToClient(returnMsg);
 			
@@ -1409,29 +1412,5 @@ public class OBLServer extends AbstractServer
 		{
 			exp.printStackTrace();
 		}
-	}
-	 public static byte[] getByteArrayFromFilePath(String path) 
-	 {
-	  if (path == null)
-	  {
-	   return null;
-	  }
-
-	  byte[] byteArray = null;
-	  try
-	  {
-	   File file = new File(path);
-	   FileInputStream fis = new FileInputStream(file);
-	   BufferedInputStream bis = new BufferedInputStream(fis);
-	   byteArray = new byte[(int) file.length()];
-	   //bis.read(byteArray);
-	   bis.read(byteArray,0,byteArray.length);
-	   bis.close();
-	  } catch (Exception e) {
-	       // TODO: handle exception
-	   e.printStackTrace();
-	  }
-	  return byteArray;
-	 }
-	 
+	}	 
 }

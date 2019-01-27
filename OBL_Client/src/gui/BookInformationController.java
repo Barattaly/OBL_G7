@@ -29,8 +29,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-public class BookInformationController implements IClientUI
+public class BookInformationController implements IClientUI 
 {
 	private User userLoggedIn;
 
@@ -304,27 +305,29 @@ public class BookInformationController implements IClientUI
 	@FXML
 	void moveToArchiveClick(ActionEvent event) 
 	{
-		String bookID= catNumTextField.getText();
-		   
+		String bookID= catNumTextField.getText();   
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("OBL Log Out");
+		alert.setTitle("Warning");
 		alert.setHeaderText("Are you sure you want to delete this book?");
 		Optional<ButtonType> option = alert.showAndWait();
 		if (option.get() == ButtonType.OK)
 		{
 			GuiManager.client.moveBookToArchive(bookID);
-			 GuiManager.ShowMessagePopup("The book with catalog number :" + bookID + "  moved to the archive" );
-		} 
-		else if (option.get() == ButtonType.CANCEL)
+			GuiManager.ShowMessagePopup("The book with catalog number :" + bookID + "  moved to the archive" );
+				 
+		} else if (option.get() == ButtonType.CANCEL)
 		{
 			alert.close();
-		}  
-	}
-	@FXML
-	void viewTableOfContentClick(ActionEvent event)
-	{
-		Book bookToSend=new Book(catNumTextField.getText());
-		GuiManager.client.viewTableOfContent(bookToSend);
+		}
+		Stage stage = (Stage) deleteBookBtn.getScene().getWindow();//we want to close the stage where the delete button is
+		    // do what you have to do
+		 stage.close();
+	    }
+	   @FXML
+	    void viewTableOfContentClick(ActionEvent event) 
+	   {
+		   Book bookToSend=new Book(catNumTextField.getText());
+		   GuiManager.client.viewTableOfContent(bookToSend);
 		   
-	}
+	   }
 }
