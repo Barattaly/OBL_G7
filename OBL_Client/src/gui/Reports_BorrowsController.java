@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 import javax.naming.spi.InitialContextFactory;
 
 import com.jfoenix.controls.JFXTextField;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 
 import entities.Report_BorrowDurationInfo;
 import javafx.fxml.FXML;
@@ -122,7 +121,7 @@ public class Reports_BorrowsController implements Initializable
 		averageString = String.valueOf(average);
 		if (averageString.length() > 4)
 			averageString = averageString.substring(0, 4);
-		wantedBooksAvarageTextField.setText(String.valueOf(average).substring(0, 4));
+		wantedBooksAvarageTextField.setText(averageString);
 	}
 
 	private void setGraphs()

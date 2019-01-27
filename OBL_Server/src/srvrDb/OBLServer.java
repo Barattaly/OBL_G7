@@ -1,6 +1,10 @@
 package srvrDb;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -178,7 +182,12 @@ public class OBLServer extends AbstractServer
 				reports_getAvarageBorrows(client);
 				break;
 			}
-
+			case MoveBookToArchive:
+				moveBookToArchive((String)dbMessage.Data,client);
+				break;
+			case ViewTableOfContent:
+				sendPDFtoClient((Book)dbMessage.Data,client);
+				break;
 			default:
 				break;
 			}
@@ -230,6 +239,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 		}
 	}
+
 
 	private Map<Integer, Book> createAlistOfAllBooks() throws SQLException
 	{
@@ -307,7 +317,6 @@ public class OBLServer extends AbstractServer
 		}
 		return booksList;
 	}
-
 	private void sendListOfAllBooks(ConnectionToClient client) throws SQLException, IOException
 	{
 		Map<Integer, Book> booksList = createAlistOfAllBooks();
@@ -332,7 +341,7 @@ public class OBLServer extends AbstractServer
 		{
 			rs.next();
 			User user = UsersQueries.CreateUserFromRS(rs);
-			if (isUserLocked(userToCheck, client))
+			if(isUserLocked(userToCheck, client)) 
 				return;
 			DBMessage returnMsg;
 			if (user.getLoginStatus().equals("on"))
@@ -355,7 +364,6 @@ public class OBLServer extends AbstractServer
 		}
 
 	}
-
 	/*
 	 * The function check if the user is locked and if yes she send the message for
 	 * the client
@@ -1039,7 +1047,6 @@ public class OBLServer extends AbstractServer
 
 		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrowsForSubID, borrowList));
 	}
-
 	private void getCurrentBorrow(ConnectionToClient client) throws IOException
 	{
 		String query = BorrowsQueries.getCurrentBorrows();
@@ -1191,5 +1198,32 @@ public class OBLServer extends AbstractServer
 		DBMessage returnMsg = new DBMessage(DBAction.Reports_getAvarageBorrows,data);
 		client.sendToClient(returnMsg);
 	}
-
+	private void moveBookToArchive(String catalogNumber,ConnectionToClient client)throws IOException 
+	{
+	String query=BooksQueries.updateBookArciveStatus(catalogNumber);
+	oblDB.executeUpdate(query);
+	}
+	/*
+	 * in this function we get book catalog number and pull the path from db, then move the file 
+	 * to byte array and send it to the client 
+	 * */
+	private void sendPDFtoClient(Book catalogNumber,ConnectionToClient client )throws IOException 
+	{
+		String query=BooksQueries.searchBookByCatalogNumber(catalogNumber);
+		ResultSet rs = oblDB.executeQuery(query);
+		try
+		{
+			rs.next();
+			String localPath=new String(rs.getString(9));
+			File file=new File(localPath);
+			byte[] mybytearray = Files.readAllBytes(file.toPath());
+		    DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
+		    client.sendToClient(returnMsg);
+			
+		}catch (SQLException exp)
+		{
+			exp.printStackTrace();
+		}
+	}
+	 
 }

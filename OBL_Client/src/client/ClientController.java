@@ -6,6 +6,7 @@ package client;
 
 import ocsf.client.*;
 
+import java.awt.Desktop;
 import java.io.*;
 
 import entities.Book;
@@ -50,7 +51,9 @@ public class ClientController extends AbstractClient
 						+ "Everything you do now will not be saved.");
 			});
 			break;
-			
+		case ViewTableOfContent:
+			openTableOfContentPDF(message);
+			break;
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
 			break; 
@@ -247,7 +250,7 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-
+	
 	public void report_getBorrowDurationInfo()
 	{
 		DBMessage message = new DBMessage(DBAction.Reports_getAvarageBorrows, null);
@@ -259,6 +262,50 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 		
+	}
+	
+	public void viewTableOfContent(Book bookCatalogNumber)
+	{
+		DBMessage message = new DBMessage(DBAction.ViewTableOfContent, bookCatalogNumber);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	public void moveBookToArchive (String catalogNumber)
+	{
+		DBMessage message = new DBMessage(DBAction.MoveBookToArchive, catalogNumber);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	/*in this function we get byte array from the server and we open it as pdf file*/
+	private void openTableOfContentPDF(DBMessage message) 
+	{
+		byte[] myByteArray = (byte[])message.Data;
+		if(Desktop.isDesktopSupported()) 
+		{
+			try 
+			{
+				File outputFile = new File("tableOfContentTempFile.pdf");
+				FileOutputStream fos= new FileOutputStream(outputFile);
+				 fos.write(myByteArray);
+			     Desktop.getDesktop().open(outputFile);
+			     fos.close();
+			} 
+			catch (Exception ex){
+				ex.printStackTrace();
+			}
+		}
 	}
 }
 //End of ClientController class
