@@ -208,6 +208,7 @@ public class BorrowsQueries
 		}
 		return logs;
 	}
+	
 	public static ArrayList<BorrowACopyOfBook> createBorrowListFromSelectAllRS(ResultSet rs)
 	{
 		ArrayList<BorrowACopyOfBook> borrowList = new ArrayList<>();
@@ -226,5 +227,15 @@ public class BorrowsQueries
 			e.printStackTrace();
 		}
 		return borrowList;
+	}
+	
+	public static String getBookCurrentBorrows(Book book)
+	{
+		if (book == null)
+			return null;
+		String queryMsg = "SELECT id, subscriberID, borrowDate, expectedReturnDate, isReturnedLate, bookCatalogNumber, copyID " 
+						+ "FROM obl_db.borrows " 
+						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' AND actualReturnDate is null;";
+		return queryMsg;
 	}
 }

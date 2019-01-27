@@ -1,8 +1,12 @@
 package gui;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Book;
@@ -19,12 +23,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class BorrowsScreenController implements IClientUI
 {
@@ -51,6 +59,14 @@ public class BorrowsScreenController implements IClientUI
 	private TableColumn<ObservableBorrow, String> subscriberIDColumn;
 
 	private ObservableList<ObservableBorrow> observableBorrowsList;// for table view...
+	
+	@FXML
+	private AnchorPane spinnerAnchorPane;
+
+	@FXML
+	private JFXSpinner spinner;
+	
+	
 	@FXML
 	private ImageView refreshBtn;
 	@FXML
@@ -58,25 +74,22 @@ public class BorrowsScreenController implements IClientUI
 	// this is the search function, it is in listener for text inside the textfield
 	private InvalidationListener onSearchStart = new InvalidationListener()
 	{
-
+		
 		@Override
 		public void invalidated(Observable arg0)
 		{
 
-			if (searchTextField.textProperty().get().isEmpty())
-			{
+            if(searchTextField.textProperty().get().isEmpty()) 
+            {
+            	borrowsTable.setItems(observableBorrowsList);
+                return;
+            }
 
-				borrowsTable.setItems(observableBorrowsList);
+            ObservableList<ObservableBorrow> tableItems = FXCollections.observableArrayList();
 
-				return;
+            ObservableList<TableColumn<ObservableBorrow, ?>> cols = borrowsTable.getColumns();
 
-			}
-
-			ObservableList<ObservableBorrow> tableItems = FXCollections.observableArrayList();
-
-			ObservableList<TableColumn<ObservableBorrow, ?>> cols = borrowsTable.getColumns();
-
-			for (int i = 0; i < observableBorrowsList.size(); i++)
+            for (int i = 0; i < observableBorrowsList.size(); i++)
 			{
 
 				for (int j = 0; j < cols.size(); j++)
@@ -84,33 +97,30 @@ public class BorrowsScreenController implements IClientUI
 
 					TableColumn col = cols.get(j);
 					String cellValue = null;
-					try
+                    try
 					{
 						cellValue = col.getCellData(observableBorrowsList.get(i)).toString();
-					} catch (NullPointerException ex)
+					} 
+                    catch (NullPointerException ex)
 					{
 						break;
 					}
 
-					cellValue = cellValue.toLowerCase();
+                    cellValue = cellValue.toLowerCase();
 
-					if (cellValue.contains(searchTextField.textProperty().get().toLowerCase()))
-					{
+                    if(cellValue.contains(searchTextField.textProperty().get().toLowerCase())) 
+                    {
 
-						tableItems.add(observableBorrowsList.get(i));
+                        tableItems.add(observableBorrowsList.get(i));
 
-						break;
-
-					}
-
-				}
-
-			}
-
-			borrowsTable.setItems(tableItems);
+                        break;
+                    }                        
+                }
+            }
+            borrowsTable.setItems(tableItems);	
 		}
 	};
-
+	
 	@Override
 	public User getUserLogedIn()
 	{
@@ -129,10 +139,11 @@ public class BorrowsScreenController implements IClientUI
 			break;
 		case "librarian":
 		case "library manager":
-			initialLibrarianView();
+			 initialLibrarianView();
 			break;
 		}
 	}
+
 
 	private void initialLibrarianView()
 	{
@@ -142,7 +153,7 @@ public class BorrowsScreenController implements IClientUI
 		copyNumberColumn.setCellValueFactory(new PropertyValueFactory<>("copyId"));
 		catalogNumberColumn.setCellValueFactory(new PropertyValueFactory<>("catalogNumber"));
 		subscriberIDColumn.setCellValueFactory(new PropertyValueFactory<>("subscriberId"));
-
+		//updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
 		borrowsTable.setRowFactory(tv -> { // press on row in borrow table to do what ever we want
 			TableRow<ObservableBorrow> row = new TableRow<>();
@@ -156,7 +167,6 @@ public class BorrowsScreenController implements IClientUI
 			});
 			return row;
 		});
-
 		GuiManager.client.getAllCurrentBorrows();
 	}
 
@@ -180,6 +190,7 @@ public class BorrowsScreenController implements IClientUI
 			});
 			return row;
 		});
+		//updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
 		GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
 	}
@@ -192,7 +203,9 @@ public class BorrowsScreenController implements IClientUI
 		case GetCurrentBorrowsForSubID:
 		case GetCurrentBorrows:
 		{
-			updateBorrowTable((List<BorrowACopyOfBook>) msg.Data);
+			updateBorrowTable((List<BorrowACopyOfBook>)msg.Data);
+			spinnerAnchorPane.setVisible(false);
+			spinner.setVisible(false);
 		}
 		default:
 			break;
@@ -232,5 +245,64 @@ public class BorrowsScreenController implements IClientUI
 	{
 		refreshBtn.setOpacity(1);
 	}
+	
+	/*
+	private void updateReturnDatesColors(TableColumn<ObservableBorrow, String> column) 
+	{
+		returnDateColumn.setCellFactory(
+				new Callback<TableColumn<ObservableBorrow, String>, TableCell<ObservableBorrow, String>>() 
+				{
+					public TableCell call(TableColumn param) 
+					{
+						return new TableCell<ObservableBorrow, String>() 
+						{
+							@Override
+							public void updateItem(String item, boolean empty) 
+							{
+								super.updateItem(item, empty);
 
+								if (item != null) 
+								{
+
+									if (item.length() == 10) // expected return date column
+									{
+										if ((LocalDate.parse(getCurrentDateAsString())
+												.isAfter(LocalDate.parse(item)))) 
+										{
+											setTextFill(Color.RED);
+											setStyle("-fx-font-weight: bold");
+											setText(item);
+										} 
+										else if ((LocalDate.parse(getCurrentDateAsString())
+												.isEqual(LocalDate.parse(item))) // return day
+												|| (LocalDate.parse(getCurrentDateAsString()).plusDays(1))
+														.isEqual(LocalDate.parse(item))) // one day before return date
+										{
+											setTextFill(Color.GREEN);
+											setStyle("-fx-font-weight: bold");
+											setText(item);
+										} 
+										else 
+										{
+											setTextFill(Color.BLACK);
+											setStyle("-fx-font-weight: lighter");
+											setText(item);
+										}
+
+									}
+								}
+							}
+						};
+					}
+				});
+	}*/
+	
+	public static String getCurrentDateAsString()
+	{
+		GregorianCalendar calendar = new GregorianCalendar();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String string = format.format(calendar.getTime());
+		return string;
+	}
+	
 }

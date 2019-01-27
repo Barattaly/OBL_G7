@@ -108,12 +108,22 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		String queryMsg = "SELECT * FROM obl_db.books WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
 		return queryMsg;
 	}
+	
 	public static String getArchiveStatus(Book bookToCheck)
 	{
 		if (bookToCheck == null)
 			return null;
 		String queryMsg = "SELECT archived FROM obl_db.books "
 						+ "WHERE books.catalogNumber = '" + bookToCheck.getCatalogNumber()+ "';";
+		return queryMsg;
+	}
+	
+	public static String getBookName(Book book)
+	{
+		if (book == null)
+			return null;
+		String queryMsg = "SELECT name FROM obl_db.books "
+						+ "WHERE books.catalogNumber = '" + book.getCatalogNumber()+ "';";
 		return queryMsg;
 	}
 	

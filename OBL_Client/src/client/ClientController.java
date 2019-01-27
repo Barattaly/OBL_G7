@@ -20,7 +20,7 @@ import gui.GuiManager;
 import javafx.application.Platform;
 
 public class ClientController extends AbstractClient
-{
+{ 
 
 	final public static int DEFAULT_PORT = 5555;
 

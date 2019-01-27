@@ -33,8 +33,12 @@ public class BookOrder implements Serializable
 	{
 		this.subscriberId = subscriberId;
 	}
-
 	
+	public BookOrder(String bookCatalogNumber, boolean flag) 
+	{
+		this.bookCatalogNumber = bookCatalogNumber;
+		this.flag = flag;
+	}
 	
 	public BookOrder(String subscriberId, String status, boolean flag) 
 	{

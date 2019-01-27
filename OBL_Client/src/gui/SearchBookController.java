@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXRadioButton;
+import com.jfoenix.controls.JFXSpinner;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -31,6 +32,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class SearchBookController implements Initializable, IClientUI
@@ -107,6 +109,12 @@ public class SearchBookController implements Initializable, IClientUI
 
 	@FXML
 	private Label headlineLabel;
+	
+	@FXML
+	private AnchorPane spinnerAnchorPane;
+
+	@FXML
+	private JFXSpinner spinner;
 	
 	private BookInformationController bookInformationController;
 
@@ -332,6 +340,8 @@ public class SearchBookController implements Initializable, IClientUI
 		{
 			bookMap = (Map<Integer, Book>) msg.Data;
 			copyBookMapToBookList();
+			spinnerAnchorPane.setVisible(false);
+			spinner.setVisible(false);
 			break;
 		}
 		case CreateNewOrder:
@@ -410,6 +420,8 @@ public class SearchBookController implements Initializable, IClientUI
 		this.bookMap = bookMap;
 		copyBookMapToBookList();
 		BookTable.refresh();
+		spinnerAnchorPane.setVisible(false);
+		spinner.setVisible(false);
 	}
 
 	// The default is pop up
