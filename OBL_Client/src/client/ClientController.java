@@ -296,10 +296,8 @@ public class ClientController extends AbstractClient
 		{
 			try 
 			{
-				
 				File outputFile = new File("C:\\Users\\Shiran\\Desktop\\try.pdf");
 				FileOutputStream fos= new FileOutputStream(outputFile);
-			     
 				 fos.write(myByteArray);
 			     Desktop.getDesktop().open(outputFile);
 			     fos.close();
