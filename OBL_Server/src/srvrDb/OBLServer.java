@@ -1203,14 +1203,14 @@ public class OBLServer extends AbstractServer
 	String query=BooksQueries.updateBookArciveStatus(catalogNumber);
 	oblDB.executeUpdate(query);
 	}
-	/*in this function we get book catalog number and pull the path from db, then move the file 
-	 * to byte array and send it to the client */
+	/*
+	 * in this function we get book catalog number and pull the path from db, then move the file 
+	 * to byte array and send it to the client 
+	 * */
 	private void sendPDFtoClient(Book catalogNumber,ConnectionToClient client )throws IOException 
-	
 	{
 		String query=BooksQueries.searchBookByCatalogNumber(catalogNumber);
 		ResultSet rs = oblDB.executeQuery(query);
-		
 		try
 		{
 			rs.next();

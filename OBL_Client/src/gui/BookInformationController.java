@@ -149,6 +149,7 @@ public class BookInformationController implements IClientUI
 					}
 				}
 			}
+			book.getTableOfContenPath();
 		}
 		publicationYearTextField.setText(book.getPublicationYear());
 		editionNumTextField.setText(book.getEditionNumber());
