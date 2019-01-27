@@ -46,7 +46,7 @@ public class OBLServer extends AbstractServer
 
 	public TextArea logREF = null;
 	private MySQLConnection oblDB;
-	ArrayList<ActivityLog> activityLogList;
+	
 
 	/**
 	 * Constructs an instance of the echo server.
@@ -1057,6 +1057,7 @@ public class OBLServer extends AbstractServer
 
 	private void getActivityLog(String subscriberID, ConnectionToClient client) throws IOException
 	{
+		ArrayList<ActivityLog> activityLogList;
 		activityLogList = new ArrayList<ActivityLog>();
 		ArrayList<ActivityLog> temp = getOrderActivityLog(subscriberID);
 		if (temp != null)
