@@ -10,11 +10,16 @@ import entities.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
 import java.lang.invoke.StringConcatFactory;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+
+import java.util.Optional;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -92,6 +97,9 @@ public class BookInformationController implements IClientUI
 	
 	
 
+    @FXML
+    private JFXButton viewTOC_btn;
+    
 	public void setBookInformation(Book book)
 	{
 		descreptionPane.setText(book.getDescription());
@@ -280,5 +288,31 @@ public class BookInformationController implements IClientUI
 			orderBookBtn.setDisable(true);
 		} else
 			orderBookBtn.setDisable(false);
+	}
+	@FXML
+	void moveToArchiveClick(ActionEvent event) 
+	{
+		String bookID= catNumTextField.getText();
+		   
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("OBL Log Out");
+		alert.setHeaderText("Are you sure you want to delete this book?");
+		Optional<ButtonType> option = alert.showAndWait();
+		if (option.get() == ButtonType.OK)
+		{
+			GuiManager.client.moveBookToArchive(bookID);
+			 GuiManager.ShowMessagePopup("The book with catalog number :" + bookID + "  moved to the archive" );
+		} 
+		else if (option.get() == ButtonType.CANCEL)
+		{
+			alert.close();
+		}  
+	}
+	@FXML
+	void viewTableOfContentClick(ActionEvent event)
+	{
+		Book bookToSend=new Book(catNumTextField.getText());
+		GuiManager.client.viewTableOfContent(bookToSend);
+		   
 	}
 }

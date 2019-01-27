@@ -1,5 +1,8 @@
 package srvrDb;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -179,7 +182,12 @@ public class OBLServer extends AbstractServer
 				reports_getAvarageBorrows(client);
 				break;
 			}
-
+			case MoveBookToArchive:
+				moveBookToArchive((String)dbMessage.Data,client);
+				break;
+			/*case ViewTableOfContent:
+				sendPDFtoClient((Book)dbMessage.Data,client);
+				break;*/
 			default:
 				break;
 			}
@@ -231,6 +239,7 @@ public class OBLServer extends AbstractServer
 			client.sendToClient(returnMsg);
 		}
 	}
+
 
 	private Map<Integer, Book> createAlistOfAllBooks() throws SQLException
 	{
@@ -351,7 +360,7 @@ public class OBLServer extends AbstractServer
 		{
 			rs.next();
 			User user = UsersQueries.CreateUserFromRS(rs);
-			if (isUserLocked(userToCheck, client))
+			if(isUserLocked(userToCheck, client)) 
 				return;
 			DBMessage returnMsg;
 			if (user.getLoginStatus().equals("on"))
@@ -374,7 +383,6 @@ public class OBLServer extends AbstractServer
 		}
 
 	}
-
 	/*
 	 * The function check if the user is locked and if yes she send the message for
 	 * the client
@@ -1140,7 +1148,6 @@ public class OBLServer extends AbstractServer
 
 		client.sendToClient(new DBMessage(DBAction.GetCurrentBorrowsForSubID, borrowList));
 	}
-
 	private void getCurrentBorrow(ConnectionToClient client) throws IOException
 	{
 		String query = BorrowsQueries.getCurrentBorrows();
@@ -1297,5 +1304,53 @@ public class OBLServer extends AbstractServer
 		DBMessage returnMsg = new DBMessage(DBAction.Reports_getAvarageBorrows,data);
 		client.sendToClient(returnMsg);
 	}
+	private void moveBookToArchive(String catalogNumber,ConnectionToClient client)throws IOException 
+	{
+	String query=BooksQueries.updateBookArciveStatus(catalogNumber);
+	oblDB.executeUpdate(query);
+	}
+	
+	private void sendPDFtoClient(Book catalogNumber,ConnectionToClient client )throws IOException 
+	
+	{
+		String query=BooksQueries.getPdfPath(catalogNumber);
+		ResultSet rs = oblDB.executeQuery(query);
+		
+		try
+		{
+			rs.next();
+			String localPath=new String(rs.getString(1));
+			byte[] mybytearray=getByteArrayFromFilePath("C:\\Users\\Shiran\\git\\OBL_G7\\OBL_Server\\src\\resources\\try.pdf");
+		    DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
+		    client.sendToClient(returnMsg);
+			
+		}catch (SQLException exp)
+		{
+			exp.printStackTrace();
+		}
+	}
+	 public static byte[] getByteArrayFromFilePath(String path) 
+	 {
+	  if (path == null)
+	  {
+	   return null;
+	  }
 
+	  byte[] byteArray = null;
+	  try
+	  {
+	   File file = new File(path);
+	   FileInputStream fis = new FileInputStream(file);
+	   BufferedInputStream bis = new BufferedInputStream(fis);
+	   byteArray = new byte[(int) file.length()];
+	   //bis.read(byteArray);
+	   bis.read(byteArray,0,byteArray.length);
+	   bis.close();
+	  } catch (Exception e) {
+	       // TODO: handle exception
+	   e.printStackTrace();
+	  }
+	  return byteArray;
+	 }
+	 
 }

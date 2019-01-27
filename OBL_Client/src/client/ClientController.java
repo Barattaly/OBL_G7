@@ -6,6 +6,7 @@ package client;
 
 import ocsf.client.*;
 
+import java.awt.Desktop;
 import java.io.*;
 
 import entities.Book;
@@ -50,7 +51,9 @@ public class ClientController extends AbstractClient
 						+ "Everything you do now will not be saved.");
 			});
 			break;
-			
+		case ViewTableOfContent:
+			openTableOfContentPDF(message);
+			break;
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
 			break; 
@@ -247,7 +250,7 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-
+	
 	public void report_getBorrowDurationInfo()
 	{
 		DBMessage message = new DBMessage(DBAction.Reports_getAvarageBorrows, null);
@@ -259,6 +262,56 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 		
+	}
+	
+	public void viewTableOfContent(Book bookCatalogNumber)
+	{
+		DBMessage message = new DBMessage(DBAction.ViewTableOfContent, bookCatalogNumber);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	public void moveBookToArchive (String catalogNumber)
+	{
+		DBMessage message = new DBMessage(DBAction.MoveBookToArchive, catalogNumber);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	private void openTableOfContentPDF(DBMessage message) 
+	{
+		Byte[] myByteArray = (Byte[])message.Data;
+		if(Desktop.isDesktopSupported()) 
+		{
+			try 
+			{
+				 //InputStream is = new ByteArrayInputStream(((MyFile)msg).getMybytearray());
+				// int fileSize =((MyFile)msg).getSize(); 
+			     File outputFile = new File ("C:\\Users\\Shiran\\git\\OBL_G7\\OBL_Server\\src\\resources\\try.pdf");
+			     FileOutputStream fos= new FileOutputStream(outputFile);
+			     BufferedOutputStream bos=new BufferedOutputStream(fos);
+			    // bos.write(msgServer.getMybytearray(),0,fileSize);
+			     Desktop.getDesktop().open(outputFile);
+			     bos.flush();
+			     fos.flush();
+			     
+			    //to be continued...		     
+			} 
+			catch (Exception ex){
+				ex.printStackTrace();
+			}
+		}
 	}
 }
 //End of ClientController class

@@ -121,7 +121,7 @@ public class Reports_BorrowsController implements Initializable
 		averageString = String.valueOf(average);
 		if (averageString.length() > 4)
 			averageString = averageString.substring(0, 4);
-		wantedBooksAvarageTextField.setText(String.valueOf(average).substring(0, 4));
+		wantedBooksAvarageTextField.setText(averageString);
 	}
 
 	private void setGraphs()
