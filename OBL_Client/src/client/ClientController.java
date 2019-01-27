@@ -296,8 +296,7 @@ public class ClientController extends AbstractClient
 		{
 			try 
 			{
-				//need to put the path to your desktop
-				File outputFile = new File("C:\\Users\\Shiran\\Desktop\\tableOfContent.pdf");
+				File outputFile = new File("tableOfContent.pdf");
 				FileOutputStream fos= new FileOutputStream(outputFile);
 				 fos.write(myByteArray);
 			     Desktop.getDesktop().open(outputFile);
