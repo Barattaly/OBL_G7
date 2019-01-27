@@ -153,7 +153,7 @@ public class BorrowsScreenController implements IClientUI
 		copyNumberColumn.setCellValueFactory(new PropertyValueFactory<>("copyId"));
 		catalogNumberColumn.setCellValueFactory(new PropertyValueFactory<>("catalogNumber"));
 		subscriberIDColumn.setCellValueFactory(new PropertyValueFactory<>("subscriberId"));
-		updateReturnDatesColors(returnDateColumn);
+		//updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
 		borrowsTable.setRowFactory(tv -> { // press on row in borrow table to do what ever we want
 			TableRow<ObservableBorrow> row = new TableRow<>();
@@ -190,7 +190,7 @@ public class BorrowsScreenController implements IClientUI
 			});
 			return row;
 		});
-		updateReturnDatesColors(returnDateColumn);
+		//updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
 		GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
 	}
@@ -246,7 +246,7 @@ public class BorrowsScreenController implements IClientUI
 		refreshBtn.setOpacity(1);
 	}
 	
-	
+	/*
 	private void updateReturnDatesColors(TableColumn<ObservableBorrow, String> column) 
 	{
 		returnDateColumn.setCellFactory(
@@ -295,7 +295,7 @@ public class BorrowsScreenController implements IClientUI
 						};
 					}
 				});
-	}
+	}*/
 	
 	public static String getCurrentDateAsString()
 	{
