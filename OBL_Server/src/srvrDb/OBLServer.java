@@ -227,7 +227,7 @@ public class OBLServer extends AbstractServer
 		if (book.getTocArraybyte()==null)
 			tocPath=null;                    //TODO: set a default TOC
 		else 
-		tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", "books\\");
+		tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", "resources.tablesOfContent//");
 		book.setTableOfContenPath(tocPath);
 		
 		String query = BooksQueries.AddBook(book);
