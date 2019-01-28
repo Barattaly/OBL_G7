@@ -15,6 +15,7 @@ import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
+import entities.Report_Activity;
 import entities.Subscriber;
 import gui.GuiManager;
 import javafx.application.Platform;
@@ -310,6 +311,30 @@ public class ClientController extends AbstractClient
 	public void report_ActivityInfo()
 	{
 		DBMessage message = new DBMessage(DBAction.Reports_Activity, null);
+		try
+		{
+			sendToServer(message);  
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public void getReportsList()
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_getList, null);
+		try
+		{
+			sendToServer(message);  
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}	
+	}
+
+	public void addReport(Report_Activity reportData)
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_Add, reportData);
 		try
 		{
 			sendToServer(message);  

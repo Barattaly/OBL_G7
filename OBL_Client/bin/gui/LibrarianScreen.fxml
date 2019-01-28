@@ -210,7 +210,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="118.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="118.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
