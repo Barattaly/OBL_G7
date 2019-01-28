@@ -19,6 +19,6 @@ public class DBMessage implements Serializable
 		GetAllBooksList,CreateNewBorrow, ViewSubscriberCard,UpdateSubscriberCard,
 		ShutDown, ReturnBook, GetEmployeeList,GetCurrentBorrowsForSubID,GetCurrentBorrows, 
 		CreateNewOrder,GetActivityLog,Reports_getAvarageBorrows,ViewTableOfContent,MoveBookToArchive
-		,Reports_Activity; 
+		,Reports_Activity,EditBookDetails; 
 	}
 }

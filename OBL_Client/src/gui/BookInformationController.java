@@ -18,12 +18,17 @@ import javafx.scene.control.Label;
 import java.lang.invoke.StringConcatFactory;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
+
+
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+
 
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
@@ -96,7 +101,11 @@ public class BookInformationController implements IClientUI
 	@FXML
 	private Label locationLabel;
 	
-	
+	 @FXML
+	    private JFXCheckBox wantedBookCheckBox;
+
+	  @FXML
+	  	private JFXButton saveChanges_btn;
 
     @FXML
     private JFXButton viewTOC_btn;
@@ -330,4 +339,39 @@ public class BookInformationController implements IClientUI
 		   GuiManager.client.viewTableOfContent(bookToSend);
 		   
 	   }
+
+	    @FXML
+	    void editDetailsClick(ActionEvent event) {
+	    	bookNameTextArea.setEditable(true);
+	    	authorTextArea.setEditable(true);
+	    	categoriesTextArea.setEditable(true);
+	    	publicationYearTextField.setEditable(true);
+	    	editionNumTextField.setEditable(true);
+	    	locationTextField.setEditable(true);
+	    	descreptionPane.setEditable(true);
+	    	copiesTextArea.setEditable(true);
+	    	wantedBookLabel.setVisible(false);
+	    	wantedLogo.setVisible(false);
+	    	wantedBookCheckBox.setVisible(true);
+	    	saveChanges_btn.setVisible(true);		
+	    }
+	    @FXML
+	    void saveChangesClick(ActionEvent event) //need to add function to remove ' 
+	    {
+	    	 ArrayList <String> authorsList=new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
+	    	 ArrayList <String> categoriesList=new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
+	    	 String bookClassification;
+	    	 if(wantedBookCheckBox.isSelected())
+	    		 bookClassification = "wanted";
+	    	 else
+	    		 bookClassification = "ordinary";
+	    	 //להוסיף בדיקה אם השדות ריקים
+	    	 Book newBook=new Book(catNumTextField.getText(),bookNameTextArea.getText(),
+	    			 authorsList,categoriesList,publicationYearTextField.getText(), 
+	    			 editionNumTextField.getText(),
+	    			 locationTextField.getText(),descreptionPane.getText(),bookClassification);
+	    	 
+	    	 GuiManager.client.editBookDetails(newBook);
+	    }
+
 }

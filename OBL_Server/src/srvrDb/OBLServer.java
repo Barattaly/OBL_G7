@@ -198,6 +198,9 @@ public class OBLServer extends AbstractServer
 				reports_createAcitivityReport(client);
 				break;
 			}
+			case EditBookDetails:
+				changeBookDetails((Book)dbMessage.Data,client);
+				break;
 			default:
 				break;
 			}
@@ -1521,5 +1524,11 @@ public class OBLServer extends AbstractServer
 		report = new Report_Activity(reportDate, totalNumberOfSubscribers, activeSubscribersNumber,
 				lockedSubscribersNumber, frozenSubscribersNumber, currentNumOfBorrows, numOfLateSubscribers);
 		client.sendToClient(new DBMessage(DBAction.Reports_Activity, report));
+	}
+	private void changeBookDetails (Book book, ConnectionToClient client) throws IOException
+	{
+		String query=BooksQueries.changeBookFields(book);
+		oblDB.executeUpdate(query);
+		
 	}
 }

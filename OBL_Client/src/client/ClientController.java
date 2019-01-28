@@ -318,5 +318,20 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
+	
+	public void editBookDetails (Book book)
+	{
+
+		DBMessage message = new DBMessage(DBAction.EditBookDetails, book);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
 }
 //End of ClientController class

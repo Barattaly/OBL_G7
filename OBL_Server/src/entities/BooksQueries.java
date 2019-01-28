@@ -143,5 +143,13 @@ public static String SelectAllBooksEachRowForNewAuthor()
 						+ catalogNumber + "';";
 		return queryMsg;
 	}
+	public static String changeBookFields(Book book)//shiran- need to add location +publication year
+	{
+		String queryMsg= "UPDATE obl_db.books SET name='"+ book.getName() +"',classification='"
+				+ book.getClassification() +"',description='"+ book.getDescription() +"',editionNumber='"
+				+book.getEditionNumber()+"' "
+						+ "WHERE catalogNumber='"+ book.getCatalogNumber() +"';";
+		return queryMsg;
+	}
 	
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.Cursor?>
@@ -46,17 +47,17 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <Label fx:id="wantedBookLabel" layoutX="512.0" layoutY="514.0" text="This book is wanted!" textFill="#a0a2ab">
+            <Label fx:id="wantedBookLabel" layoutX="512.0" layoutY="514.0" text="This book is wanted!" textFill="#a0a2ab" visible="false">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="475.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="475.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="@../../bin/resources/warning.png" />
                </image>
             </ImageView>
-            <JFXButton fx:id="editDetailsBtn" layoutX="474.0" layoutY="575.0" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
+            <JFXButton fx:id="editDetailsBtn" layoutX="474.0" layoutY="575.0" onAction="#editDetailsClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -147,12 +148,12 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="returnDateLabel" layoutX="60.0" layoutY="469.0" prefHeight="35.0" prefWidth="214.0" text="Closest return date:" textFill="#a0a2ab" underline="true">
+            <Label fx:id="returnDateLabel" layoutX="62.0" layoutY="469.0" prefHeight="35.0" prefWidth="214.0" text="Closest return date:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <JFXTextArea fx:id="bookNameTextArea" editable="false" focusColor="#203447" layoutX="134.0" layoutY="140.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
+            <JFXTextArea fx:id="bookNameTextArea" editable="false" focusColor="#2f587c" layoutX="134.0" layoutY="140.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" text="Not Available" unFocusColor="#203447">
                <font>
                   <Font size="18.0" />
                </font>
@@ -192,6 +193,19 @@
                   <Font size="18.0" />
                </font>
             </JFXTextField>
+            <JFXCheckBox fx:id="wantedBookCheckBox" layoutX="512.0" layoutY="477.0" text="wanted book" textFill="#f5eeee" visible="false">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXCheckBox>
+            <JFXButton fx:id="saveChanges_btn" layoutX="474.0" layoutY="528.0" onAction="#saveChangesClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Save changes" textFill="WHITE" visible="false">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXButton>
          </children>
       </AnchorPane>
    </top>
