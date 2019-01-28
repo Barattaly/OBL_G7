@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="587.0" prefWidth="730.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ViewSubscriberCardController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="664.0" prefWidth="882.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ViewSubscriberCardController">
    <children>
-      <Pane fx:id="pane_viewSubscriberCard" layoutX="50.0" layoutY="11.0" prefHeight="586.0" prefWidth="652.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane fx:id="pane_viewSubscriberCard" layoutX="50.0" layoutY="11.0" prefHeight="587.0" prefWidth="882.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <JFXButton fx:id="btn_Edit" buttonType="RAISED" layoutX="50.0" layoutY="513.0" onAction="#btn_EditClick" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
+            <JFXButton fx:id="btn_Edit" buttonType="RAISED" focusTraversable="false" layoutX="50.0" layoutY="545.0" onAction="#btn_EditClick" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="#fffefe">
                <font>
                   <Font size="14.0" />
                </font>
@@ -27,25 +27,28 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </JFXButton>
-            <Label layoutX="207.0" layoutY="70.0" text="Subscriber card details" textFill="#a0a2ab">
+            <Label layoutX="271.0" layoutY="68.0" text="Subscriber card details" textFill="#a0a2ab">
                <font>
-                  <Font size="24.0" />
+                  <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <TitledPane alignment="TOP_LEFT" animated="false" contentDisplay="TOP" layoutX="306.0" layoutY="160.0" prefHeight="313.0" prefWidth="410.0" stylesheets="@../../bin/resources/titledpane.css" text="View activity log " textFill="#a0a2ab" wrapText="true">
+            <TitledPane alignment="TOP_LEFT" animated="false" contentDisplay="TOP" focusTraversable="false" layoutX="330.0" layoutY="169.0" prefHeight="313.0" prefWidth="530.0" stylesheets="@../../bin/resources/titledpane.css" text="View activity log " textFill="#a0a2ab" wrapText="true">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #3C58FA;">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <children>
-                        <TableView fx:id="activityTable" layoutY="1.0" prefHeight="284.0" prefWidth="413.0">
+                        <TableView fx:id="activityTable" fixedCellSize="0.0" focusTraversable="false" layoutY="1.0" prefHeight="284.0" prefWidth="530.0">
                            <columns>
-                              <TableColumn fx:id="activitycol" prefWidth="99.0" text="Activity" />
-                              <TableColumn fx:id="booknamecol" prefWidth="98.0" text="Book name" />
-                              <TableColumn fx:id="datecol" prefWidth="84.0" text="Date" />
-                              <TableColumn fx:id="commentscol" prefWidth="127.0" text="comments" />
+                              <TableColumn fx:id="activitycol" prefWidth="153.0" text="Activity" />
+                              <TableColumn fx:id="booknamecol" prefWidth="93.0" text="Book name" />
+                              <TableColumn fx:id="datecol" prefWidth="108.0" text="Date" />
+                              <TableColumn fx:id="commentscol" prefWidth="175.0" text="comments" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </children>
                   </AnchorPane>
@@ -57,7 +60,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </TitledPane>
-            <GridPane alignment="BASELINE_LEFT" cacheShape="false" layoutX="50.0" layoutY="164.0" prefHeight="282.0" prefWidth="248.0">
+            <GridPane alignment="BASELINE_LEFT" cacheShape="false" layoutX="50.0" layoutY="196.0" prefHeight="282.0" prefWidth="248.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="10.0" prefWidth="123.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="9.0" prefWidth="113.0" />
@@ -147,7 +150,7 @@
                   <Insets />
                </opaqueInsets>
             </GridPane>
-            <JFXButton fx:id="btn_Cancel" buttonType="RAISED" layoutX="193.0" layoutY="513.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
+            <JFXButton fx:id="btn_Cancel" buttonType="RAISED" layoutX="193.0" layoutY="545.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
@@ -155,7 +158,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </JFXButton>
-            <JFXButton fx:id="btn_Save" buttonType="RAISED" layoutX="50.0" layoutY="513.0" onAction="#btn_SaveClick" style="-fx-background-color: green;" text="Save changes" textFill="#fffefe" visible="false">
+            <JFXButton fx:id="btn_Save" buttonType="RAISED" layoutX="50.0" layoutY="545.0" onAction="#btn_SaveClick" style="-fx-background-color: green;" text="Save changes" textFill="#fffefe" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
@@ -163,12 +166,12 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </JFXButton>
-            <Label fx:id="warningLabel" layoutX="57.0" layoutY="491.0" textFill="RED">
+            <Label fx:id="warningLabel" layoutX="57.0" layoutY="523.0" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="SuccessLabel" layoutX="53.0" layoutY="486.0" prefHeight="25.0" prefWidth="367.0" textFill="#a0a2ab">
+            <Label fx:id="SuccessLabel" layoutX="53.0" layoutY="518.0" prefHeight="25.0" prefWidth="367.0" textFill="#a0a2ab">
                <font>
                   <Font size="14.0" />
                </font>

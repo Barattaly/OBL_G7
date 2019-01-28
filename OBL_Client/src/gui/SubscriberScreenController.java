@@ -44,9 +44,9 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	private Label statusLabel;
 
 	@FXML
-	private Pane pane_home, pane_books;
+	private Pane pane_home;
 	@FXML
-	private AnchorPane pane_viewSubscriberCard;
+	private AnchorPane pane_viewSubscriberCard,pane_books;
 	@FXML
 	private AnchorPane pane_searchBook;
 
