@@ -141,10 +141,10 @@ public class AddNewBookController implements Initializable
 			 List<String> categories = new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
 			 
 			 
-			Book tempbook = New Book(bookNameTextArea.getText(),purchaseDate, authorNameList,
+			/*Book tempbook = New Book(bookNameTextArea.getText(),purchaseDate, authorNameList,
 					categories, String publicationYear, String editionNumber ,
 					String location,String description,
-					int maxCopies,  String classification,String tableOfContenPath);
+					int maxCopies,  String classification,String tableOfContenPath);*/
 		}
 
 	}
