@@ -89,9 +89,6 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	private JFXSpinner thinkSpinner;
 
-	@FXML
-	private HBox reportsDatesPane;
-
 	private ObservableList<ObservableEmployee> empList;// for table view...
 
 	@FXML
@@ -337,15 +334,12 @@ public class LibrarianManagerController extends LibrarianScreenController
 		{
 		case "Activity":
 			generateReportBtn.setDisable(false);
-			reportsDatesPane.setVisible(false);
 			break;
 		case "Borrows Duration":
 			generateReportBtn.setDisable(false);
-			reportsDatesPane.setVisible(false);
 			break;
 		case "Late Returns":
 			generateReportBtn.setDisable(false);
-			reportsDatesPane.setVisible(false);
 			break;
 		}
 	}

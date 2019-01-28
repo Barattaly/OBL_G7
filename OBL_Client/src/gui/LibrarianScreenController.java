@@ -67,9 +67,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	protected Label userNameLabel;
 	@FXML
-	protected Pane pane_home, pane_createNewSubscriberCard, pane_searchSubscriberCard;
+	protected Pane pane_createNewSubscriberCard, pane_searchSubscriberCard;
 	@FXML
-	protected AnchorPane pane_searchBook;
+	protected AnchorPane pane_searchBook,pane_home;
 	@FXML
 	protected ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard;
 
@@ -185,6 +185,21 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_createNewSubscriberCard.setOpacity(1);
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
+		GuiManager.preventLettersTypeInTextField(idNumberTextfield);
+		GuiManager.preventLettersTypeInTextField(phoneNumberTextfield);
+		emailTextfield.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
+		{
+			@Override
+			public void handle(KeyEvent e)
+			{
+				if (!GuiManager.isValidEmailAddress(emailTextfield.getText()))
+				{
+					warningLabel.setText("Wrong email format");
+				}
+				else
+					warningLabel.setText("");
+			}
+		});
 	}
 
 	@FXML
@@ -681,7 +696,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			searchBookWindowController = loader.getController();
 			searchBookWindowController.setUserLogedIn(userLogedIn);
 			searchBookWindowController.setPopUpMode(false);
-			
+			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
+			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
+			AnchorPane.setLeftAnchor(newLoadedPane, 0.0);
+			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
+
 			pane_searchBook.getChildren().add(newLoadedPane);
 		} catch (Exception e)
 		{
@@ -713,15 +732,19 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			AnchorPane newLoadedPane = loader.load();
 			borrowsWindowController = loader.getController();
 			borrowsWindowController.setUserLogedIn(userLogedIn);
-			borrowsPane.getChildren().add(newLoadedPane);
+			
 			AnchorPane.setLeftAnchor(newLoadedPane, 0.0);
 			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
 			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
 			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
+			
+			borrowsPane.getChildren().add(newLoadedPane);
+
 
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
+	
 }
