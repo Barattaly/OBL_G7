@@ -95,13 +95,13 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Accordion layoutX="451.0" layoutY="65.0">
+            <Accordion layoutX="451.0" layoutY="65.0" prefHeight="290.0" prefWidth="274.0">
                <panes>
-                  <TitledPane lineSpacing="2.0" prefHeight="200.0" prefWidth="232.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
+                  <TitledPane lineSpacing="2.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
                     <content>
                       <AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TextArea fx:id="descreptionPane" editable="false" focusTraversable="false" maxHeight="200.0" maxWidth="250.0" minHeight="200.0" minWidth="232.0" prefHeight="200.0" prefWidth="250.0" wrapText="true">
+                              <TextArea fx:id="descreptionPane" editable="false" focusTraversable="false" layoutY="27.0" maxHeight="200.0" maxWidth="250.0" minHeight="200.0" minWidth="232.0" prefHeight="200.0" prefWidth="250.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -113,11 +113,11 @@
                         <Font size="19.0" />
                      </font>
                   </TitledPane>
-                  <TitledPane fx:id="copiesTitlePane" expanded="false" prefHeight="200.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../resources/titledpane.css" text="Copies" textFill="#a0a2ab">
+                  <TitledPane fx:id="copiesTitlePane" expanded="false" style="-fx-background-color: #203447;" stylesheets="@../resources/titledpane.css" text="Copies" textFill="#a0a2ab">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="118.0" prefWidth="194.0">
                            <children>
-                              <TextArea fx:id="copiesTextArea" editable="false" prefHeight="164.0" prefWidth="244.0" />
+                              <TextArea fx:id="copiesTextArea" editable="false" prefHeight="114.0" prefWidth="199.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                     </content>
