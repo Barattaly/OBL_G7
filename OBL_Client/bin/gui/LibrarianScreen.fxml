@@ -159,12 +159,12 @@
             </Pane>
             <Pane fx:id="pane_searchSubscriberCard" layoutX="81.0" layoutY="34.0" prefHeight="611.0" visible="false" AnchorPane.leftAnchor="81.0" AnchorPane.rightAnchor="98.0" AnchorPane.topAnchor="34.0">
                <children>
-                  <Label layoutX="179.0" layoutY="205.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID:" textFill="#a0a2ab">
+                  <Label layoutX="187.0" layoutY="205.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID:" textFill="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="btn_viewSubscriberCard" alignment="TOP_CENTER" buttonType="RAISED" layoutX="252.0" layoutY="291.0" onAction="#btn_viewSubscriberCardClick" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
+                  <JFXButton fx:id="btn_viewSubscriberCard" alignment="CENTER" buttonType="RAISED" layoutX="252.0" layoutY="291.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -177,7 +177,7 @@
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <JFXTextField fx:id="txt_subscriberID" focusColor="#a0a2ab" layoutX="309.0" layoutY="190.0" prefHeight="30.0" prefWidth="149.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+                  <JFXTextField fx:id="txt_subscriberID" focusColor="#a0a2ab" layoutX="317.0" layoutY="190.0" prefHeight="30.0" prefWidth="149.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -194,7 +194,7 @@
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <JFXButton buttonType="RAISED" layoutX="565.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="147.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -202,7 +202,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="303.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="324.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -210,7 +210,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="118.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="573.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

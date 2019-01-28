@@ -1091,84 +1091,7 @@ public class OBLServer extends AbstractServer
 		}
 	}
 
-	/*
-	 * This method suppose to run automatically every 24 hours. If subscriber is
-	 * late at return a copy of a book, his status will change to "frozen", and the
-	 * borrow "isReturnedLate" flag will change to "yes".
-	 */
-	private void checkAndUpdateLateReturns()
-	{
-		String query = BorrowsQueries.getCurrentBorrowsTable();
-		ResultSet rsCurrentBorrowsTable = oblDB.executeQuery(query); // get current borrows table
-		BorrowACopyOfBook borrowFromBorrowsTable = new BorrowACopyOfBook();
-		ArrayList<Subscriber> subscribersLateReturnsAtListThreeTimes = new ArrayList<Subscriber>();
-		try
-		{
-			while (rsCurrentBorrowsTable.next())
-			{
-				borrowFromBorrowsTable.setId(rsCurrentBorrowsTable.getString(1));
-				borrowFromBorrowsTable.setSubscriberId(rsCurrentBorrowsTable.getString(2));
-				borrowFromBorrowsTable.setExpectedReturnDate(rsCurrentBorrowsTable.getString(4));
 
-				String expectedBorrowDate = borrowFromBorrowsTable.getExpectedReturnDate();
-				String returnDate = getCurrentDateAsString();
-
-				Subscriber subscriberToUpdate = new Subscriber(borrowFromBorrowsTable.getSubscriberId());
-				int lateReturnsCount = getSubscriberNumOfLateReturns(subscriberToUpdate);
-
-				if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(expectedBorrowDate))) // check if the subscriber
-																								// is late at return
-				{
-					lateReturnsCount++;
-					if (lateReturnsCount >= 3)
-					{
-						subscribersLateReturnsAtListThreeTimes.add(subscriberToUpdate);
-
-					}
-					query = BorrowsQueries.getIsReturnedLate(borrowFromBorrowsTable);
-					ResultSet rsIsReturnedLate = oblDB.executeQuery(query); // get the value of "isReturnedLate" flag
-					try
-					{
-						rsIsReturnedLate.next();
-						if (rsIsReturnedLate.getString(1).equals("no"))
-						{
-							borrowFromBorrowsTable.setIsReturnedLate("yes");
-							query = BorrowsQueries.updateIsReturnedLateToYes(borrowFromBorrowsTable);
-							oblDB.executeUpdate(query); // update the flag at the borrow if the subscriber returned the
-														// copy late
-						}
-					} catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-					subscriberToUpdate.setStatus("frozen");
-					query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
-					ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // update subscriber's status to frozen
-					try
-					{
-						rsSubscriberStatus.next();
-						if (rsSubscriberStatus.getString(1).equals("active"))
-						{
-							query = SubscribersQueries.updateSubscriberStatusToFrozen(subscriberToUpdate);
-							oblDB.executeUpdate(query); // update subscriber's status to frozen
-						}
-					} catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		/*
-		 * Send message to the library manager in order to approve deep freeze of the
-		 * subscriber card the message will include the hashMap:
-		 * subscribersLateReturnsAtListThreeTimes
-		 */
-	}
 
 	/**
 	 * This method overrides the one in the superclass. Called when the server
@@ -1521,5 +1444,10 @@ public class OBLServer extends AbstractServer
 		report = new Report_Activity(reportDate, totalNumberOfSubscribers, activeSubscribersNumber,
 				lockedSubscribersNumber, frozenSubscribersNumber, currentNumOfBorrows, numOfLateSubscribers);
 		client.sendToClient(new DBMessage(DBAction.Reports_Activity, report));
+	}
+
+	public MySQLConnection getConnection()
+	{
+		return oblDB;
 	}
 }

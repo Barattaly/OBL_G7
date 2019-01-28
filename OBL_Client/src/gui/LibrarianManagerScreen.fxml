@@ -27,7 +27,7 @@
          <children>
             <Pane fx:id="pane_searchSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton alignment="TOP_CENTER" buttonType="RAISED" layoutX="313.0" layoutY="288.0" onAction="#btn_viewSubscriberCardClick" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="323.0" layoutY="288.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -40,7 +40,7 @@
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <JFXTextField fx:id="txt_subscriberID" focusColor="#a0a2ab" layoutX="375.0" layoutY="191.0" prefHeight="30.0" prefWidth="150.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+                  <JFXTextField fx:id="txt_subscriberID" focusColor="#a0a2ab" layoutX="386.0" layoutY="191.0" prefHeight="30.0" prefWidth="150.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -48,14 +48,14 @@
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </JFXTextField>
-                  <Label layoutX="245.0" layoutY="206.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID:" textFill="#a0a2ab">
+                  <Label layoutX="257.0" layoutY="206.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID:" textFill="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <AnchorPane fx:id="pane_searchBook" layoutX="84.0" layoutY="81.0" prefHeight="450.0" prefWidth="597.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane fx:id="pane_searchBook" layoutX="84.0" layoutY="81.0" prefHeight="450.0" prefWidth="597.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Pane fx:id="pane_createNewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="258.0" layoutY="73.0" text="Create new subsciber card" textFill="#a0a2ab">
@@ -294,15 +294,15 @@
                         <Font size="18.0" />
                      </font>
                   </JFXTextField>
-                  <Label layoutX="14.0" layoutY="613.0" text="*All data provided here is by third party software, in case of an error please check with Emplyees Managment Software" textFill="#a0a2ab" />
+                  <Label layoutX="105.0" layoutY="613.0" text="*All data that provided here is by third party software, in case of an error please check with Emplyees Managment Software" textFill="#a0a2ab" />
                   <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="775.0" layoutY="144.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../bin/resources/refresh.png" />
                      </image>
                   </ImageView>
-                  <AnchorPane fx:id="employeesSpinnerAnchorPane" layoutX="303.0" layoutY="250.0" prefHeight="142.0" prefWidth="149.0" style="-fx-background-color: #a0a2ab;">
+                  <AnchorPane fx:id="employeesSpinnerAnchorPane" layoutX="303.0" layoutY="250.0" prefHeight="184.0" prefWidth="211.0" style="-fx-background-color: #a0a2ab;">
                      <children>
-                        <JFXSpinner fx:id="employeesSpinner" layoutX="75.0" layoutY="71.0" prefHeight="59.0" prefWidth="70.0" />
+                        <JFXSpinner fx:id="employeesSpinner" layoutX="70.0" layoutY="110.0" prefHeight="59.0" prefWidth="70.0" />
                      </children>
                   </AnchorPane>
                </children>

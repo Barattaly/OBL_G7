@@ -102,7 +102,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	protected JFXButton btn_viewSubscriberCard;
 
-	 protected ViewSubscriberCardController controller; 
+	protected ViewSubscriberCardController controller; 
 
 	protected SearchBookController searchBookWindowController = null;
 
@@ -186,6 +186,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
 		GuiManager.preventLettersTypeInTextField(idNumberTextfield);
+		GuiManager.limitTextFieldMaxCharacters(idNumberTextfield, 9);
 		GuiManager.preventLettersTypeInTextField(phoneNumberTextfield);
 		emailTextfield.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 		{
