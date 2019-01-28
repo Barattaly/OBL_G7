@@ -3,6 +3,7 @@ package srvrDb;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.ResultSet;
@@ -198,6 +199,11 @@ public class OBLServer extends AbstractServer
 				reports_createAcitivityReport(client);
 				break;
 			}
+			case AddBook:
+			{
+				AddNewBook((Book)dbMessage.Data , client);
+				break;
+			}
 			default:
 				break;
 			}
@@ -214,6 +220,42 @@ public class OBLServer extends AbstractServer
 			}
 		}
 	}
+	
+	private void AddNewBook(Book book, ConnectionToClient client)throws IOException
+	{
+		String tocPath;
+		if (book.getTocArraybyte()==null)
+			tocPath=null;                    //TODO: set a default TOC
+		else 
+		tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", "books\\");
+		book.setTableOfContenPath(tocPath);
+		
+		String query = BooksQueries.AddBook(book);
+		oblDB.executeUpdate(query);
+		
+		
+
+	}
+	
+	public static String createFileFromByteArray(byte[] bytes , String fileName , String fileType ,String filePath )
+	{
+	    File outputFile = new File(filePath + fileName + "." + fileType);
+
+	    
+	    
+	    try ( FileOutputStream outputStream = new FileOutputStream(outputFile); ) {
+
+	       outputStream.write(bytes);  //write the bytes and your done. 
+	       return outputFile.getPath();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		return null;
+	}
+		
+		
+	
+
 
 	private void updateSubscriberInformation(Subscriber subscriberToUpdate, ConnectionToClient client)
 			throws IOException

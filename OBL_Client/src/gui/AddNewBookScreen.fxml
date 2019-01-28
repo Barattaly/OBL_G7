@@ -163,6 +163,11 @@
                   <Font size="14.0" />
                </font>
             </Label>
+            <JFXButton fx:id="btnTOC" layoutX="481.0" layoutY="435.0" onAction="#btnTableOfcontentClick" prefHeight="40.0" prefWidth="134.0" style="-fx-background-color: #3C58FA;" text="Add table of content" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
          </children>
       </AnchorPane>
    </center>

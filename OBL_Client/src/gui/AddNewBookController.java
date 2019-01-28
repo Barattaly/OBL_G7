@@ -1,6 +1,9 @@
 package gui;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,11 +19,16 @@ import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
+
 import entities.Book;
+import entities.DBMessage;
+import entities.User;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -28,9 +36,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-public class AddNewBookController implements Initializable
+
+public class AddNewBookController implements Initializable 
 {
+
 
 	@FXML
 	private TextArea descreptionPane;
@@ -56,6 +68,9 @@ public class AddNewBookController implements Initializable
 
 	@FXML
 	private JFXButton btnAddBook;
+	
+	@FXML
+    private JFXButton btnTOC;
    
 	@FXML
     private JFXCheckBox wantedBook;
@@ -68,7 +83,10 @@ public class AddNewBookController implements Initializable
 	private Label warningLabel;
 
 	protected static final String INITAL_VALUE = "0";
-
+	
+	private byte[] tocArraybyte=null;
+	
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
@@ -107,8 +125,14 @@ public class AddNewBookController implements Initializable
 	    // SpinnerValueFactory reached new value before key released an SpinnerValueFactory will
 	    // throw an exception
 	    copiesSpinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, enterKeyEventHandler);
+	    
+	    GuiManager.preventLettersTypeInTextField(editionNumTextField);
+	    GuiManager.preventLettersTypeInTextField(publicationYearTextField);
+	    
 
 	}
+	
+
 	
 	public static String getCurrentDateAsString()
 	{
@@ -121,6 +145,7 @@ public class AddNewBookController implements Initializable
 	@FXML
 	void btnAddBookClick(ActionEvent event)
 	{
+		
 		warningLabel.setText("");
 		if (bookNameTextArea.getText().isEmpty() || categoriesTextArea.getText().isEmpty()
 				 || copiesSpinner.getValue().equals(0) || authorTextArea.getText().isEmpty() )
@@ -134,19 +159,59 @@ public class AddNewBookController implements Initializable
 		{
 			 Calendar now = Calendar.getInstance();
 			 String purchaseDate = getCurrentDateAsString();
-			 System.out.println(purchaseDate);
+		
 			 
-			 List<String> authorNameList = new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
+			 ArrayList<String> authorNameList = new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
 			 
-			 List<String> categories = new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
+			 ArrayList<String> categories = new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
+			 
+			 String classification;
+			 if(wantedBook.isSelected())
+				 classification = "wanted";
+			 else
+				 classification="ordinary";
 			 
 			 
-			/*Book tempbook = New Book(bookNameTextArea.getText(),purchaseDate, authorNameList,
-					categories, String publicationYear, String editionNumber ,
-					String location,String description,
-					int maxCopies,  String classification,String tableOfContenPath);*/
+			
+			Book tempbook = new Book(bookNameTextArea.getText(),purchaseDate, authorNameList,
+					categories, publicationYearTextField.getText(), editionNumTextField.getText() ,
+					locationTextField.getText(),descreptionPane.getText(),
+					copiesSpinner.getValue(),classification,tocArraybyte);
+			GuiManager.client.AddNewBook(tempbook);
 		}
 
 	}
+	
+    @FXML
+    void btnTableOfcontentClick(ActionEvent event) {
+    	   FileChooser fileChooser = new FileChooser();
+    		File file = fileChooser.showOpenDialog((Stage)btnTOC.getScene().getWindow());
+    		// file.getName();
+    		if (file != null) {
+    			try {
+    				if (!getFileExtension(file.getName()).equals("pdf"))
+    					GuiManager.ShowErrorPopup("Error - TOC must be a pdf file");
+    				else {
+    					tocArraybyte = Files.readAllBytes(file.toPath());
+    				}
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				// e.printStackTrace();
+    				tocArraybyte = null;
+    			}
+    		}
+   
+
+    }
+    
+    public static String getFileExtension(String fullName) {
+		if (fullName == null)
+			return null;
+		String fileName = new File(fullName).getName();
+		int dotIndex = fileName.lastIndexOf('.');
+		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+	}
+
+
 
 }

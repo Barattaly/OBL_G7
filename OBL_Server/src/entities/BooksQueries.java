@@ -144,4 +144,14 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return queryMsg;
 	}
 	
+	public static String AddBook(Book book) 
+	{
+		String queryMsg = "INSERT INTO obl_db.books (`name`, `purchaseDate`, `classification`, `description`, `location`,  `editionNumber`,`publicationYear`,`tableOfContentPath`,`archived`)"
+				+" VALUES ('"+book.getName()+"', '"+book.getPurchaseDate()+"', '"+book.getClassification()
+						+"', '" +book.getDescription()+ "', '"+book.getLocation()+"','"+book.getEditionNumber()
+								+ "','"+book.getPublicationYear()+ "','"+book.getTableOfContenPath()+ "','yes'" +");";
+				
+		return queryMsg;
+	}
+	
 }
