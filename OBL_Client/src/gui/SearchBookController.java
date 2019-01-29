@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

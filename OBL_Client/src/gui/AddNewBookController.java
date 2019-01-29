@@ -143,9 +143,11 @@ public class AddNewBookController implements Initializable, IClientUI
 	void btnAddBookClick(ActionEvent event)
 	{
 
-		warningLabel.setText("");
+		warningLabel.setText("");	
+			
 		if (bookNameTextArea.getText().isEmpty() || categoriesTextArea.getText().isEmpty()
-				|| copiesSpinner.getValue().equals(0) || authorTextArea.getText().isEmpty())
+				|| copiesSpinner.getValue().equals(0) || authorTextArea.getText().isEmpty() || publicationYearTextField.getText().isEmpty()
+				|| editionNumTextField.getText().isEmpty() || locationTextField.getText().isEmpty())
 
 		{
 			warningLabel.setTextFill(Color.RED);
@@ -167,6 +169,13 @@ public class AddNewBookController implements Initializable, IClientUI
 				classification = "wanted";
 			else
 				classification = "ordinary";
+			
+			if((Integer.parseInt(publicationYearTextField.getText().trim()) <= 999))
+			{
+				   warningLabel.setTextFill(Color.RED);
+			       warningLabel.setText("Enter correct year please");
+			       return;
+			}
 
 			Book tempbook = new Book(bookNameTextArea.getText(), purchaseDate, authorNameList, categories,
 					publicationYearTextField.getText(), editionNumTextField.getText(), locationTextField.getText(),
@@ -234,8 +243,6 @@ public class AddNewBookController implements Initializable, IClientUI
 					GuiManager.ShowErrorPopup("The book is already exist");
 				else
 					GuiManager.ShowMessagePopup("The was added successfully");
-					
-			
 		}
 
 	}
