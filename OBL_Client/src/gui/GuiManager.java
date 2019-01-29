@@ -22,6 +22,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -69,6 +70,7 @@ public class GuiManager
 			put(SCREENS.subscriber, "/gui/SubscriberScreen.fxml");
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
 			put(SCREENS.viewSubscriberCard, "/gui/viewSubscriberCardScreen.fxml");
+			put(SCREENS.addNewBook, "/gui/AddNewBookScreen.fxml");
 
 		}
 	};
@@ -192,7 +194,7 @@ public class GuiManager
 
 	public static enum SCREENS
 	{
-		login, librarian, searchBook, bookInformation, subscriber, librarianManager, viewSubscriberCard;
+		login, librarian, searchBook, bookInformation, subscriber, librarianManager, viewSubscriberCard , addNewBook;
 	}
 
 	/**
@@ -214,6 +216,7 @@ public class GuiManager
 			}
 		});
 	}
+	
 	/**
 	 * useful function to make a maxLength in textfield string
 	 * 
@@ -281,6 +284,7 @@ public class GuiManager
 			e.printStackTrace();
 		}
 	}
+
 /**
  * checking if email adress is a valid email adress.
  * @param email
@@ -298,6 +302,26 @@ public class GuiManager
 			result = false;
 		}
 		return result;
+	}
+	public static void openAddNewBook()
+	{
+		try
+		{
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(
+					GuiManager.class.getResource(availableFXML.get(SCREENS.addNewBook)));
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+			SeondStage.setResizable(false);
+			SeondStage.setTitle("Add new book");
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 }

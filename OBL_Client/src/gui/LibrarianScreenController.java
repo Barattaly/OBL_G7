@@ -26,6 +26,7 @@ import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -599,14 +600,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.openActvityLog(activityList);
 				});
 			}
-
 			break;
 		}
 
 	
 		case GetAllBooksList:
 		{
-			searchBookWindowController.setBookMap((Map<Integer, Book>) msg.Data);
+			searchBookWindowController.getMessageFromServer(msg);
 			break;
 		}
 		case GetCurrentBorrows:

@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -104,8 +105,9 @@ public class SearchBookController implements Initializable, IClientUI
 	@FXML
 	private Label oblLogoLabel;
 
-	@FXML
-	private JFXButton addNewBookBtn;
+
+    @FXML
+    private JFXButton addNewBookBtn;
 
 	@FXML
 	private Label headlineLabel;
@@ -463,4 +465,10 @@ public class SearchBookController implements Initializable, IClientUI
 	{
 		refreshBtn.setOpacity(1);
 	}
+	
+    @FXML
+    void addNewBookBtnClick(ActionEvent event) {
+    	GuiManager.openAddNewBook();
+
+    }
 }

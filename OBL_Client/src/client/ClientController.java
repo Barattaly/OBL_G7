@@ -75,9 +75,19 @@ public class ClientController extends AbstractClient
 		case ViewTableOfContent:
 			openTableOfContentPDF(message);
 			break;
+		case AddBook:
+		{
+			Platform.runLater(() -> {
+				if(((DBMessage)msg).Data == null)
+					GuiManager.ShowErrorPopup("The book is already exist");
+				else
+					GuiManager.ShowMessagePopup("The book was added successfully");
+			});
+			break;
+		}
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
-			break;
+			break; 
 
 		}
 	}
@@ -145,7 +155,7 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-
+		
 	}
 
 	public void createNewBorrow(BorrowACopyOfBook borrow)
@@ -183,9 +193,9 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-
+		
 	}
-
+	
 	public void updateSubscriberDetails(Subscriber subscriberToUpdate)
 	{
 		DBMessage message = new DBMessage(DBAction.UpdateSubscriberCard, subscriberToUpdate);
@@ -196,9 +206,9 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-
+		
 	}
-
+	
 	public void returnBook(BorrowACopyOfBook borrowToClose)
 	{
 		DBMessage message = new DBMessage(DBAction.ReturnBook, borrowToClose);
@@ -233,7 +243,7 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-
+		
 	}
 
 	public void getCurrentBorrowsForSubscriberID(String id)
@@ -265,7 +275,7 @@ public class ClientController extends AbstractClient
 		DBMessage message = new DBMessage(DBAction.GetActivityLog, id);
 		try
 		{
-			sendToServer(message);
+			sendToServer(message);  
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -308,13 +318,13 @@ public class ClientController extends AbstractClient
 		}
 	}
 
-	/*
+	/**
 	 * in this function we get byte array from the server and we open it as pdf file
 	 */
 	private void openTableOfContentPDF(DBMessage message)
 	{
-		byte[] myByteArray = (byte[]) message.Data;
-		if (Desktop.isDesktopSupported())
+		byte[] myByteArray = (byte[])message.Data;
+		if(Desktop.isDesktopSupported()) 
 		{
 			try
 			{
@@ -377,6 +387,17 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 
+	}
+	public void AddNewBook(Book book)
+	{
+		DBMessage message = new DBMessage(DBAction.AddBook, book);
+		try
+		{
+			sendToServer(message);  
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 }
 //End of ClientController class
