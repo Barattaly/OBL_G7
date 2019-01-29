@@ -1,11 +1,16 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.naming.spi.InitialContextFactory;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Report_BorrowDurationInfo;
@@ -27,6 +32,7 @@ public class Reports_BorrowsController
 
 	@FXML
 	private BarChart<CategoryAxis, NumberAxis> regularBooksGraph;
+
 	@FXML
 	private BarChart<CategoryAxis, NumberAxis> wantedBookGraph;
 
@@ -52,45 +58,55 @@ public class Reports_BorrowsController
 
 	private void setMedian()
 	{
-		int[] daysArray = new int[data.getRegularBooks().keySet().size()];
-		int i = 0;
+		List<Integer> daysArray = new ArrayList();// int[data.getRegularBooks().keySet().size()];
 		double median;
 		String medianString;
 		// regulat books:
 		for (String catNum : data.getRegularBooks().keySet())
 		{
-			daysArray[i] = data.getRegularBooks().get(catNum);
-			i++;
+			if (data.getRegularBooks().get(catNum) != 0)
+			{
+				daysArray.add(data.getRegularBooks().get(catNum));
+			}
 		}
-		Arrays.sort(daysArray);
-
-		if (daysArray.length % 2 == 0)
-			median = ((double) daysArray[daysArray.length / 2] + (double) daysArray[daysArray.length / 2 - 1]) / 2;
-		else
-			median = (double) daysArray[daysArray.length / 2];
-		medianString = String.valueOf(median);
-		if (medianString.length() > 4)
-			medianString = medianString.substring(0, 4);
-		regularBooksMedianTextField.setText(medianString);
+		if (daysArray.size() != 0)
+		{
+			Collections.sort(daysArray);
+			if (daysArray.size() % 2 == 0)
+				median = ((double) daysArray.get(daysArray.size() / 2)
+						+ (double) daysArray.get(daysArray.size() / 2 - 1)) / 2;
+			else
+				median = (double) daysArray.get(daysArray.size() / 2);
+			medianString = String.valueOf(median);
+			if (medianString.length() > 4)
+				medianString = medianString.substring(0, 4);
+			regularBooksMedianTextField.setText(medianString);
+		} else
+			regularBooksMedianTextField.setText("0");
 		// wanted books:
-		i = 0;
-		daysArray = new int[data.getWantedBooks().keySet().size()];
+		daysArray.clear();
 		for (String catNum : data.getWantedBooks().keySet())
 		{
-			daysArray[i] = data.getWantedBooks().get(catNum);
-			i++;
+			if (data.getWantedBooks().get(catNum) != 0)
+			{
+				daysArray.add(data.getWantedBooks().get(catNum));
+			}
 		}
-		Arrays.sort(daysArray);
+		if (daysArray.size() != 0)
+		{
+			Collections.sort(daysArray);
 
-		if (daysArray.length % 2 == 0)
-			median = ((double) daysArray[daysArray.length / 2] + (double) daysArray[daysArray.length / 2 - 1]) / 2;
-		else
-			median = (double) daysArray[daysArray.length / 2];
-		medianString = String.valueOf(median);
-		if (medianString.length() > 4)
-			medianString = medianString.substring(0, 4);
-		wantedBooksMedianTextField.setText(medianString);
-
+			if (daysArray.size() % 2 == 0)
+				median = ((double) daysArray.get(daysArray.size() / 2)
+						+ (double) daysArray.get(daysArray.size() / 2 - 1)) / 2;
+			else
+				median = (double) daysArray.get(daysArray.size() / 2);
+			medianString = String.valueOf(median);
+			if (medianString.length() > 4)
+				medianString = medianString.substring(0, 4);
+			wantedBooksMedianTextField.setText(medianString);
+		} else
+			wantedBooksMedianTextField.setText("0");
 	}
 
 	private void setAvrages()
@@ -111,7 +127,7 @@ public class Reports_BorrowsController
 		if (averageString.length() > 4)
 			averageString = averageString.substring(0, 4);
 		regularBooksAvarageTextField.setText(averageString);
-		average =0;
+		average = 0;
 		count = 0;
 		for (String catNum : data.getWantedBooks().keySet())
 		{
@@ -134,13 +150,14 @@ public class Reports_BorrowsController
 		XYChart.Series regular = new XYChart.Series();
 		XYChart.Series wanted = new XYChart.Series();
 		int[] histogram;
-		
+
 		int[] regularDurations = Arrays.stream(data.getRegularBooks().values().toArray()).mapToInt(o -> (int) o)
 				.toArray();
 		int[] wantedDurations = Arrays.stream(data.getWantedBooks().values().toArray()).mapToInt(o -> (int) o)
 				.toArray();
 		regularBooksGraph.getXAxis().setLabel("Borrow duration [Days]");
 		regularBooksGraph.getYAxis().setLabel("Amount of books");
+
 		wantedBookGraph.getXAxis().setLabel("Borrow duration [Days]");
 		wantedBookGraph.getYAxis().setLabel("Amount of books");
 		regular.setName("Regular Books");
