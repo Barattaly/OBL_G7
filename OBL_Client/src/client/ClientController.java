@@ -54,6 +54,16 @@ public class ClientController extends AbstractClient
 		case ViewTableOfContent:
 			openTableOfContentPDF(message);
 			break;
+		case AddBook:
+		{
+			Platform.runLater(() -> {
+				if(((DBMessage)msg).Data == null)
+					GuiManager.ShowErrorPopup("The book is already exist");
+				else
+					GuiManager.ShowMessagePopup("The book was added successfully");
+			});
+			break;
+		}
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
 			break; 

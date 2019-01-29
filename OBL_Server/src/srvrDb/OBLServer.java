@@ -48,7 +48,7 @@ import ocsf.server.ConnectionToClient;
 public class OBLServer extends AbstractServer
 {
 
-	public TextArea logREF = null;
+	public TextArea logREF = null; 
 	private MySQLConnection oblDB;
 
 	/**
@@ -201,7 +201,7 @@ public class OBLServer extends AbstractServer
 			}
 			case AddBook:
 			{
-				AddNewBook((Book)dbMessage.Data , client);
+				addNewBook((Book)dbMessage.Data , client);
 				break;
 			}
 			default:
@@ -221,18 +221,18 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	private void AddNewBook(Book book, ConnectionToClient client)throws IOException, SQLException
+	private void addNewBook(Book book, ConnectionToClient client)throws IOException, SQLException
 	{
 		String query0,query1,query2,query3,query4,query5,query6,query7,query8,query9,query10;
-		int rowCount = 0;
+		int rowCount = 0;  
 		
 		query0 = BooksQueries.SearchBookByName(book);
 		ResultSet rs0=oblDB.executeQuery(query0);
 		rowCount = getRowCount(rs0);
 		if (rowCount == 1)
 		{
-			DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
-			client.sendToClient(returnMsg);
+			//DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
+			//client.sendToClient(returnMsg); 
 			return;
 		}
 	
@@ -243,7 +243,6 @@ public class OBLServer extends AbstractServer
 			tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", ".\\src\\resources\\tablesOfContent\\");
 		
 		tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
-		System.out.println(tocPath);
 		book.setTableOfContenPath(tocPath);
 		
 		query1 = BooksQueries.AddBook(book); 
@@ -284,9 +283,6 @@ public class OBLServer extends AbstractServer
 				query5=BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
 				oblDB.executeUpdate(query5);
 				
-			} else
-			{ 
-				continue;	
 			}
 		}
 		
@@ -304,9 +300,6 @@ public class OBLServer extends AbstractServer
 				query9=BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
 				oblDB.executeUpdate(query9);
 				
-			} else
-			{ 
-				continue;	
 			}
 		}
 		
@@ -319,9 +312,9 @@ public class OBLServer extends AbstractServer
 		}
 		
 
-		DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
-		client.sendToClient(returnMsg);
-		return;	
+		//DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
+		//client.sendToClient(returnMsg);
+			
 
 	}
 	

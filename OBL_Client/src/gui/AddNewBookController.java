@@ -39,7 +39,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class AddNewBookController implements Initializable, IClientUI
+public class AddNewBookController implements Initializable
 {
 
 	@FXML
@@ -220,31 +220,5 @@ public class AddNewBookController implements Initializable, IClientUI
 		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
 	}
 
-	@Override
-	public User getUserLogedIn()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setUserLogedIn(User userLoged)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void getMessageFromServer(DBMessage msg)
-	{
-		if (msg.Action == DBAction.AddBook)
-		{
-				if(msg.Data == null)
-					GuiManager.ShowErrorPopup("The book is already exist");
-				else
-					GuiManager.ShowMessagePopup("The was added successfully");
-		}
-
-	}
 
 }
