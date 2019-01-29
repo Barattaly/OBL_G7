@@ -1539,48 +1539,47 @@ public class OBLServer extends AbstractServer
 		}
 		Book newBook=new Book(book.getCatalogNumber(), book.getName(),book.getAuthorNameList(),book.getCategories(), 
 				year, book.getEditionNumber(),book.getLocation(),book.getDescription(),book.getClassification());
-		String query2=BooksQueries.changeBookFields(newBook);
-		oblDB.executeUpdate(query2);
-		
+		query=BooksQueries.changeBookFields(newBook);
+		oblDB.executeUpdate(query);
+		//changing now book authors 
 		 ArrayList <String> authorsList=book.getAuthorNameList();
-		 String query3=BooksQueries.getAuthorsFromBook(book);
-		 ResultSet rs3 =oblDB.executeQuery(query3);
-		 int rowCount = getRowCount(rs3);
+		 query=BooksQueries.getAuthorsFromBook(book);
+		 rs =oblDB.executeQuery(query);
+		 int rowCount = getRowCount(rs);
 		 for(int i=0;i<rowCount;i++)
 		 {
-			 try{
-				 rs3.next();
-				 String author=rs3.getString(1);
-				
-				 //in case we want to add
+			 try
+			 {
+				 rs.next();
+				 String author=rs.getString(1);
 					 for(String s : authorsList)
 					 {
-						String query4=BooksQueries.getAuthor(s);
-						 ResultSet rs4 =oblDB.executeQuery(query4);
-						 int rowCount2=getRowCount(rs4);
+						query=BooksQueries.getAuthor(s);
+						 ResultSet rs2 =oblDB.executeQuery(query);
+						 int rowCount2=getRowCount(rs2);
 						 if (rowCount2==0)
 						 {
-							 String query5=BooksQueries.addAuthor(s);
-							 oblDB.executeUpdate(query5);
-							 String query6=BooksQueries.addAuthorToBook(s, newBook);
-							 oblDB.executeUpdate(query6);
+							 query=BooksQueries.addAuthor(s);
+							 oblDB.executeUpdate(query);
+							 query=BooksQueries.addAuthorToBook(s, newBook);
+							 oblDB.executeUpdate(query);
 						 }
 						else
 						{
-							String query8=BooksQueries.getAuthorsFromBook(newBook, s);
-							 ResultSet rs8 =oblDB.executeQuery(query8);
-							 int count=getRowCount(rs8);
-							 if(count==0)
+							query=BooksQueries.getAuthorFromBook(newBook, s);
+							rs2 =oblDB.executeQuery(query);
+							rowCount2=getRowCount(rs2);
+							 if(rowCount2==0)
 							 {
-								 String query9=BooksQueries.addAuthorToBook(s, newBook);
-								 oblDB.executeUpdate(query9);
+								 query=BooksQueries.addAuthorToBook(s, newBook);
+								 oblDB.executeUpdate(query);
 							 }
 						}
 					 
-					 if(!(authorsList.contains(author)))//in case we want to delete author 
+					 if(!(authorsList.contains(author)))//in case we want to delete author from db
 					 {
-						 String query7=BooksQueries.deleteAuthor(author, newBook);
-						 oblDB.executeUpdate(query7);
+						 query=BooksQueries.deleteAuthor(author, newBook);
+						 oblDB.executeUpdate(query);
 					 }
 				 }
 				 
@@ -1590,5 +1589,54 @@ public class OBLServer extends AbstractServer
 				}
 			
 		 }	
+		 //changing now categories
+		 ArrayList <String> categories=book.getCategories();
+		 query=BooksQueries.getCategoriesForBookId(book.getCatalogNumber());
+		 rs =oblDB.executeQuery(query);
+		 rowCount=getRowCount(rs);
+		 for(int i=0;i<rowCount;i++)
+		 {
+		 try 
+		 {
+			 rs.next();
+			 String category=rs.getString(1);			 
+				 for (String s: categories)
+				 {
+					 query=BooksQueries.getCategoryByName(s);
+					 ResultSet rs2=oblDB.executeQuery(query);
+					 int rowCount2=getRowCount(rs2);
+					 if(rowCount2==0) //in case there is not such category at all so we want to add it
+					 {
+						 query=BooksQueries.addCagegory(s);
+						 oblDB.executeUpdate(query);
+						 query=BooksQueries.addCagegoryToBook(s, newBook);
+						 oblDB.executeUpdate(query);
+					 }
+					 else    //add only to books_categories table
+					 {
+						query=BooksQueries.getCategoriesFromBook(newBook, s);
+						rs2 =oblDB.executeQuery(query);
+						rowCount2=getRowCount(rs2);
+						if(rowCount2==0)
+						{
+						 query=BooksQueries.addCagegoryToBook(s, newBook);
+						 oblDB.executeUpdate(query);
+						}
+					 }
+				 }
+				 if(!(categories.contains(category))) //in case we want to delete a category
+				 {
+					 query=BooksQueries.deleteCategory(category, newBook);
+					 oblDB.executeUpdate(query);
+				 }
+			 
+			 
+		 }catch (SQLException exp)
+			{
+				exp.printStackTrace();
+			}
+		 }
+	
 	}
+	
 }

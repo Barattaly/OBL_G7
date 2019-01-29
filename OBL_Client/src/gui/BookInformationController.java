@@ -359,6 +359,11 @@ public class BookInformationController implements IClientUI
 	    	saveChanges_btn.setVisible(true);
 	    	cancel_btn.setVisible(true);
 	    	editDetailsBtn.setDisable(true);
+	    	if(bookToShow.getClassification().equals("wanted"))
+	    	{
+	    		wantedBookCheckBox.setSelected(true);
+	    	}
+	    	
 	    }
 	    @FXML
 	    void saveChangesClick(ActionEvent event) //need to add function to remove ' 
@@ -369,6 +374,7 @@ public class BookInformationController implements IClientUI
 			Optional<ButtonType> option = alert.showAndWait();
 			if (option.get() == ButtonType.OK)
 			{
+			cancel_btn.setVisible(false);
 			bookNameTextArea.setEditable(false);
 		    authorTextArea.setEditable(false);
 		    categoriesTextArea.setEditable(false);
@@ -419,7 +425,7 @@ public class BookInformationController implements IClientUI
 	    	setBookInformation(bookToShow);
 	    }
 	    /*
-	     * this function get a string and remove all tag's that can break the fucking program
+	     * this function get a string and remove all tag's that can break the program
 	     */
 	    public static String removeTag(String str)
 	    {

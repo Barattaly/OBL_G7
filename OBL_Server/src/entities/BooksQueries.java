@@ -183,9 +183,35 @@ public static String SelectAllBooksEachRowForNewAuthor()
 				+ "AND authorName='"+author+"';";
 		return queryMsg;
 	}
-	public static String getAuthorsFromBook(Book book,String author)
+	public static String getAuthorFromBook(Book book,String author)
 	{
-		String queryMsg="SELECT obl_db.books_authors.authorName FROM obl_db.books_authors WHERE bookCatalogNumber='"+book.getCatalogNumber()+"' AND name='"+author+"';";
+		String queryMsg="SELECT obl_db.books_authors.authorName FROM obl_db.books_authors WHERE bookCatalogNumber='"+book.getCatalogNumber()+"' AND authorName='"+author+"';";
+		return queryMsg;
+	}
+	public static String deleteCategory(String category,Book book)
+	{
+		String queryMsg="DELETE FROM obl_db.books_categories WHERE bookCatalogNumber='"+book.getCatalogNumber()+"'"
+				+ " AND categoryName='"+category+"';";
+		return queryMsg;
+	}
+	public static String getCategoryByName(String category)
+	{
+		String queryMsg="SELECT * FROM obl_db.categories WHERE categoryName='"+category+"';";
+		return queryMsg;
+	}
+	public static String addCagegory(String category)
+	{
+		String queryMsg="INSERT INTO obl_db.categories VALUES('"+category+"');";
+		return queryMsg;
+	}
+	public static String addCagegoryToBook(String category,Book book)
+	{
+		String queryMsg="INSERT INTO obl_db.books_categories VALUES('"+book.getCatalogNumber()+"','"+category+"');";
+		return queryMsg;
+	}
+	public static String getCategoriesFromBook(Book book,String category)
+	{
+		String queryMsg="SELECT obl_db.books_categories.categoryName FROM obl_db.books_categories WHERE bookCatalogNumber='"+book.getCatalogNumber()+"' AND categoryName='"+category+"';";
 		return queryMsg;
 	}
 }
