@@ -170,7 +170,7 @@ public class AddNewBookController implements Initializable
 			else
 				classification = "ordinary";
 			
-			if((Integer.parseInt(publicationYearTextField.getText().trim()) <= 999))
+			if((Integer.parseInt(publicationYearTextField.getText().trim()) <= 999) && (Integer.parseInt(publicationYearTextField.getText().trim()) > 2019 ))
 			{
 				   warningLabel.setTextFill(Color.RED);
 			       warningLabel.setText("Enter correct year please");
