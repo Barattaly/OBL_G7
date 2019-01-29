@@ -323,6 +323,11 @@ public class ClientController extends AbstractClient
 	 */
 	private void openTableOfContentPDF(DBMessage message)
 	{
+		if(message.Data == null)
+		{
+			GuiManager.ShowErrorPopup("PDF does not exist.");
+			return;
+		}
 		byte[] myByteArray = (byte[])message.Data;
 		if(Desktop.isDesktopSupported()) 
 		{
