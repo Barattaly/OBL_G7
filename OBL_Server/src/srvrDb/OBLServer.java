@@ -1551,12 +1551,8 @@ public class OBLServer extends AbstractServer
 			 try{
 				 rs3.next();
 				 String author=rs3.getString(1);
-				 if(!(authorsList.contains(author)))//in case we delete author 
-				 {
-					 String query7=BooksQueries.deleteAuthor(author, newBook);
-					 oblDB.executeUpdate(query7);
-				 }
-				 else { //in case we want to add
+				
+				 //in case we want to add
 					 for(String s : authorsList)
 					 {
 						String query4=BooksQueries.getAuthor(s);
@@ -1580,6 +1576,11 @@ public class OBLServer extends AbstractServer
 								 oblDB.executeUpdate(query9);
 							 }
 						}
+					 
+					 if(!(authorsList.contains(author)))//in case we want to delete author 
+					 {
+						 String query7=BooksQueries.deleteAuthor(author, newBook);
+						 oblDB.executeUpdate(query7);
 					 }
 				 }
 				 

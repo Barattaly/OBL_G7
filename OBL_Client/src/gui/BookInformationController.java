@@ -107,13 +107,16 @@ public class BookInformationController implements IClientUI
 	  @FXML
 	  	private JFXButton saveChanges_btn;
 
-    @FXML
-    private JFXButton viewTOC_btn;
+	  @FXML
+	   private JFXButton viewTOC_btn;
     
+	  @FXML
+	  private JFXButton cancel_btn;
+	  
 	public void setBookInformation(Book book)
 	{
-		descreptionPane.setText(book.getDescription());
 		bookToShow = book;
+		descreptionPane.setText(book.getDescription());
 		bookNameTextArea.setText(book.getName());
 		String authors = book.getAuthorNameList().toString().replace("[", "").replace("]", "");
 		authorTextArea.setText(authors);
@@ -353,11 +356,28 @@ public class BookInformationController implements IClientUI
 	    	wantedBookLabel.setVisible(false);
 	    	wantedLogo.setVisible(false);
 	    	wantedBookCheckBox.setVisible(true);
-	    	saveChanges_btn.setVisible(true);		
+	    	saveChanges_btn.setVisible(true);
+	    	cancel_btn.setVisible(true);
+	    	editDetailsBtn.setDisable(true);
 	    }
 	    @FXML
 	    void saveChangesClick(ActionEvent event) //need to add function to remove ' 
 	    {
+	    	Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Warning");
+			alert.setHeaderText("Are you sure you want to change those detailes?");
+			Optional<ButtonType> option = alert.showAndWait();
+			if (option.get() == ButtonType.OK)
+			{
+			bookNameTextArea.setEditable(false);
+		    authorTextArea.setEditable(false);
+		    categoriesTextArea.setEditable(false);
+		    publicationYearTextField.setEditable(false);
+		    editionNumTextField.setEditable(false);
+		    locationTextField.setEditable(false);
+		    descreptionPane.setEditable(false);
+		    copiesTextArea.setEditable(false);
+		    wantedBookCheckBox.setVisible(true);
 	    	 ArrayList <String> authorsList=new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
 	    	 ArrayList <String> categoriesList=new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
 	    	 String bookName=removeTag(bookNameTextArea.getText());
@@ -372,13 +392,31 @@ public class BookInformationController implements IClientUI
 	    	 if(bookName.isEmpty()||publicationYear.isEmpty()||location.isEmpty()||description.isEmpty())
 	    		 GuiManager.ShowErrorPopup("please fill all fields!");
 	    	 else {
+	    		 
 	    		 Book newBook=new Book(catNumTextField.getText(),bookName,
 	    			 authorsList,categoriesList,publicationYear, 
 	    			 editionNumTextField.getText(),
 	    			 location,description,bookClassification);
 	    	 
 	    		 GuiManager.client.editBookDetails(newBook);
+	    		 GuiManager.ShowMessagePopup("This book has been edited successfully!");
+	    		 saveChanges_btn.setVisible(false);
+	    		 editDetailsBtn.setDisable(false);
 	    	 }
+			}
+			else if (option.get() == ButtonType.CANCEL)
+			{
+				alert.close();
+			}
+	    }
+
+	    @FXML
+	    void cancelClick(ActionEvent event) {
+	    	saveChanges_btn.setVisible(false);
+	    	cancel_btn.setVisible(false);
+	    	editDetailsBtn.setDisable(false);
+	    	wantedBookCheckBox.setVisible(false);
+	    	setBookInformation(bookToShow);
 	    }
 	    /*
 	     * this function get a string and remove all tag's that can break the fucking program
