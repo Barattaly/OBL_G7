@@ -20,10 +20,9 @@ import entities.Subscriber;
 import gui.GuiManager;
 import javafx.application.Platform;
 
-
 /**
- * This class is a singletone class. 
- * You can only create one instance of this class using - "createClientIfNotExist".
+ * This class is a singletone class. You can only create one instance of this
+ * class using - "createClientIfNotExist".
  */
 public class ClientController extends AbstractClient
 {
@@ -39,8 +38,10 @@ public class ClientController extends AbstractClient
 		super(host, port); // Call the superclass constructor
 		openConnection();
 	}
+
 	/**
 	 * Call this instead of the constructor
+	 * 
 	 * @param host the host ip
 	 * @param port the port to connect
 	 */
@@ -363,6 +364,19 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
+	}
+
+	public void report_getLateReturnsInfo()
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_LateReturns, null);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
 	}
 }
 //End of ClientController class

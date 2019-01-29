@@ -34,6 +34,7 @@ import entities.EmployeeQueries;
 import entities.OrdersQueries;
 import entities.Report_Activity;
 import entities.Report_BorrowDurationInfo;
+import entities.Report_LateReturns;
 import entities.ReportsQueries;
 import entities.ReturnesQueries;
 import entities.SendEmail;
@@ -52,7 +53,7 @@ public class OBLServer extends AbstractServer
 	private MySQLConnection oblDB;
 
 	/**
-	 * Constructs an instance of the echo server.
+	 * Constructs an instance of the OBL server.
 	 *
 	 * @param port The port number to connect on.
 	 */
@@ -207,6 +208,11 @@ public class OBLServer extends AbstractServer
 			case Reports_Add:
 			{
 				reports_AddNewToList((Report_Activity)dbMessage.Data,client);
+				break;
+			}
+			case Reports_LateReturns:
+			{
+				reports_LateReturns(client);
 				break;
 			}
 			default:
@@ -1552,5 +1558,13 @@ public class OBLServer extends AbstractServer
 		else
 			client.sendToClient(new DBMessage(DBAction.Reports_Add, null));
 	}
+	
+
+	private void reports_LateReturns(ConnectionToClient client) throws IOException, SQLException
+	{
+		Report_LateReturns report = ReportsQueries.CreateLateReturnsReport(oblDB);
+		client.sendToClient(new DBMessage(DBAction.Reports_LateReturns, report));
+	}
+
 
 }

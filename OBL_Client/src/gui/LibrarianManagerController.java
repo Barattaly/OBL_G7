@@ -23,6 +23,7 @@ import entities.ObservableBorrow;
 import entities.ObservableEmployee;
 import entities.Report_Activity;
 import entities.Report_BorrowDurationInfo;
+import entities.Report_LateReturns;
 import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
@@ -62,6 +63,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 {
 	private Reports_BorrowsController borrowReportControler;
 	private Reports_ActivityController activityReportController;
+	private Reports_LateReturnsController lateReturnsController;
 
 	@FXML
 	private TableView<ObservableEmployee> emplyeeTableView;
@@ -126,8 +128,8 @@ public class LibrarianManagerController extends LibrarianScreenController
 
 	@FXML
 	private Label instructionLabelActivityReport;
-	
-	private Map<String,Report_Activity> oldActivityReports;
+
+	private Map<String, Report_Activity> oldActivityReports;
 
 	// this is the search function, it is in listener for text inside the textfield
 	private InvalidationListener onSearchStart = new InvalidationListener()
@@ -214,25 +216,26 @@ public class LibrarianManagerController extends LibrarianScreenController
 
 		empList = FXCollections.observableArrayList();
 		reportsList = FXCollections.observableArrayList();
-		
-		reportsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-		    @Override
-		    public void handle(MouseEvent event) 
-		    {
-		    	if(event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
-		    	{
-		    		openActivityReport(oldActivityReports.get(((JFXListCell)event.getTarget()).getText()),false);
+		reportsListView.setOnMouseClicked(new EventHandler<MouseEvent>()
+		{
 
-		        /*if (click.getClickCount() == 2) {
-		           //Use ListView's getSelected Item
-		           currentItemSelected = playList.getSelectionModel()
-		                                                    .getSelectedItem();
-		           //use this to do whatever you want to. Open Link etc.*/
-		        }
-		    }
+			@Override
+			public void handle(MouseEvent event)
+			{
+				if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
+				{
+					openActivityReport(oldActivityReports.get(((JFXListCell) event.getTarget()).getText()), false);
+
+					/*
+					 * if (click.getClickCount() == 2) { //Use ListView's getSelected Item
+					 * currentItemSelected = playList.getSelectionModel() .getSelectedItem(); //use
+					 * this to do whatever you want to. Open Link etc.
+					 */
+				}
+			}
 		});
-		
+
 	}
 
 	@FXML
@@ -332,7 +335,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 		{
 			Platform.runLater(() -> {
 				thinkSpinner.setVisible(false);
-				openActivityReport((Report_Activity) msg.Data,true);
+				openActivityReport((Report_Activity) msg.Data, true);
 			});
 			break;
 		}
@@ -343,15 +346,25 @@ public class LibrarianManagerController extends LibrarianScreenController
 		}
 		case Reports_Add:
 		{
-			Platform.runLater(() -> 
-			{
-				if(msg.Data == null)
+			Platform.runLater(() -> {
+				if (msg.Data == null)
 					GuiManager.ShowErrorPopup("Report saving went wrong\nPlease restart the program and try again.");
 				else
-					GuiManager.ShowMessagePopup("Report "+((Report_Activity) msg.Data).getReportDate()+" saving succeeded.");
-			});			
+					GuiManager.ShowMessagePopup(
+							"Report " + ((Report_Activity) msg.Data).getReportDate() + " saving succeeded.");
+				loadListSpinner.setVisible(true);
+				GuiManager.client.getReportsList();
+			});
 			break;
-		}	
+		}
+		case Reports_LateReturns:
+		{
+			Platform.runLater(() -> {
+				thinkSpinner.setVisible(false);
+				openLateReturnsReport((Report_LateReturns) msg.Data);
+			});
+			break;
+		}
 		default:
 			super.getMessageFromServer(msg);
 		}
@@ -427,6 +440,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 			GuiManager.client.report_getBorrowDurationInfo();
 			break;
 		case "Late Returns":
+			GuiManager.client.report_getLateReturnsInfo();
 			break;
 		}
 
@@ -491,5 +505,25 @@ public class LibrarianManagerController extends LibrarianScreenController
 			reportsListView.setItems(reportsList);
 		});
 	}
+	
+	private void openLateReturnsReport(Report_LateReturns data)
+	{
+		try
+		{
+			Stage SeondStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/Reports_LateReturns.fxml"));
+			Parent root = loader.load();
+			lateReturnsController = loader.getController();
+			lateReturnsController.setReportInformation(data);
+			Scene scene = new Scene(root);
+			SeondStage.setTitle("Late returns Duration");
+			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
+			SeondStage.setScene(scene);
+			SeondStage.showAndWait();
 
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }
