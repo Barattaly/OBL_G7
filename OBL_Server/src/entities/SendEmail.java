@@ -34,7 +34,7 @@ public class SendEmail
 
 			Transport.send(message);
 
-			System.out.println("Done");
+			System.out.println("mail sent");
 
 		} 
 		catch (MessagingException e) 
