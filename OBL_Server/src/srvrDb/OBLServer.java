@@ -1527,8 +1527,67 @@ public class OBLServer extends AbstractServer
 	}
 	private void changeBookDetails (Book book, ConnectionToClient client) throws IOException
 	{
-		String query=BooksQueries.changeBookFields(book);
-		oblDB.executeUpdate(query);
+		String year=" ";
+		String query=BooksQueries.getYear(book);
+		ResultSet rs =oblDB.executeQuery(query);
+		try {
+			rs.next();
+			year= new String(rs.getString(1));
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		Book newBook=new Book(book.getCatalogNumber(), book.getName(),book.getAuthorNameList(),book.getCategories(), 
+				year, book.getEditionNumber(),book.getLocation(),book.getDescription(),book.getClassification());
+		String query2=BooksQueries.changeBookFields(newBook);
+		oblDB.executeUpdate(query2);
 		
+		 ArrayList <String> authorsList=book.getAuthorNameList();
+		 String query3=BooksQueries.getAuthorsFromBook(book);
+		 ResultSet rs3 =oblDB.executeQuery(query3);
+		 int rowCount = getRowCount(rs3);
+		 for(int i=0;i<rowCount;i++)
+		 {
+			 try{
+				 rs3.next();
+				 String author=rs3.getString(1);
+				 if(!(authorsList.contains(author)))//in case we delete author 
+				 {
+					 String query7=BooksQueries.deleteAuthor(author, newBook);
+					 oblDB.executeUpdate(query7);
+				 }
+				 else { //in case we want to add
+					 for(String s : authorsList)
+					 {
+						String query4=BooksQueries.getAuthor(s);
+						 ResultSet rs4 =oblDB.executeQuery(query4);
+						 int rowCount2=getRowCount(rs4);
+						 if (rowCount2==0)
+						 {
+							 String query5=BooksQueries.addAuthor(s);
+							 oblDB.executeUpdate(query5);
+							 String query6=BooksQueries.addAuthorToBook(s, newBook);
+							 oblDB.executeUpdate(query6);
+						 }
+						else
+						{
+							String query8=BooksQueries.getAuthorsFromBook(newBook, s);
+							 ResultSet rs8 =oblDB.executeQuery(query8);
+							 int count=getRowCount(rs8);
+							 if(count==0)
+							 {
+								 String query9=BooksQueries.addAuthorToBook(s, newBook);
+								 oblDB.executeUpdate(query9);
+							 }
+						}
+					 }
+				 }
+				 
+			 }catch (SQLException exp)
+				{
+					exp.printStackTrace();
+				}
+			
+		 }	
 	}
 }

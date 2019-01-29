@@ -147,9 +147,45 @@ public static String SelectAllBooksEachRowForNewAuthor()
 	{
 		String queryMsg= "UPDATE obl_db.books SET name='"+ book.getName() +"',classification='"
 				+ book.getClassification() +"',description='"+ book.getDescription() +"',editionNumber='"
-				+book.getEditionNumber()+"' "
+				+book.getEditionNumber()+"',location='"+book.getLocation()+"',publicationYear='"
+				+book.getPublicationYear()+"' "					
 						+ "WHERE catalogNumber='"+ book.getCatalogNumber() +"';";
 		return queryMsg;
 	}
-	
+	public static String getYear(Book book)
+	{
+		String queryMsg="SELECT YEAR('"+book.getPublicationYear()+"');";
+		return queryMsg;
+	}
+	public static String getAuthorsFromBook(Book book)
+	{
+		String queryMsg="SELECT obl_db.books_authors.authorName FROM obl_db.books_authors WHERE bookCatalogNumber='"+book.getCatalogNumber()+"';";
+		return queryMsg;
+	}
+	public static String getAuthor(String author)
+	{
+		String queryMsg="SELECT * FROM obl_db.authors WHERE name='"+author+"';";
+		return queryMsg;
+	}
+	public static String addAuthor(String name)
+	{
+		String queryMsg="INSERT INTO obl_db.authors VALUES('"+name+"');";
+		return queryMsg;
+	}
+	public static String addAuthorToBook(String name,Book book)
+	{
+		String queryMsg="INSERT INTO obl_db.books_authors VALUES('"+book.getCatalogNumber()+"','"+name+"');";
+		return queryMsg;
+	}
+	public static String deleteAuthor(String author,Book book)
+	{
+		String queryMsg="DELETE FROM obl_db.books_authors WHERE bookCatalogNumber='"+book.getCatalogNumber()+"' "
+				+ "AND authorName='"+author+"';";
+		return queryMsg;
+	}
+	public static String getAuthorsFromBook(Book book,String author)
+	{
+		String queryMsg="SELECT obl_db.books_authors.authorName FROM obl_db.books_authors WHERE bookCatalogNumber='"+book.getCatalogNumber()+"' AND name='"+author+"';";
+		return queryMsg;
+	}
 }

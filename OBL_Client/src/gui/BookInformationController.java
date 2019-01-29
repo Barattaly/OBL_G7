@@ -360,18 +360,33 @@ public class BookInformationController implements IClientUI
 	    {
 	    	 ArrayList <String> authorsList=new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
 	    	 ArrayList <String> categoriesList=new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
+	    	 String bookName=removeTag(bookNameTextArea.getText());
+	    	 String publicationYear=removeTag(publicationYearTextField.getText());
+	    	 String location=removeTag(locationTextField.getText());
+	    	 String description=removeTag(descreptionPane.getText());
 	    	 String bookClassification;
 	    	 if(wantedBookCheckBox.isSelected())
 	    		 bookClassification = "wanted";
 	    	 else
 	    		 bookClassification = "ordinary";
-	    	 //להוסיף בדיקה אם השדות ריקים
-	    	 Book newBook=new Book(catNumTextField.getText(),bookNameTextArea.getText(),
-	    			 authorsList,categoriesList,publicationYearTextField.getText(), 
+	    	 if(bookName.isEmpty()||publicationYear.isEmpty()||location.isEmpty()||description.isEmpty())
+	    		 GuiManager.ShowErrorPopup("please fill all fields!");
+	    	 else {
+	    		 Book newBook=new Book(catNumTextField.getText(),bookName,
+	    			 authorsList,categoriesList,publicationYear, 
 	    			 editionNumTextField.getText(),
-	    			 locationTextField.getText(),descreptionPane.getText(),bookClassification);
+	    			 location,description,bookClassification);
 	    	 
-	    	 GuiManager.client.editBookDetails(newBook);
+	    		 GuiManager.client.editBookDetails(newBook);
+	    	 }
 	    }
-
+	    /*
+	     * this function get a string and remove all tag's that can break the fucking program
+	     */
+	    public static String removeTag(String str)
+	    {
+	    	String s= str.replace("'", " ");
+	    	return s;
+	    }
+	 	    
 }
