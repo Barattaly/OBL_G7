@@ -1,12 +1,20 @@
 package entities;
 import java.io.Serializable;
 
-@SuppressWarnings("serial")
+/**
+ * This class is the message tranfering from client to server and the other way.
+ * @author eyalv
+ *
+ */
 public class DBMessage implements Serializable
 {
 	public DBAction Action;
 	public Object Data;
-	
+	/**
+	 * The constructor of the message
+	 * @param action - enum of actions - how to classify the operation.
+	 * @param data - an object of data, if no data is needed - send null.
+	 */
 	public DBMessage(DBAction action,Object data)
 	{
 		this.Action = action;
