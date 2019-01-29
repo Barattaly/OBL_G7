@@ -221,27 +221,110 @@ public class OBLServer extends AbstractServer
 		}
 	}
 	
-	private void AddNewBook(Book book, ConnectionToClient client)throws IOException
+	private void AddNewBook(Book book, ConnectionToClient client)throws IOException, SQLException
 	{
+		String query0,query1,query2,query3,query4,query5,query6,query7,query8,query9,query10;
+		int rowCount = 0;
+		
+		query0 = BooksQueries.SearchBookByName(book);
+		ResultSet rs0=oblDB.executeQuery(query0);
+		rowCount = getRowCount(rs0);
+		if (rowCount == 1)
+		{
+			DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
+	
 		String tocPath;
 		if (book.getTocArraybyte()==null)
 			tocPath=null;                    //TODO: set a default TOC
 		else 
-		tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", "resources.tablesOfContent//");
+			tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", ".\\src\\resources\\tablesOfContent\\");
 		book.setTableOfContenPath(tocPath);
 		
-		String query = BooksQueries.AddBook(book);
-		oblDB.executeUpdate(query);
+		query1 = BooksQueries.AddBook(book); 
+		oblDB.executeUpdate(query1);
 		
 		
+		query2 = BooksQueries.GetCatalogNumberByName(book);
+		ResultSet rs=oblDB.executeQuery(query2);
+		rowCount = getRowCount(rs);
+		if (rowCount == 0) 
+		{
+			return;
+		} else
+		{ 
+			try
+			{
+				rs.next();
+				book.setCatalogNumber(rs.getString(1));
+			} catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
+		
+		
+		rowCount=0;
+		for(String author : book.getAuthorNameList())
+		{
+			
+			query3=BooksQueries.SearchAuthor(author);
+			ResultSet rs2 = oblDB.executeQuery(query3);
+			rowCount = getRowCount(rs2);
+			if (rowCount == 0) 
+			{
+				query4=BooksQueries.AddAuthor(author);
+				oblDB.executeUpdate(query4);
+				query5=BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
+				oblDB.executeUpdate(query5);
+				
+			} else
+			{ 
+				continue;	
+			}
+		}
+		
+		rowCount=0;
+		for(String category : book.getCategories())
+		{
+			
+			query7=BooksQueries.SearchCategory(category);
+			ResultSet rs3 = oblDB.executeQuery(query7);
+			rowCount = getRowCount(rs3);
+			if (rowCount == 0) 
+			{
+				query8=BooksQueries.AddCategory(category);
+				oblDB.executeUpdate(query8);
+				query9=BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
+				oblDB.executeUpdate(query9);
+				
+			} else
+			{ 
+				continue;	
+			}
+		}
+		
+		int copies = book.getMaxCopies();
+		
+		for(int i=0; i < copies; i++)
+		{
+			query10=BooksQueries.AddCopy(book.getCatalogNumber());
+			oblDB.executeUpdate(query10);
+		}
+		
+
+		DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
+		client.sendToClient(returnMsg);
+		return;	
 
 	}
 	
 	public static String createFileFromByteArray(byte[] bytes , String fileName , String fileType ,String filePath )
 	{
 	    File outputFile = new File(filePath + fileName + "." + fileType);
-
-	    
 	    
 	    try ( FileOutputStream outputStream = new FileOutputStream(outputFile); ) {
 
