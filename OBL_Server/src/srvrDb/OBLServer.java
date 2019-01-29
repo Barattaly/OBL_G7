@@ -50,7 +50,7 @@ import ocsf.server.ConnectionToClient;
 public class OBLServer extends AbstractServer
 {
 
-	public TextArea logREF = null; 
+	public TextArea logREF = null;
 	private MySQLConnection oblDB;
 
 	/**
@@ -201,14 +201,14 @@ public class OBLServer extends AbstractServer
 				reports_createAcitivityReport(client);
 				break;
 			}
-				case Reports_getList:
+			case Reports_getList:
 			{
 				reports_getList(client);
 				break;
 			}
 			case Reports_Add:
 			{
-				reports_AddNewToList((Report_Activity)dbMessage.Data,client);
+				reports_AddNewToList((Report_Activity) dbMessage.Data, client);
 				break;
 			}
 			case Reports_LateReturns:
@@ -218,7 +218,7 @@ public class OBLServer extends AbstractServer
 			}
 			case AddBook:
 			{
-				addNewBook((Book)dbMessage.Data , client);
+				addNewBook((Book) dbMessage.Data, client);
 				break;
 			}
 			default:
@@ -237,7 +237,7 @@ public class OBLServer extends AbstractServer
 			}
 		}
 	}
-	
+
 	private void updateSubscriberInformation(Subscriber subscriberToUpdate, ConnectionToClient client)
 			throws IOException
 	{
@@ -1448,26 +1448,32 @@ public class OBLServer extends AbstractServer
 	{
 		String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
 		ResultSet rs = oblDB.executeQuery(query);
+
+		String localPath="";
+		File file;
+		byte[] mybytearray = null;
 		try
 		{
 			rs.next();
-			String localPath = new String(rs.getString(9));
-			File file = new File(localPath);
-			byte[] mybytearray = Files.readAllBytes(file.toPath());
-			DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
-			client.sendToClient(returnMsg);
-
-		} catch (SQLException exp)
+			localPath = rs.getString(9);
+			file = new File(localPath);
+			mybytearray = Files.readAllBytes(file.toPath());
+		} catch (Exception e)
 		{
-			exp.printStackTrace();
+			client.sendToClient(new DBMessage(DBAction.ViewTableOfContent, null));
+			return;
 		}
+		DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
+		client.sendToClient(returnMsg);
+
 	}
 
 	private void reports_createAcitivityReport(ConnectionToClient client) throws IOException
 	{
 		GregorianCalendar calendar = new GregorianCalendar();
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		String reportDate = format.format(calendar.getTime());;
+		String reportDate = format.format(calendar.getTime());
+		;
 		int totalNumberOfSubscribers = 0;
 		int activeSubscribersNumber = 0;
 		int lockedSubscribersNumber = 0;
@@ -1545,7 +1551,7 @@ public class OBLServer extends AbstractServer
 				lockedSubscribersNumber, frozenSubscribersNumber, currentNumOfBorrows, numOfLateSubscribers);
 		client.sendToClient(new DBMessage(DBAction.Reports_Activity, report));
 	}
-	
+
 	private void reports_getList(ConnectionToClient client) throws IOException
 	{
 		String query = ReportsQueries.selectAllFromReports();
@@ -1554,60 +1560,59 @@ public class OBLServer extends AbstractServer
 		DBMessage returnMsg = new DBMessage(DBAction.Reports_getList, listOfReports);
 		client.sendToClient(returnMsg);
 	}
-	private void reports_AddNewToList(Report_Activity report,ConnectionToClient client) throws IOException
+
+	private void reports_AddNewToList(Report_Activity report, ConnectionToClient client) throws IOException
 	{
 		String query = ReportsQueries.addReport(report);
-		if(oblDB.executeUpdate(query) != 0)
+		if (oblDB.executeUpdate(query) != 0)
 		{
 			client.sendToClient(new DBMessage(DBAction.Reports_Add, report));
-		}
-		else
+		} else
 			client.sendToClient(new DBMessage(DBAction.Reports_Add, null));
 	}
-	
 
 	private void reports_LateReturns(ConnectionToClient client) throws IOException, SQLException
 	{
 		Report_LateReturns report = ReportsQueries.CreateLateReturnsReport(oblDB);
 		client.sendToClient(new DBMessage(DBAction.Reports_LateReturns, report));
 	}
-	
-	private void addNewBook(Book book, ConnectionToClient client)throws IOException, SQLException
+
+	private void addNewBook(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query0,query1,query2,query3,query4,query5,query6,query7,query8,query9,query10;
-		int rowCount = 0;  
-		
+		String query0, query1, query2, query3, query4, query5, query6, query7, query8, query9, query10;
+		int rowCount = 0;
+
 		query0 = BooksQueries.SearchBookByName(book);
-		ResultSet rs0=oblDB.executeQuery(query0);
+		ResultSet rs0 = oblDB.executeQuery(query0);
 		rowCount = getRowCount(rs0);
 		if (rowCount == 1)
 		{
-			//DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
-			//client.sendToClient(returnMsg); 
+			DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
 			return;
 		}
-	
+
 		String tocPath;
-		if (book.getTocArraybyte()==null)
-			tocPath=null;                    //TODO: set a default TOC
-		else 
-			tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", ".\\src\\resources\\tablesOfContent\\");
-		
+		if (book.getTocArraybyte() == null)
+			tocPath = null; // TODO: set a default TOC
+		else
+			tocPath = createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf",
+					".\\src\\resources\\tablesOfContent\\");
+
 		tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
 		book.setTableOfContenPath(tocPath);
-		
-		query1 = BooksQueries.AddBook(book); 
+
+		query1 = BooksQueries.AddBook(book);
 		oblDB.executeUpdate(query1);
-		
-		
+
 		query2 = BooksQueries.GetCatalogNumberByName(book);
-		ResultSet rs=oblDB.executeQuery(query2);
+		ResultSet rs = oblDB.executeQuery(query2);
 		rowCount = getRowCount(rs);
-		if (rowCount == 0) 
+		if (rowCount == 0)
 		{
 			return;
 		} else
-		{ 
+		{
 			try
 			{
 				rs.next();
@@ -1616,70 +1621,65 @@ public class OBLServer extends AbstractServer
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}	
+			}
 		}
-		
-		
-		rowCount=0;
-		for(String author : book.getAuthorNameList())
+
+		rowCount = 0;
+		for (String author : book.getAuthorNameList())
 		{
-			
-			query3=BooksQueries.SearchAuthor(author);
+
+			query3 = BooksQueries.SearchAuthor(author);
 			ResultSet rs2 = oblDB.executeQuery(query3);
 			rowCount = getRowCount(rs2);
-			if (rowCount == 0) 
+			if (rowCount == 0)
 			{
-				query4=BooksQueries.AddAuthor(author);
+				query4 = BooksQueries.AddAuthor(author);
 				oblDB.executeUpdate(query4);
-				query5=BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
+				query5 = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
 				oblDB.executeUpdate(query5);
-				
 			}
 		}
-		
-		rowCount=0;
-		for(String category : book.getCategories())
+
+		rowCount = 0;
+		for (String category : book.getCategories())
 		{
-			
-			query7=BooksQueries.SearchCategory(category);
+
+			query7 = BooksQueries.SearchCategory(category);
 			ResultSet rs3 = oblDB.executeQuery(query7);
 			rowCount = getRowCount(rs3);
-			if (rowCount == 0) 
+			if (rowCount == 0)
 			{
-				query8=BooksQueries.AddCategory(category);
+				query8 = BooksQueries.AddCategory(category);
 				oblDB.executeUpdate(query8);
-				query9=BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
+				query9 = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
 				oblDB.executeUpdate(query9);
-				
 			}
 		}
-		
+
 		int copies = book.getMaxCopies();
-		
-		for(int i=0; i < copies; i++)
+
+		for (int i = 0; i < copies; i++)
 		{
-			query10=BooksQueries.AddCopy(book.getCatalogNumber());
+			query10 = BooksQueries.AddCopy(book.getCatalogNumber());
 			oblDB.executeUpdate(query10);
 		}
-		
-
-		//DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
-		//client.sendToClient(returnMsg);
-			
-
+		DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
+		client.sendToClient(returnMsg);
 	}
-	
-	public static String createFileFromByteArray(byte[] bytes , String fileName , String fileType ,String filePath )
-	{
-	    File outputFile = new File(filePath + fileName + "." + fileType);
-	    
-	    try ( FileOutputStream outputStream = new FileOutputStream(outputFile); ) {
 
-	       outputStream.write(bytes);  //write the bytes and your done. 
-	       return outputFile.getPath();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+	public static String createFileFromByteArray(byte[] bytes, String fileName, String fileType, String filePath)
+	{
+		File outputFile = new File(filePath + fileName + "." + fileType);
+
+		try (FileOutputStream outputStream = new FileOutputStream(outputFile);)
+		{
+
+			outputStream.write(bytes); // write the bytes and your done.
+			return outputFile.getPath();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		return null;
 	}
 }

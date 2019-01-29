@@ -17,6 +17,7 @@ import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -82,11 +83,13 @@ public class GuiManager
 	 */
 	public static void ShowErrorPopup(String msg)
 	{
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Unexpected Error");
-		alert.setHeaderText("");
-		alert.setContentText(msg);
-		alert.showAndWait();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Unexpected Error");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.showAndWait();
+		});
 	}
 
 	/**
@@ -96,11 +99,13 @@ public class GuiManager
 	 */
 	public static void ShowMessagePopup(String msg)
 	{
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Message");
-		alert.setHeaderText("");
-		alert.setContentText(msg);
-		alert.showAndWait();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Message");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.showAndWait();
+		});
 	}
 
 	/**
@@ -194,7 +199,7 @@ public class GuiManager
 
 	public static enum SCREENS
 	{
-		login, librarian, searchBook, bookInformation, subscriber, librarianManager, viewSubscriberCard , addNewBook;
+		login, librarian, searchBook, bookInformation, subscriber, librarianManager, viewSubscriberCard, addNewBook;
 	}
 
 	/**
@@ -204,6 +209,8 @@ public class GuiManager
 	 */
 	public static void preventLettersTypeInTextField(JFXTextField textField)
 	{
+		Platform.runLater(() -> {
+		});
 		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 		{
 			@Override
@@ -216,7 +223,7 @@ public class GuiManager
 			}
 		});
 	}
-	
+
 	/**
 	 * useful function to make a maxLength in textfield string
 	 * 
@@ -225,6 +232,8 @@ public class GuiManager
 	 */
 	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength)
 	{
+		Platform.runLater(() -> {
+		});
 		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 		{
 			@Override
@@ -237,10 +246,12 @@ public class GuiManager
 			}
 		});
 	}
-/**
- * opening a subscriber card
- * @param newSub
- */
+
+	/**
+	 * opening a subscriber card
+	 * 
+	 * @param newSub
+	 */
 	public static void openSubscriberCard(Subscriber newSub)
 	{
 		try
@@ -266,10 +277,13 @@ public class GuiManager
 			e.printStackTrace();
 		}
 	}
-/**
- * setting an activity log to a subscriber card for librarian or subscriber view.
- * @param activityList
- */
+
+	/**
+	 * setting an activity log to a subscriber card for librarian or subscriber
+	 * view.
+	 * 
+	 * @param activityList
+	 */
 	public static void openActvityLog(ArrayList<ActivityLog> activityList)
 	{
 		try
@@ -285,11 +299,12 @@ public class GuiManager
 		}
 	}
 
-/**
- * checking if email adress is a valid email adress.
- * @param email
- * @return true or false
- */
+	/**
+	 * checking if email adress is a valid email adress.
+	 * 
+	 * @param email
+	 * @return true or false
+	 */
 	public static boolean isValidEmailAddress(String email)
 	{
 		boolean result = true;
@@ -303,13 +318,13 @@ public class GuiManager
 		}
 		return result;
 	}
+
 	public static void openAddNewBook()
 	{
 		try
 		{
 			Stage SeondStage = new Stage();
-			FXMLLoader loader = new FXMLLoader(
-					GuiManager.class.getResource(availableFXML.get(SCREENS.addNewBook)));
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(SCREENS.addNewBook)));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 			SeondStage.setResizable(false);
