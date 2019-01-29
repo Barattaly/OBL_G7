@@ -2,11 +2,15 @@ package gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListCell;
+import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
@@ -28,6 +32,7 @@ import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,6 +43,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
@@ -45,6 +51,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -109,6 +116,19 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@FXML
 	private ToggleGroup reportToggleGroup;
 
+	@FXML
+	private JFXListView<String> reportsListView;
+
+	private ObservableList<String> reportsList;// for table view...
+
+	@FXML
+	private ProgressIndicator loadListSpinner;
+
+	@FXML
+	private Label instructionLabelActivityReport;
+	
+	private Map<String,Report_Activity> oldActivityReports;
+
 	// this is the search function, it is in listener for text inside the textfield
 	private InvalidationListener onSearchStart = new InvalidationListener()
 	{
@@ -171,7 +191,13 @@ public class LibrarianManagerController extends LibrarianScreenController
 	{
 		super.initialize(arg0, arg1);
 		GuiManager.client.getEmployeeList();
+
 		searchTextField.textProperty().addListener(onSearchStart);
+
+		reportsListView.setVisible(false);
+		loadListSpinner.setVisible(false);
+		instructionLabelActivityReport.setVisible(false);
+		thinkSpinner.setVisible(false);
 
 		pane_employees.setVisible(false);
 		pane_reports.setVisible(false);
@@ -187,7 +213,26 @@ public class LibrarianManagerController extends LibrarianScreenController
 		empDepartmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
 
 		empList = FXCollections.observableArrayList();
+		reportsList = FXCollections.observableArrayList();
+		
+		reportsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
+		    @Override
+		    public void handle(MouseEvent event) 
+		    {
+		    	if(event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
+		    	{
+		    		openActivityReport(oldActivityReports.get(((JFXListCell)event.getTarget()).getText()),false);
+
+		        /*if (click.getClickCount() == 2) {
+		           //Use ListView's getSelected Item
+		           currentItemSelected = playList.getSelectionModel()
+		                                                    .getSelectedItem();
+		           //use this to do whatever you want to. Open Link etc.*/
+		        }
+		    }
+		});
+		
 	}
 
 	@FXML
@@ -281,18 +326,32 @@ public class LibrarianManagerController extends LibrarianScreenController
 				thinkSpinner.setVisible(false);
 				openBorrowReport((Report_BorrowDurationInfo) msg.Data);
 			});
-
 			break;
 		}
 		case Reports_Activity:
 		{
 			Platform.runLater(() -> {
 				thinkSpinner.setVisible(false);
-				openActivityReport((Report_Activity) msg.Data);
+				openActivityReport((Report_Activity) msg.Data,true);
 			});
-
 			break;
 		}
+		case Reports_getList:
+		{
+			updateReportsList((List<Report_Activity>) msg.Data);
+			break;
+		}
+		case Reports_Add:
+		{
+			Platform.runLater(() -> 
+			{
+				if(msg.Data == null)
+					GuiManager.ShowErrorPopup("Report saving went wrong\nPlease restart the program and try again.");
+				else
+					GuiManager.ShowMessagePopup("Report "+((Report_Activity) msg.Data).getReportDate()+" saving succeeded.");
+			});			
+			break;
+		}	
 		default:
 			super.getMessageFromServer(msg);
 		}
@@ -333,13 +392,24 @@ public class LibrarianManagerController extends LibrarianScreenController
 		switch (((JFXRadioButton) reportToggleGroup.getSelectedToggle()).getText())
 		{
 		case "Activity":
+			loadListSpinner.setVisible(true);
+			GuiManager.client.getReportsList();
 			generateReportBtn.setDisable(false);
+			reportsListView.setVisible(true);
+			instructionLabelActivityReport.setVisible(true);
+
 			break;
 		case "Borrows Duration":
 			generateReportBtn.setDisable(false);
+			reportsListView.setVisible(false);
+			instructionLabelActivityReport.setVisible(false);
+			loadListSpinner.setVisible(false);
 			break;
 		case "Late Returns":
 			generateReportBtn.setDisable(false);
+			reportsListView.setVisible(false);
+			instructionLabelActivityReport.setVisible(false);
+			loadListSpinner.setVisible(false);
 			break;
 		}
 	}
@@ -384,7 +454,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 
 	}
 
-	private void openActivityReport(Report_Activity info)
+	private void openActivityReport(Report_Activity info, boolean isNew)
 	{
 		try
 		{
@@ -393,6 +463,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 			Parent root = loader.load();
 			activityReportController = loader.getController();
 			activityReportController.setReportInformation(info);
+			activityReportController.setSaveVisible(isNew);
 			Scene scene = new Scene(root);
 			SeondStage.setTitle("Activity Report");
 			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
@@ -403,7 +474,22 @@ public class LibrarianManagerController extends LibrarianScreenController
 		{
 			e.printStackTrace();
 		}
+	}
 
+	private void updateReportsList(List<Report_Activity> data)
+	{
+		oldActivityReports = new HashMap<>();
+		Platform.runLater(() -> {
+			loadListSpinner.setVisible(false);
+
+			reportsList.clear();
+			for (Report_Activity report : data)
+			{
+				oldActivityReports.put(report.getReportDate(), report);
+				reportsList.add(report.getReportDate());
+			}
+			reportsListView.setItems(reportsList);
+		});
 	}
 
 }

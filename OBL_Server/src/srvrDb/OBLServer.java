@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -196,6 +197,16 @@ public class OBLServer extends AbstractServer
 			case Reports_Activity:
 			{
 				reports_createAcitivityReport(client);
+				break;
+			}
+			case Reports_getList:
+			{
+				reports_getList(client);
+				break;
+			}
+			case Reports_Add:
+			{
+				reports_AddNewToList((Report_Activity)dbMessage.Data,client);
 				break;
 			}
 			default:
@@ -1366,7 +1377,7 @@ public class OBLServer extends AbstractServer
 	private void reports_createAcitivityReport(ConnectionToClient client) throws IOException
 	{
 		GregorianCalendar calendar = new GregorianCalendar();
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		String reportDate = format.format(calendar.getTime());;
 		int totalNumberOfSubscribers = 0;
 		int activeSubscribersNumber = 0;
@@ -1445,7 +1456,28 @@ public class OBLServer extends AbstractServer
 				lockedSubscribersNumber, frozenSubscribersNumber, currentNumOfBorrows, numOfLateSubscribers);
 		client.sendToClient(new DBMessage(DBAction.Reports_Activity, report));
 	}
-
+	
+	
+	private void reports_getList(ConnectionToClient client) throws IOException
+	{
+		String query = ReportsQueries.selectAllFromReports();
+		ResultSet rs = oblDB.executeQuery(query);
+		List<Report_Activity> listOfReports = ReportsQueries.createListOfReportsFromRS(rs);
+		DBMessage returnMsg = new DBMessage(DBAction.Reports_getList, listOfReports);
+		client.sendToClient(returnMsg);
+	}
+	
+	private void reports_AddNewToList(Report_Activity report,ConnectionToClient client) throws IOException
+	{
+		String query = ReportsQueries.addReport(report);
+		if(oblDB.executeUpdate(query) != 0)
+		{
+			client.sendToClient(new DBMessage(DBAction.Reports_Add, report));
+		}
+		else
+			client.sendToClient(new DBMessage(DBAction.Reports_Add, null));
+	}
+	
 	public MySQLConnection getConnection()
 	{
 		return oblDB;
