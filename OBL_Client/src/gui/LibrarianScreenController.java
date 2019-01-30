@@ -659,6 +659,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case AddBook:
+		{
+			searchBookWindowController.getMessageFromServer(msg);
+		}
 		}
 	}
 

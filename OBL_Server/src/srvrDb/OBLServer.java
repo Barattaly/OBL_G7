@@ -1582,80 +1582,91 @@ public class OBLServer extends AbstractServer
 
 	private void addNewBook(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query0, query1, query2, query3, query4, query5, query6, query7, query8, query9, query10;
+		String query;
 		int rowCount = 0;
+		ResultSet rs;
+		DBMessage returnMsg;
 
-		query0 = BooksQueries.SearchBookByName(book);
-		ResultSet rs0 = oblDB.executeQuery(query0);
-		rowCount = getRowCount(rs0);
-		if (rowCount == 1)
+		query = BooksQueries.SearchBookByName(book);
+		rs = oblDB.executeQuery(query);
+		rowCount = getRowCount(rs);
+		if (rowCount == 1)// book name already exist
 		{
-			DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
+			returnMsg = new DBMessage(DBAction.AddBook, null);
 			client.sendToClient(returnMsg);
 			return;
 		}
 
 		String tocPath;
-		if (book.getTocArraybyte() == null)
-			tocPath = null; // TODO: set a default TOC
-		else
-			tocPath = createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf",
-					".\\src\\resources\\tablesOfContent\\");
+		if (book.getTocArraybyte() != null && createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf",
+				".\\src\\resources\\tablesOfContent\\"))
+		{
+			// path provided and the file created successfully 
+			// There are 4 slashes - 2 for mysql and 2 for eclipse.
+			tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
+		} else
+			tocPath = null;
 
-		tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
 		book.setTableOfContenPath(tocPath);
 
-		query1 = BooksQueries.AddBook(book);
-		oblDB.executeUpdate(query1);
+		query = BooksQueries.AddBook(book);
+		if (oblDB.executeUpdate(query) == 0)
+		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
 
-		query2 = BooksQueries.GetCatalogNumberByName(book);
-		ResultSet rs = oblDB.executeQuery(query2);
+		query = BooksQueries.GetCatalogNumberByName(book);
+		rs = oblDB.executeQuery(query);
 		rowCount = getRowCount(rs);
 		if (rowCount == 0)
 		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
 			return;
-		} else
+		}
+		try
 		{
-			try
-			{
-				rs.next();
-				book.setCatalogNumber(rs.getString(1));
-			} catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			rs.next();
+			book.setCatalogNumber(rs.getString(1));
+		} catch (SQLException e)
+		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
 		}
 
 		rowCount = 0;
+		
 		for (String author : book.getAuthorNameList())
 		{
 
-			query3 = BooksQueries.SearchAuthor(author);
-			ResultSet rs2 = oblDB.executeQuery(query3);
-			rowCount = getRowCount(rs2);
+			query = BooksQueries.SearchAuthor(author);
+			rs = oblDB.executeQuery(query);
+			rowCount = getRowCount(rs);
 			if (rowCount == 0)
 			{
-				query4 = BooksQueries.AddAuthor(author);
-				oblDB.executeUpdate(query4);
-				query5 = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
-				oblDB.executeUpdate(query5);
+				query = BooksQueries.AddAuthor(author);
+				oblDB.executeUpdate(query);
+				query = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
+				oblDB.executeUpdate(query);
 			}
 		}
-
+		try
+		{
 		rowCount = 0;
 		for (String category : book.getCategories())
 		{
 
-			query7 = BooksQueries.SearchCategory(category);
-			ResultSet rs3 = oblDB.executeQuery(query7);
-			rowCount = getRowCount(rs3);
+			query = BooksQueries.SearchCategory(category);
+			rs = oblDB.executeQuery(query);
+			rowCount = getRowCount(rs);
 			if (rowCount == 0)
 			{
-				query8 = BooksQueries.AddCategory(category);
-				oblDB.executeUpdate(query8);
-				query9 = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
-				oblDB.executeUpdate(query9);
+				query = BooksQueries.AddCategory(category);
+				oblDB.executeUpdate(query);
+				query = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
+				oblDB.executeUpdate(query);
 			}
 		}
 
@@ -1663,14 +1674,21 @@ public class OBLServer extends AbstractServer
 
 		for (int i = 0; i < copies; i++)
 		{
-			query10 = BooksQueries.AddCopy(book.getCatalogNumber());
-			oblDB.executeUpdate(query10);
+			query = BooksQueries.AddCopy(book.getCatalogNumber());
+			oblDB.executeUpdate(query);
 		}
-		DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+		}
+		returnMsg = new DBMessage(DBAction.AddBook, "Success");
 		client.sendToClient(returnMsg);
 	}
 
-	public static String createFileFromByteArray(byte[] bytes, String fileName, String fileType, String filePath)
+	private boolean createFileFromByteArray(byte[] bytes, String fileName, String fileType, String filePath)
 	{
 		File outputFile = new File(filePath + fileName + "." + fileType);
 
@@ -1678,12 +1696,12 @@ public class OBLServer extends AbstractServer
 		{
 
 			outputStream.write(bytes); // write the bytes and your done.
-			return outputFile.getPath();
+			return true;
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		return null;
+		return false;
 	}
 
 	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
@@ -1789,7 +1807,7 @@ public class OBLServer extends AbstractServer
 		query = CopiesQueries.getBookCopiesDetails(book);
 		ResultSet currentCopies = oblDB.executeQuery(query);
 		List<String> updatedCopies = new ArrayList<>();
-		//removing copies:
+		// removing copies:
 		for (CopyOfBook copy : book.getCopies())
 		{
 			updatedCopies.add(copy.getId());
@@ -1802,7 +1820,7 @@ public class OBLServer extends AbstractServer
 				// delete copy id - currentCopies.getString(1)
 			}
 		}
-		//adding copies:
+		// adding copies:
 		int copies = book.getMaxCopies();
 
 		for (int i = 0; i < copies; i++)
@@ -1810,6 +1828,6 @@ public class OBLServer extends AbstractServer
 			query = BooksQueries.AddCopy(book.getCatalogNumber());
 			oblDB.executeUpdate(query);
 		}
-		
+
 	}
 }
