@@ -70,7 +70,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	protected Pane pane_createNewSubscriberCard, pane_searchSubscriberCard;
 	@FXML
-	protected AnchorPane pane_searchBook,pane_home;
+	protected AnchorPane pane_searchBook, pane_home;
 	@FXML
 	protected ImageView btn_home, btn_createNewSubscriberCard, btn_books, btn_searchSubscriberCard;
 
@@ -103,7 +103,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	protected JFXButton btn_viewSubscriberCard;
 
-	 protected ViewSubscriberCardController controller; 
+	protected ViewSubscriberCardController controller;
 
 	protected SearchBookController searchBookWindowController = null;
 
@@ -187,6 +187,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		btn_books.setOpacity(1);
 		btn_searchSubscriberCard.setOpacity(1);
 		GuiManager.preventLettersTypeInTextField(idNumberTextfield);
+		GuiManager.limitTextFieldMaxCharacters(idNumberTextfield, 9);
 		GuiManager.preventLettersTypeInTextField(phoneNumberTextfield);
 		emailTextfield.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 		{
@@ -273,7 +274,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		returnDateLabel.setStyle("-fx-text-fill: #a0a2ab");
 		JFXDatePicker returnDate = new JFXDatePicker();
 		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
-		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yyyy");
+		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yy");
 		returnDate.setDayCellFactory(picker -> new DateCell()
 		{
 			public void updateItem(LocalDate date, boolean empty)
@@ -600,17 +601,20 @@ public class LibrarianScreenController implements Initializable, IClientUI
 					GuiManager.openActvityLog(activityList);
 				});
 			}
+
 			break;
 		}
-
-	
 		case GetAllBooksList:
 		{
-			searchBookWindowController.getMessageFromServer(msg);
+			Platform.runLater(() -> {
+				searchBookWindowController.setBookMap((Map<Integer, Book>)(msg.Data));
+			});
 			break;
 		}
 		case GetCurrentBorrows:
-			borrowsWindowController.getMessageFromServer(msg);
+			Platform.runLater(() -> {
+				borrowsWindowController.getMessageFromServer(msg);
+			});
 			break;
 		case ReturnBook:
 		{
@@ -649,6 +653,19 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case AddBook:
+		{
+			searchBookWindowController.getMessageFromServer(msg);
+		}
+		case BorrowExtension:
+		{
+			Platform.runLater(() -> {
+				borrowsWindowController.getMessageFromServer(msg);
+			});
+			break;
+		}
+		default:
+			break;
 		}
 	}
 

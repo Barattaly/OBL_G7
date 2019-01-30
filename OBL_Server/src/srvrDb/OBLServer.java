@@ -1,11 +1,15 @@
 package srvrDb;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -22,16 +26,21 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
+import entities.BorrowExtension;
+import entities.BorrowExtensionQueries;
 import entities.BorrowsQueries;
 import entities.CopiesQueries;
 import entities.CopyOfBook;
 import entities.ActivityLog;
 import entities.Book;
 import entities.BookOrder;
+import entities.BookOrder.orderQueueCheckOptions;
 import entities.BooksQueries;
 import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
+import entities.OblMessagesQueries;
+import entities.OblMessage;
 import entities.OrdersQueries;
 import entities.Report_Activity;
 import entities.Report_BorrowDurationInfo;
@@ -50,7 +59,7 @@ import ocsf.server.ConnectionToClient;
 public class OBLServer extends AbstractServer
 {
 
-	public TextArea logREF = null; 
+	public TextArea logREF = null;
 	private MySQLConnection oblDB;
 
 	/**
@@ -64,6 +73,13 @@ public class OBLServer extends AbstractServer
 		try
 		{
 			oblDB = new MySQLConnection(dbName, dbPassword, userName);
+			if (isDBRunning())
+			{
+				// if server was off -> all users are disconnected.
+				oblDB.executeUpdate("UPDATE obl_db.users SET loginStatus = 'off'");
+
+			}
+			
 		} catch (Exception e)
 		{
 		}
@@ -79,6 +95,12 @@ public class OBLServer extends AbstractServer
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		oblDB = new MySQLConnection(dbName, dbPassword, userName);
+		if (isDBRunning())
+		{
+			// if server was off -> all users are disconnected.
+			oblDB.executeUpdate("UPDATE obl_db.users SET loginStatus = 'off'");
+
+		}
 	}
 
 	/**
@@ -201,14 +223,14 @@ public class OBLServer extends AbstractServer
 				reports_createAcitivityReport(client);
 				break;
 			}
-				case Reports_getList:
+			case Reports_getList:
 			{
 				reports_getList(client);
 				break;
 			}
 			case Reports_Add:
 			{
-				reports_AddNewToList((Report_Activity)dbMessage.Data,client);
+				reports_AddNewToList((Report_Activity) dbMessage.Data, client);
 				break;
 			}
 			case Reports_LateReturns:
@@ -218,7 +240,17 @@ public class OBLServer extends AbstractServer
 			}
 			case AddBook:
 			{
-				addNewBook((Book)dbMessage.Data , client);
+				addNewBook((Book) dbMessage.Data, client);
+				break;
+			}
+			case EditBookDetails:
+			{
+				changeBookDetails((Book) dbMessage.Data, client);
+				break;
+			}
+			case BorrowExtension:
+			{
+				createBorrowExtension((BorrowExtension) dbMessage.Data, client);
 				break;
 			}
 			default:
@@ -237,7 +269,7 @@ public class OBLServer extends AbstractServer
 			}
 		}
 	}
-	
+
 	private void updateSubscriberInformation(Subscriber subscriberToUpdate, ConnectionToClient client)
 			throws IOException
 	{
@@ -507,18 +539,19 @@ public class OBLServer extends AbstractServer
 		 * check if there is order for this book. if exist, only the first in the order
 		 * queue can borrow this book
 		 */
-		if (orderQueueCheck(book, subscriber) == -1) // the subscriber is not the one who ordered the book
+		if (orderQueueCheckForNewBorrow(book, subscriber) == orderQueueCheckOptions.SubscriberIsNotFirstInOrdersQueue) 
+			// the subscriber is not the one who ordered the book 
 		{
 			borrowToAdd.setSubscriberId("1");
 			DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
 			client.sendToClient(returnMsg);
 			return;
-		} else if (orderQueueCheck(book, subscriber) == 1 || orderQueueCheck(book, subscriber) == -2)
-		// the subscriber is the subscriber who ordered the book (1) , or the orders
-		// queue is empty (-2)
+		} else if (orderQueueCheckForNewBorrow(book, subscriber) == orderQueueCheckOptions.SubscriberIsFirstInOrdersQueue 
+				|| orderQueueCheckForNewBorrow(book, subscriber) == orderQueueCheckOptions.OrdersQueueIsEmpty)
+		// the subscriber is the subscriber who ordered the book, or the orders queue is empty
 		{
-			if (!isSubscriberStatusActive(subscriber)) // check if the subscriber status is not active
-														// (frozen/deep freeze/locked)
+			if (!isSubscriberStatusActive(subscriber)) 
+				// check if the subscriber status is not active (frozen/deep freeze/locked)
 			{
 				borrowToAdd.setSubscriberId("2");
 				DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
@@ -598,7 +631,7 @@ public class OBLServer extends AbstractServer
 					query = CopiesQueries.updateCopyStatusToUnavailable(book);
 					oblDB.executeUpdate(query); // update copy status to unavailable
 
-					if (orderQueueCheck(book, subscriber) == 1)
+					if (orderQueueCheckForNewBorrow(book, subscriber) == orderQueueCheckOptions.SubscriberIsFirstInOrdersQueue)
 					{
 						query = OrdersQueries.getBookCurrentOrders(book); // search by book catalog number
 						ResultSet rsBookCurrentOrders = oblDB.executeQuery(query);
@@ -789,6 +822,96 @@ public class OBLServer extends AbstractServer
 		return;
 	}
 
+	private void createBorrowExtension(BorrowExtension borrowToExtend, ConnectionToClient client) throws IOException
+	{
+		Book bookToCheck = null;
+		int daysUntilExpectedReturnDate = 0; // check if this is the right number to initialize
+		boolean isReturnDateValid = false;
+		String query = BorrowsQueries.getBorrowDetails(borrowToExtend.getBorrow().getId());
+		ResultSet rsBorrowDetails = oblDB.executeQuery(query);
+		Subscriber subscriber = null;
+		try // get the details of the wanted borrow to extend
+		{
+			rsBorrowDetails.next();
+			borrowToExtend.getBorrow().setSubscriberId(rsBorrowDetails.getString(1));
+			borrowToExtend.getBorrow().setBorrowDate(rsBorrowDetails.getString(2));
+			borrowToExtend.getBorrow().setExpectedReturnDate(rsBorrowDetails.getString(3));
+			borrowToExtend.getBorrow().setBookCatalogNumber(rsBorrowDetails.getString(5));
+			borrowToExtend.getBorrow().setCopyId(rsBorrowDetails.getString(6));
+			borrowToExtend.getBorrow().setActualReturnDate("0"); // avoid null value
+			bookToCheck = new Book(borrowToExtend.getBorrow().getBookCatalogNumber());
+			// check if orders queue exist for the borrowed book, if exist than extend the borrow is unavailable
+			if(orderQueueCheckForNewBorrowExtesion(bookToCheck) == orderQueueCheckOptions.OrdersQueueIsNotEmpty)
+			{
+				borrowToExtend.getBorrow().setBookCatalogNumber("0");
+				DBMessage returnMsg = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+				client.sendToClient(returnMsg);
+				return;
+			}
+			daysUntilExpectedReturnDate = rsBorrowDetails.getInt(4);
+			subscriber = new Subscriber(borrowToExtend.getBorrow().getSubscriberId());
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		// check if current date is more than 7 days until expected return date - than extend the borrow is unavailable
+		if(daysUntilExpectedReturnDate > 7)
+		{
+			borrowToExtend.getBorrow().setActualReturnDate("1");
+			DBMessage returnMsg = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		else if (!isSubscriberStatusActive(subscriber)) 
+			// check if the subscriber status is not active (frozen/deep freeze/locked)
+		{
+			borrowToExtend.getBorrow().setSubscriberId("0");
+			DBMessage returnMsg = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		else if (isBookArchived(bookToCheck)) // check if the book is archived
+		{
+			borrowToExtend.getBorrow().setBookCatalogNumber("-1");
+			DBMessage returnMsg = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		// check if the book classification is wanted - than extend the borrow is unavailable
+		else if (getBookClassification(bookToCheck).equals("wanted")) 
+		{
+				borrowToExtend.getBorrow().setBookCatalogNumber("-2");
+				DBMessage returnMsg = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+				client.sendToClient(returnMsg);
+				return;
+		} 
+		else
+		{
+			updateDateFormat(borrowToExtend.getBorrow());
+			query = BorrowExtensionQueries.addNewBorrowExtension(borrowToExtend);
+			oblDB.executeUpdate(query); // add a new borrow extension to borrows_extensions table
+
+			borrowToExtend.getBorrow().setExpectedReturnDate(borrowToExtend.getExtensionDate());
+			query = BorrowsQueries.updateExpectedReturnDate(borrowToExtend.getBorrow());
+			oblDB.executeUpdate(query); // update expected return date of the specific borrow on borrows table
+			if(borrowToExtend.getExtensionType().equals("automatic")) // mean that the subscriber wanted to extend borrow return date
+			{
+				String messageContent = "The subscriber: " + borrowToExtend.getBorrow().getSubscriberId() 
+									  + " was sucessfully excuted a borrow extension.\n"
+									  + " Borrow number: " + borrowToExtend.getBorrow().getId();
+				OblMessage message = new OblMessage(messageContent, "librarian");
+				query = OblMessagesQueries.sendMessageToLibrarians(message);
+				oblDB.executeUpdate(query); // add a new message to messages table
+			}
+		}
+		DBMessage returnMsg = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+		client.sendToClient(returnMsg);
+		return;
+
+	}
+		
 	private boolean isBookExist(Book bookToCheck)
 	{
 		String query = BooksQueries.searchBookByCatalogNumber(bookToCheck);// search by book catalog number
@@ -1005,34 +1128,48 @@ public class OBLServer extends AbstractServer
 		}
 	}
 
-	private int orderQueueCheck(Book book, Subscriber subscriber)
+	private orderQueueCheckOptions orderQueueCheckForNewBorrow(Book book, Subscriber subscriber)
 	{
 		String query = OrdersQueries.getBookCurrentOrders(book);// search by book catalog number
 		ResultSet rsBookCurrentOrders = oblDB.executeQuery(query);
 
 		int bookNumOfCurrentOrders = getRowCount(rsBookCurrentOrders);
-		if (bookNumOfCurrentOrders > 0) // means that the book orders queue exist
+		if (bookNumOfCurrentOrders > 0) // means that the book orders queue is not empty
 		{
 			try
 			{
 				rsBookCurrentOrders.next();
-				String subscriberID = rsBookCurrentOrders.getString(2); // check if the subscriber is first on orders
-																		// queue
+				String subscriberID = rsBookCurrentOrders.getString(2); 
+				// check if the subscriber is first on orders queue
 				if (subscriberID.equals(subscriber.getId()))
 				{
-					return 1;
+					return orderQueueCheckOptions.SubscriberIsFirstInOrdersQueue;
 				}
-				return -1; // if the first subscriber on orders queue is not the same subscriber
+				return orderQueueCheckOptions.SubscriberIsNotFirstInOrdersQueue; // if the first subscriber on orders queue is not the same subscriber
 			} catch (Exception e)
 			{
 				e.printStackTrace();
-				return 0;
+				return orderQueueCheckOptions.Error;
 			}
 		}
 		// means that the book orders queue is empty
-		return -2;
+		return orderQueueCheckOptions.OrdersQueueIsEmpty;
 	}
+	
+	private orderQueueCheckOptions orderQueueCheckForNewBorrowExtesion(Book book)
+	{
+		String query = OrdersQueries.getBookCurrentOrders(book);// search by book catalog number
+		ResultSet rsBookCurrentOrders = oblDB.executeQuery(query);
 
+		int bookNumOfCurrentOrders = getRowCount(rsBookCurrentOrders);
+		if (bookNumOfCurrentOrders > 0) 
+		{
+			// means that the book orders queue is not empty
+			return orderQueueCheckOptions.OrdersQueueIsNotEmpty;
+		}
+		// means that the book orders queue is empty
+		return orderQueueCheckOptions.OrdersQueueIsEmpty;
+	}
 	private void updateDateFormat(BorrowACopyOfBook borrowToAdd)
 	{
 		String year = borrowToAdd.getExpectedReturnDate();
@@ -1043,7 +1180,7 @@ public class OBLServer extends AbstractServer
 		borrowToAdd.setExpectedReturnDate("" + year1 + monthDay);
 	}
 
-	private int getBookCurrentNumOfOrders(Book book)
+	/*private int getBookCurrentNumOfOrders(Book book)
 	{
 		String query = BooksQueries.getCurrentNumOfOrders(book);// search by book catalog number
 		ResultSet rsBookCurrentNumOfOrders = oblDB.executeQuery(query);
@@ -1056,7 +1193,7 @@ public class OBLServer extends AbstractServer
 			e.printStackTrace();
 			return -1;
 		}
-	}
+	}*/
 
 	/*
 	 * private int getSubcriberCurrentNumOfBorrows(Subscriber subscriberToUpdate) {
@@ -1069,7 +1206,7 @@ public class OBLServer extends AbstractServer
 	 * } }
 	 */
 
-	private int getSubscriberNumOfLateReturns(Subscriber subscriberToUpdate)
+	/*private int getSubscriberNumOfLateReturns(Subscriber subscriberToUpdate)
 	{
 		String query = SubscribersQueries.getNumOfLateReturns(subscriberToUpdate);// search by subscriber ID
 		ResultSet rsCurrentNumOfLateReturns = oblDB.executeQuery(query);
@@ -1082,7 +1219,7 @@ public class OBLServer extends AbstractServer
 			e.printStackTrace();
 			return -1;
 		}
-	}
+	}*/
 
 	private boolean isSubscriberLateAnotherReturn(BorrowACopyOfBook borrowToClose)
 	{
@@ -1112,85 +1249,6 @@ public class OBLServer extends AbstractServer
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	/*
-	 * This method suppose to run automatically every 24 hours. If subscriber is
-	 * late at return a copy of a book, his status will change to "frozen", and the
-	 * borrow "isReturnedLate" flag will change to "yes".
-	 */
-	private void checkAndUpdateLateReturns()
-	{
-		String query = BorrowsQueries.getCurrentBorrowsTable();
-		ResultSet rsCurrentBorrowsTable = oblDB.executeQuery(query); // get current borrows table
-		BorrowACopyOfBook borrowFromBorrowsTable = new BorrowACopyOfBook();
-		ArrayList<Subscriber> subscribersLateReturnsAtListThreeTimes = new ArrayList<Subscriber>();
-		try
-		{
-			while (rsCurrentBorrowsTable.next())
-			{
-				borrowFromBorrowsTable.setId(rsCurrentBorrowsTable.getString(1));
-				borrowFromBorrowsTable.setSubscriberId(rsCurrentBorrowsTable.getString(2));
-				borrowFromBorrowsTable.setExpectedReturnDate(rsCurrentBorrowsTable.getString(4));
-
-				String expectedBorrowDate = borrowFromBorrowsTable.getExpectedReturnDate();
-				String returnDate = getCurrentDateAsString();
-
-				Subscriber subscriberToUpdate = new Subscriber(borrowFromBorrowsTable.getSubscriberId());
-				int lateReturnsCount = getSubscriberNumOfLateReturns(subscriberToUpdate);
-
-				if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(expectedBorrowDate))) // check if the subscriber
-																								// is late at return
-				{
-					lateReturnsCount++;
-					if (lateReturnsCount >= 3)
-					{
-						subscribersLateReturnsAtListThreeTimes.add(subscriberToUpdate);
-
-					}
-					query = BorrowsQueries.getIsReturnedLate(borrowFromBorrowsTable);
-					ResultSet rsIsReturnedLate = oblDB.executeQuery(query); // get the value of "isReturnedLate" flag
-					try
-					{
-						rsIsReturnedLate.next();
-						if (rsIsReturnedLate.getString(1).equals("no"))
-						{
-							borrowFromBorrowsTable.setIsReturnedLate("yes");
-							query = BorrowsQueries.updateIsReturnedLateToYes(borrowFromBorrowsTable);
-							oblDB.executeUpdate(query); // update the flag at the borrow if the subscriber returned the
-														// copy late
-						}
-					} catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-					subscriberToUpdate.setStatus("frozen");
-					query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
-					ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // update subscriber's status to frozen
-					try
-					{
-						rsSubscriberStatus.next();
-						if (rsSubscriberStatus.getString(1).equals("active"))
-						{
-							query = SubscribersQueries.updateSubscriberStatusToFrozen(subscriberToUpdate);
-							oblDB.executeUpdate(query); // update subscriber's status to frozen
-						}
-					} catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		/*
-		 * Send message to the library manager in order to approve deep freeze of the
-		 * subscriber card the message will include the hashMap:
-		 * subscribersLateReturnsAtListThreeTimes
-		 */
 	}
 
 	/**
@@ -1440,34 +1498,50 @@ public class OBLServer extends AbstractServer
 		oblDB.executeUpdate(query);
 	}
 
-	/*
+	/**
 	 * in this function we get book catalog number and pull the path from db, then
 	 * move the file to byte array and send it to the client
+	 * 
+	 * @throws SQLException
 	 */
-	private void sendPDFtoClient(Book catalogNumber, ConnectionToClient client) throws IOException
+	private void sendPDFtoClient(Book catalogNumber, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
+		//doesnt open correctly when converted to JAR - NEED TO FIX.
+		
+		/*String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
 		ResultSet rs = oblDB.executeQuery(query);
+
+		String localPath = "";
+		File file;
+		byte[] mybytearray = null;
 		try
 		{
 			rs.next();
-			String localPath = new String(rs.getString(9));
-			File file = new File(localPath);
-			byte[] mybytearray = Files.readAllBytes(file.toPath());
-			DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
-			client.sendToClient(returnMsg);
+			localPath = rs.getString(9);
+			if (localPath.charAt(0) == '.')
+			{
+				localPath = localPath.substring(2, localPath.length());
 
-		} catch (SQLException exp)
+			}
+			ClassLoader classLoader = getClass().getClassLoader();
+			String temp = "resources\\tablesOfContent\\Table of content - Linear algebra.pdf";
+			file = new File(classLoader.getResource(temp).toURI());
+			mybytearray = Files.readAllBytes(file.toPath());
+		} catch (Exception e)
 		{
-			exp.printStackTrace();
+			client.sendToClient(new DBMessage(DBAction.ViewTableOfContent, null));
+			return;
 		}
+		DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
+		client.sendToClient(returnMsg);*/
+
 	}
 
 	private void reports_createAcitivityReport(ConnectionToClient client) throws IOException
 	{
 		GregorianCalendar calendar = new GregorianCalendar();
 		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		String reportDate = format.format(calendar.getTime());;
+		String reportDate = format.format(calendar.getTime());
 		int totalNumberOfSubscribers = 0;
 		int activeSubscribersNumber = 0;
 		int lockedSubscribersNumber = 0;
@@ -1545,7 +1619,7 @@ public class OBLServer extends AbstractServer
 				lockedSubscribersNumber, frozenSubscribersNumber, currentNumOfBorrows, numOfLateSubscribers);
 		client.sendToClient(new DBMessage(DBAction.Reports_Activity, report));
 	}
-	
+
 	private void reports_getList(ConnectionToClient client) throws IOException
 	{
 		String query = ReportsQueries.selectAllFromReports();
@@ -1554,132 +1628,275 @@ public class OBLServer extends AbstractServer
 		DBMessage returnMsg = new DBMessage(DBAction.Reports_getList, listOfReports);
 		client.sendToClient(returnMsg);
 	}
-	private void reports_AddNewToList(Report_Activity report,ConnectionToClient client) throws IOException
+
+	private void reports_AddNewToList(Report_Activity report, ConnectionToClient client) throws IOException
 	{
 		String query = ReportsQueries.addReport(report);
-		if(oblDB.executeUpdate(query) != 0)
+		if (oblDB.executeUpdate(query) != 0)
 		{
 			client.sendToClient(new DBMessage(DBAction.Reports_Add, report));
-		}
-		else
+		} else
 			client.sendToClient(new DBMessage(DBAction.Reports_Add, null));
 	}
-	
 
 	private void reports_LateReturns(ConnectionToClient client) throws IOException, SQLException
 	{
 		Report_LateReturns report = ReportsQueries.CreateLateReturnsReport(oblDB);
 		client.sendToClient(new DBMessage(DBAction.Reports_LateReturns, report));
 	}
-	
-	private void addNewBook(Book book, ConnectionToClient client)throws IOException, SQLException
+
+	private void addNewBook(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query0,query1,query2,query3,query4,query5,query6,query7,query8,query9,query10;
-		int rowCount = 0;  
-		
-		query0 = BooksQueries.SearchBookByName(book);
-		ResultSet rs0=oblDB.executeQuery(query0);
-		rowCount = getRowCount(rs0);
-		if (rowCount == 1)
+		String query;
+		int rowCount = 0;
+		ResultSet rs;
+		DBMessage returnMsg;
+
+		query = BooksQueries.SearchBookByName(book);
+		rs = oblDB.executeQuery(query);
+		rowCount = getRowCount(rs);
+		if (rowCount == 1)// book name already exist
 		{
-			//DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
-			//client.sendToClient(returnMsg); 
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
 			return;
 		}
-	
+
 		String tocPath;
-		if (book.getTocArraybyte()==null)
-			tocPath=null;                    //TODO: set a default TOC
-		else 
-			tocPath =createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf", ".\\src\\resources\\tablesOfContent\\");
-		
-		tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
-		book.setTableOfContenPath(tocPath);
-		
-		query1 = BooksQueries.AddBook(book); 
-		oblDB.executeUpdate(query1);
-		
-		
-		query2 = BooksQueries.GetCatalogNumberByName(book);
-		ResultSet rs=oblDB.executeQuery(query2);
-		rowCount = getRowCount(rs);
-		if (rowCount == 0) 
+		if (book.getTocArraybyte() != null && createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf",
+				".\\src\\resources\\tablesOfContent\\"))
 		{
-			return;
+			// path provided and the file created successfully
+			// There are 4 slashes - 2 for mysql and 2 for eclipse.
+			tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
 		} else
-		{ 
+			tocPath = null;
+
+		book.setTableOfContenPath(tocPath);
+
+		query = BooksQueries.AddBook(book);
+		if (oblDB.executeUpdate(query) == 0)
+		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
+
+		query = BooksQueries.GetCatalogNumberByName(book);
+		rs = oblDB.executeQuery(query);
+		rowCount = getRowCount(rs);
+		if (rowCount == 0)
+		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		try
+		{
+			rs.next();
+			book.setCatalogNumber(rs.getString(1));
+		} catch (SQLException e)
+		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+		}
+
+		rowCount = 0;
+
+		for (String author : book.getAuthorNameList())
+		{
+
+			query = BooksQueries.SearchAuthor(author);
+			rs = oblDB.executeQuery(query);
+			rowCount = getRowCount(rs);
+			if (rowCount == 0)
+			{
+				query = BooksQueries.AddAuthor(author);
+				oblDB.executeUpdate(query);
+				query = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
+				oblDB.executeUpdate(query);
+			}
+		}
+		try
+		{
+			rowCount = 0;
+			for (String category : book.getCategories())
+			{
+
+				query = BooksQueries.SearchCategory(category);
+				rs = oblDB.executeQuery(query);
+				rowCount = getRowCount(rs);
+				if (rowCount == 0)
+				{
+					query = BooksQueries.AddCategory(category);
+					oblDB.executeUpdate(query);
+					query = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
+					oblDB.executeUpdate(query);
+				}
+			}
+
+			int copies = book.getMaxCopies();
+
+			for (int i = 0; i < copies; i++)
+			{
+				query = BooksQueries.AddCopy(book.getCatalogNumber());
+				oblDB.executeUpdate(query);
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+		}
+		returnMsg = new DBMessage(DBAction.AddBook, "Success");
+		client.sendToClient(returnMsg);
+	}
+
+	private boolean createFileFromByteArray(byte[] bytes, String fileName, String fileType, String filePath)
+	{
+		File outputFile = new File(filePath + fileName + "." + fileType);
+
+		try (FileOutputStream outputStream = new FileOutputStream(outputFile);)
+		{
+
+			outputStream.write(bytes); // write the bytes and your done.
+			return true;
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
+	{
+		String year = "";
+		String query = BooksQueries.changeBookFields(book);
+		ResultSet rs;
+
+		oblDB.executeUpdate(query);
+		// changing now book authors
+		ArrayList<String> newAuthorsList = book.getAuthorNameList();
+		query = BooksQueries.getAuthorsFromBook(book);
+		rs = oblDB.executeQuery(query);
+		int numberOfOldCatagories = getRowCount(rs);
+		for (int i = 0; i < numberOfOldCatagories; i++)
+		{
 			try
 			{
 				rs.next();
-				book.setCatalogNumber(rs.getString(1));
-			} catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-		}
-		
-		
-		rowCount=0;
-		for(String author : book.getAuthorNameList())
-		{
-			
-			query3=BooksQueries.SearchAuthor(author);
-			ResultSet rs2 = oblDB.executeQuery(query3);
-			rowCount = getRowCount(rs2);
-			if (rowCount == 0) 
-			{
-				query4=BooksQueries.AddAuthor(author);
-				oblDB.executeUpdate(query4);
-				query5=BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
-				oblDB.executeUpdate(query5);
-				
-			}
-		}
-		
-		rowCount=0;
-		for(String category : book.getCategories())
-		{
-			
-			query7=BooksQueries.SearchCategory(category);
-			ResultSet rs3 = oblDB.executeQuery(query7);
-			rowCount = getRowCount(rs3);
-			if (rowCount == 0) 
-			{
-				query8=BooksQueries.AddCategory(category);
-				oblDB.executeUpdate(query8);
-				query9=BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
-				oblDB.executeUpdate(query9);
-				
-			}
-		}
-		
-		int copies = book.getMaxCopies();
-		
-		for(int i=0; i < copies; i++)
-		{
-			query10=BooksQueries.AddCopy(book.getCatalogNumber());
-			oblDB.executeUpdate(query10);
-		}
-		
+				String oldAuthor = rs.getString(1);
+				for (String newAuthor : newAuthorsList)
+				{
+					query = BooksQueries.getAuthor(newAuthor);
+					ResultSet rs2 = oblDB.executeQuery(query);
+					int rowCount2 = getRowCount(rs2);
+					if (rowCount2 == 0)
+					{
+						query = BooksQueries.addAuthor(newAuthor);
+						oblDB.executeUpdate(query);
+						query = BooksQueries.addAuthorToBook(newAuthor, book);
+						oblDB.executeUpdate(query);
+					} else
+					{
+						query = BooksQueries.getAuthorFromBook(book, newAuthor);
+						rs2 = oblDB.executeQuery(query);
+						rowCount2 = getRowCount(rs2);
+						if (rowCount2 == 0)
+						{
+							query = BooksQueries.addAuthorToBook(newAuthor, book);
+							oblDB.executeUpdate(query);
+						}
+					}
 
-		//DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
-		//client.sendToClient(returnMsg);
-			
+					if (!(newAuthorsList.contains(oldAuthor)))// in case we want to delete author from db
+					{
+						query = BooksQueries.deleteAuthor(oldAuthor, book);
+						oblDB.executeUpdate(query);
+					}
+				}
+
+			} catch (SQLException exp)
+			{
+				exp.printStackTrace();
+			}
+
+		}
+		// changing now categories
+		ArrayList<String> newCategories = book.getCategories();
+		query = BooksQueries.getCategoriesForBookId(book.getCatalogNumber());
+		rs = oblDB.executeQuery(query);
+		numberOfOldCatagories = getRowCount(rs);
+		for (int i = 0; i < numberOfOldCatagories; i++)
+		{
+			try
+			{
+				rs.next();
+				String oldCategory = rs.getString(1);
+				for (String oldCatagory : newCategories)
+				{
+					query = BooksQueries.getCategoryByName(oldCatagory);
+					ResultSet rs2 = oblDB.executeQuery(query);
+					int rowCount2 = getRowCount(rs2);
+					if (rowCount2 == 0) // in case there is not such category at all so we want to add it
+					{
+						query = BooksQueries.addCagegory(oldCatagory);
+						oblDB.executeUpdate(query);
+						query = BooksQueries.addCagegoryToBook(oldCatagory, book);
+						oblDB.executeUpdate(query);
+					} else // add only to books_categories table
+					{
+						query = BooksQueries.getCategoriesFromBook(book, oldCatagory);
+						rs2 = oblDB.executeQuery(query);
+						rowCount2 = getRowCount(rs2);
+						if (rowCount2 == 0)
+						{
+							query = BooksQueries.addCagegoryToBook(oldCatagory, book);
+							oblDB.executeUpdate(query);
+						}
+					}
+				}
+				if (!(newCategories.contains(oldCategory))) // in case we want to delete a category
+				{
+					query = BooksQueries.deleteCategory(oldCategory, book);
+					oblDB.executeUpdate(query);
+				}
+
+			} catch (SQLException exp)
+			{
+				exp.printStackTrace();
+			}
+		}
+		// copiesssss
+		query = CopiesQueries.getBookCopiesDetails(book);
+		ResultSet currentCopies = oblDB.executeQuery(query);
+		List<String> updatedCopies = new ArrayList<>();
+		// removing copies:
+		for (CopyOfBook copy : book.getCopies())
+		{
+			updatedCopies.add(copy.getId());
+		}
+		while (currentCopies.next())
+		{
+
+			if (!updatedCopies.contains(currentCopies.getString(1)))
+			{
+				// delete copy id - currentCopies.getString(1)
+			}
+		}
+		// adding copies:
+		int copies = book.getMaxCopies();
+
+		for (int i = 0; i < copies; i++)
+		{
+			query = BooksQueries.AddCopy(book.getCatalogNumber());
+			oblDB.executeUpdate(query);
+		}
 
 	}
 	
-	public static String createFileFromByteArray(byte[] bytes , String fileName , String fileType ,String filePath )
+	public MySQLConnection getConnection()
 	{
-	    File outputFile = new File(filePath + fileName + "." + fileType);
-	    
-	    try ( FileOutputStream outputStream = new FileOutputStream(outputFile); ) {
-
-	       outputStream.write(bytes);  //write the bytes and your done. 
-	       return outputFile.getPath();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-		return null;
+		return oblDB;
 	}
 }

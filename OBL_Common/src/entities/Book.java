@@ -89,7 +89,21 @@ public class Book implements Serializable
 	{
 		this.catalogNumber = catalogNumber;
 	}
-
+	//shiran
+	public Book(String catalogNumber, String name,ArrayList<String> authorNameList,ArrayList<String> categories, 
+			String publicationYear, String editionNumber,String location, String description,String classification)
+	{
+		this.catalogNumber=catalogNumber;
+		this.name=name;
+		this.authorNameList=authorNameList;
+		this.categories=categories;
+		this.publicationYear=publicationYear;
+		this.editionNumber=editionNumber;
+		this.location=location;
+		this.description=description;
+		this.classification = classification;
+		
+	}
 	public String getCatalogNumber() 
 	{
 		return catalogNumber;

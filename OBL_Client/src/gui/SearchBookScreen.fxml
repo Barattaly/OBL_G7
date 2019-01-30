@@ -34,7 +34,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
 		</TableView>
-				<HBox alignment="CENTER" prefHeight="426.0" prefWidth="733.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="14.0">
+				<HBox alignment="CENTER" prefHeight="390.0" prefWidth="733.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="14.0">
 					<children>
 						<Pane fx:id="searchBookPane" prefHeight="470.0" prefWidth="734.0">
 							<children>
