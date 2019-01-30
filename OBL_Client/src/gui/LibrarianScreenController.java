@@ -653,6 +653,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case AddBook:
+		{
+			searchBookWindowController.getMessageFromServer(msg);
+		}
 		case BorrowExtension:
 		{
 			Platform.runLater(() -> {

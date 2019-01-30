@@ -115,6 +115,11 @@
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </JFXTextField>
+                  <JFXTextField fx:id="userNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </JFXTextField>
                   <JFXTextField fx:id="idNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
@@ -136,11 +141,6 @@
                      </cursor>
                   </JFXTextField>
                   <JFXTextField fx:id="emailField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor>
-                  </JFXTextField>
-                  <JFXTextField fx:id="userNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
