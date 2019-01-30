@@ -58,6 +58,8 @@ public class ServerScreenController implements Initializable
     @FXML
     private TextField serverIPLabel;
 
+	
+	private AutomaticExecutors executer = null;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -139,7 +141,8 @@ public class ServerScreenController implements Initializable
 			loadingSpinner.setVisible(true);
 			server.connectToDB( dbNameTextField.getText(), dbPassTextField.getText(),
 					dbUserNameTextField.getText());
-
+			executer = new AutomaticExecutors(server.getConnection());
+		
 		} catch (Exception ex)
 		{
 			_logTextArea.setText(ex.getMessage() + System.lineSeparator() + _logTextArea.getText());

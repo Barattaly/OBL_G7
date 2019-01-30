@@ -236,6 +236,13 @@ public class SubscriberScreenController implements Initializable, IClientUI
 
 			break;  
 		}
+		case BorrowExtension:
+		{
+			Platform.runLater(() -> {
+				borrowsWindowController.getMessageFromServer(msg);
+			});
+			break;
+		}
 		}
 	}
 

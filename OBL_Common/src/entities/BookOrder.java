@@ -12,6 +12,11 @@ public class BookOrder implements Serializable
 	private String bookCatalogNumber;
 	private boolean flag;
 	
+	public enum orderQueueCheckOptions
+	{
+		OrdersQueueIsEmpty, OrdersQueueIsNotEmpty, SubscriberIsFirstInOrdersQueue, SubscriberIsNotFirstInOrdersQueue, Error;
+	}
+	
 	public BookOrder(String id, String subscriberId, String orderDate, String status, String bookArriveDate,
 			String bookCatalogNumber) 
 	{
