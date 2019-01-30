@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,33 +18,51 @@ import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+/**
+ * A static class, handling all the GUI. This is the main controller between the
+ * communication with the server (aka "ClientController") and the GUI (all of
+ * the FXML controllers).
+ * 
+ * @author eyalv
+ *
+ */
 public class GuiManager
 {
 	public static ClientController client;
 	public static IClientUI CurrentGuiController;
 	public static boolean dbConnected = false;
 	public static ViewSubscriberCardController subscriberCardController = null;
+	public static int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
+	/**
+	 * Map from string to a type of user screen
+	 */
 	public static Map<String, SCREENS> userTypeFromString = new HashMap<String, SCREENS>()
 	{
-		{ 
+		{
 			put("librarian", SCREENS.librarian);
 			put("subscriber", SCREENS.subscriber);
 			put("library manager", SCREENS.librarianManager);
 
 		}
 	};
+	/**
+	 * Map between user screen type to FXML path. this not all the paths available -
+	 * only the necessary here. You can add as much as you want.
+	 */
 	public static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
 	{
 		{
@@ -54,36 +73,57 @@ public class GuiManager
 			put(SCREENS.subscriber, "/gui/SubscriberScreen.fxml");
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
 			put(SCREENS.viewSubscriberCard, "/gui/viewSubscriberCardScreen.fxml");
+			put(SCREENS.addNewBook, "/gui/AddNewBookScreen.fxml");
 
 		}
 	};
 
+	/**
+	 * Pop up a error message
+	 * 
+	 * @param msg - what to show in the error message
+	 */
 	public static void ShowErrorPopup(String msg)
 	{
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Unexpected Error");
-		alert.setHeaderText("");
-		alert.setContentText(msg);
-		alert.showAndWait();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Unexpected Error");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.showAndWait();
+		});
 	}
 
+	/**
+	 * Pop up a information message
+	 * 
+	 * @param msg - what to show in the message
+	 */
 	public static void ShowMessagePopup(String msg)
 	{
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Message");
-		alert.setHeaderText("");
-		alert.setContentText(msg);
-		alert.showAndWait();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Message");
+			alert.setHeaderText("");
+			alert.setContentText(msg);
+			alert.showAndWait();
+		});
 	}
 
-	public static void SwitchScene(SCREENS fxmlPath)
+	/**
+	 * Wherever you need to switch scene (e.g. from login to user screen) this
+	 * function initial all the needed data and update the "CurrentGuiController"
+	 * 
+	 * @param screenEnum - the screen you want to switch to from the enum list.
+	 */
+	public static void SwitchScene(SCREENS screenEnum)
 	{
 		try
 		{
-			if (fxmlPath == SCREENS.login && !(CurrentGuiController instanceof SearchBookController))
+			if (screenEnum == SCREENS.login && !(CurrentGuiController instanceof SearchBookController))
 				client.updateUserLogOut(CurrentGuiController.getUserLogedIn());
 			Stage SeondStage = new Stage();
-			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(fxmlPath)));
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(screenEnum)));
 			Parent root = loader.load();
 			CurrentGuiController = loader.getController();
 			Scene scene = new Scene(root);
@@ -98,12 +138,19 @@ public class GuiManager
 		}
 	}
 
+	/**
+	 * create the client singletone type. initial server communication
+	 * 
+	 * @param fxmlPath
+	 * @param primaryStage
+	 */
 	public static void InitialPrimeryStage(SCREENS fxmlPath, Stage primaryStage)
 	{
 
 		try
 		{
-			client = new ClientController("localhost", ClientController.DEFAULT_PORT);// get connection
+			client = ClientController.createClientIfNotExist("localhost", ClientController.DEFAULT_PORT);// get
+																											// connection
 			client.sendToServer(new DBMessage(DBAction.isDBRuning, null));// check DB
 		} catch (Exception e)
 		{
@@ -129,6 +176,10 @@ public class GuiManager
 		}
 	}
 
+	/**
+	 * A "safe shutdown" function doing logout and closing the connection to the
+	 * server.
+	 */
 	private static void shutDown()
 	{
 		if (client == null)
@@ -150,11 +201,18 @@ public class GuiManager
 
 	public static enum SCREENS
 	{
-		login, librarian, searchBook, bookInformation, subscriber, librarianManager, viewSubscriberCard;
+		login, librarian, searchBook, bookInformation, subscriber, librarianManager, viewSubscriberCard, addNewBook;
 	}
 
+	/**
+	 * useful function to prevent letters in number textfield
+	 * 
+	 * @param textField
+	 */
 	public static void preventLettersTypeInTextField(JFXTextField textField)
 	{
+		Platform.runLater(() -> {
+		});
 		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 		{
 			@Override
@@ -168,8 +226,16 @@ public class GuiManager
 		});
 	}
 
+	/**
+	 * useful function to make a maxLength in textfield string
+	 * 
+	 * @param textField
+	 * @param maxLength
+	 */
 	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength)
 	{
+		Platform.runLater(() -> {
+		});
 		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 		{
 			@Override
@@ -183,6 +249,11 @@ public class GuiManager
 		});
 	}
 
+	/**
+	 * opening a subscriber card
+	 * 
+	 * @param newSub
+	 */
 	public static void openSubscriberCard(Subscriber newSub)
 	{
 		try
@@ -192,7 +263,7 @@ public class GuiManager
 					GuiManager.class.getResource(availableFXML.get(SCREENS.viewSubscriberCard)));
 			Parent root = loader.load();
 			subscriberCardController = loader.getController();
-			if(subscriberCardController != null)
+			if (subscriberCardController != null)
 				subscriberCardController.setSubscriberToShow(newSub);
 			else
 				ShowErrorPopup("Somthing get wrong , please restart the system");
@@ -208,12 +279,18 @@ public class GuiManager
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * setting an activity log to a subscriber card for librarian or subscriber
+	 * view.
+	 * 
+	 * @param activityList
+	 */
 	public static void openActvityLog(ArrayList<ActivityLog> activityList)
 	{
 		try
 		{
-			if(subscriberCardController != null)
+			if (subscriberCardController != null)
 				subscriberCardController.setActivityLogList(activityList);
 			else
 				ShowErrorPopup("Somthing get wrong , please restart the system");
@@ -223,10 +300,13 @@ public class GuiManager
 			e.printStackTrace();
 		}
 	}
-	
 
-	
-
+	/**
+	 * checking if email adress is a valid email adress.
+	 * 
+	 * @param email
+	 * @return true or false
+	 */
 	public static boolean isValidEmailAddress(String email)
 	{
 		boolean result = true;
@@ -240,5 +320,4 @@ public class GuiManager
 		}
 		return result;
 	}
-
 }

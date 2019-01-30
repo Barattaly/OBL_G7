@@ -164,7 +164,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="btn_viewSubscriberCard" alignment="TOP_CENTER" buttonType="RAISED" layoutX="252.0" layoutY="291.0" onAction="#btn_viewSubscriberCardClick" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
+                  <JFXButton fx:id="btn_viewSubscriberCard" alignment="CENTER" buttonType="RAISED" layoutX="252.0" layoutY="291.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -194,7 +194,7 @@
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <JFXButton buttonType="RAISED" layoutX="565.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="144.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -202,7 +202,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="303.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="321.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -210,7 +210,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="118.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="581.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

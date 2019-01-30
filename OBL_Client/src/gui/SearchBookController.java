@@ -7,7 +7,9 @@ import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
+import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -104,8 +106,9 @@ public class SearchBookController implements Initializable, IClientUI
 	@FXML
 	private Label oblLogoLabel;
 
-	@FXML
-	private JFXButton addNewBookBtn;
+
+    @FXML
+    private JFXButton addNewBookBtn;
 
 	@FXML
 	private Label headlineLabel;
@@ -117,6 +120,8 @@ public class SearchBookController implements Initializable, IClientUI
 	private JFXSpinner spinner;
 	
 	private BookInformationController bookInformationController;
+	
+	Stage newBookStage;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -331,6 +336,7 @@ public class SearchBookController implements Initializable, IClientUI
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
@@ -347,6 +353,20 @@ public class SearchBookController implements Initializable, IClientUI
 		case CreateNewOrder:
 		{
 			bookInformationController.getMessageFromServer(msg);
+			break;
+		}
+		case AddBook:
+		{
+			Platform.runLater(() -> {
+				if(((DBMessage)msg).Data == null)
+					GuiManager.ShowErrorPopup("Book was not added.\nPlease check the inforamtion you enterd (unique book name, correct year etc...)");
+				else
+				{
+					GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
+					GuiManager.ShowMessagePopup("The book was added successfully");
+					newBookStage.close();
+				}
+			});
 			break;
 		}
 		default:
@@ -462,5 +482,31 @@ public class SearchBookController implements Initializable, IClientUI
 	void releasedRefresh(MouseEvent event)
 	{
 		refreshBtn.setOpacity(1);
+	}
+	
+    @FXML
+    void addNewBookBtnClick(ActionEvent event) 
+    {
+    	openAddNewBook();
+    }
+    
+    private void openAddNewBook()
+	{
+		try
+		{
+			newBookStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(GuiManager.availableFXML.get(SCREENS.addNewBook)));
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+			newBookStage.setResizable(false);
+			newBookStage.setTitle("Add new book");
+			newBookStage.getIcons().add(new Image("/resources/Braude.png"));
+			newBookStage.setScene(scene);
+			newBookStage.show();
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

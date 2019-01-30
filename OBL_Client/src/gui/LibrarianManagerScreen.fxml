@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXRadioButton?>
 <?import com.jfoenix.controls.JFXSpinner?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -27,7 +30,7 @@
          <children>
             <Pane fx:id="pane_searchSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton alignment="TOP_CENTER" buttonType="RAISED" layoutX="313.0" layoutY="288.0" onAction="#btn_viewSubscriberCardClick" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="323.0" layoutY="288.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -40,7 +43,7 @@
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <JFXTextField fx:id="txt_subscriberID" focusColor="#a0a2ab" layoutX="375.0" layoutY="191.0" prefHeight="30.0" prefWidth="150.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
+                  <JFXTextField fx:id="txt_subscriberID" focusColor="#a0a2ab" layoutX="386.0" layoutY="191.0" prefHeight="30.0" prefWidth="150.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -48,14 +51,14 @@
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </JFXTextField>
-                  <Label layoutX="245.0" layoutY="206.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID:" textFill="#a0a2ab">
+                  <Label layoutX="257.0" layoutY="206.0" prefHeight="20.0" prefWidth="130.0" text="Enter subscriber ID:" textFill="#a0a2ab">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <AnchorPane fx:id="pane_searchBook" layoutX="84.0" layoutY="81.0" prefHeight="450.0" prefWidth="597.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane fx:id="pane_searchBook" layoutX="84.0" layoutY="81.0" prefHeight="450.0" prefWidth="597.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Pane fx:id="pane_createNewSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="258.0" layoutY="73.0" text="Create new subsciber card" textFill="#a0a2ab">
@@ -192,43 +195,6 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="pane_reports" layoutY="35.0" prefHeight="609.0" prefWidth="796.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Label layoutX="355.0" layoutY="78.0" text="Reports" textFill="#a0a2ab">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
-                  <JFXButton buttonType="RAISED" cancelButton="true" layoutX="29.0" layoutY="481.0" prefHeight="77.0" prefWidth="127.0" ripplerFill="TRANSPARENT" style="-fx-background-color: #3C58FA;" text="Open old reports" textFill="WHITE" viewOrder="5.0">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                  </JFXButton>
-                  <JFXButton fx:id="generateReportBtn" buttonType="RAISED" cancelButton="true" disable="true" layoutX="351.0" layoutY="308.0" onAction="#generateReportClicked" prefHeight="44.0" prefWidth="110.0" ripplerFill="TRANSPARENT" style="-fx-background-color: green;" text="Generate" textFill="WHITE" viewOrder="5.0">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                  </JFXButton>
-                  <JFXRadioButton layoutX="189.0" layoutY="184.0" onAction="#radioBtnClicked" text="Activity" textFill="#a0a2ab">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="reportToggleGroup" />
-                     </toggleGroup>
-                     <font>
-                        <Font size="18.0" />
-                     </font></JFXRadioButton>
-                  <JFXRadioButton layoutX="301.0" layoutY="184.0" onAction="#radioBtnClicked" text="Borrows Duration" textFill="#a0a2ab" toggleGroup="$reportToggleGroup">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </JFXRadioButton>
-                  <JFXRadioButton layoutX="490.0" layoutY="184.0" onAction="#radioBtnClicked" text="Late Returns" textFill="#a0a2ab" toggleGroup="$reportToggleGroup">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </JFXRadioButton>
-                  <JFXSpinner fx:id="thinkSpinner" layoutX="359.0" layoutY="431.0" visible="false" />
-               </children>
-            </Pane>
             <AnchorPane fx:id="pane_home" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label fx:id="userWelcomLabel" layoutX="56.0" layoutY="101.0" text="Hello Galina!" textFill="#a0a2ab">
@@ -236,7 +202,7 @@
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="593.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="142.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -244,7 +210,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="331.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="343.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -252,7 +218,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="146.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Return" textAlignment="CENTER" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="620.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Return" textAlignment="CENTER" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -294,17 +260,62 @@
                         <Font size="18.0" />
                      </font>
                   </JFXTextField>
-                  <Label layoutX="14.0" layoutY="613.0" text="*All data provided here is by third party software, in case of an error please check with Emplyees Managment Software" textFill="#a0a2ab" />
-                  <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="775.0" layoutY="144.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
+                  <Label layoutX="90.0" layoutY="613.0" text="*All data provided here is by third party software, in case of an error please check with Emplyees Managment Software" textFill="#a0a2ab" />
+                  <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="764.0" layoutY="144.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../bin/resources/refresh.png" />
                      </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </ImageView>
                   <AnchorPane fx:id="employeesSpinnerAnchorPane" layoutX="303.0" layoutY="250.0" prefHeight="142.0" prefWidth="149.0" style="-fx-background-color: #a0a2ab;">
                      <children>
                         <JFXSpinner fx:id="employeesSpinner" layoutX="75.0" layoutY="71.0" prefHeight="59.0" prefWidth="70.0" />
                      </children>
                   </AnchorPane>
+               </children>
+            </Pane>
+            <Pane fx:id="pane_reports" layoutY="35.0" prefHeight="609.0" prefWidth="796.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="355.0" layoutY="78.0" text="Reports" textFill="#a0a2ab">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <JFXButton fx:id="generateReportBtn" buttonType="RAISED" disable="true" focusTraversable="false" layoutX="351.0" layoutY="308.0" onAction="#generateReportClicked" prefHeight="44.0" prefWidth="110.0" ripplerFill="TRANSPARENT" style="-fx-background-color: green;" text="Generate" textFill="WHITE" viewOrder="5.0">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXRadioButton focusTraversable="false" layoutX="189.0" layoutY="184.0" onAction="#radioBtnClicked" text="Activity" textFill="#a0a2ab">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="reportToggleGroup" />
+                     </toggleGroup>
+                     <font>
+                        <Font size="18.0" />
+                     </font></JFXRadioButton>
+                  <JFXRadioButton focusTraversable="false" layoutX="301.0" layoutY="184.0" onAction="#radioBtnClicked" text="Borrows Duration" textFill="#a0a2ab" toggleGroup="$reportToggleGroup">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </JFXRadioButton>
+                  <JFXRadioButton focusTraversable="false" layoutX="490.0" layoutY="184.0" onAction="#radioBtnClicked" text="Late Returns" textFill="#a0a2ab" toggleGroup="$reportToggleGroup">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </JFXRadioButton>
+                  <JFXSpinner fx:id="thinkSpinner" layoutX="374.0" layoutY="398.0" visible="false" />
+                  <JFXListView fx:id="reportsListView" layoutX="75.0" layoutY="293.0" prefHeight="310.0" prefWidth="153.0">
+                     <effect>
+                        <InnerShadow />
+                     </effect></JFXListView>
+                  <ProgressIndicator fx:id="loadListSpinner" layoutX="127.0" layoutY="423.0" prefHeight="135.0" prefWidth="150.0" />
+                  <Label fx:id="instructionLabelActivityReport" layoutX="16.0" layoutY="257.0" text="Double tap wanted report to open" textFill="#a0a2ab">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Label fx:id="LogOut" layoutX="711.0" layoutY="5.0" onMouseClicked="#logOutDisplay" text="LogOut" textFill="#a0a2ab" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="5.0">

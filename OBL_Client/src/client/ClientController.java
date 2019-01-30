@@ -14,26 +14,49 @@ import entities.BookOrder;
 import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
+import entities.BorrowExtension;
 import entities.DBMessage.DBAction;
+import entities.Report_Activity;
 import entities.Subscriber;
 import gui.GuiManager;
 import javafx.application.Platform;
 
+/**
+ * This class is a singletone class. You can only create one instance of this
+ * class using - "createClientIfNotExist".
+ */
 public class ClientController extends AbstractClient
-{ 
+{
 
 	final public static int DEFAULT_PORT = 5555;
+	private static ClientController singletoneInstance = null;
 
-	public ClientController(String host, int port) throws IOException
+	/**
+	 * private Singletone constructor
+	 */
+	private ClientController(String host, int port) throws IOException
 	{
 		super(host, port); // Call the superclass constructor
 		openConnection();
 	}
 
+	/**
+	 * Call this instead of the constructor
+	 * 
+	 * @param host the host ip
+	 * @param port the port to connect
+	 */
+	public static ClientController createClientIfNotExist(String host, int port) throws IOException
+	{
+		if (singletoneInstance == null)
+			singletoneInstance = new ClientController(host, port);
+		return singletoneInstance;
+	}
+
 	@Override
 	public void handleMessageFromServer(Object msg)
 	{
-		if(msg==null)
+		if (msg == null)
 			GuiManager.ShowErrorPopup("Something went wrong.\nPlease restart the progrem");
 		if (!(msg instanceof DBMessage))
 			return;// check if the message is DBMessage and not something else
@@ -46,8 +69,7 @@ public class ClientController extends AbstractClient
 			break;
 		case ShutDown:
 			Platform.runLater(() -> {
-				GuiManager.ShowErrorPopup("The server was unexpectedly shut down.\n"
-						+ "Please restart your progrem.\n"
+				GuiManager.ShowErrorPopup("The server was unexpectedly shut down.\n" + "Please restart your progrem.\n"
 						+ "Everything you do now will not be saved.");
 			});
 			break;
@@ -56,7 +78,7 @@ public class ClientController extends AbstractClient
 			break;
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
-			break; 
+			break;
 
 		}
 	}
@@ -137,8 +159,9 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+
 	}
+
 	public void getAllBooks()
 	{
 		DBMessage message = new DBMessage(DBAction.GetAllBooksList, null);
@@ -150,6 +173,7 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
+
 	public void getSubscriberFromDB(String id)
 	{
 		DBMessage message = new DBMessage(DBAction.ViewSubscriberCard, id);
@@ -160,9 +184,9 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void updateSubscriberDetails(Subscriber subscriberToUpdate)
 	{
 		DBMessage message = new DBMessage(DBAction.UpdateSubscriberCard, subscriberToUpdate);
@@ -173,9 +197,9 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void returnBook(BorrowACopyOfBook borrowToClose)
 	{
 		DBMessage message = new DBMessage(DBAction.ReturnBook, borrowToClose);
@@ -194,13 +218,12 @@ public class ClientController extends AbstractClient
 		try
 		{
 			sendToServer(message);
-		} 
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			ex.printStackTrace();
-		}		
+		}
 	}
-	
+
 	public void createNewOrder(BookOrder newOrder)
 	{
 		DBMessage message = new DBMessage(DBAction.CreateNewOrder, newOrder);
@@ -211,7 +234,7 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+
 	}
 
 	public void getCurrentBorrowsForSubscriberID(String id)
@@ -220,8 +243,7 @@ public class ClientController extends AbstractClient
 		try
 		{
 			sendToServer(message);
-		} 
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -233,75 +255,82 @@ public class ClientController extends AbstractClient
 		try
 		{
 			sendToServer(message);
-		} 
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 	}
+
 	public void getActivityLogFromDB(String id)
 	{
 		DBMessage message = new DBMessage(DBAction.GetActivityLog, id);
 		try
 		{
-			sendToServer(message);  
+			sendToServer(message);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public void report_getBorrowDurationInfo()
 	{
 		DBMessage message = new DBMessage(DBAction.Reports_getAvarageBorrows, null);
 		try
 		{
-			sendToServer(message);  
+			sendToServer(message);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public void viewTableOfContent(Book bookCatalogNumber)
 	{
 		DBMessage message = new DBMessage(DBAction.ViewTableOfContent, bookCatalogNumber);
 		try
 		{
 			sendToServer(message);
-		} 
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 	}
-	public void moveBookToArchive (String catalogNumber)
+
+	public void moveBookToArchive(String catalogNumber)
 	{
 		DBMessage message = new DBMessage(DBAction.MoveBookToArchive, catalogNumber);
 		try
 		{
 			sendToServer(message);
-		} 
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
 	}
-	/*in this function we get byte array from the server and we open it as pdf file*/
-	private void openTableOfContentPDF(DBMessage message) 
+	
+	/**
+	 * in this function we get byte array from the server and we open it as pdf file
+	 */
+	private void openTableOfContentPDF(DBMessage message)
 	{
+		if(message.Data == null)
+		{
+			GuiManager.ShowErrorPopup("PDF does not exist.");
+			return;
+		}
 		byte[] myByteArray = (byte[])message.Data;
 		if(Desktop.isDesktopSupported()) 
 		{
-			try 
+			try
 			{
 				File outputFile = new File("tableOfContentTempFile.pdf");
-				FileOutputStream fos= new FileOutputStream(outputFile);
-				 fos.write(myByteArray);
-			     Desktop.getDesktop().open(outputFile);
-			     fos.close();
-			} 
-			catch (Exception ex){
+				FileOutputStream fos = new FileOutputStream(outputFile);
+				fos.write(myByteArray);
+				Desktop.getDesktop().open(outputFile);
+				fos.close();
+			} catch (Exception ex)
+			{
 				ex.printStackTrace();
 			}
 		}
@@ -312,7 +341,83 @@ public class ClientController extends AbstractClient
 		DBMessage message = new DBMessage(DBAction.Reports_Activity, null);
 		try
 		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public void getReportsList()
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_getList, null);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public void addReport(Report_Activity reportData)
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_Add, reportData);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public void report_getLateReturnsInfo()
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_LateReturns, null);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+	}
+	
+	public void AddNewBook(Book book)
+	{
+		DBMessage message = new DBMessage(DBAction.AddBook, book);
+		try
+		{
 			sendToServer(message);  
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public void editBookDetails (Book book)
+	{
+
+		DBMessage message = new DBMessage(DBAction.EditBookDetails, book);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+	}
+
+	public void borrowExtension(BorrowExtension borrowToExtend)
+	{
+		DBMessage message = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+		try
+		{
+			sendToServer(message);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
