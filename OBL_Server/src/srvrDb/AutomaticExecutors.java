@@ -201,7 +201,6 @@ public class AutomaticExecutors
 						+ rsSubscriberDetails.getString(4).substring(1) + " "
 						+ rsSubscriberDetails.getString(5).substring(0, 1).toUpperCase()
 						+ rsSubscriberDetails.getString(5).substring(1);
-				subscriberToInform.setPhoneNumber(rsSubscriberDetails.getString(6));
 				subscriberToInform.setEmail(rsSubscriberDetails.getString(7));
 			} catch (Exception e)
 			{
