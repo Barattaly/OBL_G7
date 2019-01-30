@@ -6,13 +6,16 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BookInformationController">
@@ -193,24 +196,45 @@
                   <Font size="18.0" />
                </font>
             </JFXTextField>
-            <JFXCheckBox fx:id="wantedBookCheckBox" layoutX="512.0" layoutY="477.0" text="wanted book" textFill="#f5eeee" visible="false">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </JFXCheckBox>
-            <JFXButton fx:id="saveChanges_btn" layoutX="474.0" layoutY="528.0" onAction="#saveChangesClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #047f17;" text="Save changes" textFill="WHITE" visible="false">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </JFXButton>
-            <JFXButton fx:id="cancel_btn" cancelButton="true" layoutX="599.0" layoutY="528.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc" visible="false">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </JFXButton>
+            <Pane fx:id="onEditShowPane" layoutX="465.0" layoutY="346.0" prefHeight="228.0" prefWidth="255.0">
+               <children>
+                  <JFXCheckBox fx:id="wantedBookCheckBox" layoutX="7.0" layoutY="140.0" text="wanted book" textFill="#f5eeee">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </JFXCheckBox>
+                  <JFXButton fx:id="saveChanges_btn" layoutX="7.0" layoutY="182.0" onAction="#saveChangesClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #047f17;" text="Save changes" textFill="WHITE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="cancel_btn" cancelButton="true" layoutX="130.0" layoutY="182.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton layoutX="125.0" layoutY="62.0" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: RED;" text="Remove" textFill="WHITE" />
+                  <Label layoutX="9.0" layoutY="95.0" text="Add new:" textFill="#a0a2ab" underline="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Spinner fx:id="copiesSpinner" editable="true" layoutX="125.0" layoutY="100.0" prefHeight="14.0" prefWidth="76.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Spinner>
+                  <Label layoutX="6.0" layoutY="7.0" text="Manage Copies:" textFill="#a0a2ab" underline="true">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="copiesComboBox" layoutX="10.0" layoutY="62.0" prefHeight="25.0" prefWidth="90.0" />
+               </children>
+            </Pane>
          </children>
       </AnchorPane>
    </bottom>

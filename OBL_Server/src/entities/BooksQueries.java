@@ -46,12 +46,17 @@ public static String SelectAllBooksEachRowForNewAuthor()
 				String classification, String description, String location,
 				String editionNumber,String publicationYear,
 				String tableOfContenPath, String isArchived)*/
-				
+				String publicationYear =rs.getString(8);
+				if(publicationYear.length()>4)
+				{
+					publicationYear = publicationYear.substring(0, 4);
+				}
 				Book temp = new Book(rs.getString(1),rs.getString(2), rs.getString(3), 
 						rs.getString(4),rs.getString(5), 
 						rs.getString(6), rs.getString(7), 
-						rs.getString(8), rs.getString(9), 
+						publicationYear, rs.getString(9), 
 						rs.getString(10));
+				
 				String author = rs.getString(11);// 11 is the author name
 				temp.setAuthorNameList(new ArrayList<>());
 				int tempCatNum = Integer.parseInt(temp.getCatalogNumber());

@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
@@ -1452,7 +1452,7 @@ public class OBLServer extends AbstractServer
 		String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
 		ResultSet rs = oblDB.executeQuery(query);
 
-		String localPath="";
+		String localPath = "";
 		File file;
 		byte[] mybytearray = null;
 		try
@@ -1686,7 +1686,7 @@ public class OBLServer extends AbstractServer
 		return null;
 	}
 
-	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException
+	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
 		String year = "";
 		String query = BooksQueries.changeBookFields(book);
@@ -1785,6 +1785,31 @@ public class OBLServer extends AbstractServer
 				exp.printStackTrace();
 			}
 		}
-		//copiesssss
+		// copiesssss
+		query = CopiesQueries.getBookCopiesDetails(book);
+		ResultSet currentCopies = oblDB.executeQuery(query);
+		List<String> updatedCopies = new ArrayList<>();
+		//removing copies:
+		for (CopyOfBook copy : book.getCopies())
+		{
+			updatedCopies.add(copy.getId());
+		}
+		while (currentCopies.next())
+		{
+
+			if (!updatedCopies.contains(currentCopies.getString(1)))
+			{
+				// delete copy id - currentCopies.getString(1)
+			}
+		}
+		//adding copies:
+		int copies = book.getMaxCopies();
+
+		for (int i = 0; i < copies; i++)
+		{
+			query = BooksQueries.AddCopy(book.getCatalogNumber());
+			oblDB.executeUpdate(query);
+		}
+		
 	}
 }
