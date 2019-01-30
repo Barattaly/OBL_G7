@@ -127,7 +127,7 @@
             </Label>
             <ImageView fitHeight="78.0" fitWidth="116.0" layoutX="7.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Logo.png" />
+                  <Image url="@../resources/Logo.png" />
                </image>
             </ImageView>
             <Label layoutX="17.0" layoutY="891.0" text="Per book:" textFill="#a0a2ab" underline="true">

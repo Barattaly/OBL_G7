@@ -238,7 +238,7 @@
             </Label>
             <ImageView fitHeight="17.0" fitWidth="16.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Login_Username.png" />
+                  <Image url="@../resources/Login_Username.png" />
                </image>
             </ImageView>
             <Label fx:id="LogOut" layoutX="812.0" layoutY="13.0" onMouseClicked="#logOutDisplay" prefHeight="18.0" prefWidth="48.0" text="LogOut" textFill="#a0a2ab" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="13.0">
@@ -251,7 +251,7 @@
             </Label>
             <ImageView fx:id="logoutimage" fitHeight="20.0" fitWidth="23.0" layoutX="790.0" layoutY="13.0" onMouseClicked="#logOutDisplay" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="62.0" AnchorPane.topAnchor="13.0">
                <image>
-                  <Image url="@../../bin/resources/LogOut.png" />
+                  <Image url="@../resources/LogOut.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -273,39 +273,51 @@
             </Label>
             <ImageView fx:id="btn_home" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="120.0" onMouseClicked="#btn_homeDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/HomePage.JPG" />
+                  <Image url="@../resources/HomePage.JPG" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
             <ImageView fx:id="btn_createNewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="340.0" onMouseClicked="#btn_createNewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/CreateNewSubscriberCard.jpg" />
+                  <Image url="@../resources/CreateNewSubscriberCard.jpg" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
             <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="230.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Books.jpg" />
+                  <Image url="@../resources/Books.jpg" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
             <ImageView fx:id="btn_searchSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutX="2.0" layoutY="450.0" onMouseClicked="#btn_searchSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/SearchSubscriberCard.jpg" />
+                  <Image url="@../resources/SearchSubscriberCard.jpg" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
             <ImageView fitHeight="78.0" fitWidth="116.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Logo.png" />
+                  <Image url="@../resources/Logo.png" />
                </image>
             </ImageView>
          </children>
