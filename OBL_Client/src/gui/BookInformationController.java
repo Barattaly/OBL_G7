@@ -400,9 +400,8 @@ public class BookInformationController implements IClientUI
 					GuiManager.ShowErrorPopup("please fill all fields!");
 				else {
 	    		 
-				Book newBook=new Book(catNumTextField.getText(),bookName,authorsList,
-								categoriesList,publicationYear, editionNumTextField.getText(),
-								location,description,bookClassification);		
+					Book newBook = new Book(catNumTextField.getText(),bookName,authorsList,	categoriesList,publicationYear, editionNumTextField.getText(),
+							location,description,bookClassification);	
 	    		 GuiManager.client.editBookDetails(newBook);
 	    		 GuiManager.ShowMessagePopup("This book has been edited successfully!");
 	    		 saveChanges_btn.setVisible(false);

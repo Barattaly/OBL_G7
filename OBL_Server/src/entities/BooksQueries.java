@@ -1,6 +1,7 @@
 package entities;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -143,6 +144,89 @@ public static String SelectAllBooksEachRowForNewAuthor()
 						+ catalogNumber + "';";
 		return queryMsg;
 	}
+		public static String AddBook(Book book)  
+	{
+		String queryMsg = "INSERT INTO obl_db.books (`name`, `purchaseDate`, `classification`, `description`, `location`,  `editionNumber`,`publicationYear`,`tableOfContentPath`,`archived`)"
+				+" VALUES ('"+book.getName()+"', '"+book.getPurchaseDate()+"', '"+book.getClassification()
+						+"', '" +book.getDescription()+ "', '"+book.getLocation()+"','"+book.getEditionNumber()
+								+ "','"+book.getPublicationYear()+ "','"+book.getTableOfContenPath()+ "','no'" +");";
+		return queryMsg;
+	}
+	
+	public static String GetCatalogNumberByName(Book book) 
+	{
+		String queryMsg = "SELECT catalogNumber FROM obl_db.books "
+				+ "WHERE books.name = '" + book.getName()+ "';";
+				
+		return queryMsg;
+	}
+	
+	public static String SearchAuthor(String author) 
+	{
+		String queryMsg = "SELECT name FROM obl_db.authors"
+				+" WHERE authors.name ='"+author+"';";
+				
+		return queryMsg; 
+	}
+	
+	
+	
+	public static String AddAuthor(String author) 
+	{
+		String queryMsg = "INSERT INTO obl_db.authors (`name`)"
+				+" VALUES ('"+author+"');";
+				
+		return queryMsg;
+	}
+	
+	public static String AddBookAuthors(String catalogNumber , String author) 
+	{
+		String queryMsg = "INSERT INTO obl_db.books_authors(`bookCatalogNumber`, `authorName`)"
+				+" VALUES ('"+catalogNumber+"', '"+author+"');";
+				
+		return queryMsg;
+	}
+	
+	public static String SearchCategory(String category) 
+	{
+		String queryMsg = "SELECT categoryName FROM obl_db.categories"
+				+" WHERE categories.categoryName ='"+category+"';";
+				
+		return queryMsg; 
+	}
+	
+	public static String AddCategory(String category) 
+	{
+		String queryMsg = "INSERT INTO obl_db.categories (`categoryName`)"
+				+" VALUES ('"+category+"');";
+				
+		return queryMsg;
+	}
+	
+	public static String AddBookCategory(String catalogNumber , String category) 
+	{
+		String queryMsg = "INSERT INTO obl_db.books_categories (`bookCatalogNumber`, `categoryName`)"
+				+" VALUES ('"+catalogNumber+"', '"+category+"');";
+				
+		return queryMsg;
+	}
+	
+	public static String AddCopy(String catalogNumber) 
+	{
+		String queryMsg = "INSERT INTO obl_db.books_copies (`bookCatalogNumber`, `status`)"
+				+" VALUES ('"+catalogNumber+ "'," + "'available'" + ");";
+				
+		return queryMsg;
+	}
+	
+	public static String SearchBookByName(Book book) 
+	{
+		String queryMsg = "SELECT * FROM obl_db.books"
+				+" WHERE books.name ='"+book.getName()+"';";
+				
+		return queryMsg; 
+	}
+	
 	public static String changeBookFields(Book book)//shiran- need to add location +publication year
 	{
 		String queryMsg= "UPDATE obl_db.books SET name='"+ book.getName() +"',classification='"

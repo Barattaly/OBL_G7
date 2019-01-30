@@ -23,9 +23,12 @@ public class Book implements Serializable
 	private ArrayList<BorrowACopyOfBook> borrows;
 	private ArrayBlockingQueue<BookOrder> orders;
 	
+	private byte[] tocArraybyte;
+
 	private int maxCopies;
 	private int currentNumOfBorrows;
 	private int currentNumOfOrders;
+	
 	
 	public Book(String catalogNumber, String name, String purchaseDate,
 				String classification, String description, String location,
@@ -43,6 +46,26 @@ public class Book implements Serializable
 		this.tableOfContenPath = tableOfContenPath;
 		this.isArchived = isArchived;
 	}
+	
+	public Book( String name,String purchaseDate, ArrayList<String> authorNameList,
+			ArrayList<String> categories, String publicationYear, String editionNumber ,
+			String location,String description,
+			int maxCopies,  String classification,byte[] tocArraybyte)       ////tal
+{
+	
+	this.name = name;
+	this.purchaseDate=purchaseDate;
+	this.classification = classification;
+	this.description = description;
+	this.location = location;
+	this.editionNumber = editionNumber;
+	this.publicationYear = publicationYear;
+	this.tocArraybyte = tocArraybyte;
+	this.authorNameList= authorNameList;
+	this.categories = categories;
+	this.maxCopies = maxCopies;
+	
+}
 	
 	
 	public Book(String catalogNumber, String name, String purchaseDate, String classification,
@@ -236,6 +259,16 @@ public class Book implements Serializable
 	public void setBorrows(ArrayList<BorrowACopyOfBook> borrows) 
 	{
 		this.borrows = borrows;
+	}
+	
+	public byte[] getTocArraybyte()
+	{
+		return tocArraybyte;
+	}
+
+	public void setTocArraybyte(byte[] tocArraybyte)
+	{
+		this.tocArraybyte = tocArraybyte;
 	}
 	
 }
