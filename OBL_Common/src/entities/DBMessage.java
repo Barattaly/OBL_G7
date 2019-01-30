@@ -28,6 +28,6 @@ public class DBMessage implements Serializable
 		ShutDown, ReturnBook, GetEmployeeList,GetCurrentBorrowsForSubID,GetCurrentBorrows, 
 		CreateNewOrder,GetActivityLog,Reports_getAvarageBorrows,ViewTableOfContent,MoveBookToArchive
 		,Reports_Activity,Reports_getList,Reports_Add,Reports_LateReturns, AddBook, 
-		EditBookDetails; 
+		EditBookDetails, BorrowExtension; 
 	}
 }

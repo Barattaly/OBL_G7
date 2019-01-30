@@ -49,6 +49,8 @@ public class ServerScreenController implements Initializable
 	private TextArea _logTextArea;
 	@FXML
 	private AnchorPane _mainAnchorPane;
+	
+	private Executors executer = null;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -116,7 +118,8 @@ public class ServerScreenController implements Initializable
 		{
 			server.connectToDB( dbNameTextField.getText(), dbPassTextField.getText(),
 					dbUserNameTextField.getText());
-
+			executer = new Executors(server.getConnection());
+		
 		} catch (Exception ex)
 		{
 			_logTextArea.setText(ex.getMessage() + System.lineSeparator() + _logTextArea.getText());

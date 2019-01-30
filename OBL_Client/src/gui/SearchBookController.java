@@ -333,6 +333,7 @@ public class SearchBookController implements Initializable, IClientUI
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{

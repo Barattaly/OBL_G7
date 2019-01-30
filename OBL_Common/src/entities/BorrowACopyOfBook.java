@@ -74,6 +74,11 @@ public class BorrowACopyOfBook implements Serializable
 		this.isReturnedLate = isReturnedLate;
 		this.bookCatalogNumber = bookCatalogNumber;
 	}
+	
+	public BorrowACopyOfBook(String id) 
+	{
+		this.id = id;
+	}
 	public String getId() 
 	{
 		return id;

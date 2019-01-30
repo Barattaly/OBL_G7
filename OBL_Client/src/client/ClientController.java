@@ -14,6 +14,7 @@ import entities.BookOrder;
 import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
+import entities.BorrowExtension;
 import entities.DBMessage.DBAction;
 import entities.Report_Activity;
 import entities.Subscriber;
@@ -87,7 +88,7 @@ public class ClientController extends AbstractClient
 		}
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
-			break; 
+			break;
 
 		}
 	}
@@ -193,9 +194,9 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void updateSubscriberDetails(Subscriber subscriberToUpdate)
 	{
 		DBMessage message = new DBMessage(DBAction.UpdateSubscriberCard, subscriberToUpdate);
@@ -206,9 +207,9 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void returnBook(BorrowACopyOfBook borrowToClose)
 	{
 		DBMessage message = new DBMessage(DBAction.ReturnBook, borrowToClose);
@@ -243,7 +244,7 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-		
+
 	}
 
 	public void getCurrentBorrowsForSubscriberID(String id)
@@ -275,7 +276,7 @@ public class ClientController extends AbstractClient
 		DBMessage message = new DBMessage(DBAction.GetActivityLog, id);
 		try
 		{
-			sendToServer(message);  
+			sendToServer(message);
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
@@ -317,7 +318,7 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * in this function we get byte array from the server and we open it as pdf file
 	 */
@@ -380,7 +381,7 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-
+	
 	public void report_getLateReturnsInfo()
 	{
 		DBMessage message = new DBMessage(DBAction.Reports_LateReturns, null);
@@ -393,6 +394,7 @@ public class ClientController extends AbstractClient
 		}
 
 	}
+	
 	public void AddNewBook(Book book)
 	{
 		DBMessage message = new DBMessage(DBAction.AddBook, book);
@@ -418,6 +420,18 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 		
+	}
+
+	public void borrowExtension(BorrowExtension borrowToExtend)
+	{
+		DBMessage message = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 }
 //End of ClientController class

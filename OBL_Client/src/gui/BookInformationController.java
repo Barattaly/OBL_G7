@@ -158,8 +158,16 @@ public class BookInformationController implements IClientUI
 		{
 			availableLabel.setText("Not available for borrow"); // means that the book is available for order
 			availableLabel.setTextFill(Color.RED);
-			locationLabel.setVisible(false);
-			locationTextField.setVisible(false);
+			if(userLoggedIn.getType().equals("subscriber"))
+			{
+				locationLabel.setVisible(false);
+				locationTextField.setVisible(false);
+			}
+			if(!userLoggedIn.getType().equals("subscriber"))
+			{
+				returnDateLabel.setVisible(false);
+				returnDateTextField.setVisible(false);
+			}
 			if (book.getCurrentNumOfOrders() == book.getMaxCopies()) // if orders queue is full
 			{
 				if (subscriberLoggedIn != null)
