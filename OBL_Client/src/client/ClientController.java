@@ -14,6 +14,7 @@ import entities.BookOrder;
 import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.User;
+import entities.BorrowExtension;
 import entities.DBMessage.DBAction;
 import entities.Report_Activity;
 import entities.Subscriber;
@@ -306,7 +307,7 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
-
+	
 	/*
 	 * in this function we get byte array from the server and we open it as pdf file
 	 */
@@ -356,6 +357,18 @@ public class ClientController extends AbstractClient
 	public void addReport(Report_Activity reportData)
 	{
 		DBMessage message = new DBMessage(DBAction.Reports_Add, reportData);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public void borrowExtension(BorrowExtension borrowToExtend)
+	{
+		DBMessage message = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
 		try
 		{
 			sendToServer(message);

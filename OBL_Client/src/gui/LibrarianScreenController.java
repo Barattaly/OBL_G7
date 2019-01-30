@@ -273,7 +273,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		returnDateLabel.setStyle("-fx-text-fill: #a0a2ab");
 		JFXDatePicker returnDate = new JFXDatePicker();
 		returnDate.setStyle("-fx-text-inner-color: #a0a2ab");
-		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yyyy");
+		returnDate.setPromptText("dd.mm.yyyy or dd.mm.yy");
 		returnDate.setDayCellFactory(picker -> new DateCell()
 		{
 			public void updateItem(LocalDate date, boolean empty)
@@ -603,8 +603,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 
 			break;
 		}
-
-	
 		case GetAllBooksList:
 		{
 			searchBookWindowController.setBookMap((Map<Integer, Book>) msg.Data);
@@ -650,6 +648,13 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case BorrowExtension:
+		{
+			borrowsWindowController.getMessageFromServer(msg);
+			break;
+		}
+		default:
+			break;
 		}
 	}
 

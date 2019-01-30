@@ -238,4 +238,24 @@ public class BorrowsQueries
 						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' AND actualReturnDate is null;";
 		return queryMsg;
 	}
+	
+	public static String getBorrowDetails(String borrowId)
+	{
+		String queryMsg = "SELECT subscriberID, borrowDate, expectedReturnDate, DATEDIFF(expectedReturnDate,CURDATE()), " 
+						+ "bookCatalogNumber, copyID " 
+						+ "FROM obl_db.borrows WHERE id = '" + borrowId + "';";
+		return queryMsg;
+	}
+	
+	public static String updateExpectedReturnDate(BorrowACopyOfBook borrowToUpdate)
+	{
+		if (borrowToUpdate == null)
+			return null;
+		
+		String queryMsg = "UPDATE obl_db.borrows SET expectedReturnDate = '" + borrowToUpdate.getExpectedReturnDate()
+						+ "' WHERE (id = '" + borrowToUpdate.getId() 
+						+ "') and (subscriberID = '" + borrowToUpdate.getSubscriberId() + "');";
+		return queryMsg;
+	}
+	
 }
