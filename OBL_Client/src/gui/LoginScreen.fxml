@@ -63,7 +63,7 @@
             </ImageView>
             <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="338.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Logo.png" />
+                  <Image url="@../resources/Logo.png" />
                </image>
             </ImageView>
             <Label layoutX="359.0" layoutY="94.0" text="OBL" textFill="#a0a2ab">
