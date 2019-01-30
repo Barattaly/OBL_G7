@@ -15,6 +15,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 
 import java.lang.invoke.StringConcatFactory;
 import java.text.SimpleDateFormat;
@@ -121,6 +123,14 @@ public class BookInformationController implements IClientUI
 
 	@FXML
 	private ComboBox<String> copiesComboBox;
+	
+	@FXML
+	private Spinner<Integer> copiesSpinner;
+	
+	protected static final String INITAL_VALUE = "0";
+
+    @FXML
+    private JFXButton remove_btn;
 
 	private List<String> copiesFromComboBox = new ArrayList<String>();
 
@@ -136,6 +146,7 @@ public class BookInformationController implements IClientUI
 		categoriesTextArea.setText(categories);
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
 		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
+		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
 		catNumTextField.setText(book.getCatalogNumber());
 		boolean isOrderExist = false;
 		if (book.getClassification().equals("wanted"))
@@ -363,7 +374,6 @@ public class BookInformationController implements IClientUI
 	{
 		Book bookToSend = new Book(catNumTextField.getText());
 		GuiManager.client.viewTableOfContent(bookToSend);
-
 	}
 
 	@FXML
@@ -376,10 +386,8 @@ public class BookInformationController implements IClientUI
 		editionNumTextField.setEditable(true);
 		locationTextField.setEditable(true);
 		descreptionPane.setEditable(true);
-
 		wantedBookLabel.setVisible(false);
 		wantedLogo.setVisible(false);
-
 		onEditShowPane.setVisible(true);
 		editDetailsBtn.setDisable(true);
 		if (bookToShow.getClassification().equals("wanted"))
@@ -388,7 +396,9 @@ public class BookInformationController implements IClientUI
 		}
 		copiesComboBox.getItems().clear();
 		copiesComboBox.getItems().addAll(copiesFromComboBox);
-
+		copiesSpinner.setValueFactory(
+				new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, Integer.parseInt(INITAL_VALUE)));
+		copiesSpinner.setEditable(false);
 	}
 
 	@FXML
@@ -437,17 +447,21 @@ public class BookInformationController implements IClientUI
 			}
 			Book newBook = new Book(catNumTextField.getText(), bookName, authorsList, categoriesList, publicationYear,
 					editionNumTextField.getText(), location, description, bookClassification);
-			// newBook.setMaxCopies(maxCopies); spinner value!!!
+			int maxCopies=copiesSpinner.getValue(); //taking the copies that added by the spinner
+			newBook.setMaxCopies(maxCopies); 
 			// copies
 			newBook.setCopies(bookToShow.getCopies());
-			for (CopyOfBook copy : newBook.getCopies())
+			
+			
+			ArrayList<CopyOfBook> copiesArray =newBook.getCopies();
+			
+			for (int i =0 ; i < copiesArray.size() ; i++)
 			{
-				if (!(copiesFromComboBox.contains(copy.getId())))
+				if (!(copiesFromComboBox.contains(copiesArray.get(i).getId())))
 				{
-					newBook.getCopies().remove(copy);
+					newBook.getCopies().remove(copiesArray.get(i));
 				}
 			}
-			//
 			GuiManager.client.editBookDetails(newBook);
 			GuiManager.ShowMessagePopup("This book has been edited successfully!");
 			saveChanges_btn.setVisible(false);
@@ -487,4 +501,36 @@ public class BookInformationController implements IClientUI
 		return s;
 	}
 
+    @FXML
+    void removeCopiesClick(ActionEvent event) 
+    {
+    	if(copiesComboBox.getSelectionModel().getSelectedItem()==null)
+    	{
+    		GuiManager.ShowErrorPopup("Please choose one copy ");
+    	}
+    	int size= copiesComboBox.getItems().size();
+    	if(size==1)
+    	{
+    		GuiManager.ShowErrorPopup("Cannot delete last copy.  please add copies  instead or move book to archive." );
+    	}
+    	String copyID=copiesComboBox.getSelectionModel().getSelectedItem();
+    	ArrayList<CopyOfBook> copyToCheck= bookToShow.getCopies();
+    	for(CopyOfBook c: copyToCheck )
+    	{
+    		String id=c.getId();
+    		if(id.equals(copyID))
+    		{
+    			String status=c.getStatus();
+    			if(status.equals("unavailable"))
+    				GuiManager.ShowErrorPopup("This copy cannot be deleted!");
+    			else
+    			{
+    				copiesComboBox.getItems().remove(copiesComboBox.getSelectionModel().getSelectedItem());
+    				copiesFromComboBox.remove(c.getId());
+    				copiesComboBox.getSelectionModel().clearSelection();
+    			}
+    		}
+    	}
+    }
 }
+

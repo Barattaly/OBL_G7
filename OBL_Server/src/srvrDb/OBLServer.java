@@ -1785,10 +1785,10 @@ public class OBLServer extends AbstractServer
 				exp.printStackTrace();
 			}
 		}
-		// copiesssss
+		// copies editing
 		query = CopiesQueries.getBookCopiesDetails(book);
 		ResultSet currentCopies = oblDB.executeQuery(query);
-		List<String> updatedCopies = new ArrayList<>();
+		List<String> updatedCopies = new ArrayList<String>();
 		//removing copies:
 		for (CopyOfBook copy : book.getCopies())
 		{
@@ -1797,14 +1797,14 @@ public class OBLServer extends AbstractServer
 		while (currentCopies.next())
 		{
 
-			if (!updatedCopies.contains(currentCopies.getString(1)))
+			if (!updatedCopies.contains(currentCopies.getString(1))) //if needed to remove this copy from db
 			{
-				// delete copy id - currentCopies.getString(1)
+				query=CopiesQueries.deleteCopyFromBook(currentCopies.getString(1));
+				oblDB.executeUpdate(query);
 			}
 		}
 		//adding copies:
 		int copies = book.getMaxCopies();
-
 		for (int i = 0; i < copies; i++)
 		{
 			query = BooksQueries.AddCopy(book.getCatalogNumber());

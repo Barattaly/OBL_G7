@@ -196,9 +196,9 @@
                   <Font size="18.0" />
                </font>
             </JFXTextField>
-            <Pane fx:id="onEditShowPane" layoutX="465.0" layoutY="346.0" prefHeight="228.0" prefWidth="255.0">
+            <Pane fx:id="onEditShowPane" layoutX="465.0" layoutY="353.0" prefHeight="221.0" prefWidth="255.0">
                <children>
-                  <JFXCheckBox fx:id="wantedBookCheckBox" layoutX="7.0" layoutY="140.0" text="wanted book" textFill="#f5eeee">
+                  <JFXCheckBox fx:id="wantedBookCheckBox" layoutX="52.0" layoutY="146.0" text="wanted book" textFill="#f5eeee">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -216,23 +216,23 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton layoutX="125.0" layoutY="62.0" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: RED;" text="Remove" textFill="WHITE" />
-                  <Label layoutX="9.0" layoutY="95.0" text="Add new:" textFill="#a0a2ab" underline="true">
+                  <JFXButton fx:id="remove_btn" layoutX="88.0" layoutY="63.0" onAction="#removeCopiesClick" prefHeight="25.0" prefWidth="61.0" style="-fx-background-color: #da0f0f;" text="Remove" textFill="WHITE" />
+                  <Label layoutX="79.0" layoutY="88.0" prefHeight="27.0" prefWidth="86.0" text="Add copies:" textFill="#a0a2ab">
                      <font>
-                        <Font size="24.0" />
+                        <Font size="16.0" />
                      </font>
                   </Label>
-                  <Spinner fx:id="copiesSpinner" editable="true" layoutX="125.0" layoutY="100.0" prefHeight="14.0" prefWidth="76.0">
+                  <Spinner fx:id="copiesSpinner" editable="true" layoutX="88.0" layoutY="115.0" prefHeight="25.0" prefWidth="61.0">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Spinner>
-                  <Label layoutX="6.0" layoutY="7.0" text="Manage Copies:" textFill="#a0a2ab" underline="true">
+                  <Label layoutX="7.0" text="Manage Copies:" textFill="#a0a2ab">
                      <font>
-                        <Font size="24.0" />
+                        <Font size="19.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="copiesComboBox" layoutX="10.0" layoutY="62.0" prefHeight="25.0" prefWidth="90.0" />
+                  <ComboBox fx:id="copiesComboBox" layoutX="80.0" layoutY="30.0" prefHeight="25.0" prefWidth="76.0" />
                </children>
             </Pane>
          </children>
