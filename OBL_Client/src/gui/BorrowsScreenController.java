@@ -183,7 +183,6 @@ public class BorrowsScreenController implements IClientUI
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
 					ObservableBorrow rowData = row.getItem();
-					System.out.println("Librarian pressed on: " + rowData.getBorrowId() + " Borrow ID");
 					borrowExtensionDialog = new Stage();
 					borrowExtensionDialog.initModality(Modality.APPLICATION_MODAL);
 					borrowExtensionDialog.setHeight(250);
@@ -278,8 +277,79 @@ public class BorrowsScreenController implements IClientUI
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
 					ObservableBorrow rowData = row.getItem();
-					System.out.println("subscriber pressed on: " + rowData.getBorrowId() + " Borrow ID");
-
+					borrowExtensionDialog = new Stage();
+					borrowExtensionDialog.initModality(Modality.APPLICATION_MODAL);
+					borrowExtensionDialog.setHeight(250);
+					borrowExtensionDialog.setWidth(400);
+					borrowExtensionDialog.setTitle("Borrow extension");
+					borrowExtensionDialog.getIcons().add(new Image("/resources/Braude.png"));
+					Label headline = new Label("Enter new expected return date:");
+					headline.setStyle("-fx-text-fill: #a0a2ab");
+					headline.setFont(new Font(16));
+					VBox borrowExtensionDialogVbox = new VBox(15);
+					Label newReturnDateLabel = new Label("New return date: ");
+					newReturnDateLabel.setStyle("-fx-text-fill: #a0a2ab");
+					JFXDatePicker newReturnDate = new JFXDatePicker();
+					newReturnDate.setStyle("-fx-text-inner-color: #a0a2ab");
+					newReturnDate.setPromptText("dd.mm.yyyy or dd.mm.yy");
+					newReturnDate.setDayCellFactory(picker -> new DateCell()
+					{
+						public void updateItem(LocalDate date, boolean empty)
+						{
+							super.updateItem(date, empty);
+							LocalDate today = LocalDate.now();
+							setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.compareTo(today) < 0
+									|| date.compareTo(today.plusDays(13)) > 0);
+						}
+					});
+					GridPane grid = new GridPane();
+					grid.add(newReturnDateLabel, 1, 1);
+					grid.add(newReturnDate, 2, 1);
+					grid.setHgap(10);
+					grid.setVgap(10);
+					grid.setAlignment(Pos.CENTER);
+					borrowExtensionDialogVbox.setAlignment(Pos.CENTER);
+					Label warningMessageLabel = new Label("");
+					warningMessageLabel.setStyle("-fx-text-fill: RED; -fx-font-weight: BOLD");
+					JFXButton extendBorrowButton = new JFXButton("Extend borrow");
+					extendBorrowButton.setStyle("-fx-background-color: #3C58FA; -fx-text-fill: white;");
+					borrowExtensionDialogVbox.setStyle("-fx-background-color: #203447; -fx-text-fill: #a0a2ab;");
+					borrowExtensionDialogProgressBar = new JFXProgressBar();
+					borrowExtensionDialogProgressBar.setVisible(false);
+					extendBorrowButton.setOnAction(new EventHandler<ActionEvent>()
+					{
+						@Override
+						public void handle(ActionEvent e)
+						{
+							String warningMessage = "";
+							warningMessageLabel.setText(warningMessage);
+							if (newReturnDate.getValue() == null)
+							{
+								warningMessage = "Please enter return date";
+							} 
+							else
+							{
+								try
+								{
+									String newExpectedReturnDate = newReturnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+									BorrowACopyOfBook borrow = new BorrowACopyOfBook(rowData.getBorrowId());
+									BorrowExtension borrowToExtend = new BorrowExtension(borrow, newExpectedReturnDate, "Automatic", userLoggedIn.getId());
+									borrowExtensionDialogProgressBar.setVisible(true);
+									GuiManager.client.borrowExtension(borrowToExtend);
+								} 
+								catch (Exception ex)
+								{
+									ex.printStackTrace();
+								}
+							}
+							if (!warningMessage.isEmpty())
+								warningMessageLabel.setText(warningMessage);
+						}
+					});
+					borrowExtensionDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, extendBorrowButton, borrowExtensionDialogProgressBar);
+					Scene borrowDialogScene = new Scene(borrowExtensionDialogVbox, 300, 200);
+					borrowExtensionDialog.setScene(borrowDialogScene);
+					borrowExtensionDialog.showAndWait();
 				}
 			});
 			return row;

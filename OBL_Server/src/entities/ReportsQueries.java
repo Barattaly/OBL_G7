@@ -1,8 +1,15 @@
 package entities;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.mysql.jdbc.MySQLConnection;
+
+import entities.Report_LateReturns.NumberAndDurationOfLates;
 
 public class ReportsQueries
 {
@@ -84,5 +91,52 @@ public class ReportsQueries
 				","+report.getActiveSubscribersNumber()+","+report.getFrozenSubscribersNumber()+","+report.getLockedSubscribersNumber()+")";
 		return queryMsg;
 	}
-
+	
+	public static Report_LateReturns CreateLateReturnsReport(srvrDb.MySQLConnection oblDB) throws SQLException
+	{
+		Report_LateReturns reportGenereted = new Report_LateReturns();
+		Map<String, NumberAndDurationOfLates> mapOfBooksToInfo = new HashMap<>();
+		String query = "SELECT bookCatalogNumber,DATEDIFF(actualReturnDate,expectedReturnDate) FROM obl_db.borrows WHERE isReturnedLate = 'yes';";
+		ResultSet rs = oblDB.executeQuery(query);
+		//count amount of lates
+		while(rs.next())
+		{
+			String catalogNumer = rs.getString(1);
+			int lateDuration = rs.getInt(2);
+			if(mapOfBooksToInfo.keySet().contains(catalogNumer))
+			{
+				int currentNumOfLates = mapOfBooksToInfo.get(catalogNumer).getNumberOfLates();
+				int currentDuration = mapOfBooksToInfo.get(catalogNumer).getDurationOfLates();
+				currentNumOfLates++;
+				currentDuration +=lateDuration;
+				mapOfBooksToInfo.get(catalogNumer).setNumberOfLates(currentNumOfLates);
+				mapOfBooksToInfo.get(catalogNumer).setDurationOfLates(currentDuration);
+			}
+			else
+			{
+				mapOfBooksToInfo.put(catalogNumer, reportGenereted.new NumberAndDurationOfLates());//the first late
+				
+				mapOfBooksToInfo.get(catalogNumer).setNumberOfLates(1);//the first late
+				mapOfBooksToInfo.get(catalogNumer).setDurationOfLates(lateDuration);
+			}
+		}
+		//calc the avarage of duration
+		for(String key : mapOfBooksToInfo.keySet())
+		{
+			int avarage = mapOfBooksToInfo.get(key).getDurationOfLates()/mapOfBooksToInfo.get(key).getNumberOfLates();
+			mapOfBooksToInfo.get(key).setDurationOfLates(avarage);
+		}
+		//calc total amount of returns
+		for(String key : mapOfBooksToInfo.keySet())
+		{
+			query = "SELECT COUNT(actualReturnDate) FROM obl_db.borrows WHERE bookCatalogNumber = " + key;
+			rs = oblDB.executeQuery(query);
+			rs.next();
+			int numberOfReturn = rs.getInt(1);
+			float avarageNumberOfLates = (float)mapOfBooksToInfo.get(key).getNumberOfLates()/numberOfReturn; 
+			mapOfBooksToInfo.get(key).setAvarageNumberOfLates(avarageNumberOfLates);
+		}
+		reportGenereted.setBookToNumberAndDurationOfLates(mapOfBooksToInfo);
+		return reportGenereted;
+	}
 }

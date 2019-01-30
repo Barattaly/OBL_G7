@@ -21,10 +21,9 @@ import entities.Subscriber;
 import gui.GuiManager;
 import javafx.application.Platform;
 
-
 /**
- * This class is a singletone class. 
- * You can only create one instance of this class using - "createClientIfNotExist".
+ * This class is a singletone class. You can only create one instance of this
+ * class using - "createClientIfNotExist".
  */
 public class ClientController extends AbstractClient
 {
@@ -40,8 +39,10 @@ public class ClientController extends AbstractClient
 		super(host, port); // Call the superclass constructor
 		openConnection();
 	}
+
 	/**
 	 * Call this instead of the constructor
+	 * 
 	 * @param host the host ip
 	 * @param port the port to connect
 	 */
@@ -75,6 +76,16 @@ public class ClientController extends AbstractClient
 		case ViewTableOfContent:
 			openTableOfContentPDF(message);
 			break;
+		case AddBook:
+		{
+			Platform.runLater(() -> {
+				if(((DBMessage)msg).Data == null)
+					GuiManager.ShowErrorPopup("The book is already exist");
+				else
+					GuiManager.ShowMessagePopup("The book was added successfully");
+			});
+			break;
+		}
 		default:
 			GuiManager.CurrentGuiController.getMessageFromServer(message);
 			break;
@@ -145,7 +156,7 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
-
+		
 	}
 
 	public void createNewBorrow(BorrowACopyOfBook borrow)
@@ -308,13 +319,18 @@ public class ClientController extends AbstractClient
 		}
 	}
 	
-	/*
+	/**
 	 * in this function we get byte array from the server and we open it as pdf file
 	 */
 	private void openTableOfContentPDF(DBMessage message)
 	{
-		byte[] myByteArray = (byte[]) message.Data;
-		if (Desktop.isDesktopSupported())
+		if(message.Data == null)
+		{
+			GuiManager.ShowErrorPopup("PDF does not exist.");
+			return;
+		}
+		byte[] myByteArray = (byte[])message.Data;
+		if(Desktop.isDesktopSupported()) 
 		{
 			try
 			{
@@ -364,6 +380,46 @@ public class ClientController extends AbstractClient
 		{
 			ex.printStackTrace();
 		}
+	}
+	
+	public void report_getLateReturnsInfo()
+	{
+		DBMessage message = new DBMessage(DBAction.Reports_LateReturns, null);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+	}
+	
+	public void AddNewBook(Book book)
+	{
+		DBMessage message = new DBMessage(DBAction.AddBook, book);
+		try
+		{
+			sendToServer(message);  
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+	
+	public void editBookDetails (Book book)
+	{
+
+		DBMessage message = new DBMessage(DBAction.EditBookDetails, book);
+		try
+		{
+			sendToServer(message);
+		} 
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
 	}
 
 	public void borrowExtension(BorrowExtension borrowToExtend)
