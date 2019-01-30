@@ -28,7 +28,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-
+import com.sun.mail.imap.CopyUID;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
@@ -122,7 +122,8 @@ public class BookInformationController implements IClientUI
 		authorTextArea.setText(authors);
 		String categories = book.getCategories().toString().replace("[", "").replace("]", "");
 		categoriesTextArea.setText(categories);
-
+		GuiManager.preventLettersTypeInTextField(editionNumTextField);
+		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
 		catNumTextField.setText(book.getCatalogNumber());
 		boolean isOrderExist = false;
 		if (book.getClassification().equals("wanted"))
@@ -352,7 +353,6 @@ public class BookInformationController implements IClientUI
 	    	editionNumTextField.setEditable(true);
 	    	locationTextField.setEditable(true);
 	    	descreptionPane.setEditable(true);
-	    	copiesTextArea.setEditable(true);
 	    	wantedBookLabel.setVisible(false);
 	    	wantedLogo.setVisible(false);
 	    	wantedBookCheckBox.setVisible(true);
@@ -374,36 +374,35 @@ public class BookInformationController implements IClientUI
 			Optional<ButtonType> option = alert.showAndWait();
 			if (option.get() == ButtonType.OK)
 			{
-			cancel_btn.setVisible(false);
-			bookNameTextArea.setEditable(false);
-		    authorTextArea.setEditable(false);
-		    categoriesTextArea.setEditable(false);
-		    publicationYearTextField.setEditable(false);
-		    editionNumTextField.setEditable(false);
-		    locationTextField.setEditable(false);
-		    descreptionPane.setEditable(false);
-		    copiesTextArea.setEditable(false);
-		    wantedBookCheckBox.setVisible(true);
-	    	 ArrayList <String> authorsList=new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
-	    	 ArrayList <String> categoriesList=new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
-	    	 String bookName=removeTag(bookNameTextArea.getText());
-	    	 String publicationYear=removeTag(publicationYearTextField.getText());
-	    	 String location=removeTag(locationTextField.getText());
-	    	 String description=removeTag(descreptionPane.getText());
-	    	 String bookClassification;
-	    	 if(wantedBookCheckBox.isSelected())
-	    		 bookClassification = "wanted";
-	    	 else
-	    		 bookClassification = "ordinary";
-	    	 if(bookName.isEmpty()||publicationYear.isEmpty()||location.isEmpty()||description.isEmpty())
-	    		 GuiManager.ShowErrorPopup("please fill all fields!");
-	    	 else {
+				//ADD TEST TO PUBLICATION YEAR - 1901 to 2155.
+				cancel_btn.setVisible(false);
+				bookNameTextArea.setEditable(false);
+				authorTextArea.setEditable(false);
+				categoriesTextArea.setEditable(false);
+				publicationYearTextField.setEditable(false);
+				editionNumTextField.setEditable(false);
+				locationTextField.setEditable(false);
+				descreptionPane.setEditable(false);
+				copiesTextArea.setEditable(false);
+				wantedBookCheckBox.setVisible(true);
+				ArrayList <String> authorsList=new ArrayList<String>(Arrays.asList(authorTextArea.getText().split(",")));
+				ArrayList <String> categoriesList=new ArrayList<String>(Arrays.asList(categoriesTextArea.getText().split(",")));
+				String bookName=removeTag(bookNameTextArea.getText());
+				String publicationYear=removeTag(publicationYearTextField.getText());
+				String location=removeTag(locationTextField.getText());
+				String description=removeTag(descreptionPane.getText());
+				String bookClassification;
+				if(wantedBookCheckBox.isSelected())
+					bookClassification = "wanted";
+				else
+					bookClassification = "ordinary";
+				if(bookName.isEmpty()||publicationYear.isEmpty()||location.isEmpty()||description.isEmpty())
+					GuiManager.ShowErrorPopup("please fill all fields!");
+				else {
 	    		 
-	    		 Book newBook=new Book(catNumTextField.getText(),bookName,
-	    			 authorsList,categoriesList,publicationYear, 
-	    			 editionNumTextField.getText(),
-	    			 location,description,bookClassification);
-	    	 
+				Book newBook=new Book(catNumTextField.getText(),bookName,authorsList,
+								categoriesList,publicationYear, editionNumTextField.getText(),
+								location,description,bookClassification);		
 	    		 GuiManager.client.editBookDetails(newBook);
 	    		 GuiManager.ShowMessagePopup("This book has been edited successfully!");
 	    		 saveChanges_btn.setVisible(false);

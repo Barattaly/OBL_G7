@@ -206,7 +206,7 @@
                   <Font size="14.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="cancel_btn" layoutX="599.0" layoutY="528.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc" visible="false">
+            <JFXButton fx:id="cancel_btn" cancelButton="true" layoutX="599.0" layoutY="528.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
