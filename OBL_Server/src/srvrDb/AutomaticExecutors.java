@@ -10,21 +10,22 @@ import java.util.concurrent.TimeUnit;
 
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
+import entities.OblMessage;
+import entities.OblMessagesQueries;
 import entities.Subscriber;
 import entities.SubscribersQueries;
 
-public class Executors 
+public class AutomaticExecutors 
 {
 	private static MySQLConnection oblDB; 
 	
-	public Executors(MySQLConnection oblDb)
+	public AutomaticExecutors(MySQLConnection oblDb)
 	{
 		if(oblDb == null)
 			return;
-		this.oblDB = oblDb;
-		//call to automate func
+		AutomaticExecutors.oblDB = oblDb;
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 5, TimeUnit.MINUTES);
+		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 15, TimeUnit.MINUTES);
 		/*executor.scheduleAtFixedRate(() -> task2(), 0, 3, TimeUnit.SECONDS);
 		executor.scheduleAtFixedRate(() -> task3(), 0, 1, TimeUnit.MINUTES);*/
 	}
@@ -33,7 +34,9 @@ public class Executors
 	 * This method suppose to run automatically every 24 hours. If subscriber is
 	 * late at return a copy of a book, his status will change to "frozen", and the
 	 * borrow "isReturnedLate" flag will change to "yes".
-	 */
+	 * If it's the third late of the same subscriber - than message with the subscriber
+	 * details is send to the library manager in order to change subscriber card
+	 * status to "deep freeze" */
 	static void checkAndUpdateLateReturns()
 	{
 		String query = BorrowsQueries.getCurrentBorrowsTable();
@@ -53,18 +56,24 @@ public class Executors
 
 				Subscriber subscriberToUpdate = new Subscriber(borrowFromBorrowsTable.getSubscriberId());
 				int lateReturnsCount = getSubscriberNumOfLateReturns(subscriberToUpdate);
-
-				if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(expectedBorrowDate))) // check if the subscriber
-																								// is late at return
+				boolean existInArrayList = false;
+				// check if the subscriber is late at return
+				if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(expectedBorrowDate))) 
 				{
 					lateReturnsCount++;
 					if (lateReturnsCount >= 3)
 					{
-						subscribersLateReturnsAtListThreeTimes.add(subscriberToUpdate);
-
+						for (Subscriber subscriberToCheck : subscribersLateReturnsAtListThreeTimes)
+						{
+							if(subscriberToCheck.getId().equals(subscriberToUpdate.getId()))
+								existInArrayList = true;
+						}
+						if(!existInArrayList)
+							subscribersLateReturnsAtListThreeTimes.add(subscriberToUpdate);
 					}
 					query = BorrowsQueries.getIsReturnedLate(borrowFromBorrowsTable);
-					ResultSet rsIsReturnedLate = oblDB.executeQuery(query); // get the value of "isReturnedLate" flag
+					// get the value of "isReturnedLate" flag
+					ResultSet rsIsReturnedLate = oblDB.executeQuery(query); 
 					try
 					{
 						rsIsReturnedLate.next();
@@ -72,8 +81,8 @@ public class Executors
 						{
 							borrowFromBorrowsTable.setIsReturnedLate("yes");
 							query = BorrowsQueries.updateIsReturnedLateToYes(borrowFromBorrowsTable);
-							oblDB.executeUpdate(query); // update the flag at the borrow if the subscriber returned the
-														// copy late
+							// update the flag at the borrow if the subscriber returned the copy late
+							oblDB.executeUpdate(query);
 						}
 					} catch (Exception e)
 					{
@@ -103,9 +112,20 @@ public class Executors
 
 		/*
 		 * Send message to the library manager in order to approve deep freeze of the
-		 * subscriber card the message will include the hashMap:
+		 * subscriber card the message will include the ArrayList:
 		 * subscribersLateReturnsAtListThreeTimes
 		 */
+		OblMessage message;
+		String messageContent;
+		for (Subscriber subscriber : subscribersLateReturnsAtListThreeTimes)
+		{
+			messageContent = "The subscriber: " + subscriber.getId()
+					  	   + " is late at return of 3 books.\n"
+					  	   + "Please approve to change the subscriber card status to deep freeze";
+			message = new OblMessage(messageContent, "library manager");
+			query = OblMessagesQueries.sendMessageToLibraryManager(message);
+			oblDB.executeUpdate(query); // add a new message to messages table
+		}
 	}
 	
 	private static String getCurrentDateAsString()

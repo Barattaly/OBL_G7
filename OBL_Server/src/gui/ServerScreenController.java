@@ -50,7 +50,7 @@ public class ServerScreenController implements Initializable
 	@FXML
 	private AnchorPane _mainAnchorPane;
 	
-	private Executors executer = null;
+	private AutomaticExecutors executer = null;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -118,7 +118,7 @@ public class ServerScreenController implements Initializable
 		{
 			server.connectToDB( dbNameTextField.getText(), dbPassTextField.getText(),
 					dbUserNameTextField.getText());
-			executer = new Executors(server.getConnection());
+			executer = new AutomaticExecutors(server.getConnection());
 		
 		} catch (Exception ex)
 		{

@@ -17,7 +17,7 @@ public class OblMessagesQueries
 		return queryMsg;
 	}
 	
-	/*public static String sendMessageToLibraryManager(OblMessage messageToSend)
+	public static String sendMessageToLibraryManager(OblMessage messageToSend)
 	{
 		if (messageToSend == null)	
 			return null;
@@ -27,7 +27,7 @@ public class OblMessagesQueries
 						+ "VALUES ('" + currentDateTimeString + "', '" + messageToSend.getMessageContent() 
 						+ "', '" + messageToSend.getRecipientUserType() + "');";
 		return queryMsg;
-	}*/
+	}
 	
 	public static String getcurrentDateTimesString()
 	{
