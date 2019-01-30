@@ -653,10 +653,28 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 			break;
 		}
+		case AddBook:
+		{
+			searchBookWindowController.getMessageFromServer(msg);
+		}
 		case BorrowExtension:
 		{
 			Platform.runLater(() -> {
 				borrowsWindowController.getMessageFromServer(msg);
+			});
+			break;
+		}
+		case EditBookDetails:
+		{
+			Platform.runLater(() -> {
+				if(msg.Data == null)
+				{
+					GuiManager.ShowErrorPopup("Something went wrong.\nPlease try again.");
+				}
+				else
+				{
+					searchBookWindowController.getMessageFromServer(msg);
+				}
 			});
 			break;
 		}

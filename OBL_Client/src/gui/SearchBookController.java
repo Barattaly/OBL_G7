@@ -3,12 +3,14 @@ package gui;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import com.jfoenix.controls.JFXTextField;
 
 import entities.*;
 import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -119,6 +121,8 @@ public class SearchBookController implements Initializable, IClientUI
 	private JFXSpinner spinner;
 	
 	private BookInformationController bookInformationController;
+	
+	Stage newBookStage;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
@@ -352,10 +356,47 @@ public class SearchBookController implements Initializable, IClientUI
 			bookInformationController.getMessageFromServer(msg);
 			break;
 		}
+		case AddBook:
+		{
+			Platform.runLater(() -> {
+				if(((DBMessage)msg).Data == null)
+					GuiManager.ShowErrorPopup("Book was not added.\nPlease check the inforamtion you enterd (unique book name, correct year etc...)");
+				else
+				{
+					GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list
+					GuiManager.ShowMessagePopup("The book was added successfully");
+					newBookStage.close();
+				}
+			});
+			break;
+		}
+		case EditBookDetails://data is not null
+		{
+			Platform.runLater(() -> {
+				GuiManager.ShowMessagePopup("This book has been edited successfully!");
+				bookInformationController.getStage().close();
+				refreshBtnClicked(null);
+				//openUpdatedBook(((Book)msg.Data).getCatalogNumber());
+			});
+			break;
+		}
 		default:
 			break;
 		}
 
+	}
+
+	private void openUpdatedBook(String catalogNumber)
+	{
+		try
+		{
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		openBookWindow(bookMap.get(catalogNumber), getUserLogedIn());
 	}
 
 	// this function is because of the fucking stupid table view of javaFx
@@ -468,8 +509,28 @@ public class SearchBookController implements Initializable, IClientUI
 	}
 	
     @FXML
-    void addNewBookBtnClick(ActionEvent event) {
-    	GuiManager.openAddNewBook();
-
+    void addNewBookBtnClick(ActionEvent event) 
+    {
+    	openAddNewBook();
     }
+    
+    private void openAddNewBook()
+	{
+		try
+		{
+			newBookStage = new Stage();
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(GuiManager.availableFXML.get(SCREENS.addNewBook)));
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+			newBookStage.setResizable(false);
+			newBookStage.setTitle("Add new book");
+			newBookStage.getIcons().add(new Image("/resources/Braude.png"));
+			newBookStage.setScene(scene);
+			newBookStage.show();
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

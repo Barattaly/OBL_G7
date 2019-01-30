@@ -2,14 +2,12 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -25,7 +23,7 @@
                   <Image url="@../../bin/resources/Logo.png" />
                </image>
             </ImageView>
-            <Label layoutX="60.0" layoutY="199.0" text="Author:" textFill="#a0a2ab" underline="true">
+            <Label layoutX="60.0" layoutY="199.0" text="Authors:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
@@ -50,26 +48,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Accordion layoutX="451.0" layoutY="65.0">
-               <panes>
-                  <TitledPane lineSpacing="2.0" prefHeight="200.0" prefWidth="245.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
-                     <content>
-                        <AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TextArea fx:id="descreptionPane" focusTraversable="false" prefHeight="200.0" prefWidth="250.0" wrapText="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextArea>
-                           </children>
-                        </AnchorPane>
-                     </content>
-                     <font>
-                        <Font size="19.0" />
-                     </font>
-                  </TitledPane>
-               </panes>
-            </Accordion>
+            <Accordion layoutX="451.0" layoutY="65.0" />
             <Label layoutX="60.0" layoutY="327.0" prefHeight="35.0" prefWidth="181.0" text="Publication Year:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
@@ -85,51 +64,6 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <JFXTextArea fx:id="bookNameTextArea" focusColor="#203447" layoutX="134.0" layoutY="140.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </JFXTextArea>
-            <JFXTextArea fx:id="authorTextArea" focusColor="#203447" layoutX="144.0" layoutY="199.0" prefHeight="67.0" prefWidth="290.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </JFXTextArea>
-            <JFXTextArea fx:id="categoriesTextArea" focusColor="#203447" layoutX="184.0" layoutY="265.0" prefHeight="67.0" prefWidth="247.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </JFXTextArea>
-            <JFXTextField fx:id="publicationYearTextField" focusColor="#203447" layoutX="244.0" layoutY="327.0" prefHeight="39.0" prefWidth="185.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </JFXTextField>
-            <JFXTextField fx:id="editionNumTextField" focusColor="#203447" layoutX="237.0" layoutY="395.0" prefHeight="39.0" prefWidth="192.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </JFXTextField>
-            <JFXTextField fx:id="locationTextField" focusColor="#203447" layoutX="163.0" layoutY="457.0" style="-fx-text-inner-color: #a0a2ab;" unFocusColor="#203447">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </JFXTextField>
-            <JFXButton fx:id="btnAddBook" layoutX="311.0" layoutY="595.0" onAction="#btnAddBookClick" prefHeight="58.0" prefWidth="139.0" style="-fx-background-color: #3C58FA;" text="Add Book" textFill="WHITE">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </JFXButton>
-            <Label layoutX="450.0" layoutY="302.0" text="Number of copies:" textFill="#a0a2ab" underline="true">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            <Spinner fx:id="copiesSpinner" editable="true" layoutX="658.0" layoutY="306.0" prefHeight="14.0" prefWidth="76.0">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Spinner>
             <Label alignment="BOTTOM_RIGHT" layoutX="29.0" layoutY="129.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
                <font>
                   <Font size="14.0" />
@@ -145,29 +79,16 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="warningLabel" layoutX="295.0" layoutY="572.0" text="Label">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <JFXCheckBox fx:id="wantedBook" layoutX="447.0" layoutY="366.0" text="This book is wanted?" textFill="#a0a2ab" unCheckedColor="#a0a2ab">
+            <Label layoutX="450.0" layoutY="302.0" text="Number of copies:" textFill="#a0a2ab" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </JFXCheckBox>
+            </Label>
             <Label alignment="BOTTOM_RIGHT" layoutX="29.0" layoutY="189.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <JFXButton fx:id="btnTOC" layoutX="481.0" layoutY="435.0" onAction="#btnTableOfcontentClick" prefHeight="40.0" prefWidth="134.0" style="-fx-background-color: #3C58FA;" text="Add table of content" textFill="WHITE">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </JFXButton>
             <Label alignment="BOTTOM_RIGHT" layoutX="29.0" layoutY="319.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
                <font>
                   <Font size="14.0" />
@@ -181,6 +102,78 @@
             <Label alignment="BOTTOM_RIGHT" layoutX="29.0" layoutY="450.0" prefHeight="36.0" prefWidth="26.0" text="*" textFill="RED">
                <font>
                   <Font size="14.0" />
+               </font>
+            </Label>
+            <JFXTextField fx:id="bookNameTextArea" layoutX="134.0" layoutY="147.0" prefHeight="25.0" prefWidth="257.0" promptText="Can not be an existing name" style="-fx-text-inner-color: #a0a2ab;">
+               <font>
+                  <Font size="14.0" />
+               </font></JFXTextField>
+            <JFXTextField fx:id="authorTextArea" labelFloat="true" layoutX="151.0" layoutY="203.0" prefHeight="25.0" prefWidth="241.0" promptText="Author1, author2, etc..." style="-fx-text-inner-color: #a0a2ab;" viewOrder="1.0">
+               <font>
+                  <Font size="14.0" />
+               </font></JFXTextField>
+            <JFXTextField fx:id="categoriesTextArea" labelFloat="true" layoutX="190.0" layoutY="270.0" prefHeight="25.0" prefWidth="202.0" promptText="Category1, category2, etc..." style="-fx-text-inner-color: #a0a2ab;" viewOrder="2.0">
+               <font>
+                  <Font size="14.0" />
+               </font></JFXTextField>
+            <JFXTextField fx:id="publicationYearTextField" layoutX="244.0" layoutY="327.0" prefHeight="39.0" prefWidth="149.0" promptText="A valid year" style="-fx-text-inner-color: #a0a2ab;" viewOrder="3.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="editionNumTextField" layoutX="237.0" layoutY="395.0" prefHeight="39.0" prefWidth="156.0" style="-fx-text-inner-color: #a0a2ab;" viewOrder="4.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="locationTextField" layoutX="163.0" layoutY="457.0" prefHeight="39.0" prefWidth="231.0" style="-fx-text-inner-color: #a0a2ab;" viewOrder="5.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXTextField>
+            <TextArea fx:id="descreptionPane" focusTraversable="false" layoutX="451.0" layoutY="110.0" prefHeight="158.0" prefWidth="250.0" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextArea>
+            <Spinner fx:id="copiesSpinner" editable="true" layoutX="658.0" layoutY="306.0" prefHeight="14.0" prefWidth="76.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Spinner>
+            <JFXCheckBox fx:id="wantedBook" layoutX="447.0" layoutY="366.0" text="Is this book wanted?" textFill="#a0a2ab" unCheckedColor="#a0a2ab">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXCheckBox>
+            <JFXButton fx:id="btnTOC" alignment="CENTER" layoutX="517.0" layoutY="447.0" onAction="#btnTableOfcontentClick" prefHeight="55.0" prefWidth="131.0" style="-fx-background-color: #3C58FA;" text="Add table of content" textFill="WHITE" wrapText="true">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="68.0" fitWidth="56.0">
+                     <image>
+                        <Image url="@../../../../../Desktop/pdf-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="btnAddBook" layoutX="311.0" layoutY="595.0" onAction="#btnAddBookClick" prefHeight="58.0" prefWidth="139.0" style="-fx-background-color: GREEN;" text="Add Book" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
+            <Label layoutX="450.0" layoutY="65.0" text="Description:" textFill="#a0a2ab" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="warningLabel" layoutX="65.0" layoutY="553.0" textFill="RED">
+               <font>
+                  <Font size="17.0" />
                </font>
             </Label>
          </children>

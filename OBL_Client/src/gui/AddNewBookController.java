@@ -46,13 +46,13 @@ public class AddNewBookController implements Initializable
 	private TextArea descreptionPane;
 
 	@FXML
-	private JFXTextArea bookNameTextArea;
+	private JFXTextField bookNameTextArea;
 
 	@FXML
-	private JFXTextArea authorTextArea;
+	private JFXTextField authorTextArea;
 
 	@FXML
-	private JFXTextArea categoriesTextArea;
+	private JFXTextField categoriesTextArea;
 
 	@FXML
 	private JFXTextField publicationYearTextField;
@@ -89,7 +89,7 @@ public class AddNewBookController implements Initializable
 		copiesSpinner.setValueFactory(
 				new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, Integer.parseInt(INITAL_VALUE)));
 		copiesSpinner.setEditable(false);
-
+		
 		/*EventHandler<KeyEvent> enterKeyEventHandler;
 
 		enterKeyEventHandler = new EventHandler<KeyEvent>()
@@ -128,6 +128,8 @@ public class AddNewBookController implements Initializable
 
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
 		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
+		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
+
 
 	}
 

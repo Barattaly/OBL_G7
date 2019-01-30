@@ -1,11 +1,15 @@
 package srvrDb;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -69,6 +73,13 @@ public class OBLServer extends AbstractServer
 		try
 		{
 			oblDB = new MySQLConnection(dbName, dbPassword, userName);
+			if (isDBRunning())
+			{
+				// if server was off -> all users are disconnected.
+				oblDB.executeUpdate("UPDATE obl_db.users SET loginStatus = 'off'");
+
+			}
+			
 		} catch (Exception e)
 		{
 		}
@@ -84,6 +95,12 @@ public class OBLServer extends AbstractServer
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		oblDB = new MySQLConnection(dbName, dbPassword, userName);
+		if (isDBRunning())
+		{
+			// if server was off -> all users are disconnected.
+			oblDB.executeUpdate("UPDATE obl_db.users SET loginStatus = 'off'");
+
+		}
 	}
 
 	/**
@@ -1484,10 +1501,14 @@ public class OBLServer extends AbstractServer
 	/**
 	 * in this function we get book catalog number and pull the path from db, then
 	 * move the file to byte array and send it to the client
+	 * 
+	 * @throws SQLException
 	 */
-	private void sendPDFtoClient(Book catalogNumber, ConnectionToClient client) throws IOException
+	private void sendPDFtoClient(Book catalogNumber, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
+		//doesnt open correctly when converted to JAR - NEED TO FIX.
+		
+		/*String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
 		ResultSet rs = oblDB.executeQuery(query);
 
 		String localPath = "";
@@ -1497,7 +1518,14 @@ public class OBLServer extends AbstractServer
 		{
 			rs.next();
 			localPath = rs.getString(9);
-			file = new File(localPath);
+			if (localPath.charAt(0) == '.')
+			{
+				localPath = localPath.substring(2, localPath.length());
+
+			}
+			ClassLoader classLoader = getClass().getClassLoader();
+			String temp = "resources\\tablesOfContent\\Table of content - Linear algebra.pdf";
+			file = new File(classLoader.getResource(temp).toURI());
 			mybytearray = Files.readAllBytes(file.toPath());
 		} catch (Exception e)
 		{
@@ -1505,7 +1533,7 @@ public class OBLServer extends AbstractServer
 			return;
 		}
 		DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
-		client.sendToClient(returnMsg);
+		client.sendToClient(returnMsg);*/
 
 	}
 
@@ -1619,95 +1647,112 @@ public class OBLServer extends AbstractServer
 
 	private void addNewBook(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query0, query1, query2, query3, query4, query5, query6, query7, query8, query9, query10;
+		String query;
 		int rowCount = 0;
+		ResultSet rs;
+		DBMessage returnMsg;
 
-		query0 = BooksQueries.SearchBookByName(book);
-		ResultSet rs0 = oblDB.executeQuery(query0);
-		rowCount = getRowCount(rs0);
-		if (rowCount == 1)
+		query = BooksQueries.SearchBookByName(book);
+		rs = oblDB.executeQuery(query);
+		rowCount = getRowCount(rs);
+		if (rowCount == 1)// book name already exist
 		{
-			DBMessage returnMsg = new DBMessage(DBAction.AddBook, null);
+			returnMsg = new DBMessage(DBAction.AddBook, null);
 			client.sendToClient(returnMsg);
 			return;
 		}
 
 		String tocPath;
-		if (book.getTocArraybyte() == null)
-			tocPath = null; // TODO: set a default TOC
-		else
-			tocPath = createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf",
-					".\\src\\resources\\tablesOfContent\\");
+		if (book.getTocArraybyte() != null && createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf",
+				".\\src\\resources\\tablesOfContent\\"))
+		{
+			// path provided and the file created successfully
+			// There are 4 slashes - 2 for mysql and 2 for eclipse.
+			tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
+		} else
+			tocPath = null;
 
-		tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
 		book.setTableOfContenPath(tocPath);
 
-		query1 = BooksQueries.AddBook(book);
-		oblDB.executeUpdate(query1);
+		query = BooksQueries.AddBook(book);
+		if (oblDB.executeUpdate(query) == 0)
+		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
+			return;
+		}
 
-		query2 = BooksQueries.GetCatalogNumberByName(book);
-		ResultSet rs = oblDB.executeQuery(query2);
+		query = BooksQueries.GetCatalogNumberByName(book);
+		rs = oblDB.executeQuery(query);
 		rowCount = getRowCount(rs);
 		if (rowCount == 0)
 		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
 			return;
-		} else
+		}
+		try
 		{
-			try
-			{
-				rs.next();
-				book.setCatalogNumber(rs.getString(1));
-			} catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			rs.next();
+			book.setCatalogNumber(rs.getString(1));
+		} catch (SQLException e)
+		{
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
 		}
 
 		rowCount = 0;
+
 		for (String author : book.getAuthorNameList())
 		{
 
-			query3 = BooksQueries.SearchAuthor(author);
-			ResultSet rs2 = oblDB.executeQuery(query3);
-			rowCount = getRowCount(rs2);
+			query = BooksQueries.SearchAuthor(author);
+			rs = oblDB.executeQuery(query);
+			rowCount = getRowCount(rs);
 			if (rowCount == 0)
 			{
-				query4 = BooksQueries.AddAuthor(author);
-				oblDB.executeUpdate(query4);
-				query5 = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
-				oblDB.executeUpdate(query5);
+				query = BooksQueries.AddAuthor(author);
+				oblDB.executeUpdate(query);
+				query = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
+				oblDB.executeUpdate(query);
 			}
 		}
-
-		rowCount = 0;
-		for (String category : book.getCategories())
+		try
 		{
-
-			query7 = BooksQueries.SearchCategory(category);
-			ResultSet rs3 = oblDB.executeQuery(query7);
-			rowCount = getRowCount(rs3);
-			if (rowCount == 0)
+			rowCount = 0;
+			for (String category : book.getCategories())
 			{
-				query8 = BooksQueries.AddCategory(category);
-				oblDB.executeUpdate(query8);
-				query9 = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
-				oblDB.executeUpdate(query9);
+
+				query = BooksQueries.SearchCategory(category);
+				rs = oblDB.executeQuery(query);
+				rowCount = getRowCount(rs);
+				if (rowCount == 0)
+				{
+					query = BooksQueries.AddCategory(category);
+					oblDB.executeUpdate(query);
+					query = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
+					oblDB.executeUpdate(query);
+				}
 			}
-		}
 
-		int copies = book.getMaxCopies();
+			int copies = book.getMaxCopies();
 
-		for (int i = 0; i < copies; i++)
+			for (int i = 0; i < copies; i++)
+			{
+				query = BooksQueries.AddCopy(book.getCatalogNumber());
+				oblDB.executeUpdate(query);
+			}
+		} catch (Exception e)
 		{
-			query10 = BooksQueries.AddCopy(book.getCatalogNumber());
-			oblDB.executeUpdate(query10);
+			e.printStackTrace();
+			returnMsg = new DBMessage(DBAction.AddBook, null);
+			client.sendToClient(returnMsg);
 		}
-		DBMessage returnMsg = new DBMessage(DBAction.AddBook, "Success");
+		returnMsg = new DBMessage(DBAction.AddBook, "Success");
 		client.sendToClient(returnMsg);
 	}
 
-	public static String createFileFromByteArray(byte[] bytes, String fileName, String fileType, String filePath)
+	private boolean createFileFromByteArray(byte[] bytes, String fileName, String fileType, String filePath)
 	{
 		File outputFile = new File(filePath + fileName + "." + fileType);
 
@@ -1715,20 +1760,20 @@ public class OBLServer extends AbstractServer
 		{
 
 			outputStream.write(bytes); // write the bytes and your done.
-			return outputFile.getPath();
+			return true;
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		return null;
+		return false;
 	}
 
 	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String year = "";
 		String query = BooksQueries.changeBookFields(book);
 		ResultSet rs;
-
+		DBMessage returnMessage;
+		
 		oblDB.executeUpdate(query);
 		// changing now book authors
 		ArrayList<String> newAuthorsList = book.getAuthorNameList();
@@ -1774,6 +1819,8 @@ public class OBLServer extends AbstractServer
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
+				returnMessage = new DBMessage(DBAction.EditBookDetails,null);
+				client.sendToClient(returnMessage);
 			}
 
 		}
@@ -1820,12 +1867,14 @@ public class OBLServer extends AbstractServer
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
+				returnMessage = new DBMessage(DBAction.EditBookDetails,null);
+				client.sendToClient(returnMessage);
 			}
 		}
-		// copiesssss
+		// copies editing
 		query = CopiesQueries.getBookCopiesDetails(book);
 		ResultSet currentCopies = oblDB.executeQuery(query);
-		List<String> updatedCopies = new ArrayList<>();
+		List<String> updatedCopies = new ArrayList<String>();
 		//removing copies:
 		for (CopyOfBook copy : book.getCopies())
 		{
@@ -1833,21 +1882,21 @@ public class OBLServer extends AbstractServer
 		}
 		while (currentCopies.next())
 		{
-
-			if (!updatedCopies.contains(currentCopies.getString(1)))
+			if (!updatedCopies.contains(currentCopies.getString(1))) //if needed to remove this copy from db
 			{
-				// delete copy id - currentCopies.getString(1)
+				query=CopiesQueries.deleteCopyFromBook(currentCopies.getString(1));
+				oblDB.executeUpdate(query);
 			}
 		}
 		//adding copies:
 		int copies = book.getMaxCopies();
-
 		for (int i = 0; i < copies; i++)
 		{
 			query = BooksQueries.AddCopy(book.getCatalogNumber());
 			oblDB.executeUpdate(query);
 		}
-		
+		returnMessage = new DBMessage(DBAction.EditBookDetails, book);
+		client.sendToClient(returnMessage);
 	}
 	
 	public MySQLConnection getConnection()
