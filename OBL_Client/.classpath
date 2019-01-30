@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/OBL_Common"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -10,5 +9,6 @@
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="src/resources/jfoenix-9.0.8.jar"/>
 	<classpathentry kind="lib" path="src/resources/javax.mail.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/OBL_Common"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import entities.UsersQueries;
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
@@ -221,6 +221,9 @@ public class OBLServer extends AbstractServer
 				addNewBook((Book) dbMessage.Data, client);
 				break;
 			}
+			case EditBookDetails:
+				changeBookDetails((Book) dbMessage.Data, client);
+				break;
 			default:
 				break;
 			}
@@ -1440,7 +1443,7 @@ public class OBLServer extends AbstractServer
 		oblDB.executeUpdate(query);
 	}
 
-	/*
+	/**
 	 * in this function we get book catalog number and pull the path from db, then
 	 * move the file to byte array and send it to the client
 	 */
@@ -1449,7 +1452,7 @@ public class OBLServer extends AbstractServer
 		String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
 		ResultSet rs = oblDB.executeQuery(query);
 
-		String localPath="";
+		String localPath = "";
 		File file;
 		byte[] mybytearray = null;
 		try
@@ -1681,5 +1684,132 @@ public class OBLServer extends AbstractServer
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
+	{
+		String year = "";
+		String query = BooksQueries.changeBookFields(book);
+		ResultSet rs;
+
+		oblDB.executeUpdate(query);
+		// changing now book authors
+		ArrayList<String> newAuthorsList = book.getAuthorNameList();
+		query = BooksQueries.getAuthorsFromBook(book);
+		rs = oblDB.executeQuery(query);
+		int numberOfOldCatagories = getRowCount(rs);
+		for (int i = 0; i < numberOfOldCatagories; i++)
+		{
+			try
+			{
+				rs.next();
+				String oldAuthor = rs.getString(1);
+				for (String newAuthor : newAuthorsList)
+				{
+					query = BooksQueries.getAuthor(newAuthor);
+					ResultSet rs2 = oblDB.executeQuery(query);
+					int rowCount2 = getRowCount(rs2);
+					if (rowCount2 == 0)
+					{
+						query = BooksQueries.addAuthor(newAuthor);
+						oblDB.executeUpdate(query);
+						query = BooksQueries.addAuthorToBook(newAuthor, book);
+						oblDB.executeUpdate(query);
+					} else
+					{
+						query = BooksQueries.getAuthorFromBook(book, newAuthor);
+						rs2 = oblDB.executeQuery(query);
+						rowCount2 = getRowCount(rs2);
+						if (rowCount2 == 0)
+						{
+							query = BooksQueries.addAuthorToBook(newAuthor, book);
+							oblDB.executeUpdate(query);
+						}
+					}
+
+					if (!(newAuthorsList.contains(oldAuthor)))// in case we want to delete author from db
+					{
+						query = BooksQueries.deleteAuthor(oldAuthor, book);
+						oblDB.executeUpdate(query);
+					}
+				}
+
+			} catch (SQLException exp)
+			{
+				exp.printStackTrace();
+			}
+
+		}
+		// changing now categories
+		ArrayList<String> newCategories = book.getCategories();
+		query = BooksQueries.getCategoriesForBookId(book.getCatalogNumber());
+		rs = oblDB.executeQuery(query);
+		numberOfOldCatagories = getRowCount(rs);
+		for (int i = 0; i < numberOfOldCatagories; i++)
+		{
+			try
+			{
+				rs.next();
+				String oldCategory = rs.getString(1);
+				for (String oldCatagory : newCategories)
+				{
+					query = BooksQueries.getCategoryByName(oldCatagory);
+					ResultSet rs2 = oblDB.executeQuery(query);
+					int rowCount2 = getRowCount(rs2);
+					if (rowCount2 == 0) // in case there is not such category at all so we want to add it
+					{
+						query = BooksQueries.addCagegory(oldCatagory);
+						oblDB.executeUpdate(query);
+						query = BooksQueries.addCagegoryToBook(oldCatagory, book);
+						oblDB.executeUpdate(query);
+					} else // add only to books_categories table
+					{
+						query = BooksQueries.getCategoriesFromBook(book, oldCatagory);
+						rs2 = oblDB.executeQuery(query);
+						rowCount2 = getRowCount(rs2);
+						if (rowCount2 == 0)
+						{
+							query = BooksQueries.addCagegoryToBook(oldCatagory, book);
+							oblDB.executeUpdate(query);
+						}
+					}
+				}
+				if (!(newCategories.contains(oldCategory))) // in case we want to delete a category
+				{
+					query = BooksQueries.deleteCategory(oldCategory, book);
+					oblDB.executeUpdate(query);
+				}
+
+			} catch (SQLException exp)
+			{
+				exp.printStackTrace();
+			}
+		}
+		// copiesssss
+		query = CopiesQueries.getBookCopiesDetails(book);
+		ResultSet currentCopies = oblDB.executeQuery(query);
+		List<String> updatedCopies = new ArrayList<>();
+		//removing copies:
+		for (CopyOfBook copy : book.getCopies())
+		{
+			updatedCopies.add(copy.getId());
+		}
+		while (currentCopies.next())
+		{
+
+			if (!updatedCopies.contains(currentCopies.getString(1)))
+			{
+				// delete copy id - currentCopies.getString(1)
+			}
+		}
+		//adding copies:
+		int copies = book.getMaxCopies();
+
+		for (int i = 0; i < copies; i++)
+		{
+			query = BooksQueries.AddCopy(book.getCatalogNumber());
+			oblDB.executeUpdate(query);
+		}
+		
 	}
 }

@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class GuiManager
 	public static IClientUI CurrentGuiController;
 	public static boolean dbConnected = false;
 	public static ViewSubscriberCardController subscriberCardController = null;
+	public static int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
 	/**
 	 * Map from string to a type of user screen

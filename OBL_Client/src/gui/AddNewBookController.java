@@ -90,7 +90,7 @@ public class AddNewBookController implements Initializable
 				new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, Integer.parseInt(INITAL_VALUE)));
 		copiesSpinner.setEditable(false);
 
-		EventHandler<KeyEvent> enterKeyEventHandler;
+		/*EventHandler<KeyEvent> enterKeyEventHandler;
 
 		enterKeyEventHandler = new EventHandler<KeyEvent>()
 		{
@@ -124,7 +124,7 @@ public class AddNewBookController implements Initializable
 		// SpinnerValueFactory reached new value before key released an
 		// SpinnerValueFactory will
 		// throw an exception
-		copiesSpinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, enterKeyEventHandler);
+		copiesSpinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, enterKeyEventHandler);*/
 
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
 		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
@@ -143,11 +143,12 @@ public class AddNewBookController implements Initializable
 	void btnAddBookClick(ActionEvent event)
 	{
 
-		warningLabel.setText("");	
-			
+		warningLabel.setText("");
+
 		if (bookNameTextArea.getText().isEmpty() || categoriesTextArea.getText().isEmpty()
-				|| copiesSpinner.getValue().equals(0) || authorTextArea.getText().isEmpty() || publicationYearTextField.getText().isEmpty()
-				|| editionNumTextField.getText().isEmpty() || locationTextField.getText().isEmpty())
+				|| copiesSpinner.getValue().equals(0) || authorTextArea.getText().isEmpty()
+				|| publicationYearTextField.getText().isEmpty() || editionNumTextField.getText().isEmpty()
+				|| locationTextField.getText().isEmpty())
 
 		{
 			warningLabel.setTextFill(Color.RED);
@@ -169,12 +170,12 @@ public class AddNewBookController implements Initializable
 				classification = "wanted";
 			else
 				classification = "ordinary";
-			
-			if((Integer.parseInt(publicationYearTextField.getText().trim()) <= 999) && (Integer.parseInt(publicationYearTextField.getText().trim()) > 2019 ))
+			int publicitionYear = Integer.parseInt(publicationYearTextField.getText());
+			if (publicitionYear > GuiManager.currentYear || publicitionYear < 1902)
 			{
-				   warningLabel.setTextFill(Color.RED);
-			       warningLabel.setText("Enter correct year please");
-			       return;
+				warningLabel.setTextFill(Color.RED);
+				warningLabel.setText("Enter correct year please");
+				return;
 			}
 
 			Book tempbook = new Book(bookNameTextArea.getText(), purchaseDate, authorNameList, categories,
@@ -219,6 +220,5 @@ public class AddNewBookController implements Initializable
 		int dotIndex = fileName.lastIndexOf('.');
 		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
 	}
-
 
 }
