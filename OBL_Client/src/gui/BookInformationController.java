@@ -10,6 +10,7 @@ import entities.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -110,13 +111,7 @@ public class BookInformationController implements IClientUI
 	private JFXCheckBox wantedBookCheckBox;
 
 	@FXML
-	private JFXButton saveChanges_btn;
-
-	@FXML
 	private JFXButton viewTOC_btn;
-
-	@FXML
-	private JFXButton cancel_btn;
 
 	@FXML
 	private Pane onEditShowPane;
@@ -169,8 +164,16 @@ public class BookInformationController implements IClientUI
 		{
 			availableLabel.setText("Not available for borrow"); // means that the book is available for order
 			availableLabel.setTextFill(Color.RED);
-			locationLabel.setVisible(false);
-			locationTextField.setVisible(false);
+			if(userLoggedIn.getType().equals("subscriber"))
+			{
+				locationLabel.setVisible(false);
+				locationTextField.setVisible(false);
+			}
+			if(!userLoggedIn.getType().equals("subscriber"))
+			{
+				returnDateLabel.setVisible(false);
+				returnDateTextField.setVisible(false);
+			}
 			if (book.getCurrentNumOfOrders() == book.getMaxCopies()) // if orders queue is full
 			{
 				if (subscriberLoggedIn != null)
@@ -463,10 +466,7 @@ public class BookInformationController implements IClientUI
 				}
 			}
 			GuiManager.client.editBookDetails(newBook);
-			GuiManager.ShowMessagePopup("This book has been edited successfully!");
-			saveChanges_btn.setVisible(false);
 			editDetailsBtn.setDisable(false);
-			cancel_btn.setVisible(false);
 			bookNameTextArea.setEditable(false);
 			authorTextArea.setEditable(false);
 			categoriesTextArea.setEditable(false);
@@ -511,7 +511,8 @@ public class BookInformationController implements IClientUI
     	int size= copiesComboBox.getItems().size();
     	if(size==1)
     	{
-    		GuiManager.ShowErrorPopup("Cannot delete last copy.  please add copies  instead or move book to archive." );
+    		GuiManager.ShowErrorPopup("Cannot delete last copy.\nPlease add copies instead or move book to archive." );
+    		return;
     	}
     	String copyID=copiesComboBox.getSelectionModel().getSelectedItem();
     	ArrayList<CopyOfBook> copyToCheck= bookToShow.getCopies();
@@ -531,6 +532,10 @@ public class BookInformationController implements IClientUI
     			}
     		}
     	}
+    }
+    public Stage getStage()
+    {
+    	return (Stage) editDetailsBtn.getScene().getWindow();
     }
 }
 

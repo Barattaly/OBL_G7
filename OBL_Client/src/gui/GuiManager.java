@@ -320,25 +320,4 @@ public class GuiManager
 		}
 		return result;
 	}
-
-	public static void openAddNewBook()
-	{
-		try
-		{
-			Stage SeondStage = new Stage();
-			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource(availableFXML.get(SCREENS.addNewBook)));
-			Parent root = loader.load();
-			Scene scene = new Scene(root);
-			SeondStage.setResizable(false);
-			SeondStage.setTitle("Add new book");
-			SeondStage.getIcons().add(new Image("/resources/Braude.png"));
-			SeondStage.setScene(scene);
-			SeondStage.showAndWait();
-
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 }

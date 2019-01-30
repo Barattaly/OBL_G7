@@ -203,7 +203,7 @@
                         <Font size="18.0" />
                      </font>
                   </JFXCheckBox>
-                  <JFXButton fx:id="saveChanges_btn" layoutX="7.0" layoutY="182.0" onAction="#saveChangesClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #047f17;" text="Save changes" textFill="WHITE">
+                  <JFXButton layoutX="7.0" layoutY="182.0" onAction="#saveChangesClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #047f17;" text="Save changes" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -211,7 +211,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="cancel_btn" cancelButton="true" layoutX="130.0" layoutY="182.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc">
+                  <JFXButton cancelButton="true" layoutX="130.0" layoutY="182.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc">
                      <font>
                         <Font size="14.0" />
                      </font>

@@ -27,14 +27,14 @@ public class SendEmail
 		try 
 		{
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("ortbraudelibrary.utility@gmail.com"));
+			message.setFrom(new InternetAddress(username));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailRecipient));
 			message.setSubject(emailSubject);
 			message.setText(emailMessage);
 
 			Transport.send(message);
 
-			System.out.println("Done");
+			System.out.println("mail sent");
 
 		} 
 		catch (MessagingException e) 
