@@ -1770,10 +1770,10 @@ public class OBLServer extends AbstractServer
 
 	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String year = "";
 		String query = BooksQueries.changeBookFields(book);
 		ResultSet rs;
-
+		DBMessage returnMessage;
+		
 		oblDB.executeUpdate(query);
 		// changing now book authors
 		ArrayList<String> newAuthorsList = book.getAuthorNameList();
@@ -1819,6 +1819,8 @@ public class OBLServer extends AbstractServer
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
+				returnMessage = new DBMessage(DBAction.EditBookDetails,null);
+				client.sendToClient(returnMessage);
 			}
 
 		}
@@ -1865,34 +1867,36 @@ public class OBLServer extends AbstractServer
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
+				returnMessage = new DBMessage(DBAction.EditBookDetails,null);
+				client.sendToClient(returnMessage);
 			}
 		}
-		// copiesssss
+		// copies editing
 		query = CopiesQueries.getBookCopiesDetails(book);
 		ResultSet currentCopies = oblDB.executeQuery(query);
-		List<String> updatedCopies = new ArrayList<>();
-		// removing copies:
+		List<String> updatedCopies = new ArrayList<String>();
+		//removing copies:
 		for (CopyOfBook copy : book.getCopies())
 		{
 			updatedCopies.add(copy.getId());
 		}
 		while (currentCopies.next())
 		{
-
-			if (!updatedCopies.contains(currentCopies.getString(1)))
+			if (!updatedCopies.contains(currentCopies.getString(1))) //if needed to remove this copy from db
 			{
-				// delete copy id - currentCopies.getString(1)
+				query=CopiesQueries.deleteCopyFromBook(currentCopies.getString(1));
+				oblDB.executeUpdate(query);
 			}
 		}
-		// adding copies:
+		//adding copies:
 		int copies = book.getMaxCopies();
-
 		for (int i = 0; i < copies; i++)
 		{
 			query = BooksQueries.AddCopy(book.getCatalogNumber());
 			oblDB.executeUpdate(query);
 		}
-
+		returnMessage = new DBMessage(DBAction.EditBookDetails, book);
+		client.sendToClient(returnMessage);
 	}
 	
 	public MySQLConnection getConnection()

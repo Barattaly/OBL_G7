@@ -87,4 +87,9 @@ public class CopiesQueries
 						+ bookToUpdate.getCopies().get(0).getId() + "';";
 		return queryMsg;
 	}
+	public static String deleteCopyFromBook(String copyID)
+	{
+		String queryMsg= "DELETE FROM obl_db.books_copies WHERE id='"+copyID+"';";
+		return queryMsg;
+	}
 }

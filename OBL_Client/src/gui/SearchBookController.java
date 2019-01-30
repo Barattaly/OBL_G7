@@ -3,6 +3,7 @@ package gui;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import com.jfoenix.controls.JFXTextField;
 
@@ -369,10 +370,33 @@ public class SearchBookController implements Initializable, IClientUI
 			});
 			break;
 		}
+		case EditBookDetails://data is not null
+		{
+			Platform.runLater(() -> {
+				GuiManager.ShowMessagePopup("This book has been edited successfully!");
+				bookInformationController.getStage().close();
+				refreshBtnClicked(null);
+				//openUpdatedBook(((Book)msg.Data).getCatalogNumber());
+			});
+			break;
+		}
 		default:
 			break;
 		}
 
+	}
+
+	private void openUpdatedBook(String catalogNumber)
+	{
+		try
+		{
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		openBookWindow(bookMap.get(catalogNumber), getUserLogedIn());
 	}
 
 	// this function is because of the fucking stupid table view of javaFx
