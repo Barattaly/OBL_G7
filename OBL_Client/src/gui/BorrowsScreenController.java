@@ -203,9 +203,9 @@ public class BorrowsScreenController implements IClientUI
 						public void updateItem(LocalDate date, boolean empty)
 						{
 							super.updateItem(date, empty);
-							LocalDate today = LocalDate.now();
-							setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.compareTo(today) < 0
-									|| date.compareTo(today.plusDays(13)) > 0);
+							setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY 
+									|| date.compareTo(LocalDate.parse(rowData.getReturnDate())) < 0
+									|| date.compareTo(LocalDate.parse(rowData.getReturnDate()).plusDays(13)) > 0);
 						}
 					});
 					GridPane grid = new GridPane();
@@ -297,9 +297,9 @@ public class BorrowsScreenController implements IClientUI
 						public void updateItem(LocalDate date, boolean empty)
 						{
 							super.updateItem(date, empty);
-							LocalDate today = LocalDate.now();
-							setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.compareTo(today) < 0
-									|| date.compareTo(today.plusDays(13)) > 0);
+							setDisable(empty || date.getDayOfWeek() == DayOfWeek.SATURDAY 
+									|| date.compareTo(LocalDate.parse(rowData.getReturnDate())) < 0
+									|| date.compareTo(LocalDate.parse(rowData.getReturnDate()).plusDays(13)) > 0);
 						}
 					});
 					GridPane grid = new GridPane();
@@ -333,7 +333,7 @@ public class BorrowsScreenController implements IClientUI
 								{
 									String newExpectedReturnDate = newReturnDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 									BorrowACopyOfBook borrow = new BorrowACopyOfBook(rowData.getBorrowId());
-									BorrowExtension borrowToExtend = new BorrowExtension(borrow, newExpectedReturnDate, "Automatic", userLoggedIn.getId());
+									BorrowExtension borrowToExtend = new BorrowExtension(borrow, newExpectedReturnDate, "automatic", userLoggedIn.getId());
 									borrowExtensionDialogProgressBar.setVisible(true);
 									GuiManager.client.borrowExtension(borrowToExtend);
 								} 
@@ -393,7 +393,10 @@ public class BorrowsScreenController implements IClientUI
 			{
 				Platform.runLater(() -> {
 					borrowExtensionDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("The subscriber card status is not active,\nborrow extension is unavailable!");
+					if(newBorrowExtension.getExtensionType().equals("manual"))
+						GuiManager.ShowMessagePopup("The subscriber card status is not active,\nborrow extension is unavailable!");
+					else if(newBorrowExtension.getExtensionType().equals("automatic"))
+						GuiManager.ShowMessagePopup("Your card status is not active,\nborrow extension is unavailable!");
 				});
 			}
 			else if (newBorrowExtension.getBorrow().getBookCatalogNumber().equals("-1"))

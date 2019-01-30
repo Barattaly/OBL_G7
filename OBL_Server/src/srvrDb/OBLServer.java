@@ -35,6 +35,8 @@ import entities.BooksQueries;
 import entities.DBMessage;
 import entities.Employee;
 import entities.EmployeeQueries;
+import entities.OblMessagesQueries;
+import entities.OblMessage;
 import entities.OrdersQueries;
 import entities.Report_Activity;
 import entities.Report_BorrowDurationInfo;
@@ -879,7 +881,12 @@ public class OBLServer extends AbstractServer
 			oblDB.executeUpdate(query); // update expected return date of the specific borrow on borrows table
 			if(borrowToExtend.getExtensionType().equals("automatic")) // mean that the subscriber wanted to extend borrow return date
 			{
-				
+				String messageContent = "The subscriber: " + borrowToExtend.getBorrow().getSubscriberId() 
+									  + " was sucessfully excuted a borrow extension.\n"
+									  + " Borrow number: " + borrowToExtend.getBorrow().getId();
+				OblMessage message = new OblMessage(messageContent, "librarian");
+				query = OblMessagesQueries.sendMessageToLibrarians(message);
+				oblDB.executeUpdate(query); // add a new message to messages table
 			}
 		}
 		DBMessage returnMsg = new DBMessage(DBAction.BorrowExtension, borrowToExtend);
@@ -888,7 +895,6 @@ public class OBLServer extends AbstractServer
 
 	}
 		
-	
 	private boolean isBookExist(Book bookToCheck)
 	{
 		String query = BooksQueries.searchBookByCatalogNumber(bookToCheck);// search by book catalog number

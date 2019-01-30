@@ -11,9 +11,9 @@ public class BorrowExtensionQueries
 			return null;
 		String currentDateTimeString = getcurrentDateTimesString();
 
-		String queryMsg = "INSERT INTO obl_db.borrows_extensions (borrowID, extensionDate, type, userID) "
+		String queryMsg = "INSERT INTO obl_db.borrow_extension (borrowID, extensionDate, type, userID) "
 						+ "VALUES ('" + borrowToExtend.getBorrow().getId() + "', '" + currentDateTimeString + "', '" + borrowToExtend.getExtensionType() 
-						+ "', '" + borrowToExtend.getBorrow().getSubscriberId() + "');";
+						+ "', '" + borrowToExtend.getUserId() + "');";
 		return queryMsg;
 	}
 	

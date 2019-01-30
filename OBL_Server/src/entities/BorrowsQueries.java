@@ -145,12 +145,21 @@ public class BorrowsQueries
 	{
 		if (subscriberID == null)
 			return null;
-		String queryMsg = "SELECT bookName, extensionDate, type , userID"
+		/*String queryMsg = "SELECT bookName, extensionDate, type, userID"
 						+" FROM(SELECT borrows.id AS borrowID, borrows.subscriberID, books.name AS bookName"
 					    +" FROM obl_db.books"
 						+" inner join borrows ON books.catalogNumber = borrows.BookCatalogNumber"
 					    +" WHERE borrows.subscriberID = '" + subscriberID +"') AS borrowBookName"
-					    +" INNER JOIN borrow_extension ON borrowBookName.borrowID = borrow_extension.borrowID";
+					    +" INNER JOIN borrow_extension ON borrowBookName.borrowID = borrow_extension.borrowID";*/
+		String queryMsg = "SELECT bookName, extensionDate, extensionType, CONCAT(users.firstName, ' ', users.lastName) AS userName" 
+					    + " FROM(SELECT bookName, extensionDate, type AS extensionType, userID " 
+					    		+ " FROM(SELECT borrows.id AS borrowID, borrows.subscriberID, books.name AS bookName" 
+					    				+ " FROM obl_db.books "
+					    				+ " INNER JOIN borrows ON books.catalogNumber = borrows.BookCatalogNumber " 
+					    				+ " WHERE borrows.subscriberID = '" + subscriberID +"') AS borrowBookName" 
+					    		+ " INNER JOIN borrow_extension ON borrowBookName.borrowID = borrow_extension.borrowID) AS borrowExtensionTable" 
+					    + " INNER JOIN users ON borrowExtensionTable.userID = users.id;";
+		
 		return queryMsg;
 	}
 	
@@ -162,7 +171,7 @@ public class BorrowsQueries
 		{
 			while (rs.next())
 			{
-				if(rs.getString(3).equals("manually"))
+				if(rs.getString(3).equals("manual"))
 				{
 					
 					temp = new ActivityLog("Borrow Extension",rs.getString(1),rs.getString(2),rs.getString(3) + " by " + rs.getString(4));
