@@ -9,11 +9,13 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import entities.Book;
+import entities.BookOrder;
 import entities.BooksQueries;
 import entities.BorrowACopyOfBook;
 import entities.BorrowsQueries;
 import entities.OblMessage;
 import entities.OblMessagesQueries;
+import entities.OrdersQueries;
 import entities.SendEmail;
 import entities.Subscriber;
 import entities.SubscribersQueries;
@@ -31,6 +33,7 @@ public class AutomaticExecutors
 		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 15, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 15, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 15, TimeUnit.MINUTES);
+
 	}
 	
 	/*checkAndUpdateLateReturns:
@@ -156,7 +159,7 @@ public class AutomaticExecutors
 				borrowFromBorrowsTable.setBookCatalogNumber(rsCurrentBorrowsTable.getString(7));
 				borrowFromBorrowsTable.setCopyId(rsCurrentBorrowsTable.getString(8));
 				String expectedReturnDate = borrowFromBorrowsTable.getExpectedReturnDate();
-				// check if the subscriber is late at return
+				// check if current date is one day before return date
 				if (LocalDate.parse(getCurrentDateAsString()).plusDays(1).isEqual(LocalDate.parse(expectedReturnDate))) 
 				{
 					subscribersToInform.add(borrowFromBorrowsTable);
@@ -216,6 +219,49 @@ public class AutomaticExecutors
 		}
 	}
 	
+	
+	/*ordersFulfillmentCheck:
+	 * This method suppose to run automatically every 24 hours.
+	 * If subscriber ordered a book, and the book arrived to the library,
+	 * the order will stay in active status for only two days.
+	 * after two days: if the subscriber did  n't borrow the book,
+	 * the order will be canceled.*/
+	static void ordersFulfillmentCheck()
+	{
+		String query = OrdersQueries.getCurrentOrdersTable();
+		ResultSet rsCurrentOrdersTable = oblDB.executeQuery(query); // get current borrows table
+		BookOrder orderFromOrdersTable = null;
+		try
+		{
+			while (rsCurrentOrdersTable.next())
+			{
+				orderFromOrdersTable = new BookOrder();
+				orderFromOrdersTable.setId(rsCurrentOrdersTable.getString(1));
+				orderFromOrdersTable.setSubscriberId(rsCurrentOrdersTable.getString(2));
+				orderFromOrdersTable.setOrderDate(rsCurrentOrdersTable.getString(3));
+				orderFromOrdersTable.setStatus(rsCurrentOrdersTable.getString(4));
+				orderFromOrdersTable.setBookArriveDate(rsCurrentOrdersTable.getString(5));
+				orderFromOrdersTable.setBookCatalogNumber(rsCurrentOrdersTable.getString(6));
+				String bookArriveDate;
+				// check if 
+				if (orderFromOrdersTable.getBookArriveDate() != null) 
+				{
+					bookArriveDate = orderFromOrdersTable.getBookArriveDate().substring(0, 10);
+					if (LocalDate.parse(getCurrentDateAsString())
+							.isEqual(LocalDate.parse(bookArriveDate).plusDays(2))) 
+					{
+						orderFromOrdersTable.setStatus("canceled");
+						query = OrdersQueries.updateOrderStatus(orderFromOrdersTable);
+						oblDB.executeUpdate(query); // update order status to closed
+					}
+				}
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
 	
 	private static String getCurrentDateAsString()
 	{
