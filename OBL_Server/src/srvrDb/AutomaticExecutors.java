@@ -204,7 +204,7 @@ public class AutomaticExecutors
 				subscriberToInform.setEmail(rsSubscriberDetails.getString(7));
 			} catch (Exception e)
 			{
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			String emailSubject = "Reminder: One day before return day";
 			String emailMessage = "Dear " + fullName + ",\n"
@@ -219,7 +219,7 @@ public class AutomaticExecutors
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			i++;
 		}

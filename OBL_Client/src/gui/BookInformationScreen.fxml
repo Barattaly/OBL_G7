@@ -101,7 +101,7 @@
             </Label>
             <Accordion layoutX="451.0" layoutY="65.0" prefHeight="243.0" prefWidth="274.0">
                <panes>
-                  <TitledPane lineSpacing="2.0" style="-fx-background-color: #203447;" stylesheets="@../../bin/resources/titledpane.css" text="Description" textFill="#a0a2ab">
+                  <TitledPane lineSpacing="2.0" style="-fx-background-color: #203447;" stylesheets="@../resources/titledpane.css" text="Description" textFill="#a0a2ab">
                     <content>
                       <AnchorPane focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
