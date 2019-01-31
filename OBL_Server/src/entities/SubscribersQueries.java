@@ -143,7 +143,7 @@ public class SubscribersQueries
 				+" WHERE userName = '" + userName + "';";
 		return queryMsg;
 	}
-	
+
 	public static String getSubscriberIsGraduatedStatus(Subscriber subscriber)
 	{
 		if (subscriber == null)

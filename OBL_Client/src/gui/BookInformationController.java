@@ -19,7 +19,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.invoke.StringConcatFactory;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,6 +43,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class BookInformationController implements IClientUI
@@ -128,6 +132,12 @@ public class BookInformationController implements IClientUI
     private JFXButton remove_btn;
 
 	private List<String> copiesFromComboBox = new ArrayList<String>();
+	
+	private byte[] uploadedFileByteArray = null;
+
+    @FXML
+    private JFXButton uploadFileBtn;
+    
 
 	public void setBookInformation(Book book)
 	{
@@ -142,6 +152,7 @@ public class BookInformationController implements IClientUI
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
 		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
 		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
+		GuiManager.limitTextFieldMaxCharacters(locationTextField, 6);
 		catNumTextField.setText(book.getCatalogNumber());
 		boolean isOrderExist = false;
 		if (book.getClassification().equals("wanted"))
@@ -160,6 +171,8 @@ public class BookInformationController implements IClientUI
 			orderBookBtn.setDisable(true);
 			returnDateLabel.setVisible(false);
 			returnDateTextField.setVisible(false);
+			uploadFileBtn.setVisible(false);
+			viewTOC_btn.setVisible(true);
 		} else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 		{
 			availableLabel.setText("Not available for borrow"); // means that the book is available for order
@@ -254,6 +267,7 @@ public class BookInformationController implements IClientUI
 			copiesTextArea.setText("The book's copies are:\n" + "Copy ID   " + "Status" + copies);
 		}
 		copiesFromComboBox.clear();
+		copiesFromComboBox.add("copy ID");
 		for (CopyOfBook copy : book.getCopies())
 		{
 			copiesFromComboBox.add(copy.getId());
@@ -375,8 +389,7 @@ public class BookInformationController implements IClientUI
 	@FXML
 	void viewTableOfContentClick(ActionEvent event)
 	{
-		Book bookToSend = new Book(catNumTextField.getText());
-		GuiManager.client.viewTableOfContent(bookToSend);
+		GuiManager.client.viewTableOfContent(bookToShow);
 	}
 
 	@FXML
@@ -393,11 +406,14 @@ public class BookInformationController implements IClientUI
 		wantedLogo.setVisible(false);
 		onEditShowPane.setVisible(true);
 		editDetailsBtn.setDisable(true);
+		uploadFileBtn.setVisible(true);
+		viewTOC_btn.setVisible(false);
 		if (bookToShow.getClassification().equals("wanted"))
 		{
 			wantedBookCheckBox.setSelected(true);
 		}
 		copiesComboBox.getItems().clear();
+		copiesComboBox.setValue("copy ID");
 		copiesComboBox.getItems().addAll(copiesFromComboBox);
 		copiesSpinner.setValueFactory(
 				new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, Integer.parseInt(INITAL_VALUE)));
@@ -465,6 +481,9 @@ public class BookInformationController implements IClientUI
 					newBook.getCopies().remove(copiesArray.get(i));
 				}
 			}
+			newBook.setTocArraybyte(uploadedFileByteArray);
+			
+			
 			GuiManager.client.editBookDetails(newBook);
 			editDetailsBtn.setDisable(false);
 			bookNameTextArea.setEditable(false);
@@ -504,16 +523,18 @@ public class BookInformationController implements IClientUI
     @FXML
     void removeCopiesClick(ActionEvent event) 
     {
-    	if(copiesComboBox.getSelectionModel().getSelectedItem()==null)
+    	if(copiesComboBox.getSelectionModel().getSelectedItem()=="copy ID")
     	{
     		GuiManager.ShowErrorPopup("Please choose one copy ");
     	}
     	int size= copiesComboBox.getItems().size();
-    	if(size==1)
+    	if(size==2)
     	{
     		GuiManager.ShowErrorPopup("Cannot delete last copy.\nPlease add copies instead or move book to archive." );
+    		copiesComboBox.getSelectionModel().selectFirst();
     		return;
     	}
+ 
     	String copyID=copiesComboBox.getSelectionModel().getSelectedItem();
     	ArrayList<CopyOfBook> copyToCheck= bookToShow.getCopies();
     	for(CopyOfBook c: copyToCheck )
@@ -523,12 +544,17 @@ public class BookInformationController implements IClientUI
     		{
     			String status=c.getStatus();
     			if(status.equals("unavailable"))
+    			{
     				GuiManager.ShowErrorPopup("This copy cannot be deleted!");
+    				copiesComboBox.getSelectionModel().selectFirst();
+    			}
+    			
     			else
     			{
     				copiesComboBox.getItems().remove(copiesComboBox.getSelectionModel().getSelectedItem());
     				copiesFromComboBox.remove(c.getId());
     				copiesComboBox.getSelectionModel().clearSelection();
+    				copiesComboBox.getSelectionModel().selectFirst();
     			}
     		}
     	}
@@ -537,5 +563,40 @@ public class BookInformationController implements IClientUI
     {
     	return (Stage) editDetailsBtn.getScene().getWindow();
     }
+    
+	@FXML
+	void btnUploadTableOfcontentClick(ActionEvent event)
+	{
+		FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showOpenDialog((Stage) editDetailsBtn.getScene().getWindow());
+		// file.getName();
+		if (file != null)
+		{
+			try
+			{
+				if (!getFileExtension(file.getName()).equals("pdf"))
+					GuiManager.ShowErrorPopup("Error - file must be a pdf file");
+				else
+				{
+					uploadedFileByteArray = Files.readAllBytes(file.toPath());
+				}
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				uploadedFileByteArray = null;
+			}
+		}
+
+	}
+	
+	public static String getFileExtension(String fullName)
+	{
+		if (fullName == null)
+			return null;
+		String fileName = new File(fullName).getName();
+		int dotIndex = fileName.lastIndexOf('.');
+		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+	}
 }
 
