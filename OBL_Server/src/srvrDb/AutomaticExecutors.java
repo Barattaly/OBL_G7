@@ -25,7 +25,7 @@ public class AutomaticExecutors
 	private static MySQLConnection oblDB; 
 	
 	public AutomaticExecutors(MySQLConnection oblDb)
-	{
+	{	
 		if(oblDb == null)
 			return;
 		AutomaticExecutors.oblDB = oblDb;
@@ -212,8 +212,15 @@ public class AutomaticExecutors
 								+ "that you have borrowed is tomrrow.\n"
 								+ "Please return the book until tomrrow, or excute borrow extension (if extension is possible).";
 			/* send an email to the subscriber */
-			SendEmail email = new SendEmail();
-			email.sendEmail(subscriberToInform.getEmail(), emailSubject, emailMessage);
+			try
+			{
+				SendEmail email = new SendEmail();
+				email.sendEmail(subscriberToInform.getEmail(), emailSubject, emailMessage);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 			i++;
 		}
 	}

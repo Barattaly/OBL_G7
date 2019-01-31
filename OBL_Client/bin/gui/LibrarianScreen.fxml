@@ -202,7 +202,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="321.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="321.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE" visible="false">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
