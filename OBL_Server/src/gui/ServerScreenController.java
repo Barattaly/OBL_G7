@@ -66,7 +66,6 @@ public class ServerScreenController implements Initializable
 	{
 		try
 		{
-
 			try(final DatagramSocket socket = new DatagramSocket())
 			{
 				socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
@@ -84,7 +83,6 @@ public class ServerScreenController implements Initializable
 		}
 		dbNameTextField.setText("obl_db");
 		dbUserNameTextField.setText("root");
-		
 	}
 
 	@FXML
@@ -170,9 +168,11 @@ public class ServerScreenController implements Initializable
 			{
 				
 				if(server.isListening())server.stopListening();
-				server.close();
-				loadingSpinner.setVisible(false);
+				server.close();		
 			}
+			executer.shutDown();
+			loadingSpinner.setVisible(false);
+			
 		}
 		catch(Exception e)
 		{

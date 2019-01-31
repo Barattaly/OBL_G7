@@ -1,6 +1,5 @@
 package defaultPackage;
 
-import entities.SendEmail;
 import gui.ServerScreenController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
