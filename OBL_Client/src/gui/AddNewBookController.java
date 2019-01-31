@@ -199,7 +199,7 @@ public class AddNewBookController implements Initializable
 			try
 			{
 				if (!getFileExtension(file.getName()).equals("pdf"))
-					GuiManager.ShowErrorPopup("Error - TOC must be a pdf file");
+					GuiManager.ShowErrorPopup("Error - file must be a pdf file");
 				else
 				{
 					tocArraybyte = Files.readAllBytes(file.toPath());

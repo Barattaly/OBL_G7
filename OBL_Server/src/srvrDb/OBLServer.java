@@ -122,8 +122,14 @@ public class OBLServer extends AbstractServer
 				{
 					if (msg.substring(0, 11).equals("graduation:"))
 					{
-						String studentID = msg.substring(11);
-						graduateStudent(studentID);
+						try
+						{
+							String studentID = msg.substring(11);
+							graduateStudent(studentID);
+						} catch (Exception e)
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -1778,12 +1784,29 @@ public class OBLServer extends AbstractServer
 
 	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query = BooksQueries.changeBookFields(book);
+		String query;
 		ResultSet rs;
-		DBMessage returnMessage;
-
+		int rowCount=0;
+		
+		//first check if the book name and edition number are not already exist in the program
+		query = BooksQueries.SearchBookByNameAndEdition(book);
+		rs = oblDB.executeQuery(query);
+		rowCount = getRowCount(rs);
+		if (rowCount == 1)// book name already exist in different book
+		{
+			rs.next();
+			String catalogNumber=rs.getString(1);
+			if(!(catalogNumber.equals(book.getCatalogNumber())))
+			{
+				DBMessage returnMessage= new DBMessage(DBAction.EditBookDetails, null);
+				client.sendToClient(returnMessage);
+				return;
+			}
+		}
+		
+		query = BooksQueries.changeBookFields(book);
 		oblDB.executeUpdate(query);
-		// changing now book authors
+		// update book authors :
 		ArrayList<String> newAuthorsList = book.getAuthorNameList();
 		query = BooksQueries.getAuthorsFromBook(book);
 		rs = oblDB.executeQuery(query);
@@ -1827,12 +1850,12 @@ public class OBLServer extends AbstractServer
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
-				returnMessage = new DBMessage(DBAction.EditBookDetails, null);
+				DBMessage returnMessage = new DBMessage(DBAction.EditBookDetails,null);
 				client.sendToClient(returnMessage);
 			}
 
 		}
-		// changing now categories
+		// update book categories
 		ArrayList<String> newCategories = book.getCategories();
 		query = BooksQueries.getCategoriesForBookId(book.getCatalogNumber());
 		rs = oblDB.executeQuery(query);
@@ -1875,35 +1898,40 @@ public class OBLServer extends AbstractServer
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
-				returnMessage = new DBMessage(DBAction.EditBookDetails, null);
+				DBMessage returnMessage = new DBMessage(DBAction.EditBookDetails,null);
 				client.sendToClient(returnMessage);
 			}
 		}
-		// copies editing
+		// update book copies
 		query = CopiesQueries.getBookCopiesDetails(book);
 		ResultSet currentCopies = oblDB.executeQuery(query);
 		List<String> updatedCopies = new ArrayList<String>();
-		// removing copies:
+		//removing copies:
 		for (CopyOfBook copy : book.getCopies())
 		{
 			updatedCopies.add(copy.getId());
 		}
 		while (currentCopies.next())
 		{
-			if (!updatedCopies.contains(currentCopies.getString(1))) // if needed to remove this copy from db
+			if (!updatedCopies.contains(currentCopies.getString(1))) //if needed to remove this copy from db
 			{
-				query = CopiesQueries.deleteCopyFromBook(currentCopies.getString(1));
+				query=CopiesQueries.deleteCopyFromBook(currentCopies.getString(1));
 				oblDB.executeUpdate(query);
 			}
 		}
-		// adding copies:
+		//adding copies:
 		int copies = book.getMaxCopies();
 		for (int i = 0; i < copies; i++)
 		{
 			query = BooksQueries.AddCopy(book.getCatalogNumber());
 			oblDB.executeUpdate(query);
 		}
-		returnMessage = new DBMessage(DBAction.EditBookDetails, book);
+		if (book.getTocArraybyte() != null)
+		{
+			createFileFromByteArray(book.getTocArraybyte(), book.getCatalogNumber(), "pdf",	pathToSavePDF);
+		}
+		
+		DBMessage returnMessage = new DBMessage(DBAction.EditBookDetails, book);
 		client.sendToClient(returnMessage);
 	}
 
@@ -1911,9 +1939,48 @@ public class OBLServer extends AbstractServer
 	{
 		return oblDB;
 	}
-
-	private void graduateStudent(String studentID)
+ 
+	private void graduateStudent(String studentID) throws IOException, SQLException
 	{
-		System.out.println(studentID);
+		String query;
+		ResultSet rs;
+		int rowCount=0;
+		String status;
+		if(studentID.length()==8)
+		{
+			studentID="0"+studentID;
+		}
+		Subscriber subscriber=new Subscriber(studentID);
+		query=SubscribersQueries.searchSubscriberByID(subscriber);
+		rs=oblDB.executeQuery(query);
+		rowCount=getRowCount(rs);
+		if(rowCount==0)
+		{
+			//this subscriber does not exist
+			return;
+		}
+		query=SubscribersQueries.getSubscriberStatus(subscriber);
+		rs=oblDB.executeQuery(query);
+		rs.next();
+		status=rs.getString(1);
+		subscriber.setStatus(status);
+		query=BorrowsQueries.getCurrentBorrowsForSubscriberID(subscriber.getId());
+		rs=oblDB.executeQuery(query);
+		rowCount=getRowCount(rs);
+		if(rowCount==0) //if there are not borrowed books for this subscriber (we don't care if his status is active or frozen)
+		{
+			subscriber.setStatus("locked");
+			query=SubscribersQueries.updateSubscriberStatus(subscriber);
+			oblDB.executeUpdate(query);
+		}
+		else if (rowCount>0) //in case there are current borrows so the subscriber can't be locked
+		{
+			subscriber.setStatus("frozen");
+			query=SubscribersQueries.updateSubscriberStatus(subscriber);
+			oblDB.executeUpdate(query);
+		}
+		subscriber.setIsGraduatedStatus("yes");
+		query=SubscribersQueries.updateSubscriberIsGraduatedStatus(subscriber);
 	}
 }
+
