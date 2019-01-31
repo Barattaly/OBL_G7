@@ -1981,7 +1981,8 @@ public class OBLServer extends AbstractServer
 			oblDB.executeUpdate(query);
 			//need to add here update graduation to 'yes'
 		}
-	
+		subscriber.setIsGraduatedStatus("yes");
+		query=SubscribersQueries.updateSubscriberIsGraduatedStatus(subscriber);
 	}
 }
 

@@ -135,6 +135,10 @@ public class BookInformationController implements IClientUI
 	
 	private byte[] uploadedFileByteArray = null;
 
+    @FXML
+    private JFXButton uploadFileBtn;
+    
+
 	public void setBookInformation(Book book)
 	{
 		onEditShowPane.setVisible(false);
@@ -167,6 +171,8 @@ public class BookInformationController implements IClientUI
 			orderBookBtn.setDisable(true);
 			returnDateLabel.setVisible(false);
 			returnDateTextField.setVisible(false);
+			uploadFileBtn.setVisible(false);
+			viewTOC_btn.setVisible(true);
 		} else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 		{
 			availableLabel.setText("Not available for borrow"); // means that the book is available for order
@@ -400,6 +406,8 @@ public class BookInformationController implements IClientUI
 		wantedLogo.setVisible(false);
 		onEditShowPane.setVisible(true);
 		editDetailsBtn.setDisable(true);
+		uploadFileBtn.setVisible(true);
+		viewTOC_btn.setVisible(false);
 		if (bookToShow.getClassification().equals("wanted"))
 		{
 			wantedBookCheckBox.setSelected(true);
