@@ -3,6 +3,8 @@ package gui;
 import java.util.ArrayList;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXToggleButton;
+
 import entities.ActivityLog;
 import entities.DBMessage;
 import entities.ObservableActivityLog;
@@ -76,10 +78,19 @@ public class ViewSubscriberCardController implements IClientUI
 
 	@FXML
 	private Label SuccessLabel;
+	
+    @FXML
+    private JFXTextField subscriberStatusField;
+
+	@FXML
+	private JFXToggleButton freezeSubscriberToggleButton;
+
+	private User userLogged;
 
 	public void setSubscriberToShow(Subscriber sub)
 	{
 		subscriberToShow = sub;
+		subscriberStatusField.setText(subscriberToShow.getStatus());
 		subscriberNumberField.setText(subscriberToShow.getSubscriberNumber());
 		userNameField.setText(subscriberToShow.getUserName());
 		idNumberField.setText(subscriberToShow.getId());
@@ -88,24 +99,29 @@ public class ViewSubscriberCardController implements IClientUI
 		phoneNumberField.setText(subscriberToShow.getPhoneNumber());
 		emailField.setText(subscriberToShow.getEmail());
 		GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
-		
+		if (sub.getStatus().equals("frozen"))
+		{
+			freezeSubscriberToggleButton.setSelected(true);
+		} else
+			freezeSubscriberToggleButton.setSelected(false);
+
 	}
 
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
 
-
 	}
 
 	public void setUserLogedIn(User userLoged)
 	{
+		this.userLogged = userLoged;
 	}
 
 	@Override
 	public User getUserLogedIn()
 	{
-		return null;
+		return userLogged;
 	}
 
 	@FXML
@@ -116,6 +132,22 @@ public class ViewSubscriberCardController implements IClientUI
 		btn_Edit.setVisible(false);
 		btn_Cancel.setVisible(true);
 		btn_Save.setVisible(true);
+		if (getUserLogedIn() != null)
+		{
+			if (getUserLogedIn().getType().equals("library manager"))
+			{
+				freezeSubscriberToggleButton.setVisible(true);
+				if(subscriberToShow.getStatus().equals("locked"))
+				{
+					freezeSubscriberToggleButton.setDisable(true);
+				}
+				else
+					freezeSubscriberToggleButton.setDisable(false);
+			}
+		} else
+		{
+			freezeSubscriberToggleButton.setVisible(false);
+		}
 
 		firstNameField.setEditable(true);
 		lastNameField.setEditable(true);
@@ -131,9 +163,9 @@ public class ViewSubscriberCardController implements IClientUI
 	@FXML
 	void btn_CancelClick(ActionEvent event)
 	{
-		//GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
-		//GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
-		
+		// GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
+		// GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
+
 		setSubscriberToShow(subscriberToShow);
 
 		btn_Edit.setVisible(true);
@@ -152,6 +184,8 @@ public class ViewSubscriberCardController implements IClientUI
 
 		SuccessLabel.setVisible(false);
 		warningLabel.setVisible(false);
+
+		freezeSubscriberToggleButton.setVisible(false);
 	}
 
 	@FXML
@@ -198,9 +232,22 @@ public class ViewSubscriberCardController implements IClientUI
 			phoneNumberField.setCursor(Cursor.DEFAULT);
 			emailField.setCursor(Cursor.DEFAULT);
 
+			String status;
+			String oldStatus = subscriberToShow.getStatus();
+			if (!oldStatus.equals("locked"))
+			{
+				if (freezeSubscriberToggleButton.isSelected())
+				{
+					status = "frozen";
+				} else
+				{
+					status = "active";
+				}
+			}
+			else
+				status = "locked";
 			Subscriber subscriberToUpdate = new Subscriber(subscriberToShow.getId(), firstNameField.getText(),
-					lastNameField.getText(), phoneNumberField.getText(), emailField.getText(),
-					subscriberToShow.getLoginStatus());
+					lastNameField.getText(), phoneNumberField.getText(), emailField.getText(), status);
 			GuiManager.client.updateSubscriberDetails(subscriberToUpdate);
 			subscriberToUpdate.setUserName(subscriberToShow.getUserName());
 			String name = subscriberToUpdate.getFirstName().substring(0, 1).toUpperCase()
@@ -210,6 +257,7 @@ public class ViewSubscriberCardController implements IClientUI
 			warningLabel.setVisible(false);
 			SuccessLabel.setText("Changes saved successfully");
 		}
+		freezeSubscriberToggleButton.setVisible(false);
 	}
 
 	public JFXTextField getFirstNameField()

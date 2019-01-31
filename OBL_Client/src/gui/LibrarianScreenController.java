@@ -585,7 +585,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Subscriber newSub = (Subscriber) msg.Data;
 				Platform.runLater(() -> {
-					GuiManager.openSubscriberCard(newSub);
+					GuiManager.openSubscriberCard(newSub,userLogedIn);
 				});
 			}
 			break;

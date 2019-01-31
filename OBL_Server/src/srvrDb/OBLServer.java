@@ -295,6 +295,10 @@ public class OBLServer extends AbstractServer
 		{
 			String query = UsersQueries.updateUserInformation(subscriberToUpdate);
 			oblDB.executeUpdate(query);
+			if(subscriberToUpdate.getStatus() == null)
+			{
+				subscriberToUpdate.setStatus("active");
+			}
 			query = SubscribersQueries.updateSubscriberInformation(subscriberToUpdate);
 			oblDB.executeUpdate(query);
 		}

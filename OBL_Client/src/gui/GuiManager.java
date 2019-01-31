@@ -256,7 +256,7 @@ public class GuiManager
 	 * 
 	 * @param newSub
 	 */
-	public static void openSubscriberCard(Subscriber newSub)
+	public static void openSubscriberCard(Subscriber newSub,User user)
 	{
 		try
 		{
@@ -269,6 +269,7 @@ public class GuiManager
 				subscriberCardController.setSubscriberToShow(newSub);
 			else
 				ShowErrorPopup("Somthing get wrong , please restart the system");
+			subscriberCardController.setUserLogedIn(user);
 			Scene scene = new Scene(root);
 			SeondStage.setResizable(false);
 			SeondStage.setTitle("Subscriber Card");
