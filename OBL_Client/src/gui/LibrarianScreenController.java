@@ -115,9 +115,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	protected Stage borrowDialog = null;
 
 	protected Stage returnDialog = null;
-	
+
 	protected JFXProgressBar returnDialogProgressBar = null;
-	
+
 	protected JFXProgressBar borrowDialogProgressBar = null;
 
 	@FXML
@@ -197,8 +197,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 				if (!GuiManager.isValidEmailAddress(emailTextfield.getText()))
 				{
 					warningLabel.setText("Wrong email format");
-				}
-				else
+				} else
 					warningLabel.setText("");
 			}
 		});
@@ -429,7 +428,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			}
 		});
 
-		returnDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, returnButton, returnDialogProgressBar);
+		returnDialogVbox.getChildren().addAll(headline, grid, warningMessageLabel, returnButton,
+				returnDialogProgressBar);
 		Scene returnDialogScene = new Scene(returnDialogVbox, 300, 200);
 		returnDialog.setScene(returnDialogScene);
 		returnDialog.showAndWait();
@@ -508,13 +508,15 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Platform.runLater(() -> {
 					borrowDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("This book has been ordered by another subscriber,\nthis subscriber can't borrow this book.");
+					GuiManager.ShowMessagePopup(
+							"This book has been ordered by another subscriber,\nthis subscriber can't borrow this book.");
 				});
 			} else if (newBorrow.getSubscriberId().equals("2"))
 			{
 				Platform.runLater(() -> {
 					borrowDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("The subscriber card status is not active,\nthis subscriber can't borrow new books!");
+					GuiManager.ShowMessagePopup(
+							"The subscriber card status is not active,\nthis subscriber can't borrow new books!");
 				});
 			} else if (newBorrow.getBookCatalogNumber().equals("0"))
 			{
@@ -532,7 +534,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Platform.runLater(() -> {
 					borrowDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
+					GuiManager.ShowMessagePopup(
+							"All of this book's copies are unavailable,\nplease check you entered the correct book catalog number");
 				});
 			} else if (newBorrow.getBookCatalogNumber().equals("-3"))
 			{
@@ -550,7 +553,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Platform.runLater(() -> {
 					borrowDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("This copy is already borrowed,\nplease check you entered the correct copy ID");
+					GuiManager.ShowMessagePopup(
+							"This copy is already borrowed,\nplease check you entered the correct copy ID");
 				});
 			} else if (newBorrow.getExpectedReturnDate().equals("0")) // after press on "borrow button
 			{
@@ -562,7 +566,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Platform.runLater(() -> {
 					borrowDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
+					GuiManager
+							.ShowMessagePopup("This book is wanted, please enter return date up to 3 days from today");
 				});
 			} else
 			{
@@ -585,7 +590,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Subscriber newSub = (Subscriber) msg.Data;
 				Platform.runLater(() -> {
-					GuiManager.openSubscriberCard(newSub,userLogedIn);
+					GuiManager.openSubscriberCard(newSub, userLogedIn);
 				});
 			}
 			break;
@@ -607,7 +612,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		case GetAllBooksList:
 		{
 			Platform.runLater(() -> {
-				searchBookWindowController.setBookMap((Map<Integer, Book>)(msg.Data));
+				searchBookWindowController.setBookMap((Map<Integer, Book>) (msg.Data));
 			});
 			break;
 		}
@@ -629,7 +634,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Platform.runLater(() -> {
 					returnDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
+					GuiManager.ShowMessagePopup(
+							"None of this book's copies are currently borrow,\nplease check you entered the correct book catalog number");
 				});
 			} else if (newBorrow.getCopyId().equals("0"))
 			{
@@ -641,7 +647,8 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			{
 				Platform.runLater(() -> {
 					returnDialogProgressBar.setVisible(false);
-					GuiManager.ShowMessagePopup("This copy is not currently borrow,\nplease check you entered the correct copy ID");
+					GuiManager.ShowMessagePopup(
+							"This copy is not currently borrow,\nplease check you entered the correct copy ID");
 				});
 			} else
 			{
@@ -667,11 +674,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		case EditBookDetails:
 		{
 			Platform.runLater(() -> {
-				if(msg.Data == null)
+				if (msg.Data == null)
 				{
 					GuiManager.ShowErrorPopup("Something went wrong.\nPlease try again.");
-				}
-				else
+				} else
 				{
 					searchBookWindowController.getMessageFromServer(msg);
 				}
@@ -694,6 +700,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		userNameLabel.setText(userName);
 		initialSearchWindow();
 		initialBorrowsWindow();
+		setMessages();
 	}
 
 	@Override
@@ -713,10 +720,9 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		else
 		{
 			GuiManager.client.getSubscriberFromDB(txt_subscriberID.getText());
-			
+
 		}
 	}
-
 
 	protected void initialSearchWindow()
 	{
@@ -763,19 +769,24 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			AnchorPane newLoadedPane = loader.load();
 			borrowsWindowController = loader.getController();
 			borrowsWindowController.setUserLogedIn(userLogedIn);
-			
+
 			AnchorPane.setLeftAnchor(newLoadedPane, 0.0);
 			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
 			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
 			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
-			
-			borrowsPane.getChildren().add(newLoadedPane);
 
+			borrowsPane.getChildren().add(newLoadedPane);
 
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
+	protected void setMessages()
+	{
+		for (String msg : userLogedIn.getMessages())
+			System.out.println(msg);
+	}
+
 }

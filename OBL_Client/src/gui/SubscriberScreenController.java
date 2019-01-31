@@ -258,6 +258,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		GuiManager.client.getSubscriberFromDB(userLogedIn.getId());
 		initialSearchWindow();
 		initialBorrowsWindow();
+		setMessages();
 	}
 
 	@Override
@@ -282,5 +283,11 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	protected void setMessages()
+	{
+		for (String msg : getUserLogedIn().getMessages())
+			System.out.println(msg);
 	}
 }
