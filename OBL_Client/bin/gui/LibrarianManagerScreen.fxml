@@ -202,15 +202,7 @@
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="142.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </JFXButton>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="343.0" layoutY="199.0" prefHeight="42.0" prefWidth="150.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Extend book borrow" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="518.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -276,7 +268,7 @@
                   </AnchorPane>
                </children>
             </Pane>
-            <Pane fx:id="pane_reports" layoutY="35.0" prefHeight="609.0" prefWidth="796.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Pane fx:id="pane_reports" layoutY="35.0" prefHeight="609.0" prefWidth="796.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="355.0" layoutY="78.0" text="Reports" textFill="#a0a2ab">
                      <font>

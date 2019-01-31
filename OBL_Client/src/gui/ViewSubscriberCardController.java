@@ -201,21 +201,15 @@ public class ViewSubscriberCardController implements IClientUI
 			SuccessLabel.setVisible(false);
 			warningLabel.setVisible(true);
 			warningLabel.setText("Enter last name please");
-		} else if (phoneNumberField.getText().isEmpty())
+		} else if (!emailField.getText().isEmpty())
 		{
-			SuccessLabel.setVisible(false);
-			warningLabel.setVisible(true);
-			warningLabel.setText("Enter phone number please");
-		} else if (emailField.getText().isEmpty())
-		{
-			SuccessLabel.setVisible(false);
-			warningLabel.setVisible(true);
-			warningLabel.setText("Enter Email please");
-		} else if (!GuiManager.isValidEmailAddress(emailField.getText()))
-		{
-			SuccessLabel.setVisible(false);
-			warningLabel.setVisible(true);
-			warningLabel.setText("The Email is incorrect");
+			if (!GuiManager.isValidEmailAddress(emailField.getText()))
+			{
+				SuccessLabel.setVisible(false);
+				warningLabel.setVisible(true);
+				warningLabel.setText("The Email is incorrect");
+			}
+
 		} else
 		{
 			btn_Edit.setVisible(true);

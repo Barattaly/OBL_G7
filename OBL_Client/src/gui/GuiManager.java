@@ -262,7 +262,7 @@ public class GuiManager
 		{
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(
-					GuiManager.class.getResource(availableFXML.get(SCREENS.viewSubscriberCard)));
+					GuiManager.class.getResource("/gui/ViewSubscriberCardScreen.fxml"));
 			Parent root = loader.load();
 			subscriberCardController = loader.getController();
 			if (subscriberCardController != null)
