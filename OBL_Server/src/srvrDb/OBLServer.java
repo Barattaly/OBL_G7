@@ -1532,7 +1532,6 @@ public class OBLServer extends AbstractServer
 			String temp = "resources\\tablesOfContent\\Table of content - Linear algebra.pdf";
 			file = new File(classLoader.getResource(temp).toURI());*/
 			file = new File(localPath);
-			logREF.setText(localPath);
 
 			mybytearray = Files.readAllBytes(file.toPath());
 		} catch (Exception e)
