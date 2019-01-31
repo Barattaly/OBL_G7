@@ -255,6 +255,7 @@ public class BookInformationController implements IClientUI
 			copiesTextArea.setText("The book's copies are:\n" + "Copy ID   " + "Status" + copies);
 		}
 		copiesFromComboBox.clear();
+		copiesFromComboBox.add("copy ID");
 		for (CopyOfBook copy : book.getCopies())
 		{
 			copiesFromComboBox.add(copy.getId());
@@ -399,6 +400,7 @@ public class BookInformationController implements IClientUI
 			wantedBookCheckBox.setSelected(true);
 		}
 		copiesComboBox.getItems().clear();
+		copiesComboBox.setValue("copy ID");
 		copiesComboBox.getItems().addAll(copiesFromComboBox);
 		copiesSpinner.setValueFactory(
 				new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, Integer.parseInt(INITAL_VALUE)));
@@ -505,16 +507,18 @@ public class BookInformationController implements IClientUI
     @FXML
     void removeCopiesClick(ActionEvent event) 
     {
-    	if(copiesComboBox.getSelectionModel().getSelectedItem()==null)
+    	if(copiesComboBox.getSelectionModel().getSelectedItem()=="copy ID")
     	{
     		GuiManager.ShowErrorPopup("Please choose one copy ");
     	}
     	int size= copiesComboBox.getItems().size();
-    	if(size==1)
+    	if(size==2)
     	{
     		GuiManager.ShowErrorPopup("Cannot delete last copy.\nPlease add copies instead or move book to archive." );
+    		copiesComboBox.getSelectionModel().selectFirst();
     		return;
     	}
+ 
     	String copyID=copiesComboBox.getSelectionModel().getSelectedItem();
     	ArrayList<CopyOfBook> copyToCheck= bookToShow.getCopies();
     	for(CopyOfBook c: copyToCheck )
@@ -524,12 +528,17 @@ public class BookInformationController implements IClientUI
     		{
     			String status=c.getStatus();
     			if(status.equals("unavailable"))
+    			{
     				GuiManager.ShowErrorPopup("This copy cannot be deleted!");
+    				copiesComboBox.getSelectionModel().selectFirst();
+    			}
+    			
     			else
     			{
     				copiesComboBox.getItems().remove(copiesComboBox.getSelectionModel().getSelectedItem());
     				copiesFromComboBox.remove(c.getId());
     				copiesComboBox.getSelectionModel().clearSelection();
+    				copiesComboBox.getSelectionModel().selectFirst();
     			}
     		}
     	}

@@ -121,8 +121,14 @@ public class OBLServer extends AbstractServer
 				{
 					if (msg.substring(0, 11).equals("graduation:"))
 					{
-						String studentID = msg.substring(11);
-						graduateStudent(studentID);
+						try
+						{
+							String studentID = msg.substring(11);
+							graduateStudent(studentID);
+						} catch (Exception e)
+						{
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -740,7 +746,7 @@ public class OBLServer extends AbstractServer
 					if (!isSubscriberLateAnotherReturn(borrowToClose))
 					{
 						subscriberToUpdate.setStatus("active");
-						query = SubscribersQueries.updateSubscriberStatusToActive(subscriberToUpdate);
+						query = SubscribersQueries.updateSubscriberStatus(subscriberToUpdate);
 						oblDB.executeUpdate(query); // update subscriber status to active
 					}
 				}
@@ -1763,22 +1769,26 @@ public class OBLServer extends AbstractServer
 		return false;
 	}
 
-private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
+	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
 		String query;
 		ResultSet rs;
-		DBMessage returnMessage;
 		int rowCount=0;
 		
 		//first check if the book name and edition number are not already exist in the program
 		query = BooksQueries.SearchBookByNameAndEdition(book);
 		rs = oblDB.executeQuery(query);
 		rowCount = getRowCount(rs);
-		if (rowCount == 1)// book name already exist
+		if (rowCount == 1)// book name already exist in different book
 		{
-			returnMessage = new DBMessage(DBAction.EditBookDetails, null);
-			client.sendToClient(returnMessage);
-			return;
+			rs.next();
+			String catalogNumber=rs.getString(1);
+			if(!(catalogNumber.equals(book.getCatalogNumber())))
+			{
+				DBMessage returnMessage= new DBMessage(DBAction.EditBookDetails, null);
+				client.sendToClient(returnMessage);
+				return;
+			}
 		}
 		
 		query = BooksQueries.changeBookFields(book);
@@ -1827,7 +1837,7 @@ private void changeBookDetails(Book book, ConnectionToClient client) throws IOEx
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
-				returnMessage = new DBMessage(DBAction.EditBookDetails,null);
+				DBMessage returnMessage = new DBMessage(DBAction.EditBookDetails,null);
 				client.sendToClient(returnMessage);
 			}
 
@@ -1875,7 +1885,7 @@ private void changeBookDetails(Book book, ConnectionToClient client) throws IOEx
 			} catch (SQLException exp)
 			{
 				exp.printStackTrace();
-				returnMessage = new DBMessage(DBAction.EditBookDetails,null);
+				DBMessage returnMessage = new DBMessage(DBAction.EditBookDetails,null);
 				client.sendToClient(returnMessage);
 			}
 		}
@@ -1903,7 +1913,7 @@ private void changeBookDetails(Book book, ConnectionToClient client) throws IOEx
 			query = BooksQueries.AddCopy(book.getCatalogNumber());
 			oblDB.executeUpdate(query);
 		}
-		returnMessage = new DBMessage(DBAction.EditBookDetails, book);
+		DBMessage returnMessage = new DBMessage(DBAction.EditBookDetails, book);
 		client.sendToClient(returnMessage);
 	}
 
@@ -1911,10 +1921,49 @@ private void changeBookDetails(Book book, ConnectionToClient client) throws IOEx
 	{
 		return oblDB;
 	}
-
-	private void graduateStudent(String studentID)
+ 
+	private void graduateStudent(String studentID) throws IOException, SQLException
 	{
-		System.out.println(studentID);
+		String query;
+		ResultSet rs;
+		int rowCount=0;
+		String status;
+		if(studentID.length()==8)
+		{
+			studentID="0"+studentID;
+		}
+		Subscriber subscriber=new Subscriber(studentID);
+		query=SubscribersQueries.searchSubscriberByID(subscriber);
+		rs=oblDB.executeQuery(query);
+		rowCount=getRowCount(rs);
+		if(rowCount==0)
+		{
+			//this subscriber does not exist
+			return;
+		}
+		query=SubscribersQueries.getSubscriberStatus(subscriber);
+		rs=oblDB.executeQuery(query);
+		rs.next();
+		status=rs.getString(1);
+		subscriber.setStatus(status);
+		query=BorrowsQueries.getCurrentBorrowsForSubscriberID(subscriber.getId());
+		rs=oblDB.executeQuery(query);
+		rowCount=getRowCount(rs);
+		if(rowCount==0) //if there are not borrowed books for this subscriber (we don't care if his status is active or frozen)
+		{
+			subscriber.setStatus("locked");
+			query=SubscribersQueries.updateSubscriberStatus(subscriber);
+			oblDB.executeUpdate(query);
+			//need to add here update graduation to 'yes'
+		}
+		else if (rowCount>0) //in case there are current borrows so the subscriber can't be locked
+		{
+			subscriber.setStatus("frozen");
+			query=SubscribersQueries.updateSubscriberStatus(subscriber);
+			oblDB.executeUpdate(query);
+			//need to add here update graduation to 'yes'
+		}
+	
 	}
 }
 

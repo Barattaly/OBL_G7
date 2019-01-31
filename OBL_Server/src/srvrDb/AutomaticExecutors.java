@@ -102,7 +102,7 @@ public class AutomaticExecutors
 						rsSubscriberStatus.next();
 						if (rsSubscriberStatus.getString(1).equals("active"))
 						{
-							query = SubscribersQueries.updateSubscriberStatusToFrozen(subscriberToUpdate);
+							query = SubscribersQueries.updateSubscriberStatus(subscriberToUpdate);
 							oblDB.executeUpdate(query); // update subscriber's status to frozen
 						}
 					} catch (Exception e)
