@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -150,7 +151,7 @@
                   <Insets />
                </opaqueInsets>
             </GridPane>
-            <JFXButton fx:id="btn_Cancel" buttonType="RAISED" layoutX="193.0" layoutY="545.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
+            <JFXButton fx:id="btn_Cancel" buttonType="RAISED" cancelButton="true" layoutX="193.0" layoutY="545.0" onAction="#btn_CancelClick" prefHeight="28.0" prefWidth="88.0" style="-fx-background-color: red;" text="Cancel" textFill="#fffefe" visible="false">
                <font>
                   <Font size="14.0" />
                </font>
@@ -176,6 +177,11 @@
                   <Font size="14.0" />
                </font>
             </Label>
+            <JFXToggleButton fx:id="freezeSubscriberToggleButton" layoutX="32.0" layoutY="477.0" prefHeight="25.0" prefWidth="202.0" text="Freeze Subsciber" textFill="#a0a2ab" visible="false">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </JFXToggleButton>
          </children>
       </Pane>
    </children>

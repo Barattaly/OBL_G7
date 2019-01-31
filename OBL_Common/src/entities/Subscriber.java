@@ -50,6 +50,7 @@ public class Subscriber extends User
 		super(idNumber,firstName,lastName);
 		this.phoneNumber=phoneNumber;
 		this.email=email;
+		this.status = status;
 	}
 		
 	public Subscriber(String id)
