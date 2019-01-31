@@ -6,7 +6,8 @@ public class Subscriber extends User
 	private String phoneNumber;
 	private String email;
 	private String status;
-
+	private String isGraduatedStatus;
+	
 	public Subscriber(String subscriberNum, String id, String phone, String email, String status)
 	{
 		super();
@@ -99,7 +100,16 @@ public class Subscriber extends User
 	{
 		this.status = status;
 	}
+	
+	public String getIsGraduatedStatus() 
+	{
+		return isGraduatedStatus;
+	}
 
+	public void setIsGraduatedStatus(String isGraduatedStatus) 
+	{
+		this.isGraduatedStatus = isGraduatedStatus;
+	}
 
 	public void FillInformationFromUser(User userToCheck)
 	{
