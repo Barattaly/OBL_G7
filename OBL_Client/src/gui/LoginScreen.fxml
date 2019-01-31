@@ -53,12 +53,12 @@
             </ImageView>
             <ImageView fitHeight="26.0" fitWidth="22.0" layoutX="260.0" layoutY="199.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Login_Username.png" />
+                  <Image url="@../resources/Login_Username.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="26.0" fitWidth="22.0" layoutX="260.0" layoutY="253.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../bin/resources/Login_Password.png" />
+                  <Image url="@../resources/Login_Password.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="76.0" fitWidth="101.0" layoutX="338.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">

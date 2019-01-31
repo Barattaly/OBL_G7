@@ -142,7 +142,7 @@ public class BookInformationController implements IClientUI
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
 		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
 		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
-		GuiManager.limitTextFieldMaxCharacters(locationTextField, 4);
+		GuiManager.limitTextFieldMaxCharacters(locationTextField, 6);
 		catNumTextField.setText(book.getCatalogNumber());
 		boolean isOrderExist = false;
 		if (book.getClassification().equals("wanted"))

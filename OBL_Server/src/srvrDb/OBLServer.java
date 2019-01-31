@@ -1652,7 +1652,7 @@ public class OBLServer extends AbstractServer
 		ResultSet rs;
 		DBMessage returnMsg;
 
-		query = BooksQueries.SearchBookByName(book);
+		query = BooksQueries.SearchBookByNameAndEdition(book);
 		rs = oblDB.executeQuery(query);
 		rowCount = getRowCount(rs);
 		if (rowCount == 1)// book name already exist
@@ -1682,7 +1682,7 @@ public class OBLServer extends AbstractServer
 			return;
 		}
 
-		query = BooksQueries.GetCatalogNumberByName(book);
+		query = BooksQueries.GetCatalogNumberByNameAndEdition(book);
 		rs = oblDB.executeQuery(query);
 		rowCount = getRowCount(rs);
 		if (rowCount == 0)
@@ -1770,12 +1770,25 @@ public class OBLServer extends AbstractServer
 
 	private void changeBookDetails(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		String query = BooksQueries.changeBookFields(book);
+		String query;
 		ResultSet rs;
 		DBMessage returnMessage;
+		int rowCount=0;
 		
+		//first check if the book name and edition number are not already exist in the program
+		query = BooksQueries.SearchBookByNameAndEdition(book);
+		rs = oblDB.executeQuery(query);
+		rowCount = getRowCount(rs);
+		if (rowCount == 1)// book name already exist
+		{
+			returnMessage = new DBMessage(DBAction.EditBookDetails, null);
+			client.sendToClient(returnMessage);
+			return;
+		}
+		
+		query = BooksQueries.changeBookFields(book);
 		oblDB.executeUpdate(query);
-		// changing now book authors
+		// update book authors :
 		ArrayList<String> newAuthorsList = book.getAuthorNameList();
 		query = BooksQueries.getAuthorsFromBook(book);
 		rs = oblDB.executeQuery(query);
@@ -1824,7 +1837,7 @@ public class OBLServer extends AbstractServer
 			}
 
 		}
-		// changing now categories
+		// update book categories
 		ArrayList<String> newCategories = book.getCategories();
 		query = BooksQueries.getCategoriesForBookId(book.getCatalogNumber());
 		rs = oblDB.executeQuery(query);
@@ -1871,7 +1884,7 @@ public class OBLServer extends AbstractServer
 				client.sendToClient(returnMessage);
 			}
 		}
-		// copies editing
+		// update book copies
 		query = CopiesQueries.getBookCopiesDetails(book);
 		ResultSet currentCopies = oblDB.executeQuery(query);
 		List<String> updatedCopies = new ArrayList<String>();

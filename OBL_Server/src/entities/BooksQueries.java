@@ -158,10 +158,10 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return queryMsg;
 	}
 	
-	public static String GetCatalogNumberByName(Book book) 
+	public static String GetCatalogNumberByNameAndEdition(Book book) 
 	{
 		String queryMsg = "SELECT catalogNumber FROM obl_db.books "
-				+ "WHERE books.name = '" + book.getName()+ "';";
+				+" WHERE books.name ='"+book.getName()+"' AND books.editionNumber = '" + book.getEditionNumber() + "';";
 				
 		return queryMsg;
 	}
@@ -224,10 +224,10 @@ public static String SelectAllBooksEachRowForNewAuthor()
 		return queryMsg;
 	}
 	
-	public static String SearchBookByName(Book book) 
+	public static String SearchBookByNameAndEdition(Book book) 
 	{
 		String queryMsg = "SELECT * FROM obl_db.books"
-				+" WHERE books.name ='"+book.getName()+"';";
+				+" WHERE books.name ='"+book.getName()+"' AND books.editionNumber = '" + book.getEditionNumber() + "';";
 				
 		return queryMsg; 
 	}
