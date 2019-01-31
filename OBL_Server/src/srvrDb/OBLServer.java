@@ -1185,6 +1185,9 @@ public class OBLServer extends AbstractServer
 		int bookNumOfCurrentOrders = getRowCount(rsBookCurrentOrders);
 		if (bookNumOfCurrentOrders > 0)
 		{
+			
+			//check if exist an active order with borrowArriveDate = null
+			
 			// means that the book orders queue is not empty
 			return orderQueueCheckOptions.OrdersQueueIsNotEmpty;
 		}
