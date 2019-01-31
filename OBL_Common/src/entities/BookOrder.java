@@ -17,6 +17,8 @@ public class BookOrder implements Serializable
 		OrdersQueueIsEmpty, OrdersQueueIsNotEmpty, SubscriberIsFirstInOrdersQueue, SubscriberIsNotFirstInOrdersQueue, Error;
 	}
 	
+	public BookOrder() {}
+	
 	public BookOrder(String id, String subscriberId, String orderDate, String status, String bookArriveDate,
 			String bookCatalogNumber) 
 	{

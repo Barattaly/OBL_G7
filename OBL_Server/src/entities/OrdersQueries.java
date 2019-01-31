@@ -87,4 +87,11 @@ public class OrdersQueries
 		return queryMsg;
 	}
 	
+	public static String getCurrentOrdersTable()
+	{
+		String queryMsg = "SELECT * FROM obl_db.orders" 
+						+ " WHERE status ='active';";
+		return queryMsg;
+	}
+	
 }

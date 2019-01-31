@@ -1383,7 +1383,6 @@ public class OBLServer extends AbstractServer
 			return null;
 		} else
 		{
-
 			ArrayList<ActivityLog> temp = BorrowsQueries.CreateBorrowExtensionListFromRS(rs);
 			return temp;
 		}

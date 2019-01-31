@@ -24,7 +24,7 @@ public class OblMessage  implements Serializable
 		this.recipientUserId = recipientUserId;
 	}
 
-	public OblMessage(String messageContent, String recipientUserType) 
+	public OblMessage(String messageContent, String recipientUserType)
 	{
 		this.messageContent = messageContent;
 		this.recipientUserType = recipientUserType;
