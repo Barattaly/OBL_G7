@@ -61,6 +61,7 @@ public class OBLServer extends AbstractServer
 
 	public TextArea logREF = null;
 	private MySQLConnection oblDB;
+	private final String pathToSavePDF = ".\\src\\resources\\tablesOfContent\\";
 
 	/**
 	 * Constructs an instance of the OBL server.
@@ -295,7 +296,7 @@ public class OBLServer extends AbstractServer
 		{
 			String query = UsersQueries.updateUserInformation(subscriberToUpdate);
 			oblDB.executeUpdate(query);
-			if(subscriberToUpdate.getStatus() == null)
+			if (subscriberToUpdate.getStatus() == null)
 			{
 				subscriberToUpdate.setStatus("active");
 			}
@@ -1513,26 +1514,34 @@ public class OBLServer extends AbstractServer
 	 * 
 	 * @throws SQLException
 	 */
-	private void sendPDFtoClient(Book catalogNumber, ConnectionToClient client) throws IOException, SQLException
+	private void sendPDFtoClient(Book book, ConnectionToClient client) throws IOException, SQLException
 	{
-		// doesnt open correctly when converted to JAR - NEED TO FIX.
+		String localPath = pathToSavePDF + book.getCatalogNumber() + ".pdf";
+		String jarPath = "resources\\tablesOfContent\\" + book.getCatalogNumber() + ".pdf";
+		File file;
+		byte[] mybytearray = null;
+		try
+		{
+			/*localPath = rs.getString(9);
+			if (localPath.charAt(0) == '.')
+			{
+				localPath = localPath.substring(2, localPath.length());
 
-		/*
-		 * String query = BooksQueries.searchBookByCatalogNumber(catalogNumber);
-		 * ResultSet rs = oblDB.executeQuery(query);
-		 * 
-		 * String localPath = ""; File file; byte[] mybytearray = null; try { rs.next();
-		 * localPath = rs.getString(9); if (localPath.charAt(0) == '.') { localPath =
-		 * localPath.substring(2, localPath.length());
-		 * 
-		 * } ClassLoader classLoader = getClass().getClassLoader(); String temp =
-		 * "resources\\tablesOfContent\\Table of content - Linear algebra.pdf"; file =
-		 * new File(classLoader.getResource(temp).toURI()); mybytearray =
-		 * Files.readAllBytes(file.toPath()); } catch (Exception e) {
-		 * client.sendToClient(new DBMessage(DBAction.ViewTableOfContent, null));
-		 * return; } DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent,
-		 * mybytearray); client.sendToClient(returnMsg);
-		 */
+			}
+			ClassLoader classLoader = getClass().getClassLoader();
+			String temp = "resources\\tablesOfContent\\Table of content - Linear algebra.pdf";
+			file = new File(classLoader.getResource(temp).toURI());*/
+			file = new File(localPath);
+			logREF.setText(localPath);
+
+			mybytearray = Files.readAllBytes(file.toPath());
+		} catch (Exception e)
+		{
+			client.sendToClient(new DBMessage(DBAction.ViewTableOfContent, null));
+			return;
+		}
+		DBMessage returnMsg = new DBMessage(DBAction.ViewTableOfContent, mybytearray);
+		client.sendToClient(returnMsg);
 
 	}
 
@@ -1661,17 +1670,7 @@ public class OBLServer extends AbstractServer
 			return;
 		}
 
-		String tocPath;
-		if (book.getTocArraybyte() != null && createFileFromByteArray(book.getTocArraybyte(), book.getName(), "pdf",
-				".\\src\\resources\\tablesOfContent\\"))
-		{
-			// path provided and the file created successfully
-			// There are 4 slashes - 2 for mysql and 2 for eclipse.
-			tocPath = ".\\\\src\\\\resources\\\\tablesOfContent\\\\" + book.getName() + ".pdf";
-		} else
-			tocPath = null;
-
-		book.setTableOfContenPath(tocPath);
+		book.setTableOfContenPath("");// we no longer put this in DB
 
 		query = BooksQueries.AddBook(book);
 		if (oblDB.executeUpdate(query) == 0)
@@ -1698,6 +1697,11 @@ public class OBLServer extends AbstractServer
 		{
 			returnMsg = new DBMessage(DBAction.AddBook, null);
 			client.sendToClient(returnMsg);
+		}
+		
+		if (book.getTocArraybyte() != null)
+		{
+			createFileFromByteArray(book.getTocArraybyte(), book.getCatalogNumber(), "pdf",	pathToSavePDF);
 		}
 
 		rowCount = 0;

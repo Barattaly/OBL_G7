@@ -375,8 +375,7 @@ public class BookInformationController implements IClientUI
 	@FXML
 	void viewTableOfContentClick(ActionEvent event)
 	{
-		Book bookToSend = new Book(catNumTextField.getText());
-		GuiManager.client.viewTableOfContent(bookToSend);
+		GuiManager.client.viewTableOfContent(bookToShow);
 	}
 
 	@FXML
