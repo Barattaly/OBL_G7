@@ -163,6 +163,7 @@ public class ServerScreenController implements Initializable
 	{
 		try
 		{
+			loadingSpinner.setVisible(true);
 			if(server != null)
 			{
 				
@@ -170,6 +171,7 @@ public class ServerScreenController implements Initializable
 				server.close();		
 			}
 			executer.shutDown();
+			loadingSpinner.setVisible(false);
 			
 		}
 		catch(Exception e)
