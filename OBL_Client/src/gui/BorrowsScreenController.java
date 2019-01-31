@@ -444,7 +444,7 @@ public class BorrowsScreenController implements IClientUI
 	@FXML
 	void refreshBtnClicked(MouseEvent event)
 	{
-		if(userLoggedIn instanceof Subscriber)
+		if(userLoggedIn.getType().equals("subscriber"))
 			GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
 		else
 			GuiManager.client.getAllCurrentBorrows();	
