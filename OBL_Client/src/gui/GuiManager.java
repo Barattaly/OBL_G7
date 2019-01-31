@@ -212,17 +212,18 @@ public class GuiManager
 	public static void preventLettersTypeInTextField(JFXTextField textField)
 	{
 		Platform.runLater(() -> {
-		});
-		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
-		{
-			@Override
-			public void handle(KeyEvent e)
+
+			textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 			{
-				if (!"0123456789".contains(e.getCharacter()))
+				@Override
+				public void handle(KeyEvent e)
 				{
-					e.consume();
+					if (!"0123456789".contains(e.getCharacter()))
+					{
+						e.consume();
+					}
 				}
-			}
+			});
 		});
 	}
 
@@ -235,17 +236,18 @@ public class GuiManager
 	public static void limitTextFieldMaxCharacters(JFXTextField textField, int maxLength)
 	{
 		Platform.runLater(() -> {
-		});
-		textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
-		{
-			@Override
-			public void handle(KeyEvent e)
+
+			textField.addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>()
 			{
-				if (textField.getText().length() >= maxLength)
+				@Override
+				public void handle(KeyEvent e)
 				{
-					e.consume();
+					if (textField.getText().length() >= maxLength)
+					{
+						e.consume();
+					}
 				}
-			}
+			});
 		});
 	}
 
