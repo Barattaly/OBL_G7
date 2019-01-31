@@ -18,7 +18,7 @@
             <AnchorPane fx:id="pane_viewSubscriberCard" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <AnchorPane fx:id="pane_searchBook" layoutX="9.0" prefHeight="664.0" prefWidth="877.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="0.0" />
             <AnchorPane fx:id="pane_books" layoutY="61.0" prefHeight="552.0" prefWidth="882.0" visible="false" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="61.0" />
-            <Pane fx:id="pane_home" layoutX="3.0" layoutY="1.0" prefHeight="664.0" prefWidth="881.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Pane fx:id="pane_home" layoutX="3.0" layoutY="1.0" prefHeight="664.0" prefWidth="881.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="370.0" layoutY="80.0" text="Home" textFill="#a0a2ab">
                      <font>
@@ -69,7 +69,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="statusLabel" layoutX="300.0" layoutY="637.0" prefHeight="18.0" prefWidth="230.0" text="Subscriber card status: " textFill="#a0a2ab">
+            <Label fx:id="statusLabel" layoutX="316.0" layoutY="638.0" prefHeight="18.0" prefWidth="230.0" text="Subscriber card status: " textFill="#a0a2ab">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
