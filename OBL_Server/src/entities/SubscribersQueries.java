@@ -118,16 +118,7 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 	
-	public static String updateSubscriberStatusToActive(Subscriber subscriberToUpdate)
-	{
-		if (subscriberToUpdate == null)
-			return null;
-		String queryMsg = "UPDATE obl_db.subscribers SET status= '" + subscriberToUpdate.getStatus()
-						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
-		return queryMsg;
-	}
-	
-	public static String updateSubscriberStatusToFrozen(Subscriber subscriberToUpdate)
+	public static String updateSubscriberStatus(Subscriber subscriberToUpdate)
 	{
 		if (subscriberToUpdate == null)
 			return null;
@@ -150,6 +141,15 @@ public class SubscribersQueries
 		String queryMsg = "SELECT status"
 				+" FROM obl_db.users INNER JOIN obl_db.subscribers ON  obl_db.users.id = obl_db.subscribers.subscriberID"
 				+" WHERE userName = '" + userName + "';";
+		return queryMsg;
+	}
+	
+	public static String updateSubscriberIsGraduatedStatus(Subscriber subscriberToUpdate)
+	{
+		if (subscriberToUpdate == null)
+			return null;
+		String queryMsg = "UPDATE obl_db.subscribers SET isGraduated= '" + subscriberToUpdate.getIsGraduatedStatus()
+						+ "' WHERE (subscriberID = '" + subscriberToUpdate.getId() + "');";
 		return queryMsg;
 	}
 }

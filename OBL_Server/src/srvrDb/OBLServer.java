@@ -718,31 +718,34 @@ public class OBLServer extends AbstractServer
 			borrowToClose.setSubscriberId(borrowFromBorrowsTable.getSubscriberId());
 			borrowToClose.setBorrowDate(borrowFromBorrowsTable.getBorrowDate());
 			borrowToClose.setExpectedReturnDate(borrowFromBorrowsTable.getExpectedReturnDate());
-			/*
-			 * if a subscriber is late at return, the server's daily check of late returns
-			 * will change his borrow "isLateReturn" status to "yes"
-			 */
+			/* if a subscriber is late at return, the server's daily check of late returns
+			 * will change his borrow "isLateReturn" status to "yes" */
 			borrowToClose.setIsReturnedLate(borrowFromBorrowsTable.getIsReturnedLate());
 			Subscriber subscriberToUpdate = new Subscriber(borrowToClose.getSubscriberId());
-
+			
 			query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
-			ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // get borrows table
+			ResultSet rsSubscriberIsGraduated = oblDB.executeQuery(query); // get subscriber isGraduated value
+			
+			query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
+			ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // get subscriber status
 			try
 			{
 				rsSubscriberStatus.next();
 				String subscriberStatus = rsSubscriberStatus.getString(1);
 				if (subscriberStatus.equals("frozen"))
 				{
-					/*
-					 * search in borrows table if the subscriber is late at return another book if
-					 * exist: subscriber status doesn't change, stay frozen
-					 */
+					
+					//graduation
+					
+					/* search in borrows table if the subscriber is late at return another book.
+					 * if exist: subscriber status doesn't change, stay frozen */
 					if (!isSubscriberLateAnotherReturn(borrowToClose))
 					{
 						subscriberToUpdate.setStatus("active");
-						query = SubscribersQueries.updateSubscriberStatusToActive(subscriberToUpdate);
+						query = SubscribersQueries.updateSubscriberStatus(subscriberToUpdate);
 						oblDB.executeUpdate(query); // update subscriber status to active
 					}
+					
 				}
 			} catch (Exception e)
 			{
