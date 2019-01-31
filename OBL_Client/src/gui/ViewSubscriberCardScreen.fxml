@@ -33,7 +33,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <TitledPane alignment="TOP_LEFT" animated="false" contentDisplay="TOP" focusTraversable="false" layoutX="330.0" layoutY="169.0" prefHeight="313.0" prefWidth="530.0" stylesheets="@../../bin/resources/titledpane.css" text="View activity log " textFill="#a0a2ab" wrapText="true">
+            <TitledPane alignment="TOP_LEFT" animated="false" contentDisplay="TOP" focusTraversable="false" layoutX="330.0" layoutY="169.0" prefHeight="313.0" prefWidth="530.0" stylesheets="@../resources/titledpane.css" text="View activity log " textFill="#a0a2ab" wrapText="true">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #3C58FA;">
                      <cursor>
