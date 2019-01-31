@@ -104,7 +104,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <JFXTextField fx:id="bookNameTextArea" layoutX="134.0" layoutY="147.0" prefHeight="25.0" prefWidth="257.0" promptText="Can not be an existing name" style="-fx-text-inner-color: #a0a2ab;">
+            <JFXTextField fx:id="bookNameTextArea" layoutX="134.0" layoutY="147.0" prefHeight="25.0" prefWidth="257.0" promptText="Can not be an existing book" style="-fx-text-inner-color: #a0a2ab;">
                <font>
                   <Font size="14.0" />
                </font></JFXTextField>

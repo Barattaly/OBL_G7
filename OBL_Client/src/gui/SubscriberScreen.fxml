@@ -12,71 +12,8 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="664.0" prefWidth="947.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberScreenController">
-   <left>
-      <AnchorPane prefHeight="611.0" prefWidth="116.0" style="-fx-background-color: #a0a2ab;" BorderPane.alignment="CENTER">
-         <children>
-            <Label layoutX="36.0" layoutY="83.0" text="OBL" textFill="#203447">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-            </Label>
-            <ImageView fx:id="btn_home" fitHeight="124.0" fitWidth="116.0" layoutY="120.0" onMouseClicked="#btn_homeDisplay" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/HomePage.JPG" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </ImageView>
-            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutY="230.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/My%20books.jpg" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </ImageView>
-            <ImageView fx:id="btn_viewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutY="340.0" onMouseClicked="#btn_viewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/ViewSubscriberCard.jpg" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </ImageView>
-            <ImageView fx:id="btn_searchBook" fitHeight="124.0" fitWidth="116.0" layoutY="450.0" onMouseClicked="#btn_searchBookDisplay" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/SearchBook.jpg" />
-               </image>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <effect>
-                  <DropShadow />
-               </effect>
-            </ImageView>
-            <ImageView fitHeight="78.0" fitWidth="116.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../resources/Logo.png" />
-               </image>
-            </ImageView>
-         </children>
-         <effect>
-            <DropShadow height="0.0" radius="0.0" width="0.0" />
-         </effect>
-      </AnchorPane>
-   </left>
    <center>
-      <AnchorPane fx:id="AnchorePane" prefHeight="664.0" prefWidth="865.0" style="-fx-background-color: #203447;">
+      <AnchorPane fx:id="AnchorePane" prefWidth="829.0" style="-fx-background-color: #203447;">
          <children>
             <AnchorPane fx:id="pane_searchBook" layoutX="9.0" prefHeight="664.0" prefWidth="877.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="0.0" />
             <AnchorPane fx:id="pane_viewSubscriberCard" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -140,4 +77,67 @@
          </children>
       </AnchorPane>
    </center>
+   <left>
+      <AnchorPane prefHeight="611.0" prefWidth="116.0" style="-fx-background-color: #a0a2ab;" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="36.0" layoutY="83.0" text="OBL" textFill="#203447">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="btn_home" fitHeight="124.0" fitWidth="116.0" layoutY="120.0" onMouseClicked="#btn_homeDisplay" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/HomePage.JPG" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="btn_books" fitHeight="124.0" fitWidth="116.0" layoutY="230.0" onMouseClicked="#btn_booksDisplay" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/My%20books.jpg" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="btn_viewSubscriberCard" fitHeight="124.0" fitWidth="116.0" layoutY="340.0" onMouseClicked="#btn_viewSubscriberCardDisplay" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/ViewSubscriberCard.jpg" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="btn_searchBook" fitHeight="124.0" fitWidth="116.0" layoutY="450.0" onMouseClicked="#btn_searchBookDisplay" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/SearchBook.jpg" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="78.0" fitWidth="116.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/Logo.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow height="0.0" radius="0.0" width="0.0" />
+         </effect>
+      </AnchorPane>
+   </left>
 </BorderPane>
