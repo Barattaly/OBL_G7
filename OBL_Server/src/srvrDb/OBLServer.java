@@ -727,9 +727,17 @@ public class OBLServer extends AbstractServer
 			borrowToClose.setIsReturnedLate(borrowFromBorrowsTable.getIsReturnedLate());
 			Subscriber subscriberToUpdate = new Subscriber(borrowToClose.getSubscriberId());
 			
-			query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
+			query = SubscribersQueries.getSubscriberIsGraduatedStatus(subscriberToUpdate);
 			ResultSet rsSubscriberIsGraduated = oblDB.executeQuery(query); // get subscriber isGraduated value
-			
+			try
+			{
+				rsSubscriberIsGraduated.next();
+				subscriberToUpdate.setIsGraduatedStatus(rsSubscriberIsGraduated.getString(1));
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 			query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
 			ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // get subscriber status
 			try
@@ -738,12 +746,22 @@ public class OBLServer extends AbstractServer
 				String subscriberStatus = rsSubscriberStatus.getString(1);
 				if (subscriberStatus.equals("frozen"))
 				{
-					
-					//graduation
-					
+					/* if the subscriber was graduated, and didn't return all of the borrowed books*/
+					if(subscriberToUpdate.getIsGraduatedStatus().equals("yes"))
+					{
+						/* search in borrows table if the subscriber have another book that wasn't returned.
+						 * if exist: subscriber status doesn't change, stay frozen */
+						if(!isAnotherBorrowExist(borrowToClose))
+						{
+							subscriberToUpdate.setStatus("locked");
+							query = SubscribersQueries.updateSubscriberStatus(subscriberToUpdate);
+							oblDB.executeUpdate(query); // update subscriber status to locked
+						}
+						
+					}					
 					/* search in borrows table if the subscriber is late at return another book.
 					 * if exist: subscriber status doesn't change, stay frozen */
-					if (!isSubscriberLateAnotherReturn(borrowToClose))
+					else if (!isSubscriberLateAnotherReturn(borrowToClose))
 					{
 						subscriberToUpdate.setStatus("active");
 						query = SubscribersQueries.updateSubscriberStatus(subscriberToUpdate);
@@ -751,7 +769,8 @@ public class OBLServer extends AbstractServer
 					}
 					
 				}
-			} catch (Exception e)
+			} 
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
@@ -1118,6 +1137,7 @@ public class OBLServer extends AbstractServer
 			return false;
 		}
 	}
+	
 
 	private boolean isSubscriberExist(Subscriber subscriberToCheck)
 	{
@@ -1183,15 +1203,13 @@ public class OBLServer extends AbstractServer
 
 	private orderQueueCheckOptions orderQueueCheckForNewBorrowExtesion(Book book)
 	{
-		String query = OrdersQueries.getBookCurrentOrders(book);// search by book catalog number
-		ResultSet rsBookCurrentOrders = oblDB.executeQuery(query);
-
-		int bookNumOfCurrentOrders = getRowCount(rsBookCurrentOrders);
+		String query = OrdersQueries.getBookCurrentOrdersForBookExtension(book);// search by book catalog number
+		ResultSet rsBookCurrentOrdersForBookExtension = oblDB.executeQuery(query);
+	
+		//check if exist an active order with borrowArriveDate = null			
+		int bookNumOfCurrentOrders = getRowCount(rsBookCurrentOrdersForBookExtension);
 		if (bookNumOfCurrentOrders > 0)
 		{
-			
-			//check if exist an active order with borrowArriveDate = null
-			
 			// means that the book orders queue is not empty
 			return orderQueueCheckOptions.OrdersQueueIsNotEmpty;
 		}
@@ -1250,8 +1268,8 @@ public class OBLServer extends AbstractServer
 				if (!rsSubscriberCurrentBorrowsTable.getString(1).equals(borrowToClose.getId()))
 				{
 					/*
-					 * if exist a borrow with "isReturnedLate" = "yes" below the borrow we want to
-					 * close, than he is steel late at return => status will remain frozen
+					 * if exist a borrow with "isReturnedLate" = "yes" except from the borrow we 
+					 * want to close, than he is steel late at return => status will remain frozen
 					 */
 					if (rsSubscriberCurrentBorrowsTable.getString(6).equals("yes"))
 					{
@@ -1913,4 +1931,40 @@ public class OBLServer extends AbstractServer
 	{
 		System.out.println(studentID);
 	}
+	
+	private boolean isAnotherBorrowExist(BorrowACopyOfBook borrowToClose)
+	{
+		Subscriber subscriberToUpdate = new Subscriber(borrowToClose.getSubscriberId());
+		String query = SubscribersQueries.getSubscriberCurrentBorrowsTable(subscriberToUpdate);
+		ResultSet rsSubscriberCurrentBorrowsTable = oblDB.executeQuery(query); // get subscriber's current borrows table
+		int rowCount = getRowCount(rsSubscriberCurrentBorrowsTable);
+		if (rowCount >= 2) 
+		{
+			return true;
+		}
+		return false;
+		/*try
+		{
+			while (rsSubscriberCurrentBorrowsTable.next())
+			{
+				// check all of the current borrows except the borrow we want to close
+				if (!rsSubscriberCurrentBorrowsTable.getString(1).equals(borrowToClose.getId()))
+				{
+					/* if exist a borrow with actualReturnDate = null except from the borrow we
+					 * want to close => status will remain frozen 
+					if (rsSubscriberCurrentBorrowsTable.getString(6).equals("yes"))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}*/
+	}
+
 }

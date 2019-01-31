@@ -30,10 +30,9 @@ public class AutomaticExecutors
 			return;
 		AutomaticExecutors.oblDB = oblDb;
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
-		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 15, TimeUnit.MINUTES);
-		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 15, TimeUnit.MINUTES);
-		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 15, TimeUnit.MINUTES);
-
+		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 1, TimeUnit.HOURS);
+		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 1, TimeUnit.HOURS);
+		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 1, TimeUnit.HOURS);
 	}
 	
 	/*checkAndUpdateLateReturns:
@@ -67,7 +66,7 @@ public class AutomaticExecutors
 				if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(expectedReturnDate))) 
 				{
 					lateReturnsCount++;
-					if (lateReturnsCount >= 3)
+					if (lateReturnsCount == 3)
 					{
 						for (Subscriber subscriberToCheck : subscribersLateReturnsAtListThreeTimes)
 						{
