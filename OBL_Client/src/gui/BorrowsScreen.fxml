@@ -48,7 +48,7 @@
       </JFXTextField>
       <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="705.0" layoutY="85.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../bin/resources/refresh.png" />
+            <Image url="@../resources/refresh.png" />
          </image>
          <cursor>
             <Cursor fx:constant="HAND" />

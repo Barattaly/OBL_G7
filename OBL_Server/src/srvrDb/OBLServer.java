@@ -1651,7 +1651,7 @@ public class OBLServer extends AbstractServer
 		ResultSet rs;
 		DBMessage returnMsg;
 
-		query = BooksQueries.SearchBookByName(book);
+		query = BooksQueries.SearchBookByNameAndEdition(book);
 		rs = oblDB.executeQuery(query);
 		rowCount = getRowCount(rs);
 		if (rowCount == 1)// book name already exist
@@ -1681,7 +1681,7 @@ public class OBLServer extends AbstractServer
 			return;
 		}
 
-		query = BooksQueries.GetCatalogNumberByName(book);
+		query = BooksQueries.GetCatalogNumberByNameAndEdition(book);
 		rs = oblDB.executeQuery(query);
 		rowCount = getRowCount(rs);
 		if (rowCount == 0)

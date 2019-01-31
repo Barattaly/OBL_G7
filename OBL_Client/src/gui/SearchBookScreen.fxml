@@ -128,7 +128,7 @@
                      </cursor></JFXButton>
                   <ImageView fx:id="refreshBtn" fitHeight="35.0" fitWidth="46.0" layoutX="702.0" layoutY="353.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" preserveRatio="true">
                      <image>
-                        <Image url="@../../bin/resources/refresh.png" />
+                        <Image url="@../resources/refresh.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -156,12 +156,12 @@
 										<Cursor fx:constant="HAND" />
 									</cursor>
 									<image>
-										<Image url="@../../bin/resources/backarrow.png" />
+										<Image url="@../resources/backarrow.png" />
 									</image>
 								</ImageView>
 								<ImageView fx:id="oblLogoImg" fitHeight="76.0" fitWidth="101.0" layoutX="641.0400085449219" layoutY="16.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="34.279991149902344" AnchorPane.topAnchor="16.0">
 									<image>
-										<Image url="@../../bin/resources/Logo.png" />
+										<Image url="@../resources/Logo.png" />
 									</image>
 								</ImageView>
 								<Label fx:id="oblLogoLabel" layoutX="665.0" layoutY="91.0" text="OBL" textFill="#a0a2ab" AnchorPane.rightAnchor="54.0" AnchorPane.topAnchor="91.0">
