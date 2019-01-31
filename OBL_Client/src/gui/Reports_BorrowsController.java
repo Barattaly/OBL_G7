@@ -122,7 +122,10 @@ public class Reports_BorrowsController
 				count++;
 			}
 		}
-		average = average / count;
+		if (count != 0)
+			average = average / count;
+		else
+			average = 0;
 		averageString = String.valueOf(average);
 		if (averageString.length() > 4)
 			averageString = averageString.substring(0, 4);
@@ -137,7 +140,10 @@ public class Reports_BorrowsController
 				count++;
 			}
 		}
-		average = average / count;
+		if (count != 0)
+			average = average / count;
+		else
+			average = 0;
 		averageString = String.valueOf(average);
 		if (averageString.length() > 4)
 			averageString = averageString.substring(0, 4);
@@ -238,16 +244,22 @@ public class Reports_BorrowsController
 	public static int[] calcHistogram(int[] data, int min, int max, int numBins)
 	{
 		final int[] result = new int[numBins];
-		final double binSize = (max - min) / numBins;
+		double binSize = 0;
+		if (numBins != 0)
+			binSize = (max - min) / numBins;
 
 		for (int d : data)
 		{
-			int bin = (int) ((d - min) / binSize);
+			int bin;
+			if(binSize ==0) bin =0;
+			else bin = (int) ((d - min) / binSize);
 			if (bin < 0)
 			{
-				/* this data is smaller than min */ } else if (bin >= numBins)
+				/* this data is smaller than min */ } 
+			else if (bin >= numBins)
 			{
-				/* this data point is bigger than max */ } else
+				/* this data point is bigger than max */ } 
+			else
 			{
 				result[bin] += 1;
 			}

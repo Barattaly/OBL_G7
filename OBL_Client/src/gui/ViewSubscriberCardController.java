@@ -78,9 +78,9 @@ public class ViewSubscriberCardController implements IClientUI
 
 	@FXML
 	private Label SuccessLabel;
-	
-    @FXML
-    private JFXTextField subscriberStatusField;
+
+	@FXML
+	private JFXTextField subscriberStatusField;
 
 	@FXML
 	private JFXToggleButton freezeSubscriberToggleButton;
@@ -137,11 +137,10 @@ public class ViewSubscriberCardController implements IClientUI
 			if (getUserLogedIn().getType().equals("library manager"))
 			{
 				freezeSubscriberToggleButton.setVisible(true);
-				if(subscriberToShow.getStatus().equals("locked"))
+				if (subscriberToShow.getStatus().equals("locked"))
 				{
 					freezeSubscriberToggleButton.setDisable(true);
-				}
-				else
+				} else
 					freezeSubscriberToggleButton.setDisable(false);
 			}
 		} else
@@ -228,18 +227,22 @@ public class ViewSubscriberCardController implements IClientUI
 
 			String status;
 			String oldStatus = subscriberToShow.getStatus();
-			if (!oldStatus.equals("locked"))
+			if (getUserLogedIn().getType().equals("library manager"))
 			{
-				if (freezeSubscriberToggleButton.isSelected())
+				if (!oldStatus.equals("locked"))
 				{
-					status = "frozen";
+					if (freezeSubscriberToggleButton.isSelected())
+					{
+						status = "frozen";
+					} else
+					{
+						status = "active";
+					}
 				} else
-				{
-					status = "active";
-				}
+					status = "locked";
 			}
 			else
-				status = "locked";
+				status = subscriberToShow.getStatus();
 			Subscriber subscriberToUpdate = new Subscriber(subscriberToShow.getId(), firstNameField.getText(),
 					lastNameField.getText(), phoneNumberField.getText(), emailField.getText(), status);
 			GuiManager.client.updateSubscriberDetails(subscriberToUpdate);
