@@ -274,7 +274,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			AnchorPane newLoadedPane = loader.load();
 			viewSubscriberCardController = loader.getController();
 			viewSubscriberCardController.setSubscriberToShow(subscriber);
-			// viewSubscriberCardController.setPopUpMode(false);
+			viewSubscriberCardController.setUserLogedIn(this.userLogedIn);
 			
 
 			pane_viewSubscriberCard.getChildren().add(newLoadedPane);
