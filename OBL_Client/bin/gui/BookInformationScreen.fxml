@@ -238,6 +238,14 @@
                   <ComboBox fx:id="copiesComboBox" layoutX="11.0" layoutY="94.0" prefHeight="27.0" prefWidth="103.0" />
                </children>
             </Pane>
+            <JFXButton fx:id="uploadFileBtn" layoutX="110.0" layoutY="620.0" onAction="#btnUploadTableOfcontentClick" prefHeight="30.0" prefWidth="139.0" style="-fx-background-color: #3C58FA;" text="Upload File" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXButton>
          </children>
       </AnchorPane>
    </bottom>

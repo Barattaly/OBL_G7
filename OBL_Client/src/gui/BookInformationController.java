@@ -19,7 +19,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.invoke.StringConcatFactory;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,6 +43,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class BookInformationController implements IClientUI
@@ -128,6 +132,8 @@ public class BookInformationController implements IClientUI
     private JFXButton remove_btn;
 
 	private List<String> copiesFromComboBox = new ArrayList<String>();
+	
+	private byte[] uploadedFileByteArray = null;
 
 	public void setBookInformation(Book book)
 	{
@@ -467,6 +473,9 @@ public class BookInformationController implements IClientUI
 					newBook.getCopies().remove(copiesArray.get(i));
 				}
 			}
+			newBook.setTocArraybyte(uploadedFileByteArray);
+			
+			
 			GuiManager.client.editBookDetails(newBook);
 			editDetailsBtn.setDisable(false);
 			bookNameTextArea.setEditable(false);
@@ -546,5 +555,40 @@ public class BookInformationController implements IClientUI
     {
     	return (Stage) editDetailsBtn.getScene().getWindow();
     }
+    
+	@FXML
+	void btnUploadTableOfcontentClick(ActionEvent event)
+	{
+		FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showOpenDialog((Stage) editDetailsBtn.getScene().getWindow());
+		// file.getName();
+		if (file != null)
+		{
+			try
+			{
+				if (!getFileExtension(file.getName()).equals("pdf"))
+					GuiManager.ShowErrorPopup("Error - file must be a pdf file");
+				else
+				{
+					uploadedFileByteArray = Files.readAllBytes(file.toPath());
+				}
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				uploadedFileByteArray = null;
+			}
+		}
+
+	}
+	
+	public static String getFileExtension(String fullName)
+	{
+		if (fullName == null)
+			return null;
+		String fileName = new File(fullName).getName();
+		int dotIndex = fileName.lastIndexOf('.');
+		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+	}
 }
 

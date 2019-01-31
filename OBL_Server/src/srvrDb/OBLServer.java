@@ -1926,6 +1926,11 @@ public class OBLServer extends AbstractServer
 			query = BooksQueries.AddCopy(book.getCatalogNumber());
 			oblDB.executeUpdate(query);
 		}
+		if (book.getTocArraybyte() != null)
+		{
+			createFileFromByteArray(book.getTocArraybyte(), book.getCatalogNumber(), "pdf",	pathToSavePDF);
+		}
+		
 		DBMessage returnMessage = new DBMessage(DBAction.EditBookDetails, book);
 		client.sendToClient(returnMessage);
 	}
