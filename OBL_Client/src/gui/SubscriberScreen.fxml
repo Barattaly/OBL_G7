@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="664.0" prefWidth="947.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberScreenController">
+<BorderPane prefHeight="664.0" prefWidth="1010.0" style="-fx-background-color: #203447;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SubscriberScreenController">
    <center>
-      <AnchorPane fx:id="AnchorePane" prefWidth="829.0" style="-fx-background-color: #203447;">
+      <AnchorPane fx:id="AnchorePane" style="-fx-background-color: #203447;">
          <children>
             <AnchorPane fx:id="pane_searchBook" layoutX="9.0" prefHeight="664.0" prefWidth="877.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="0.0" />
             <AnchorPane fx:id="pane_viewSubscriberCard" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
