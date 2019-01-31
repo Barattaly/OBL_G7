@@ -84,7 +84,7 @@ public class SubscribersQueries
 	{
 		
 		 String queryMsg ="UPDATE obl_db.subscribers" 
-			 		+ "\nSET phoneNumber='"+subscriberToUpdate.getPhoneNumber()+"'," +"emailAddress='"+subscriberToUpdate.getEmail()+"'" 
+			 		+ "\nSET phoneNumber='"+subscriberToUpdate.getPhoneNumber()+"'," +"emailAddress='"+subscriberToUpdate.getEmail()+"',status ='"+subscriberToUpdate.getStatus()+"'" 
 			 		+ "\nWHERE subscriberID='"+subscriberToUpdate.getId()+"';";
 		 		
 		return queryMsg;
