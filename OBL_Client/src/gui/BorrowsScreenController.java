@@ -177,9 +177,47 @@ public class BorrowsScreenController implements IClientUI
 		subscriberIDColumn.setCellValueFactory(new PropertyValueFactory<>("subscriberId"));
 		//updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
-		borrowsTable.setRowFactory(tv -> {
+		
+		
+		/*borrowsTable.setRowFactory(tv -> new TableRow<ObservableBorrow>() {
+		    @Override
+		    public void updateItem(ObservableBorrow item, boolean empty)
+		    {
+		        super.updateItem(item, empty) ;
+		        if (item == null) 
+		        {
+					setTextFill(Color.BLACK);
+		            setStyle("");
+		            return;
+		        }
+		        String expectedRetunDate = item.getReturnDate();
+		        if ((LocalDate.parse(getCurrentDateAsString()).isAfter(LocalDate.parse(expectedRetunDate)))) 
+				{
+					setText("-fx-text-fill: tomato;");
+					setStyle("-fx-font-weight: bold");
+				} 
+				else if ((LocalDate.parse(getCurrentDateAsString())
+						.isEqual(LocalDate.parse(expectedRetunDate))) // return day
+						|| (LocalDate.parse(getCurrentDateAsString()).plusDays(1))
+								.isEqual(LocalDate.parse(expectedRetunDate))) // one day before return date
+				{
+					setTextFill(Color.GREEN);
+					setStyle("-fx-font-weight: bold");
+				} 
+				else 
+				{
+					setTextFill(Color.BLACK);
+					setStyle("-fx-font-weight: lighter");
+				}
+		    }
+		});
+		*/
+		
+		borrowsTable.setRowFactory(tv -> 
+		{
 			TableRow<ObservableBorrow> row = new TableRow<>();
-			row.setOnMouseClicked(event -> {
+			row.setOnMouseClicked(event -> 
+			{
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
 					ObservableBorrow rowData = row.getItem();
@@ -257,9 +295,13 @@ public class BorrowsScreenController implements IClientUI
 					borrowExtensionDialog.setScene(borrowDialogScene);
 					borrowExtensionDialog.showAndWait();
 				}
+				
 			});
 			return row;
 		});
+		
+
+		
 		GuiManager.client.getAllCurrentBorrows();
 	}
 
@@ -357,6 +399,7 @@ public class BorrowsScreenController implements IClientUI
 		//updateReturnDatesColors(returnDateColumn);
 		observableBorrowsList = FXCollections.observableArrayList();
 		GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
+		
 	}
 
 	@Override
@@ -444,7 +487,7 @@ public class BorrowsScreenController implements IClientUI
 	@FXML
 	void refreshBtnClicked(MouseEvent event)
 	{
-		if(userLoggedIn instanceof Subscriber)
+		if(userLoggedIn.getType().equals("subscriber"))
 			GuiManager.client.getCurrentBorrowsForSubscriberID(userLoggedIn.getId());
 		else
 			GuiManager.client.getAllCurrentBorrows();	

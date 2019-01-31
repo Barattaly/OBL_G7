@@ -23,20 +23,24 @@ import entities.SubscribersQueries;
 public class AutomaticExecutors 
 {
 	private static MySQLConnection oblDB; 
+	ScheduledThreadPoolExecutor executor = null;
 	
 	public AutomaticExecutors(MySQLConnection oblDb)
 	{	
 		if(oblDb == null)
 			return;
 		AutomaticExecutors.oblDB = oblDb;
-		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+		executor = new ScheduledThreadPoolExecutor(1);
 		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 15, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 15, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 15, TimeUnit.MINUTES);
 
 	}
-	
-	/*checkAndUpdateLateReturns:
+	public void shutDown()
+	{
+		executor.shutdown();
+	}
+	/**checkAndUpdateLateReturns:
 	 * This method suppose to run automatically every 24 hours. If subscriber is
 	 * late at return a copy of a book, his status will change to "frozen", and the
 	 * borrow "isReturnedLate" flag will change to "yes".
@@ -204,7 +208,7 @@ public class AutomaticExecutors
 				subscriberToInform.setEmail(rsSubscriberDetails.getString(7));
 			} catch (Exception e)
 			{
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			String emailSubject = "Reminder: One day before return day";
 			String emailMessage = "Dear " + fullName + ",\n"
@@ -219,7 +223,7 @@ public class AutomaticExecutors
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			i++;
 		}
