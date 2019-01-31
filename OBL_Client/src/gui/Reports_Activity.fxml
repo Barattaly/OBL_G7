@@ -115,7 +115,7 @@
       </Label>
       <ImageView fitHeight="78.0" fitWidth="116.0" layoutX="10.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../bin/resources/Logo.png" />
+            <Image url="@../resources/Logo.png" />
          </image>
       </ImageView>
       <JFXButton fx:id="saveBtn" alignment="CENTER" buttonType="RAISED" focusTraversable="false" layoutX="531.0" layoutY="366.0" onAction="#saveReportClicked" prefHeight="37.0" prefWidth="71.0" style="-fx-background-color: #3C58FA;" text="Save" textFill="WHITE">

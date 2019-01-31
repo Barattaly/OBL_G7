@@ -360,7 +360,7 @@ public class SearchBookController implements Initializable, IClientUI
 		{
 			Platform.runLater(() -> {
 				if(((DBMessage)msg).Data == null)
-					GuiManager.ShowErrorPopup("Book was not added.\nPlease check the inforamtion you enterd (unique book name, correct year etc...)");
+					GuiManager.ShowErrorPopup("Book was not added.\nPlease check the inforamtion you enterd (unique book name and edition , correct year etc...)");
 				else
 				{
 					GuiManager.client.getAllBooks();// fill in the table of books from the updated DB book list

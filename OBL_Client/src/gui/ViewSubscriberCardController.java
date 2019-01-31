@@ -241,6 +241,7 @@ public class ViewSubscriberCardController implements IClientUI
 			ObservableActivityLog temp = new ObservableActivityLog(activity.getActivity(), activity.getBookname(),
 					activity.getDate(), activity.getComments());
 			activitylist.add(temp);
+			activityTable.getSortOrder().add(datecol);
 			activityTable.setItems(activitylist);
 		}
 	}
