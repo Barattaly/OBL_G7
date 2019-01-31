@@ -80,13 +80,17 @@ public class ViewSubscriberCardController implements IClientUI
 	private Label SuccessLabel;
 	
     @FXML
-    private JFXToggleButton freezeSubscriberToggleButton;
+    private JFXTextField subscriberStatusField;
+
+	@FXML
+	private JFXToggleButton freezeSubscriberToggleButton;
 
 	private User userLogged;
 
 	public void setSubscriberToShow(Subscriber sub)
 	{
 		subscriberToShow = sub;
+		subscriberStatusField.setText(subscriberToShow.getStatus());
 		subscriberNumberField.setText(subscriberToShow.getSubscriberNumber());
 		userNameField.setText(subscriberToShow.getUserName());
 		idNumberField.setText(subscriberToShow.getId());
@@ -95,19 +99,17 @@ public class ViewSubscriberCardController implements IClientUI
 		phoneNumberField.setText(subscriberToShow.getPhoneNumber());
 		emailField.setText(subscriberToShow.getEmail());
 		GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
-		if(sub.getStatus().equals("frozen"))
+		if (sub.getStatus().equals("frozen"))
 		{
 			freezeSubscriberToggleButton.setSelected(true);
-		}
-		else
+		} else
 			freezeSubscriberToggleButton.setSelected(false);
-		
+
 	}
 
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
-
 
 	}
 
@@ -130,14 +132,19 @@ public class ViewSubscriberCardController implements IClientUI
 		btn_Edit.setVisible(false);
 		btn_Cancel.setVisible(true);
 		btn_Save.setVisible(true);
-		if(getUserLogedIn() != null)
+		if (getUserLogedIn() != null)
 		{
-			if(getUserLogedIn().getType().equals("library manager"))
+			if (getUserLogedIn().getType().equals("library manager"))
 			{
 				freezeSubscriberToggleButton.setVisible(true);
+				if(subscriberToShow.getStatus().equals("locked"))
+				{
+					freezeSubscriberToggleButton.setDisable(true);
+				}
+				else
+					freezeSubscriberToggleButton.setDisable(false);
 			}
-		}
-		else
+		} else
 		{
 			freezeSubscriberToggleButton.setVisible(false);
 		}
@@ -156,9 +163,9 @@ public class ViewSubscriberCardController implements IClientUI
 	@FXML
 	void btn_CancelClick(ActionEvent event)
 	{
-		//GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
-		//GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
-		
+		// GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
+		// GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
+
 		setSubscriberToShow(subscriberToShow);
 
 		btn_Edit.setVisible(true);
@@ -177,7 +184,7 @@ public class ViewSubscriberCardController implements IClientUI
 
 		SuccessLabel.setVisible(false);
 		warningLabel.setVisible(false);
-		
+
 		freezeSubscriberToggleButton.setVisible(false);
 	}
 
@@ -227,20 +234,20 @@ public class ViewSubscriberCardController implements IClientUI
 
 			String status;
 			String oldStatus = subscriberToShow.getStatus();
-			if(freezeSubscriberToggleButton.isSelected())
+			if (!oldStatus.equals("locked"))
 			{
-				status = "frozen";
+				if (freezeSubscriberToggleButton.isSelected())
+				{
+					status = "frozen";
+				} else
+				{
+					status = "active";
+				}
 			}
 			else
-			{
-				if(oldStatus.equals("locked"))
-					status = "locked";
-				else
-					status = "active";
-			}
+				status = "locked";
 			Subscriber subscriberToUpdate = new Subscriber(subscriberToShow.getId(), firstNameField.getText(),
-					lastNameField.getText(), phoneNumberField.getText(), emailField.getText(),
-					status);
+					lastNameField.getText(), phoneNumberField.getText(), emailField.getText(), status);
 			GuiManager.client.updateSubscriberDetails(subscriberToUpdate);
 			subscriberToUpdate.setUserName(subscriberToShow.getUserName());
 			String name = subscriberToUpdate.getFirstName().substring(0, 1).toUpperCase()

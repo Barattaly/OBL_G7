@@ -74,74 +74,85 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label text="Subcriber number: " textFill="#a0a2ab">
+                  <Label text="Subcriber number: " textFill="#a0a2ab" GridPane.rowIndex="1">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="User name: " textFill="#a0a2ab" GridPane.rowIndex="1">
+                  <Label text="User name: " textFill="#a0a2ab" GridPane.rowIndex="2">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="ID number: " textFill="#a0a2ab" GridPane.rowIndex="2">
+                  <Label text="ID number: " textFill="#a0a2ab" GridPane.rowIndex="3">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="First name:" textFill="#a0a2ab" GridPane.rowIndex="3">
+                  <Label text="First name:" textFill="#a0a2ab" GridPane.rowIndex="4">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Last name:" textFill="#a0a2ab" GridPane.rowIndex="4">
+                  <Label text="Last name:" textFill="#a0a2ab" GridPane.rowIndex="5">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Phone number:" textFill="#a0a2ab" GridPane.rowIndex="5">
+                  <Label text="Phone number:" textFill="#a0a2ab" GridPane.rowIndex="6">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label text="Email:" textFill="#a0a2ab" GridPane.rowIndex="6">
+                  <Label text="Email:" textFill="#a0a2ab" GridPane.rowIndex="7">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXTextField fx:id="subscriberNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1">
+                  <JFXTextField fx:id="subscriberNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </JFXTextField>
-                  <JFXTextField fx:id="userNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <JFXTextField fx:id="userNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </JFXTextField>
-                  <JFXTextField fx:id="idNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <JFXTextField fx:id="idNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </JFXTextField>
-                  <JFXTextField fx:id="firstNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <JFXTextField fx:id="firstNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </JFXTextField>
-                  <JFXTextField fx:id="lastNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <JFXTextField fx:id="lastNameField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </JFXTextField>
-                  <JFXTextField fx:id="phoneNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <JFXTextField fx:id="phoneNumberField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </JFXTextField>
-                  <JFXTextField fx:id="emailField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <JFXTextField fx:id="emailField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </JFXTextField>
+                  <Label text="Subcriber status:" textFill="#a0a2ab">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <JFXTextField fx:id="subscriberStatusField" editable="false" focusColor="#a0a2ab" style="-fx-text-inner-color: #a0a2ab;" GridPane.columnIndex="1">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
