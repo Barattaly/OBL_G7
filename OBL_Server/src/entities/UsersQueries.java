@@ -1,6 +1,9 @@
 package entities;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsersQueries
 {
@@ -71,6 +74,34 @@ public class UsersQueries
 		return queryMsg;
 		
 		
+	}
+
+	public static String getMessagesForUser(User user)
+	{
+		String queryMsg ="SELECT * FROM obl_db.messages WHERE (recipientUserType ='"+user.getType()+"' AND recipientUserId IS NULL ) "
+				+ "OR recipientUserId ='"+user.getId()+"'";
+		return queryMsg;
+	}
+
+	public static List<String> createMessagesLisrFromRS(ResultSet rs)
+	{
+		List<String> messages = new ArrayList<String>();
+		try
+		{
+		while(rs.next())
+		{
+			String msg = rs.getString(2);
+			msg +="!@#";//unique symbol for seperation string in client
+			msg +=rs.getString(3);
+			messages.add(msg);
+		}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			messages = new ArrayList<String>();
+		}
+		return messages;
 	}
 
 }
