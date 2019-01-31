@@ -1972,14 +1972,12 @@ public class OBLServer extends AbstractServer
 			subscriber.setStatus("locked");
 			query=SubscribersQueries.updateSubscriberStatus(subscriber);
 			oblDB.executeUpdate(query);
-			//need to add here update graduation to 'yes'
 		}
 		else if (rowCount>0) //in case there are current borrows so the subscriber can't be locked
 		{
 			subscriber.setStatus("frozen");
 			query=SubscribersQueries.updateSubscriberStatus(subscriber);
 			oblDB.executeUpdate(query);
-			//need to add here update graduation to 'yes'
 		}
 		subscriber.setIsGraduatedStatus("yes");
 		query=SubscribersQueries.updateSubscriberIsGraduatedStatus(subscriber);
