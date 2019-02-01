@@ -38,6 +38,7 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import com.sun.mail.imap.CopyUID;
 
+import client.IClientUI;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
@@ -138,6 +139,9 @@ public class BookInformationController implements IClientUI
     @FXML
     private JFXButton uploadFileBtn;
     
+    @FXML
+    private JFXButton cancelOrderBookBtn;
+
 
 	public void setBookInformation(Book book)
 	{
@@ -154,6 +158,7 @@ public class BookInformationController implements IClientUI
 		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
 		GuiManager.limitTextFieldMaxCharacters(locationTextField, 6);
 		catNumTextField.setText(book.getCatalogNumber());
+		cancelOrderBookBtn.setVisible(false);
 		boolean isOrderExist = false;
 		if (book.getClassification().equals("wanted"))
 		{
@@ -166,14 +171,43 @@ public class BookInformationController implements IClientUI
 		}
 		if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
 		{
-			availableLabel.setText("Available for borrow");
-			availableLabel.setTextFill(Color.web("#12d318"));
-			orderBookBtn.setDisable(true);
-			returnDateLabel.setVisible(false);
-			returnDateTextField.setVisible(false);
-			uploadFileBtn.setVisible(false);
-			viewTOC_btn.setVisible(true);
-		} else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
+			/* if the subscriber is currently order the book, and the book arrived to the library, (available for borrow) 
+			 * than we need to show the location in orders queue, and able the cancel order option*/
+			if (subscriberLoggedIn != null)
+			{
+				int i = 1, positionInQueue = 0;
+				for (BookOrder order : book.getOrders())
+				{
+					// check if the subscriber already ordered this book
+					if (order.getSubscriberId().equals(subscriberLoggedIn.getId()))
+					{
+						isOrderExist = true;
+						positionInQueue = i;
+					}
+					i++;
+				}
+				if (isOrderExist)
+				{
+					availableLabel.setText("Your position in orders queue: " + positionInQueue);
+					availableLabel.setTextFill(Color.web("#12d318"));
+					orderBookBtn.setVisible(false);
+					cancelOrderBookBtn.setVisible(true);
+					returnDateLabel.setVisible(false);
+					returnDateTextField.setVisible(false);
+				}
+			}
+			else
+			{
+				availableLabel.setText("Available for borrow");
+				availableLabel.setTextFill(Color.web("#12d318"));
+				orderBookBtn.setDisable(true);
+				returnDateLabel.setVisible(false);
+				returnDateTextField.setVisible(false);
+				uploadFileBtn.setVisible(false);
+				viewTOC_btn.setVisible(true);
+			}
+		} 
+		else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 		{
 			availableLabel.setText("Not available for borrow"); // means that the book is available for order
 			availableLabel.setTextFill(Color.RED);
@@ -214,10 +248,9 @@ public class BookInformationController implements IClientUI
 						orderBookBtn.setDisable(true);
 					}
 				}
-				/*
-				 * if the subscriber is currently order the book, than we need to show the
-				 * location in orders queue
-				 */
+				/* if the subscriber is currently order the book, and the book did not 
+				 * arrived to the library yet (not available for borrow),
+				 * than we need to show the location in orders queue, and able the cancel order option*/
 				int i = 1, positionInQueue = 0;
 				for (BookOrder order : book.getOrders())
 				{
@@ -233,7 +266,8 @@ public class BookInformationController implements IClientUI
 				{
 					availableLabel.setText("Your position in orders queue: " + positionInQueue);
 					availableLabel.setTextFill(Color.web("#12d318"));
-					orderBookBtn.setDisable(true);
+					orderBookBtn.setVisible(false);
+					cancelOrderBookBtn.setVisible(true);
 				}
 			}
 			// check what is the closest expected return date
@@ -281,6 +315,18 @@ public class BookInformationController implements IClientUI
 
 		GuiManager.client.createNewOrder(newOrder);
 	}
+	
+	@FXML
+	void btn_cancelOrderClick(ActionEvent event)
+	{
+
+	}
+	
+	@FXML
+    void reportLostCopiesClick(ActionEvent event)
+	{
+
+    }
 
 	@Override
 	public void getMessageFromServer(DBMessage msg)
@@ -322,6 +368,7 @@ public class BookInformationController implements IClientUI
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
+			uploadFileBtn.setVisible(false);
 		}
 		switch (userLoggedIn.getType())
 		{
@@ -330,24 +377,28 @@ public class BookInformationController implements IClientUI
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
 			copiesTitlePane.setVisible(false);
+			uploadFileBtn.setVisible(false);
 			break;
 		case "library manager":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(true);
 			editDetailsBtn.setVisible(true);
 			copiesTitlePane.setVisible(true);
+			uploadFileBtn.setVisible(false);
 			break;
 		case "librarian":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(true);
 			editDetailsBtn.setVisible(true);
 			copiesTitlePane.setVisible(true);
+			uploadFileBtn.setVisible(false);
 			break;
 		case "guest":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
 			copiesTitlePane.setVisible(false);
+			uploadFileBtn.setVisible(false);
 			break;
 		}
 
@@ -469,18 +520,26 @@ public class BookInformationController implements IClientUI
 			int maxCopies=copiesSpinner.getValue(); //taking the copies that added by the spinner
 			newBook.setMaxCopies(maxCopies); 
 			// copies
-			newBook.setCopies(bookToShow.getCopies());
+			//newBook.setCopies(bookToShow.getCopies());
+			newBook.setCopies(new ArrayList<>());
+			for(CopyOfBook copy:bookToShow.getCopies())
+			{
+				if ((copiesFromComboBox.contains(copy.getId())))
+				{
+					newBook.getCopies().add(copy);
+				}
+			}
 			
-			
-			ArrayList<CopyOfBook> copiesArray =newBook.getCopies();
-			
-			for (int i =0 ; i < copiesArray.size() ; i++)
+			/*List<CopyOfBook> copiesArray = newBook.getCopies();
+			int sizeOfOriginalCopies = copiesArray.size();
+			copiesFromComboBox.remove("copy ID");
+			for (int i =0 ; i < sizeOfOriginalCopies ; i++)
 			{
 				if (!(copiesFromComboBox.contains(copiesArray.get(i).getId())))
 				{
 					newBook.getCopies().remove(copiesArray.get(i));
 				}
-			}
+			}*/
 			newBook.setTocArraybyte(uploadedFileByteArray);
 			
 			
@@ -508,6 +567,7 @@ public class BookInformationController implements IClientUI
 	{
 		onEditShowPane.setVisible(false);
 		editDetailsBtn.setDisable(false);
+		uploadFileBtn.setVisible(false);
 		setBookInformation(bookToShow);
 	}
 
@@ -523,9 +583,10 @@ public class BookInformationController implements IClientUI
     @FXML
     void removeCopiesClick(ActionEvent event) 
     {
-    	if(copiesComboBox.getSelectionModel().getSelectedItem()=="copy ID")
+    	if(copiesComboBox.getSelectionModel().getSelectedItem().equals("copy ID"))
     	{
-    		GuiManager.ShowErrorPopup("Please choose one copy ");
+    		GuiManager.ShowErrorPopup("Please choose a copy");
+    		return;
     	}
     	int size= copiesComboBox.getItems().size();
     	if(size==2)
@@ -535,24 +596,24 @@ public class BookInformationController implements IClientUI
     		return;
     	}
  
-    	String copyID=copiesComboBox.getSelectionModel().getSelectedItem();
+    	String copyID = copiesComboBox.getSelectionModel().getSelectedItem();
     	ArrayList<CopyOfBook> copyToCheck= bookToShow.getCopies();
-    	for(CopyOfBook c: copyToCheck )
+    	for(CopyOfBook copy: copyToCheck )
     	{
-    		String id=c.getId();
+    		String id=copy.getId();
     		if(id.equals(copyID))
     		{
-    			String status=c.getStatus();
+    			String status=copy.getStatus();
     			if(status.equals("unavailable"))
     			{
-    				GuiManager.ShowErrorPopup("This copy cannot be deleted!");
+    				GuiManager.ShowErrorPopup("This copy is currently borrowed");
     				copiesComboBox.getSelectionModel().selectFirst();
     			}
     			
     			else
     			{
     				copiesComboBox.getItems().remove(copiesComboBox.getSelectionModel().getSelectedItem());
-    				copiesFromComboBox.remove(c.getId());
+    				copiesFromComboBox.remove(copy.getId());
     				copiesComboBox.getSelectionModel().clearSelection();
     				copiesComboBox.getSelectionModel().selectFirst();
     			}

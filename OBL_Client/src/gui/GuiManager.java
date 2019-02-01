@@ -1,6 +1,5 @@
 package gui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -12,8 +11,8 @@ import javax.mail.internet.InternetAddress;
 import com.jfoenix.controls.JFXTextField;
 
 import client.ClientController;
+import client.IClientUI;
 import entities.ActivityLog;
-import entities.Book;
 import entities.DBMessage;
 import entities.User;
 import entities.DBMessage.DBAction;
@@ -24,11 +23,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -36,12 +33,18 @@ import javafx.stage.Stage;
  * communication with the server (aka "ClientController") and the GUI (all of
  * the FXML controllers).
  * 
- * @author eyalv
  *
  */
 public class GuiManager
 {
+	/**
+	 * our singleton of the client instance.
+	 *
+	 */
 	public static ClientController client;
+	/**
+	 * Will be updated in order to now what screen is shown for the user.
+	 */
 	public static IClientUI CurrentGuiController;
 	public static boolean dbConnected = false;
 	public static ViewSubscriberCardController subscriberCardController = null;
@@ -138,7 +141,7 @@ public class GuiManager
 	}
 
 	/**
-	 * create the client singletone type. initial server communication
+	 * create the client singleton type. initial server communication
 	 * 
 	 * @param fxmlPath
 	 * @param primaryStage
@@ -255,13 +258,12 @@ public class GuiManager
 	 * 
 	 * @param newSub
 	 */
-	public static void openSubscriberCard(Subscriber newSub,User user)
+	public static void openSubscriberCard(Subscriber newSub, User user)
 	{
 		try
 		{
 			Stage SeondStage = new Stage();
-			FXMLLoader loader = new FXMLLoader(
-					GuiManager.class.getResource("/gui/ViewSubscriberCardScreen.fxml"));
+			FXMLLoader loader = new FXMLLoader(GuiManager.class.getResource("/gui/ViewSubscriberCardScreen.fxml"));
 			Parent root = loader.load();
 			subscriberCardController = loader.getController();
 			if (subscriberCardController != null)

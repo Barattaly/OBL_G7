@@ -1,9 +1,13 @@
-package entities;
+package entitiesQueries;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
+import entities.ActivityLog;
+import entities.Book;
+import entities.BookOrder;
 
 public class OrdersQueries 
 {

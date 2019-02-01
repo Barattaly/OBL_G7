@@ -1,4 +1,4 @@
-package entities;
+package entitiesQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import entities.ActivityLog;
+import entities.Book;
+import entities.BorrowACopyOfBook;
 
 public class BorrowsQueries
 {

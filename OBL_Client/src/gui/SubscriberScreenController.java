@@ -12,7 +12,11 @@ import javax.mail.internet.InternetAddress;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 
-import entities.*;
+import client.IClientUI;
+import entities.ActivityLog;
+import entities.DBMessage;
+import entities.Subscriber;
+import entities.User;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -30,6 +34,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import observableEntities.*;
 
 public class SubscriberScreenController implements Initializable, IClientUI
 {

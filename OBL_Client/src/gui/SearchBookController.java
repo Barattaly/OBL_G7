@@ -7,7 +7,11 @@ import java.util.concurrent.TimeUnit;
 
 import com.jfoenix.controls.JFXTextField;
 
-import entities.*;
+import client.IClientUI;
+import entities.Book;
+import entities.DBMessage;
+import entities.Subscriber;
+import entities.User;
 import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
@@ -37,6 +41,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import observableEntities.*;
 
 public class SearchBookController implements Initializable, IClientUI
 {

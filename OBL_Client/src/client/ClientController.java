@@ -22,6 +22,7 @@ import gui.GuiManager;
 import javafx.application.Platform;
 
 /**
+ * This is the controller between the server and the client. Every request from client UI to server will be sent through this. And backwords.
  * This class is a singletone class. You can only create one instance of this
  * class using - "createClientIfNotExist".
  */
@@ -83,19 +84,6 @@ public class ClientController extends AbstractClient
 		}
 	}
 
-	/*
-	 * from prototype:
-	 * 
-	 * public void updateStudentListFromDB(ObservableList<Student> studentList) {
-	 * String message = "SELECT * FROM Students";
-	 * //handleMessageFromClientUI(message); } public void
-	 * updateStudentStatus(Student studentToBeUpdated, String newStatus) {
-	 * if(studentToBeUpdated == null || newStatus.isEmpty()) return; String message
-	 * = "UPDATE Students SET StatusMembership='"+newStatus+"' WHERE StudentID="
-	 * +studentToBeUpdated.getStudentID();
-	 * 
-	 * //handleMessageFromClientUI(message); }
-	 */
 	/**
 	 * This method terminates the client.
 	 */

@@ -1,4 +1,4 @@
-package entities;
+package observableEntities;
 
 import javafx.beans.property.SimpleStringProperty;
 

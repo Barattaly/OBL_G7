@@ -1,4 +1,4 @@
-package srvrDb;
+package application;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -10,15 +10,21 @@ import java.util.concurrent.TimeUnit;
 
 import entities.Book;
 import entities.BookOrder;
-import entities.BooksQueries;
 import entities.BorrowACopyOfBook;
-import entities.BorrowsQueries;
 import entities.OblMessage;
-import entities.OblMessagesQueries;
-import entities.OrdersQueries;
-import entities.SendEmail;
 import entities.Subscriber;
-import entities.SubscribersQueries;
+import entitiesQueries.BooksQueries;
+import entitiesQueries.BorrowsQueries;
+import entitiesQueries.OblMessagesQueries;
+import entitiesQueries.OrdersQueries;
+import entitiesQueries.SendEmail;
+import entitiesQueries.SubscribersQueries;
+
+/**
+ * All of our automatic function will be here.
+ * Make sure you call shutDown() when exiting the program unless you want a background executers.  
+ *
+ */
 
 public class AutomaticExecutors 
 {
