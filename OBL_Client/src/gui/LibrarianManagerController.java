@@ -526,4 +526,11 @@ public class LibrarianManagerController extends LibrarianScreenController
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	protected void setMessages()
+	{
+		for (String msg : getUserLogedIn().getMessages())
+			System.out.println(msg);
+	}
 }

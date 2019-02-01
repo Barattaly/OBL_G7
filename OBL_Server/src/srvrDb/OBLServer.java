@@ -466,6 +466,9 @@ public class OBLServer extends AbstractServer
 				user.setLoginStatus("on");
 				query = UsersQueries.updateUserloginStatus(user);
 				oblDB.executeUpdate(query);
+				query = UsersQueries.getMessagesForUser(user);
+				List<String> messages = UsersQueries.createMessagesLisrFromRS(oblDB.executeQuery(query));
+				user.setMessages(messages);
 				returnMsg = new DBMessage(DBAction.CheckUser, user);
 			}
 			client.sendToClient(returnMsg);

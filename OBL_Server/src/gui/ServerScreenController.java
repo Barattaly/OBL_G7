@@ -170,8 +170,10 @@ public class ServerScreenController implements Initializable
 				if(server.isListening())server.stopListening();
 				server.close();		
 			}
+
 			if(executer != null)
 				executer.shutDown();
+
 			loadingSpinner.setVisible(false);
 			
 		}

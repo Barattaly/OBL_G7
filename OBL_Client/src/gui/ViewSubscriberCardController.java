@@ -78,9 +78,9 @@ public class ViewSubscriberCardController implements IClientUI
 
 	@FXML
 	private Label SuccessLabel;
-	
-    @FXML
-    private JFXTextField subscriberStatusField;
+
+	@FXML
+	private JFXTextField subscriberStatusField;
 
 	@FXML
 	private JFXToggleButton freezeSubscriberToggleButton;
@@ -137,11 +137,10 @@ public class ViewSubscriberCardController implements IClientUI
 			if (getUserLogedIn().getType().equals("library manager"))
 			{
 				freezeSubscriberToggleButton.setVisible(true);
-				if(subscriberToShow.getStatus().equals("locked"))
+				if (subscriberToShow.getStatus().equals("locked"))
 				{
 					freezeSubscriberToggleButton.setDisable(true);
-				}
-				else
+				} else
 					freezeSubscriberToggleButton.setDisable(false);
 			}
 		} else
@@ -201,21 +200,15 @@ public class ViewSubscriberCardController implements IClientUI
 			SuccessLabel.setVisible(false);
 			warningLabel.setVisible(true);
 			warningLabel.setText("Enter last name please");
-		} else if (phoneNumberField.getText().isEmpty())
+		} else if (!emailField.getText().isEmpty())
 		{
-			SuccessLabel.setVisible(false);
-			warningLabel.setVisible(true);
-			warningLabel.setText("Enter phone number please");
-		} else if (emailField.getText().isEmpty())
-		{
-			SuccessLabel.setVisible(false);
-			warningLabel.setVisible(true);
-			warningLabel.setText("Enter Email please");
-		} else if (!GuiManager.isValidEmailAddress(emailField.getText()))
-		{
-			SuccessLabel.setVisible(false);
-			warningLabel.setVisible(true);
-			warningLabel.setText("The Email is incorrect");
+			if (!GuiManager.isValidEmailAddress(emailField.getText()))
+			{
+				SuccessLabel.setVisible(false);
+				warningLabel.setVisible(true);
+				warningLabel.setText("The Email is incorrect");
+			}
+
 		} else
 		{
 			btn_Edit.setVisible(true);
@@ -234,18 +227,22 @@ public class ViewSubscriberCardController implements IClientUI
 
 			String status;
 			String oldStatus = subscriberToShow.getStatus();
-			if (!oldStatus.equals("locked"))
+			if (getUserLogedIn().getType().equals("library manager"))
 			{
-				if (freezeSubscriberToggleButton.isSelected())
+				if (!oldStatus.equals("locked"))
 				{
-					status = "frozen";
+					if (freezeSubscriberToggleButton.isSelected())
+					{
+						status = "frozen";
+					} else
+					{
+						status = "active";
+					}
 				} else
-				{
-					status = "active";
-				}
+					status = "locked";
 			}
 			else
-				status = "locked";
+				status = subscriberToShow.getStatus();
 			Subscriber subscriberToUpdate = new Subscriber(subscriberToShow.getId(), firstNameField.getText(),
 					lastNameField.getText(), phoneNumberField.getText(), emailField.getText(), status);
 			GuiManager.client.updateSubscriberDetails(subscriberToUpdate);

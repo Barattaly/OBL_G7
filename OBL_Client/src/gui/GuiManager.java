@@ -72,7 +72,6 @@ public class GuiManager
 			put(SCREENS.bookInformation, "/gui/BookInformationScreen.fxml");
 			put(SCREENS.subscriber, "/gui/SubscriberScreen.fxml");
 			put(SCREENS.librarianManager, "/gui/LibrarianManagerScreen.fxml");
-			put(SCREENS.viewSubscriberCard, "/gui/viewSubscriberCardScreen.fxml");
 			put(SCREENS.addNewBook, "/gui/AddNewBookScreen.fxml");
 
 		}
@@ -262,7 +261,7 @@ public class GuiManager
 		{
 			Stage SeondStage = new Stage();
 			FXMLLoader loader = new FXMLLoader(
-					GuiManager.class.getResource(availableFXML.get(SCREENS.viewSubscriberCard)));
+					GuiManager.class.getResource("/gui/ViewSubscriberCardScreen.fxml"));
 			Parent root = loader.load();
 			subscriberCardController = loader.getController();
 			if (subscriberCardController != null)
