@@ -144,6 +144,14 @@ public class SubscribersQueries
 		return queryMsg;
 	}
 
+	public static String getSubscriberIsGraduatedStatus(Subscriber subscriber)
+	{
+		if (subscriber == null)
+			return null;
+		String queryMsg ="SELECT isGraduated FROM obl_db.subscribers WHERE subscriberID ='" +subscriber.getId() + "'";
+		return queryMsg;
+	}
+	
 	public static String updateSubscriberIsGraduatedStatus(Subscriber subscriberToUpdate)
 	{
 		if (subscriberToUpdate == null)
