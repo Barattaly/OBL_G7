@@ -18,9 +18,6 @@ import com.jfoenix.controls.JFXTextField;
 import entities.Book;
 import entities.DBMessage;
 import entities.Employee;
-import entities.ObservableBook;
-import entities.ObservableBorrow;
-import entities.ObservableEmployee;
 import entities.Report_Activity;
 import entities.Report_BorrowDurationInfo;
 import entities.Report_LateReturns;
@@ -58,6 +55,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import observableEntities.ObservableBook;
+import observableEntities.ObservableBorrow;
+import observableEntities.ObservableEmployee;
 
 public class LibrarianManagerController extends LibrarianScreenController
 {

@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.jfoenix.controls.JFXTextField;
 
-import entities.ObservableBook;
 import entities.Report_BorrowDurationInfo;
 import entities.Report_LateReturns;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,6 +22,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import observableEntities.ObservableBook;
 
 public class Reports_LateReturnsController
 {

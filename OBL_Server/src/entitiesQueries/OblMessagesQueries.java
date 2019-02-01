@@ -1,7 +1,9 @@
-package entities;
+package entitiesQueries;
 
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+
+import entities.OblMessage;
 
 public class OblMessagesQueries 
 {

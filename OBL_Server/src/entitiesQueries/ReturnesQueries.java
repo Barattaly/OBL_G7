@@ -1,7 +1,9 @@
-package entities;
+package entitiesQueries;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import entities.ActivityLog;
 
 public class ReturnesQueries
 {

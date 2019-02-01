@@ -1,4 +1,6 @@
-package entities;
+package entitiesQueries;
+
+import entities.Book;
 
 public class CopiesQueries 
 {

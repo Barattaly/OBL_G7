@@ -1,4 +1,4 @@
-package entities;
+package observableEntities;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;

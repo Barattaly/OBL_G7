@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
+import client.IClientUI;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.DBMessage.DBAction;

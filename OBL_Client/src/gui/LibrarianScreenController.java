@@ -20,6 +20,7 @@ import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
+import client.IClientUI;
 import entities.ActivityLog;
 import entities.Book;
 import entities.BorrowACopyOfBook;
