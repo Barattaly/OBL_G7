@@ -11,6 +11,7 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
@@ -197,12 +198,12 @@
             </Pane>
             <AnchorPane fx:id="pane_home" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label fx:id="userWelcomLabel" layoutX="56.0" layoutY="101.0" text="Hello Galina!" textFill="#a0a2ab">
+                  <Label fx:id="userWelcomLabel" layoutX="33.0" layoutY="84.0" text="Hello Galina!" textFill="#a0a2ab">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="518.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="671.0" layoutY="160.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="150.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -210,7 +211,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="620.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Return" textAlignment="CENTER" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="672.0" layoutY="264.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="150.0" ripplerFill="#9e9e9e" style="-fx-background-color: #3C58FA;" text="Return" textAlignment="CENTER" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -218,12 +219,25 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <Label layoutX="368.0" layoutY="66.0" text="Home" textFill="#a0a2ab">
+                  <Label layoutX="368.0" layoutY="54.0" text="Home" textFill="#a0a2ab">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <AnchorPane fx:id="borrowsPane" layoutY="260.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="260.0" />
+                  <AnchorPane fx:id="borrowsPane" layoutY="316.0" prefHeight="326.0" prefWidth="852.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="318.0" />
+                  <TitledPane animated="false" layoutX="25.0" layoutY="141.0" prefHeight="164.0" prefWidth="616.0" stylesheets="@../resources/titledpane.css" text="Messages" textFill="#a0a2ab">
+                     <content>
+                        <TableView fx:id="messagesTableView" prefHeight="96.0" prefWidth="588.0">
+                           <columns>
+                              <TableColumn fx:id="dateSentTableColumn" prefWidth="86.0" text="Date Sent" />
+                              <TableColumn fx:id="msgContentTableColumn" prefWidth="516.0" text="Message content" />
+                           </columns>
+                        </TableView>
+                     </content>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </TitledPane>
                </children>
             </AnchorPane>
             <Pane fx:id="pane_employees" layoutX="40.0" layoutY="1.0" prefHeight="644.0" prefWidth="650.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -341,6 +355,14 @@
                   <Image url="@../resources/Login_Username.png" />
                </image>
             </ImageView>
+            <JFXButton alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" layoutX="671.0" layoutY="212.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Borrow extension" textAlignment="CENTER" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXButton>
          </children>
       </AnchorPane>
    </center>
