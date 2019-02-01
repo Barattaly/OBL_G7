@@ -1,4 +1,4 @@
-package srvrDb;
+package application;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -10,15 +10,21 @@ import java.util.concurrent.TimeUnit;
 
 import entities.Book;
 import entities.BookOrder;
-import entities.BooksQueries;
 import entities.BorrowACopyOfBook;
-import entities.BorrowsQueries;
 import entities.OblMessage;
-import entities.OblMessagesQueries;
-import entities.OrdersQueries;
-import entities.SendEmail;
 import entities.Subscriber;
-import entities.SubscribersQueries;
+import entitiesQueries.BooksQueries;
+import entitiesQueries.BorrowsQueries;
+import entitiesQueries.OblMessagesQueries;
+import entitiesQueries.OrdersQueries;
+import entitiesQueries.SendEmail;
+import entitiesQueries.SubscribersQueries;
+
+/**
+ * All of our automatic function will be here.
+ * Make sure you call shutDown() when exiting the program unless you want a background executers.  
+ *
+ */
 
 public class AutomaticExecutors 
 {
@@ -31,10 +37,9 @@ public class AutomaticExecutors
 			return;
 		AutomaticExecutors.oblDB = oblDb;
 		executor = new ScheduledThreadPoolExecutor(1);
-		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 15, TimeUnit.MINUTES);
-		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 15, TimeUnit.MINUTES);
-		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 15, TimeUnit.MINUTES);
-
+		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 5, TimeUnit.MINUTES);
+		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 1, TimeUnit.HOURS);
+		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 1, TimeUnit.HOURS);
 	}
 	public void shutDown()
 	{
@@ -49,10 +54,13 @@ public class AutomaticExecutors
 	 * status to "deep freeze" */	
 	static void checkAndUpdateLateReturns()
 	{
-		String query = BorrowsQueries.getCurrentBorrowsTable();
+		String query = BorrowsQueries.getBorrowsTableForCheckAndUpdateLateReturns();
 		ResultSet rsCurrentBorrowsTable = oblDB.executeQuery(query); // get current borrows table
 		BorrowACopyOfBook borrowFromBorrowsTable = new BorrowACopyOfBook();
-		ArrayList<Subscriber> subscribersLateReturnsAtListThreeTimes = new ArrayList<Subscriber>();
+		ArrayList<Subscriber> subscribersLateReturnsThreeTimes = new ArrayList<Subscriber>();
+		OblMessage message;
+		String messageContent;
+		String fullName = "";
 		try
 		{
 			while (rsCurrentBorrowsTable.next())
@@ -60,26 +68,51 @@ public class AutomaticExecutors
 				borrowFromBorrowsTable.setId(rsCurrentBorrowsTable.getString(1));
 				borrowFromBorrowsTable.setSubscriberId(rsCurrentBorrowsTable.getString(2));
 				borrowFromBorrowsTable.setExpectedReturnDate(rsCurrentBorrowsTable.getString(4));
+				borrowFromBorrowsTable.setActualReturnDate(rsCurrentBorrowsTable.getString(5));
+				borrowFromBorrowsTable.setIsReturnedLate(rsCurrentBorrowsTable.getString(6));
+				borrowFromBorrowsTable.setBookCatalogNumber(rsCurrentBorrowsTable.getString(7));
 
 				String expectedReturnDate = borrowFromBorrowsTable.getExpectedReturnDate();
-				String returnDate = getCurrentDateAsString();
-
+				String currentDate = getCurrentDateAsString();
+				
 				Subscriber subscriberToUpdate = new Subscriber(borrowFromBorrowsTable.getSubscriberId());
+				fullName = getSubscriberFullName(subscriberToUpdate);
 				int lateReturnsCount = getSubscriberNumOfLateReturns(subscriberToUpdate);
+				if(lateReturnsCount % 3 == 0)
+				{
+					lateReturnsCount = 0;
+				}
+				else
+				{
+					lateReturnsCount = lateReturnsCount % 3;
+				}
 				boolean existInArrayList = false;
 				// check if the subscriber is late at return
-				if (LocalDate.parse(returnDate).isAfter(LocalDate.parse(expectedReturnDate))) 
+				if (LocalDate.parse(currentDate).isAfter(LocalDate.parse(expectedReturnDate)) 
+						&& borrowFromBorrowsTable.getActualReturnDate() == null) 
 				{
 					lateReturnsCount++;
-					if (lateReturnsCount >= 3)
+					query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
+					ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // get subscriber's status
+					try
 					{
-						for (Subscriber subscriberToCheck : subscribersLateReturnsAtListThreeTimes)
+						rsSubscriberStatus.next();
+						subscriberToUpdate.setStatus(rsSubscriberStatus.getString(1));
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+					if (lateReturnsCount % 3 == 0 && lateReturnsCount != 0 
+							&& !subscriberToUpdate.getStatus().equals("deep freeze"))
+					{
+						for (Subscriber subscriberToCheck : subscribersLateReturnsThreeTimes)
 						{
 							if(subscriberToCheck.getId().equals(subscriberToUpdate.getId()))
 								existInArrayList = true;
 						}
 						if(!existInArrayList)
-							subscribersLateReturnsAtListThreeTimes.add(subscriberToUpdate);
+							subscribersLateReturnsThreeTimes.add(subscriberToUpdate);
 					}
 					query = BorrowsQueries.getIsReturnedLate(borrowFromBorrowsTable);
 					// get the value of "isReturnedLate" flag
@@ -93,25 +126,26 @@ public class AutomaticExecutors
 							query = BorrowsQueries.updateIsReturnedLateToYes(borrowFromBorrowsTable);
 							// update the flag at the borrow if the subscriber returned the copy late
 							oblDB.executeUpdate(query);
+							/*send a message to the subscriber about a late at return*/
+							messageContent = "Dear " + fullName + ", you are late at return of book number: " + borrowFromBorrowsTable.getBookCatalogNumber()
+						  	   + ".\nPlease return the book to the library as soon as possible.\n"
+						  	   + "Meanwhile, your subscriber card status has changed to frozen, until you will return the book.";
+							message = new OblMessage(messageContent, "subscriber", subscriberToUpdate.getId());
+							query = OblMessagesQueries.sendMessageToSubscriber(message);
+							oblDB.executeUpdate(query); // add a new message to messages table			
 						}
 					} catch (Exception e)
 					{
 						e.printStackTrace();
 					}
-					subscriberToUpdate.setStatus("frozen");
-					query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
-					ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // update subscriber's status to frozen
-					try
+					if (borrowFromBorrowsTable.getActualReturnDate() == null)
 					{
-						rsSubscriberStatus.next();
-						if (rsSubscriberStatus.getString(1).equals("active"))
+						if (subscriberToUpdate.getStatus().equals("active"))
 						{
+							subscriberToUpdate.setStatus("frozen");
 							query = SubscribersQueries.updateSubscriberStatus(subscriberToUpdate);
-							oblDB.executeUpdate(query); // update subscriber's status to frozen
-						}
-					} catch (Exception e)
-					{
-						e.printStackTrace();
+							oblDB.executeUpdate(query); // update subscriber's status to frozen			
+						}	
 					}
 				}
 			}
@@ -120,25 +154,30 @@ public class AutomaticExecutors
 			e.printStackTrace();
 		}
 
-		/*
-		 * Send message to the library manager in order to approve deep freeze of the
-		 * subscriber card the message will include the ArrayList:
-		 * subscribersLateReturnsAtListThreeTimes
-		 */
-		OblMessage message;
-		String messageContent;
-		for (Subscriber subscriber : subscribersLateReturnsAtListThreeTimes)
+		/* Send message to the library manager in order to approve deep freeze of the
+		 * subscriber card. the message will include the subscriber id and borrow id, 
+		 * and it will send to the library manager only if the subscriber status is not already "deep freeze"*/
+		
+		/*send a message to the subscriber about 3 late at returns*/
+		for (Subscriber subscriber : subscribersLateReturnsThreeTimes)
 		{
 			messageContent = "The subscriber: " + subscriber.getId()
-					  	   + " is late at return of 3 books.\n"
-					  	   + "Please approve to change the subscriber card status to deep freeze";
+		  	   + " is late at return of 3 books.\n"
+		  	   + "Please approve to change the subscriber card status to deep freeze";
 			message = new OblMessage(messageContent, "library manager");
 			query = OblMessagesQueries.sendMessageToLibraryManager(message);
 			oblDB.executeUpdate(query); // add a new message to messages table
+			
+			messageContent = "Dear " + fullName + ", you are late at return of 3 books."
+		  	   + "\nPlease return the books to the library as soon as possible.\n"
+		  	   + "Meanwhile, your subscriber card status has changed to deep freeze, until Disciplinary inquiry.";
+			message = new OblMessage(messageContent, "subscriber", subscriber.getId());
+			query = OblMessagesQueries.sendMessageToSubscriber(message);
+			oblDB.executeUpdate(query); // add a new message to messages table	
 		}
 	}
 	
-	/*reminderBeforeReturnDate:
+	/**reminderBeforeReturnDate:
 	 * This method suppose to run automatically every 24 hours.
 	 * If the current date is one day before return date,
 	 * than a remainder email send to the subscriber who borrowed the book*/	
@@ -194,28 +233,24 @@ public class AutomaticExecutors
 		for (BorrowACopyOfBook borrow: subscribersToInform)
 		{
 			Subscriber subscriberToInform = new Subscriber(borrow.getSubscriberId());
-
-			String fullName = null;
-			query = SubscribersQueries.getSubscriberFullInformationByID(subscriberToInform.getId());
-			ResultSet rsSubscriberDetails = oblDB.executeQuery(query); // get subscriber details
-			try
-			{
-				rsSubscriberDetails.next();
-				fullName = rsSubscriberDetails.getString(4).substring(0, 1).toUpperCase()
-						+ rsSubscriberDetails.getString(4).substring(1) + " "
-						+ rsSubscriberDetails.getString(5).substring(0, 1).toUpperCase()
-						+ rsSubscriberDetails.getString(5).substring(1);
-				subscriberToInform.setEmail(rsSubscriberDetails.getString(7));
-			} catch (Exception e)
-			{
-				//e.printStackTrace();
-			}
+			String fullName = getSubscriberFullName(subscriberToInform);
+			/* send a message to the subscriber */
+			OblMessage message;
+			String messageContent;
+			messageContent = "Dear " + fullName + ",\n"
+							+ "Return date of the book: \"" + books.get(i).getName() + "\" "
+							+ "that you have borrowed is tomrrow.\n"
+							+ "Please return the book until tomrrow, or excute borrow extension (if extension is possible).";
+			message = new OblMessage(messageContent, "subscriber", borrow.getSubscriberId());
+			query = OblMessagesQueries.sendMessageToSubscriber(message);
+			oblDB.executeUpdate(query); // add a new message to messages table
+			
+			/* send an email to the subscriber */
 			String emailSubject = "Reminder: One day before return day";
 			String emailMessage = "Dear " + fullName + ",\n"
 								+ "Return date of the book: \"" + books.get(i).getName() + "\" "
 								+ "that you have borrowed is tomrrow.\n"
 								+ "Please return the book until tomrrow, or excute borrow extension (if extension is possible).";
-			/* send an email to the subscriber */
 			try
 			{
 				SendEmail email = new SendEmail();
@@ -224,13 +259,13 @@ public class AutomaticExecutors
 			catch(Exception e)
 			{
 				//e.printStackTrace();
-			}
+			}	
 			i++;
 		}
 	}
 	
 	
-	/*ordersFulfillmentCheck:
+	/**ordersFulfillmentCheck:
 	 * This method suppose to run automatically every 24 hours.
 	 * If subscriber ordered a book, and the book arrived to the library,
 	 * the order will stay in active status for only two days.
@@ -263,6 +298,18 @@ public class AutomaticExecutors
 						orderFromOrdersTable.setStatus("canceled");
 						query = OrdersQueries.updateOrderStatus(orderFromOrdersTable);
 						oblDB.executeUpdate(query); // update order status to closed
+						
+						Subscriber subscriber = new Subscriber(orderFromOrdersTable.getSubscriberId());
+						String fullName = getSubscriberFullName(subscriber);
+						/* send a message to the subscriber */
+						OblMessage message;
+						String messageContent;
+						messageContent = "Dear " + fullName + ",\n"
+										+ "You did not fulfilled your order for book number: " + orderFromOrdersTable.getBookCatalogNumber()
+										+ ".\nTherefore, order number: " + orderFromOrdersTable.getId() + " is canceled.";
+						message = new OblMessage(messageContent, "subscriber", orderFromOrdersTable.getSubscriberId());
+						query = OblMessagesQueries.sendMessageToSubscriber(message);
+						oblDB.executeUpdate(query); // add a new message to messages table 
 					}
 				}
 			}
@@ -294,6 +341,27 @@ public class AutomaticExecutors
 			e.printStackTrace();
 			return -1;
 		}
+	}
+	
+	private static String getSubscriberFullName(Subscriber subscriber)
+	{
+		String fullName = null;
+		String query = SubscribersQueries.getSubscriberFullInformationByID(subscriber.getId());
+		ResultSet rsSubscriberDetails = oblDB.executeQuery(query); // get subscriber details
+		try
+		{
+			rsSubscriberDetails.next();
+			fullName = rsSubscriberDetails.getString(4).substring(0, 1).toUpperCase()
+					+ rsSubscriberDetails.getString(4).substring(1) + " "
+					+ rsSubscriberDetails.getString(5).substring(0, 1).toUpperCase()
+					+ rsSubscriberDetails.getString(5).substring(1);
+			subscriber.setEmail(rsSubscriberDetails.getString(7));
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return fullName;
 	}
 	
 	public void setOblDb(MySQLConnection oblDb)

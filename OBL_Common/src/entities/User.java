@@ -1,6 +1,8 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
+
 
 public class User implements Serializable
 {
@@ -12,6 +14,8 @@ public class User implements Serializable
 
 	protected String loginStatus;
 	protected String type;
+	
+	protected List<String> messages;
 
 	public User() {}
 	public User(String idNum, String name, String pass, String first, String last, String status, String userType)
@@ -124,5 +128,14 @@ public class User implements Serializable
 	{
 		this.idNumber = idNum;
 	}
+	
+	public List<String> getMessages()
+	{
+		return messages;
+	}
 
+	public void setMessages( List<String> msgs)
+	{
+		this.messages = msgs;
+	}
 }

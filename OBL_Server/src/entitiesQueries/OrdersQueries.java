@@ -1,9 +1,13 @@
-package entities;
+package entitiesQueries;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
+import entities.ActivityLog;
+import entities.Book;
+import entities.BookOrder;
 
 public class OrdersQueries 
 {
@@ -29,6 +33,18 @@ public class OrdersQueries
 						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' AND status ='active';";
 		return queryMsg;
 	}
+	
+	public static String getBookCurrentOrdersForBookExtension(Book book)
+	{
+		if (book == null)
+			return null;
+		String queryMsg = "SELECT id, subscriberID, orderDate, status, bookArriveDate, bookCatalogNumber "
+						+ "FROM obl_db.orders "
+						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' "
+						+ "AND status ='active' AND bookArriveDate IS NULL;";
+		return queryMsg;
+	}
+	
 	
 	public static String getcurrentDateTimesString()
 	{

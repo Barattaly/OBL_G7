@@ -16,7 +16,6 @@ public class Subscriber extends User
 		  this.phoneNumber = phone;
 		  this.email = email;
 		  this.status = status;
-
 	}
 
 	public Subscriber(String uName, String pass, String idNum, String first, String last, String phone, String mail,

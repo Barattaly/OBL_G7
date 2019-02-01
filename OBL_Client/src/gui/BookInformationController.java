@@ -38,6 +38,7 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import com.sun.mail.imap.CopyUID;
 
+import client.IClientUI;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
@@ -322,6 +323,7 @@ public class BookInformationController implements IClientUI
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
+			uploadFileBtn.setVisible(false);
 		}
 		switch (userLoggedIn.getType())
 		{
@@ -330,24 +332,28 @@ public class BookInformationController implements IClientUI
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
 			copiesTitlePane.setVisible(false);
+			uploadFileBtn.setVisible(false);
 			break;
 		case "library manager":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(true);
 			editDetailsBtn.setVisible(true);
 			copiesTitlePane.setVisible(true);
+			uploadFileBtn.setVisible(false);
 			break;
 		case "librarian":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(true);
 			editDetailsBtn.setVisible(true);
 			copiesTitlePane.setVisible(true);
+			uploadFileBtn.setVisible(false);
 			break;
 		case "guest":
 			orderBookBtn.setVisible(false);
 			deleteBookBtn.setVisible(false);
 			editDetailsBtn.setVisible(false);
 			copiesTitlePane.setVisible(false);
+			uploadFileBtn.setVisible(false);
 			break;
 		}
 
@@ -469,18 +475,26 @@ public class BookInformationController implements IClientUI
 			int maxCopies=copiesSpinner.getValue(); //taking the copies that added by the spinner
 			newBook.setMaxCopies(maxCopies); 
 			// copies
-			newBook.setCopies(bookToShow.getCopies());
+			//newBook.setCopies(bookToShow.getCopies());
+			newBook.setCopies(new ArrayList<>());
+			for(CopyOfBook copy:bookToShow.getCopies())
+			{
+				if ((copiesFromComboBox.contains(copy.getId())))
+				{
+					newBook.getCopies().add(copy);
+				}
+			}
 			
-			
-			ArrayList<CopyOfBook> copiesArray =newBook.getCopies();
-			
-			for (int i =0 ; i < copiesArray.size() ; i++)
+			/*List<CopyOfBook> copiesArray = newBook.getCopies();
+			int sizeOfOriginalCopies = copiesArray.size();
+			copiesFromComboBox.remove("copy ID");
+			for (int i =0 ; i < sizeOfOriginalCopies ; i++)
 			{
 				if (!(copiesFromComboBox.contains(copiesArray.get(i).getId())))
 				{
 					newBook.getCopies().remove(copiesArray.get(i));
 				}
-			}
+			}*/
 			newBook.setTocArraybyte(uploadedFileByteArray);
 			
 			
@@ -508,6 +522,7 @@ public class BookInformationController implements IClientUI
 	{
 		onEditShowPane.setVisible(false);
 		editDetailsBtn.setDisable(false);
+		uploadFileBtn.setVisible(false);
 		setBookInformation(bookToShow);
 	}
 
@@ -523,9 +538,10 @@ public class BookInformationController implements IClientUI
     @FXML
     void removeCopiesClick(ActionEvent event) 
     {
-    	if(copiesComboBox.getSelectionModel().getSelectedItem()=="copy ID")
+    	if(copiesComboBox.getSelectionModel().getSelectedItem().equals("copy ID"))
     	{
-    		GuiManager.ShowErrorPopup("Please choose one copy ");
+    		GuiManager.ShowErrorPopup("Please choose a copy");
+    		return;
     	}
     	int size= copiesComboBox.getItems().size();
     	if(size==2)
@@ -535,24 +551,24 @@ public class BookInformationController implements IClientUI
     		return;
     	}
  
-    	String copyID=copiesComboBox.getSelectionModel().getSelectedItem();
+    	String copyID = copiesComboBox.getSelectionModel().getSelectedItem();
     	ArrayList<CopyOfBook> copyToCheck= bookToShow.getCopies();
-    	for(CopyOfBook c: copyToCheck )
+    	for(CopyOfBook copy: copyToCheck )
     	{
-    		String id=c.getId();
+    		String id=copy.getId();
     		if(id.equals(copyID))
     		{
-    			String status=c.getStatus();
+    			String status=copy.getStatus();
     			if(status.equals("unavailable"))
     			{
-    				GuiManager.ShowErrorPopup("This copy cannot be deleted!");
+    				GuiManager.ShowErrorPopup("This copy is currently borrowed");
     				copiesComboBox.getSelectionModel().selectFirst();
     			}
     			
     			else
     			{
     				copiesComboBox.getItems().remove(copiesComboBox.getSelectionModel().getSelectedItem());
-    				copiesFromComboBox.remove(c.getId());
+    				copiesFromComboBox.remove(copy.getId());
     				copiesComboBox.getSelectionModel().clearSelection();
     				copiesComboBox.getSelectionModel().selectFirst();
     			}

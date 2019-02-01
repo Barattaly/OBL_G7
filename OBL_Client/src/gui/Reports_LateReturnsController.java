@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.jfoenix.controls.JFXTextField;
 
-import entities.ObservableBook;
 import entities.Report_BorrowDurationInfo;
 import entities.Report_LateReturns;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,6 +22,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import observableEntities.ObservableBook;
 
 public class Reports_LateReturnsController
 {
@@ -75,7 +75,6 @@ public class Reports_LateReturnsController
 		setAvrages();
 		setMedian();
 		setTable();
-		System.out.println(mainScrollPane.getVvalue());
 	}
 
 	private void setTable()
@@ -149,14 +148,22 @@ public class Reports_LateReturnsController
 		{
 			sum += data.getBookToNumberAndDurationOfLates().get(key).getNumberOfLates();
 		}
-		avrgNumberLateTextField.setText(String.valueOf(sum / size));
+		if (size != 0)
+		{
+			avrgNumberLateTextField.setText(String.valueOf(sum / size));
+		} else
+			avrgNumberLateTextField.setText("0");
 
 		sum = 0;
 		for (String key : data.getBookToNumberAndDurationOfLates().keySet())
 		{
 			sum += data.getBookToNumberAndDurationOfLates().get(key).getDurationOfLates();
 		}
-		avrgDurationLateTextField.setText(String.valueOf(sum / size));
+		if (size != 0)
+		{
+			avrgDurationLateTextField.setText(String.valueOf(sum / size));
+		} else
+			avrgDurationLateTextField.setText("0");
 	}
 
 	private void setGraphs()
@@ -310,11 +317,17 @@ public class Reports_LateReturnsController
 	public static int[] calcHistogram(int[] data, int min, int max, int numBins)
 	{
 		final int[] result = new int[numBins];
-		final double binSize = (max - min) / numBins;
+		double binSize = 0;
+		if (numBins != 0)
+			binSize = (max - min) / numBins;
 
 		for (int d : data)
 		{
-			int bin = (int) ((d - min) / binSize);
+			int bin;
+			if (binSize == 0)
+				bin = 0;
+			else
+				bin = (int) ((d - min) / binSize);
 			if (bin < 0)
 			{
 				/* this data is smaller than min */ } else if (bin >= numBins)

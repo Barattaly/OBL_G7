@@ -1,4 +1,4 @@
-package entities;
+package entitiesQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import entities.ActivityLog;
+import entities.Book;
+import entities.BorrowACopyOfBook;
 
 public class BorrowsQueries
 {
@@ -262,4 +266,10 @@ public class BorrowsQueries
 		return queryMsg;
 	}
 	
+	public static String getBorrowsTableForCheckAndUpdateLateReturns()
+	{
+		String queryMsg = "SELECT * FROM obl_db.borrows" 
+						+ " WHERE actualReturnDate is null OR isReturnedLate = 'yes';";
+		return queryMsg;
+	}
 }
