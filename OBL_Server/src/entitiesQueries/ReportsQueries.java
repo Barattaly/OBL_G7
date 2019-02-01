@@ -1,4 +1,4 @@
-package entities;
+package entitiesQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +9,8 @@ import java.util.Map;
 
 import com.mysql.jdbc.MySQLConnection;
 
+import entities.Report_Activity;
+import entities.Report_LateReturns;
 import entities.Report_LateReturns.NumberAndDurationOfLates;
 
 public class ReportsQueries
@@ -92,7 +94,7 @@ public class ReportsQueries
 		return queryMsg;
 	}
 	
-	public static Report_LateReturns CreateLateReturnsReport(srvrDb.MySQLConnection oblDB) throws SQLException
+	public static Report_LateReturns CreateLateReturnsReport(application.MySQLConnection oblDB) throws SQLException
 	{
 		Report_LateReturns reportGenereted = new Report_LateReturns();
 		Map<String, NumberAndDurationOfLates> mapOfBooksToInfo = new HashMap<>();

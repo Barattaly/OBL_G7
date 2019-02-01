@@ -1,7 +1,5 @@
-package defaultPackage;
+package application;
 
-
-import client.ClientController;
 import gui.GuiManager;
 import gui.GuiManager.SCREENS;
 import javafx.application.Application;
@@ -11,10 +9,11 @@ public class mainClient extends Application
 {	
 	public static void main(String[] args)
 	{
-		
 		launch(args);
 	}
-
+	/**
+	 * The start of the client side application is in the method of the GUIController - InitialPrimaryStage
+	 */
 	@Override
 	public void start(Stage primaryStage)
 	{

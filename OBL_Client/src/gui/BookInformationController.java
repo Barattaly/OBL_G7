@@ -38,6 +38,7 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import com.sun.mail.imap.CopyUID;
 
+import client.IClientUI;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;

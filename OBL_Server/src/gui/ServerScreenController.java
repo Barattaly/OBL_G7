@@ -5,25 +5,24 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
-import entities.SendEmail;
+import application.AutomaticExecutors;
+import application.OBLServer;
 import javafx.scene.shape.Circle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import srvrDb.*;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
-
+/**
+ * This class is the GUI controller of the server screen.
+ *
+ */
 public class ServerScreenController implements Initializable
 {
 	private OBLServer server;

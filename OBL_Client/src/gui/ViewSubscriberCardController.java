@@ -5,9 +5,9 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 
+import client.IClientUI;
 import entities.ActivityLog;
 import entities.DBMessage;
-import entities.ObservableActivityLog;
 import entities.Subscriber;
 import entities.User;
 import javafx.application.Platform;
@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import observableEntities.ObservableActivityLog;
 
 public class ViewSubscriberCardController implements IClientUI
 {
