@@ -94,7 +94,6 @@ public class UsersQueries
 		while(rs.next())
 		{
 			String msg = rs.getString(2);
-			msg +="!@#";//unique symbol for seperation string in client
 			msg +=rs.getString(3);
 			messages.add(msg);
 		}
