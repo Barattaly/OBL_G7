@@ -262,4 +262,10 @@ public class BorrowsQueries
 		return queryMsg;
 	}
 	
+	public static String getBorrowsTableForCheckAndUpdateLateReturns()
+	{
+		String queryMsg = "SELECT * FROM obl_db.borrows" 
+						+ " WHERE actualReturnDate is null OR isReturnedLate = 'yes';";
+		return queryMsg;
+	}
 }

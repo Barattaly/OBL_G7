@@ -16,7 +16,7 @@ public class OblMessagesQueries
 						+ "', '" + messageToSend.getRecipientUserType() + "');";
 		return queryMsg;
 	}
-	
+		
 	public static String sendMessageToLibraryManager(OblMessage messageToSend)
 	{
 		if (messageToSend == null)	
@@ -29,6 +29,18 @@ public class OblMessagesQueries
 		return queryMsg;
 	}
 	
+	public static String sendMessageToSubscriber(OblMessage messageToSend)
+	{
+		if (messageToSend == null)	
+			return null;
+		String currentDateTimeString = getcurrentDateTimesString();
+
+		String queryMsg = "INSERT INTO obl_db.messages (messageSentDate, messageContent, recipientUserType, recipientUserId) "
+						+ "VALUES ('" + currentDateTimeString + "', '" + messageToSend.getMessageContent() 
+						+ "', '" + messageToSend.getRecipientUserType() + "'," + messageToSend.getRecipientUserId() + ");";
+		return queryMsg;
+	}
+
 	public static String getcurrentDateTimesString()
 	{
 		GregorianCalendar calendar = new GregorianCalendar();

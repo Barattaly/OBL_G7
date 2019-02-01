@@ -813,23 +813,18 @@ public class OBLServer extends AbstractServer
 						count++;
 						Subscriber subscriberToInform = new Subscriber(orderToUpdate.getSubscriberId());
 
-						String fullName = null;
+						String fullName = "";
 						query = SubscribersQueries.getSubscriberFullInformationByID(subscriberToInform.getId());
 						ResultSet rsSubscriberDetails = oblDB.executeQuery(query); // get subscriber details
 						try
 						{
 							rsSubscriberDetails.next();
-							fullName = rsSubscriberDetails.getString(4).substring(0, 1).toUpperCase()
-									+ rsSubscriberDetails.getString(4).substring(1) + " "
-									+ rsSubscriberDetails.getString(5).substring(0, 1).toUpperCase()
-									+ rsSubscriberDetails.getString(5).substring(1);
 							subscriberToInform.setPhoneNumber(rsSubscriberDetails.getString(6));
 							subscriberToInform.setEmail(rsSubscriberDetails.getString(7));
 						} catch (Exception e)
 						{
 							e.printStackTrace();
 						}
-
 						query = BooksQueries.getBookName(book);
 						ResultSet rsBookName = oblDB.executeQuery(query); // get book name
 						String bookName = "";
@@ -841,12 +836,24 @@ public class OBLServer extends AbstractServer
 						{
 							e.printStackTrace();
 						}
+						
+						fullName = getSubscriberFullName(subscriberToInform);
+						/* send a message to the subscriber */
+						OblMessage message;
+						String messageContent;
+						messageContent = "Dear " + fullName + ",\n" + "The book: \"" + bookName
+								+ "\" that you have ordered has arrived to the library.\n"
+								+ "You have two days to borrow this book, otherwise, your order will be canceled.";
+						message = new OblMessage(messageContent, "subscriber", subscriberToInform.getId());
+						query = OblMessagesQueries.sendMessageToSubscriber(message);
+						oblDB.executeUpdate(query); // add a new message to messages table 
+												
+						/* send an email to the subscriber */
 						String emailSubject = "The book you ordered has arrived to the library";
 						String emailMessage = "Dear " + fullName + ",\n" + "The book: \"" + bookName
 								+ "\" that you have ordered has arrived to the library.\n"
 								+ "You have two days to borrow this book, otherwise, your order will be canceled.";
 
-						/* send an email to the subscriber */
 						SendEmail email = new SendEmail();
 						email.sendEmail(subscriberToInform.getEmail(), emailSubject, emailMessage);
 					}
@@ -2015,5 +2022,25 @@ public class OBLServer extends AbstractServer
 		}
 		return false;
 	}
-
+	
+	private String getSubscriberFullName(Subscriber subscriber)
+	{
+		String fullName = null;
+		String query = SubscribersQueries.getSubscriberFullInformationByID(subscriber.getId());
+		ResultSet rsSubscriberDetails = oblDB.executeQuery(query); // get subscriber details
+		try
+		{
+			rsSubscriberDetails.next();
+			fullName = rsSubscriberDetails.getString(4).substring(0, 1).toUpperCase()
+					+ rsSubscriberDetails.getString(4).substring(1) + " "
+					+ rsSubscriberDetails.getString(5).substring(0, 1).toUpperCase()
+					+ rsSubscriberDetails.getString(5).substring(1);
+			subscriber.setEmail(rsSubscriberDetails.getString(7));
+		} 
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return fullName;
+	}
 }
