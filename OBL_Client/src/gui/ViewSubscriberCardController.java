@@ -100,7 +100,7 @@ public class ViewSubscriberCardController implements IClientUI
 		phoneNumberField.setText(subscriberToShow.getPhoneNumber());
 		emailField.setText(subscriberToShow.getEmail());
 		GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
-		if (sub.getStatus().equals("frozen"))
+		if (sub.getStatus().equals("deep freeze"))
 		{
 			freezeSubscriberToggleButton.setSelected(true);
 		} else
@@ -196,12 +196,15 @@ public class ViewSubscriberCardController implements IClientUI
 			SuccessLabel.setVisible(false);
 			warningLabel.setVisible(true);
 			warningLabel.setText("Enter first name please");
-		} else if (lastNameField.getText().isEmpty())
+			return;
+		}
+		if (lastNameField.getText().isEmpty())
 		{
 			SuccessLabel.setVisible(false);
 			warningLabel.setVisible(true);
 			warningLabel.setText("Enter last name please");
-		} else if (!emailField.getText().isEmpty())
+		}
+		if (!emailField.getText().isEmpty())
 		{
 			if (!GuiManager.isValidEmailAddress(emailField.getText()))
 			{
@@ -210,51 +213,47 @@ public class ViewSubscriberCardController implements IClientUI
 				warningLabel.setText("The Email is incorrect");
 			}
 
-		} else
-		{
-			btn_Edit.setVisible(true);
-			btn_Cancel.setVisible(false);
-			btn_Save.setVisible(false);
-
-			firstNameField.setEditable(false);
-			lastNameField.setEditable(false);
-			phoneNumberField.setEditable(false);
-			emailField.setEditable(false);
-
-			firstNameField.setCursor(Cursor.DEFAULT);
-			lastNameField.setCursor(Cursor.DEFAULT);
-			phoneNumberField.setCursor(Cursor.DEFAULT);
-			emailField.setCursor(Cursor.DEFAULT);
-
-			String status;
-			String oldStatus = subscriberToShow.getStatus();
-			if (getUserLogedIn().getType().equals("library manager"))
-			{
-				if (!oldStatus.equals("locked"))
-				{
-					if (freezeSubscriberToggleButton.isSelected())
-					{
-						status = "frozen";
-					} else
-					{
-						status = "active";
-					}
-				} else
-					status = "locked";
-			}
-			else
-				status = subscriberToShow.getStatus();
-			Subscriber subscriberToUpdate = new Subscriber(subscriberToShow.getId(), firstNameField.getText(),
-					lastNameField.getText(), phoneNumberField.getText(), emailField.getText(), status);
-			GuiManager.client.updateSubscriberDetails(subscriberToUpdate);
-			subscriberToUpdate.setUserName(subscriberToShow.getUserName());
-			String name = subscriberToUpdate.getFirstName().substring(0, 1).toUpperCase()
-					+ subscriberToUpdate.getFirstName().substring(1);
-
-			SuccessLabel.setVisible(true);
-			warningLabel.setVisible(false);
-			SuccessLabel.setText("Changes saved successfully");
 		}
+		btn_Edit.setVisible(true);
+		btn_Cancel.setVisible(false);
+		btn_Save.setVisible(false);
+
+		firstNameField.setEditable(false);
+		lastNameField.setEditable(false);
+		phoneNumberField.setEditable(false);
+		emailField.setEditable(false);
+
+		firstNameField.setCursor(Cursor.DEFAULT);
+		lastNameField.setCursor(Cursor.DEFAULT);
+		phoneNumberField.setCursor(Cursor.DEFAULT);
+		emailField.setCursor(Cursor.DEFAULT);
+
+		String status;
+		String oldStatus = subscriberToShow.getStatus();
+		if (getUserLogedIn().getType().equals("library manager"))
+		{
+
+			if (freezeSubscriberToggleButton.isSelected())
+			{
+				status = "deep freeze";
+			} else
+			{
+				status = oldStatus;
+			}
+
+		} else
+			status = oldStatus;
+
+		Subscriber subscriberToUpdate = new Subscriber(subscriberToShow.getId(), firstNameField.getText(),
+				lastNameField.getText(), phoneNumberField.getText(), emailField.getText(), status);
+		GuiManager.client.updateSubscriberDetails(subscriberToUpdate);
+		subscriberToUpdate.setUserName(subscriberToShow.getUserName());
+		String name = subscriberToUpdate.getFirstName().substring(0, 1).toUpperCase()
+				+ subscriberToUpdate.getFirstName().substring(1);
+
+		SuccessLabel.setVisible(true);
+		warningLabel.setVisible(false);
+		SuccessLabel.setText("Changes saved successfully");
 		freezeSubscriberToggleButton.setVisible(false);
 	}
 
@@ -290,6 +289,15 @@ public class ViewSubscriberCardController implements IClientUI
 			activityTable.getSortOrder().add(datecol);
 			activityTable.setItems(activitylist);
 		}
+	}
+
+	public void setEditMode(boolean bool)
+	{
+		if (bool)
+		{
+			btn_EditClick(null);
+		}
+
 	}
 
 }

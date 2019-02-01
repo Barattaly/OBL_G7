@@ -30,6 +30,8 @@ import entities.User;
 import entities.DBMessage.DBAction;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -45,10 +47,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -60,6 +65,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import observableEntities.ObservableBook;
+import observableEntities.ObservableMessage;
 
 public class LibrarianScreenController implements Initializable, IClientUI
 {
@@ -104,8 +111,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	protected JFXButton btn_viewSubscriberCard;
 
-	protected ViewSubscriberCardController controller;
-
 	protected SearchBookController searchBookWindowController = null;
 
 	protected BorrowsScreenController borrowsWindowController = null;
@@ -120,7 +125,18 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	protected JFXProgressBar returnDialogProgressBar = null;
 
 	protected JFXProgressBar borrowDialogProgressBar = null;
+	
+    @FXML
+    protected TableView<ObservableMessage> messagesTableView;
 
+    @FXML
+    protected TableColumn<ObservableMessage, String> dateSentTableColumn;
+
+    @FXML
+    protected TableColumn<ObservableMessage, String> msgContentTableColumn;
+    
+    protected ObservableList<ObservableMessage> observableMsgList;// for table view...
+ 
 	@FXML
 	protected void btn_homeDisplay(MouseEvent event)
 	{
@@ -179,6 +195,11 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
+		dateSentTableColumn.setCellValueFactory(new PropertyValueFactory<>("dateSent"));
+		msgContentTableColumn.setCellValueFactory(new PropertyValueFactory<>("msgContent"));
+		observableMsgList = FXCollections.observableArrayList();
+		messagesTableView.setItems(observableMsgList);
+		
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -787,6 +808,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	protected void setMessages()
 	{
 		for (String msg : userLogedIn.getMessages())
-			System.out.println(msg);
+		{
+			ObservableMessage tempMsg = new ObservableMessage(msg.substring(0,10), msg.substring(21));
+			observableMsgList.add(tempMsg);
+		}
+		messagesTableView.setItems(observableMsgList);
 	}
 }

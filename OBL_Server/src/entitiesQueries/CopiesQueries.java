@@ -92,7 +92,7 @@ public class CopiesQueries
 	}
 	public static String deleteCopyFromBook(String copyID)
 	{
-		String queryMsg= "UPDATE obl_db.books_copies SET status = 'available' WHERE id = '"+copyID+"';";
+		String queryMsg= "UPDATE obl_db.books_copies SET status = 'deleted' WHERE id = '"+copyID+"';";
 		return queryMsg;
 	}
 }

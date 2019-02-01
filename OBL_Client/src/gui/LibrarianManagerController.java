@@ -1,6 +1,9 @@
 package gui;
 
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,13 +12,17 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXListCell;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXSpinner;
 import com.jfoenix.controls.JFXTextField;
 
 import entities.Book;
+import entities.BorrowACopyOfBook;
+import entities.BorrowExtension;
 import entities.DBMessage;
 import entities.Employee;
 import entities.Report_Activity;
@@ -34,15 +41,18 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
@@ -52,12 +62,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import observableEntities.ObservableBook;
 import observableEntities.ObservableBorrow;
 import observableEntities.ObservableEmployee;
+import observableEntities.ObservableMessage;
+
 
 public class LibrarianManagerController extends LibrarianScreenController
 {
@@ -530,7 +546,21 @@ public class LibrarianManagerController extends LibrarianScreenController
 	@Override
 	protected void setMessages()
 	{
-		for (String msg : getUserLogedIn().getMessages())
-			System.out.println(msg);
+		super.setMessages();
+		this.messagesTableView.setRowFactory(tv -> { // press on row in book table to open book information
+			TableRow<ObservableMessage> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty()))
+				{
+					ObservableMessage rowData = row.getItem();
+					String msg = rowData.getMsgContent();
+					String id = msg.substring(16, 25);
+					GuiManager.client.getSubscriberFromDB(id);
+					//GuiManager.openSubscriberCard(new Subscriber(id), getUserLogedIn());
+					//GuiManager.subscriberCardController.setEditMode(true);
+				}
+			});
+			return row;
+		});
 	}
 }

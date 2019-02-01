@@ -4,9 +4,11 @@
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -196,7 +198,7 @@
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <JFXButton buttonType="RAISED" layoutX="464.0" layoutY="199.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="647.0" layoutY="177.0" onAction="#btn_borrowClick" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Borrow" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -204,7 +206,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="568.0" layoutY="199.0" prefHeight="42.0" prefWidth="131.0" style="-fx-background-color: #3C58FA;" text="Borrow extension" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="647.0" layoutY="227.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Borrow extension" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -212,7 +214,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="724.0" layoutY="199.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="80.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="647.0" layoutY="277.0" onAction="#btn_ReturnClick" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Return" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -226,12 +228,20 @@
                      </font>
                   </Label>
                   <AnchorPane fx:id="borrowsPane" layoutY="326.0" prefHeight="338.0" prefWidth="829.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="326.0" />
-                  <TableView layoutX="46.0" layoutY="180.0" prefHeight="96.0" prefWidth="384.0">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="Date Sent" />
-                      <TableColumn prefWidth="308.0" text="Message content" />
-                    </columns>
-                  </TableView>
+                  <Accordion layoutX="173.0" layoutY="292.0" />
+                <TitledPane animated="false" layoutX="21.0" layoutY="155.0" prefHeight="164.0" prefWidth="616.0" stylesheets="@../resources/titledpane.css" text="Messages" textFill="#a0a2ab">
+                     <content>
+                        <TableView fx:id="messagesTableView" prefHeight="96.0" prefWidth="588.0">
+                          <columns>
+                            <TableColumn fx:id="dateSentTableColumn" prefWidth="86.0" text="Date Sent" />
+                            <TableColumn fx:id="msgContentTableColumn" prefWidth="507.0" text="Message content" />
+                          </columns>
+                        </TableView>
+                     </content>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </TitledPane>
                </children>
             </AnchorPane>
             <Label fx:id="userNameLabel" layoutX="38.0" layoutY="14.0" text="username" textFill="#a0a2ab">

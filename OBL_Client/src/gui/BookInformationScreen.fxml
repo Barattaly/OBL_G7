@@ -57,7 +57,7 @@
             </Label>
             <ImageView fx:id="wantedLogo" fitHeight="37.0" fitWidth="37.0" layoutX="475.0" layoutY="509.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
-                  <Image url="@../../bin/resources/warning.png" />
+                  <Image url="@../resources/warning.png" />
                </image>
             </ImageView>
             <JFXButton fx:id="editDetailsBtn" buttonType="RAISED" layoutX="474.0" layoutY="588.0" onAction="#editDetailsClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Edit details" textFill="WHITE">

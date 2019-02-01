@@ -19,6 +19,8 @@ import entities.Subscriber;
 import entities.User;
 import gui.GuiManager.SCREENS;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,8 +30,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -51,23 +55,35 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	@FXML
 	private Pane pane_home;
 	@FXML
-	private AnchorPane pane_viewSubscriberCard,pane_books;
+	private AnchorPane pane_viewSubscriberCard, pane_books;
 	@FXML
 	private AnchorPane pane_searchBook;
 
 	@FXML
 	private ImageView btn_home, btn_books, btn_viewSubscriberCard, btn_searchBook;
 
-	private SearchBookController searchBookWindowController = null; 
-	
-	private BorrowsScreenController borrowsWindowController = null; 
-	
+	private SearchBookController searchBookWindowController = null;
+
+	private BorrowsScreenController borrowsWindowController = null;
+
 	private ViewSubscriberCardController viewSubscriberCardController = null;
+
+	@FXML
+	private TableView<ObservableMessage> messagesTableView;
+
+	@FXML
+	private TableColumn<ObservableMessage, String> dateSentTableColumn;
+
+	@FXML
+	private TableColumn<ObservableMessage, String> msgContentTableColumn;
+
+	private ObservableList<ObservableMessage> observableMsgList;// for table view...
 
 	@FXML
 	void btn_homeDisplay(MouseEvent event)
 	{
-		if (!viewSubscriberCardController.getFirstNameField().getText().isEmpty())// in case user first name changed by him
+		if (!viewSubscriberCardController.getFirstNameField().getText().isEmpty())// in case user first name changed by
+																					// him
 		{
 			String name = viewSubscriberCardController.getFirstNameField().getText().substring(0, 1).toUpperCase()
 					+ viewSubscriberCardController.getFirstNameField().getText().substring(1);
@@ -125,6 +141,11 @@ public class SubscriberScreenController implements Initializable, IClientUI
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
+		dateSentTableColumn.setCellValueFactory(new PropertyValueFactory<>("dateSent"));
+		msgContentTableColumn.setCellValueFactory(new PropertyValueFactory<>("msgContent"));
+		observableMsgList = FXCollections.observableArrayList();
+		messagesTableView.setItems(observableMsgList);
+		
 		pane_home.setVisible(true);
 		pane_searchBook.setVisible(false);
 		pane_viewSubscriberCard.setVisible(false);
@@ -154,7 +175,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void initialBorrowsWindow()
 	{
 		try
@@ -168,7 +189,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			AnchorPane.setRightAnchor(newLoadedPane, 0.0);
 			AnchorPane.setBottomAnchor(newLoadedPane, 0.0);
 			AnchorPane.setTopAnchor(newLoadedPane, 0.0);
-			
+
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -216,9 +237,10 @@ public class SubscriberScreenController implements Initializable, IClientUI
 				});
 			} else
 			{
-				Platform.runLater(() -> { 
+				Platform.runLater(() -> {
 					subscriberLoggedIn = newSub;
-					if(searchBookWindowController!=null)searchBookWindowController.setSubscriber(subscriberLoggedIn);
+					if (searchBookWindowController != null)
+						searchBookWindowController.setSubscriber(subscriberLoggedIn);
 					initialSubscriberCard(newSub);
 					String status = newSub.getStatus().substring(0, 1).toUpperCase() + newSub.getStatus().substring(1);
 					statusLabel.setText("Subscriber card status: " + status);
@@ -229,8 +251,8 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		}
 		case GetActivityLog:
 		{
-			ArrayList<ActivityLog> activityList= (ArrayList<ActivityLog>) msg.Data;
-			if(activityList == null)
+			ArrayList<ActivityLog> activityList = (ArrayList<ActivityLog>) msg.Data;
+			if (activityList == null)
 				break;
 			else
 			{
@@ -239,7 +261,7 @@ public class SubscriberScreenController implements Initializable, IClientUI
 				});
 			}
 
-			break;  
+			break;
 		}
 		case BorrowExtension:
 		{
@@ -281,7 +303,6 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			viewSubscriberCardController = loader.getController();
 			viewSubscriberCardController.setSubscriberToShow(subscriber);
 			viewSubscriberCardController.setUserLogedIn(this.userLogedIn);
-			
 
 			pane_viewSubscriberCard.getChildren().add(newLoadedPane);
 		} catch (Exception e)
@@ -289,10 +310,14 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void setMessages()
 	{
-		for (String msg : getUserLogedIn().getMessages())
-			System.out.println(msg);
+		for (String msg : userLogedIn.getMessages())
+		{
+			ObservableMessage tempMsg = new ObservableMessage(msg.substring(0, 10), msg.substring(21));
+			observableMsgList.add(tempMsg);
+		}
+		messagesTableView.setItems(observableMsgList);
 	}
 }
