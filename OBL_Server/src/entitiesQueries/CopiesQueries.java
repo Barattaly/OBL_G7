@@ -19,7 +19,8 @@ public class CopiesQueries
 		if (book == null)
 			return null;
 		String queryMsg = "SELECT id, status FROM obl_db.books_copies "
-						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "';";
+						+ "WHERE bookCatalogNumber = '" + book.getCatalogNumber() + "' "
+								+ "AND status != 'deleted';";
 		return queryMsg;
 	}
 	
@@ -91,7 +92,7 @@ public class CopiesQueries
 	}
 	public static String deleteCopyFromBook(String copyID)
 	{
-		String queryMsg= "DELETE FROM obl_db.books_copies WHERE id='"+copyID+"';";
+		String queryMsg= "UPDATE obl_db.books_copies SET status = 'available' WHERE id = '"+copyID+"';";
 		return queryMsg;
 	}
 }
