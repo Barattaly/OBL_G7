@@ -29,7 +29,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
- * A static class, handling all the GUI. This is the main viewSubscriberCardController between the
+ * A static class, handling all the GUI. This is the main Controller between the
  * communication with the server (aka "ClientController") and the GUI (all of
  * the FXML controllers).
  * 
