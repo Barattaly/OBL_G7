@@ -22,7 +22,7 @@ import gui.GuiManager;
 import javafx.application.Platform;
 
 /**
- * This is the controller between the server and the client. Every request from client UI to server will be sent through this. And backwords.
+ * This is the viewSubscriberCardController between the server and the client. Every request from client UI to server will be sent through this. And backwords.
  * This class is a singletone class. You can only create one instance of this
  * class using - "createClientIfNotExist".
  */

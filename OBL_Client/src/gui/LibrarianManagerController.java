@@ -72,6 +72,8 @@ import javafx.stage.Stage;
 import observableEntities.ObservableBook;
 import observableEntities.ObservableBorrow;
 import observableEntities.ObservableEmployee;
+import observableEntities.ObservableMessage;
+
 
 public class LibrarianManagerController extends LibrarianScreenController
 {
@@ -545,16 +547,20 @@ public class LibrarianManagerController extends LibrarianScreenController
 	protected void setMessages()
 	{
 		super.setMessages();
-		/*this.messagesTableView.setRowFactory(tv -> { // press on row in book table to open book information
+		this.messagesTableView.setRowFactory(tv -> { // press on row in book table to open book information
 			TableRow<ObservableMessage> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
 				if (event.getClickCount() == 2 && (!row.isEmpty()))
 				{
-					ObservableBook rowData = row.getItem();
-					int bookCatNum = rowData.getCatalognumber();
+					ObservableMessage rowData = row.getItem();
+					String msg = rowData.getMsgContent();
+					String id = msg.substring(16, 25);
+					GuiManager.client.getSubscriberFromDB(id);
+					//GuiManager.openSubscriberCard(new Subscriber(id), getUserLogedIn());
+					//GuiManager.subscriberCardController.setEditMode(true);
 				}
 			});
 			return row;
-		});*/
+		});
 	}
 }
