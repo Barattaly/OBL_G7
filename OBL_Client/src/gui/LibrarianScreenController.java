@@ -788,5 +788,4 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		for (String msg : userLogedIn.getMessages())
 			System.out.println(msg);
 	}
-
 }
