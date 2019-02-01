@@ -111,8 +111,6 @@ public class LibrarianScreenController implements Initializable, IClientUI
 	@FXML
 	protected JFXButton btn_viewSubscriberCard;
 
-	protected ViewSubscriberCardController controller;
-
 	protected SearchBookController searchBookWindowController = null;
 
 	protected BorrowsScreenController borrowsWindowController = null;

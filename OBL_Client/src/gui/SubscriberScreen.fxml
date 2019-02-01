@@ -78,7 +78,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="statusLabel" layoutX="316.0" layoutY="638.0" prefHeight="18.0" prefWidth="230.0" text="Subscriber card status: " textFill="#a0a2ab">
+            <Label fx:id="statusLabel" layoutX="316.0" layoutY="638.0" prefHeight="20.0" prefWidth="345.0" text="Subscriber card status: " textFill="#a0a2ab">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
