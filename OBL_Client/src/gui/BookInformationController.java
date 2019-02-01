@@ -171,41 +171,14 @@ public class BookInformationController implements IClientUI
 		}
 		if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
 		{
-			/* if the subscriber is currently order the book, and the book arrived to the library, (available for borrow) 
-			 * than we need to show the location in orders queue, and able the cancel order option*/
-			if (subscriberLoggedIn != null)
-			{
-				int i = 1, positionInQueue = 0;
-				for (BookOrder order : book.getOrders())
-				{
-					// check if the subscriber already ordered this book
-					if (order.getSubscriberId().equals(subscriberLoggedIn.getId()))
-					{
-						isOrderExist = true;
-						positionInQueue = i;
-					}
-					i++;
-				}
-				if (isOrderExist)
-				{
-					availableLabel.setText("Your position in orders queue: " + positionInQueue);
-					availableLabel.setTextFill(Color.web("#12d318"));
-					orderBookBtn.setVisible(false);
-					cancelOrderBookBtn.setVisible(true);
-					returnDateLabel.setVisible(false);
-					returnDateTextField.setVisible(false);
-				}
-			}
-			else
-			{
-				availableLabel.setText("Available for borrow");
-				availableLabel.setTextFill(Color.web("#12d318"));
-				orderBookBtn.setDisable(true);
-				returnDateLabel.setVisible(false);
-				returnDateTextField.setVisible(false);
-				uploadFileBtn.setVisible(false);
-				viewTOC_btn.setVisible(true);
-			}
+			
+			isSubscriberLoggedIn(book);
+			orderBookBtn.setDisable(true);
+			returnDateLabel.setVisible(false);
+			returnDateTextField.setVisible(false);
+			uploadFileBtn.setVisible(false);
+			viewTOC_btn.setVisible(true);
+
 		} 
 		else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 		{
@@ -233,43 +206,8 @@ public class BookInformationController implements IClientUI
 				availableLabel.setTextFill(Color.RED);
 				orderBookBtn.setDisable(true);
 			}
-			if (subscriberLoggedIn != null)
-			{
-				/*
-				 * if the subscriber is currently borrow one of the copies of this book, than we
-				 * need to prevent the option to order this book
-				 */
-				for (BorrowACopyOfBook borrow : book.getBorrows())
-				{
-					if (borrow.getSubscriberId().equals(subscriberLoggedIn.getId()))
-					{
-						availableLabel.setText("You cant order a book that\nyou are currently borrowing");
-						availableLabel.setTextFill(Color.RED);
-						orderBookBtn.setDisable(true);
-					}
-				}
-				/* if the subscriber is currently order the book, and the book did not 
-				 * arrived to the library yet (not available for borrow),
-				 * than we need to show the location in orders queue, and able the cancel order option*/
-				int i = 1, positionInQueue = 0;
-				for (BookOrder order : book.getOrders())
-				{
-					// check if the subscriber already ordered this book
-					if (order.getSubscriberId().equals(subscriberLoggedIn.getId()))
-					{
-						isOrderExist = true;
-						positionInQueue = i;
-					}
-					i++;
-				}
-				if (isOrderExist)
-				{
-					availableLabel.setText("Your position in orders queue: " + positionInQueue);
-					availableLabel.setTextFill(Color.web("#12d318"));
-					orderBookBtn.setVisible(false);
-					cancelOrderBookBtn.setVisible(true);
-				}
-			}
+			isSubscriberLoggedIn(book);
+			
 			// check what is the closest expected return date
 			String closestReturnDate = book.getBorrows().get(1).getExpectedReturnDate();
 			for (BorrowACopyOfBook borrow : book.getBorrows())
@@ -658,6 +596,47 @@ public class BookInformationController implements IClientUI
 		String fileName = new File(fullName).getName();
 		int dotIndex = fileName.lastIndexOf('.');
 		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+	}
+	
+	
+	private void isSubscriberLoggedIn(Book book)
+	{
+		boolean isOrderExist = false;
+		if (subscriberLoggedIn != null)
+		{
+			/* if the subscriber is currently borrow one of the copies of this book, than we
+			 * need to prevent the option to order this book */
+			for (BorrowACopyOfBook borrow : book.getBorrows())
+			{
+				if (borrow.getSubscriberId().equals(subscriberLoggedIn.getId()))
+				{
+					availableLabel.setText("You cant order a book that\nyou are currently borrowing");
+					availableLabel.setTextFill(Color.RED);
+					orderBookBtn.setDisable(true);
+				}
+			}
+			
+			/* if the subscriber is currently order the book, and the book arrived to the library, (available for borrow) 
+			 * than we need to show the location in orders queue, and able the cancel order option*/
+			int i = 1, positionInQueue = 0;
+			for (BookOrder order : book.getOrders())
+			{
+				// check if the subscriber already ordered this book
+				if (order.getSubscriberId().equals(subscriberLoggedIn.getId()))
+				{
+					isOrderExist = true;
+					positionInQueue = i;
+				}
+				i++;
+			}
+			if (isOrderExist)
+			{
+				availableLabel.setText("Your position in orders queue: " + positionInQueue);
+				availableLabel.setTextFill(Color.web("#12d318"));
+				orderBookBtn.setVisible(false);
+				cancelOrderBookBtn.setVisible(true);
+			}
+		}
 	}
 }
 
