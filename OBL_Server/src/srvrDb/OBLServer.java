@@ -191,6 +191,7 @@ public class OBLServer extends AbstractServer
 			}
 			case UpdateSubscriberCard:
 			{
+				System.out.print("hiii");
 				updateSubscriberInformation((Subscriber) dbMessage.Data, client);
 				break;
 			}
