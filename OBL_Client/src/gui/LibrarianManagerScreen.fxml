@@ -15,6 +15,9 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -362,6 +365,21 @@
                <image>
                   <Image url="@../resources/Login_Username.png" />
                </image>
+            </ImageView>
+            <ImageView fx:id="instructionImageView" fitHeight="317.0" fitWidth="617.0" focusTraversable="true" layoutX="114.0" layoutY="121.0">
+               <image>
+                  <Image url="@../resources/instruction.gif" />
+               </image>
+               <effect>
+                  <Lighting diffuseConstant="2.0" specularConstant="0.35" specularExponent="27.91" surfaceScale="5.0">
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect>
             </ImageView>
          </children>
       </AnchorPane>

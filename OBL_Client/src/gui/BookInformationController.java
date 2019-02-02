@@ -453,7 +453,7 @@ public class BookInformationController implements IClientUI
 			else
 				bookClassification = "ordinary";
 
-			if (bookName.isEmpty() || location.isEmpty() || description.isEmpty() || publicationYear.isEmpty())
+			if (bookName.isEmpty() || location.isEmpty() || publicationYear.isEmpty())
 			{
 				GuiManager.ShowErrorPopup("Please fill all fields!");
 				return;

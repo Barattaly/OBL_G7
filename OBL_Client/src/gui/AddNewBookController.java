@@ -90,42 +90,7 @@ public class AddNewBookController implements Initializable
 				new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, Integer.parseInt(INITAL_VALUE)));
 		copiesSpinner.setEditable(false);
 		
-		/*EventHandler<KeyEvent> enterKeyEventHandler;
-
-		enterKeyEventHandler = new EventHandler<KeyEvent>()
-		{
-
-			@Override
-			public void handle(KeyEvent event)
-			{
-
-				// handle users "enter key event"
-				if (event.getCode() == KeyCode.ENTER)
-				{
-
-					try
-					{
-						// yes, using exception for control is a bad solution ;-)
-						Integer.parseInt(copiesSpinner.getEditor().textProperty().get());
-					} catch (NumberFormatException e)
-					{
-
-						// show message to user: "only numbers allowed"
-						GuiManager.ShowErrorPopup("only numbers allowed");
-						// reset editor to INITAL_VALUE
-						copiesSpinner.getEditor().textProperty().set(INITAL_VALUE);
-					}
-				}
-			}
-		};
-
-		// note: use KeyEvent.KEY_PRESSED, because KeyEvent.KEY_TYPED is to late,
-		// spinners
-		// SpinnerValueFactory reached new value before key released an
-		// SpinnerValueFactory will
-		// throw an exception
-		copiesSpinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, enterKeyEventHandler);*/
-
+		
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
 		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
 		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);

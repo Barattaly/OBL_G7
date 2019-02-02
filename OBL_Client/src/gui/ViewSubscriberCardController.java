@@ -129,6 +129,7 @@ public class ViewSubscriberCardController implements IClientUI
 	void btn_EditClick(ActionEvent event)
 	{
 		GuiManager.preventLettersTypeInTextField(phoneNumberField);
+		GuiManager.limitTextFieldMaxCharacters(phoneNumberField, 10);
 
 		btn_Edit.setVisible(false);
 		btn_Cancel.setVisible(true);
@@ -211,8 +212,19 @@ public class ViewSubscriberCardController implements IClientUI
 				SuccessLabel.setVisible(false);
 				warningLabel.setVisible(true);
 				warningLabel.setText("The Email is incorrect");
+				return;
 			}
 
+		}
+		if(!phoneNumberField.getText().isEmpty())
+		{
+			if(phoneNumberField.getText().length()<10)
+			{
+				SuccessLabel.setVisible(false);
+				warningLabel.setVisible(true);
+				warningLabel.setText("The phone number is too short");
+				return;
+			}		
 		}
 		btn_Edit.setVisible(true);
 		btn_Cancel.setVisible(false);
@@ -238,7 +250,7 @@ public class ViewSubscriberCardController implements IClientUI
 				status = "deep freeze";
 			} else
 			{
-				status = oldStatus;
+				status = "active";
 			}
 
 		} else

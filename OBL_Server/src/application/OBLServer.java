@@ -1770,13 +1770,13 @@ public class OBLServer extends AbstractServer
 			query = BooksQueries.SearchAuthor(author);
 			rs = oblDB.executeQuery(query);
 			rowCount = getRowCount(rs);
-			if (rowCount == 0)
+			if (rowCount == 0)//need to add the author to "authors"
 			{
 				query = BooksQueries.AddAuthor(author);
 				oblDB.executeUpdate(query);
-				query = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);
-				oblDB.executeUpdate(query);
 			}
+			query = BooksQueries.AddBookAuthors(book.getCatalogNumber(), author);//finally add to books_authors
+			oblDB.executeUpdate(query);
 		}
 		try
 		{
@@ -1787,13 +1787,13 @@ public class OBLServer extends AbstractServer
 				query = BooksQueries.SearchCategory(category);
 				rs = oblDB.executeQuery(query);
 				rowCount = getRowCount(rs);
-				if (rowCount == 0)
+				if (rowCount == 0)//new category - need to add him to category table
 				{
 					query = BooksQueries.AddCategory(category);
 					oblDB.executeUpdate(query);
-					query = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);
-					oblDB.executeUpdate(query);
 				}
+				query = BooksQueries.AddBookCategory(book.getCatalogNumber(), category);//finally add to books_categories
+				oblDB.executeUpdate(query);
 			}
 
 			int copies = book.getMaxCopies();
