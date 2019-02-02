@@ -38,6 +38,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import observableEntities.*;
 
 public class SubscriberScreenController implements Initializable, IClientUI
@@ -144,7 +145,9 @@ public class SubscriberScreenController implements Initializable, IClientUI
 		dateSentTableColumn.setCellValueFactory(new PropertyValueFactory<>("dateSent"));
 		msgContentTableColumn.setCellValueFactory(new PropertyValueFactory<>("msgContent"));
 		observableMsgList = FXCollections.observableArrayList();
+		
 		messagesTableView.setItems(observableMsgList);
+
 		
 		pane_home.setVisible(true);
 		pane_searchBook.setVisible(false);
@@ -326,5 +329,15 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			observableMsgList.add(tempMsg);
 		}
 		messagesTableView.setItems(observableMsgList);
+		Platform.runLater(new Runnable()
+		{
+			
+			@Override
+			public void run()
+			{
+				messagesTableView.getSortOrder().add(dateSentTableColumn);				
+			}
+		});
+		
 	}
 }

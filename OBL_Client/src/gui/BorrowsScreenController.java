@@ -181,7 +181,8 @@ public class BorrowsScreenController implements IClientUI
 		spinnerAnchorPane.setLayoutX(280);
 		spinnerAnchorPane.setLayoutY(170);
 		 
-		/*borrowsTable.setRowFactory(tv -> new TableRow<ObservableBorrow>() {
+		/*borrowsTable.setRowFactory(tv -> new TableRow<ObservableBorrow>()
+		{
 		    @Override
 		    public void updateItem(ObservableBorrow item, boolean empty)
 		    {
@@ -217,7 +218,40 @@ public class BorrowsScreenController implements IClientUI
 		
 		borrowsTable.setRowFactory(tv -> 
 		{
-			TableRow<ObservableBorrow> row = new TableRow<>();
+			TableRow<ObservableBorrow> row = new TableRow<ObservableBorrow>();// {
+				//@Override
+				/* public void updateItem(ObservableBorrow item, boolean empty)
+			    {
+					super.updateItem(item, empty) ;
+			        if (item == null) 
+			        {
+						setTextFill(Color.BLACK);
+			            setStyle("");
+			            return;
+			        }
+			        String expectedRetunDate = item.getReturnDate();
+			        if ((LocalDate.parse(getCurrentDateAsString()).isAfter(LocalDate.parse(expectedRetunDate)))) 
+					{
+						setText("-fx-text-fill: tomato;");
+						setStyle("-fx-font-weight: bold");
+					} 
+					else if ((LocalDate.parse(getCurrentDateAsString())
+							.isEqual(LocalDate.parse(expectedRetunDate))) // return day
+							|| (LocalDate.parse(getCurrentDateAsString()).plusDays(1))
+									.isEqual(LocalDate.parse(expectedRetunDate))) // one day before return date
+					{
+						setTextFill(Color.GREEN);
+						setStyle("-fx-font-weight: bold");
+					} 
+					else 
+					{
+						setTextFill(Color.BLACK);
+						setStyle("-fx-font-weight: lighter");
+					}
+			    }
+				};*/
+					
+			
 			row.setOnMouseClicked(event -> 
 			{
 				if (event.getClickCount() == 2 && (!row.isEmpty()))

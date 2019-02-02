@@ -229,7 +229,7 @@
                      <content>
                         <TableView fx:id="messagesTableView" prefHeight="96.0" prefWidth="588.0">
                            <columns>
-                              <TableColumn fx:id="dateSentTableColumn" prefWidth="86.0" text="Date Sent" />
+                              <TableColumn fx:id="dateSentTableColumn" prefWidth="86.0" sortType="DESCENDING" text="Date Sent" />
                               <TableColumn fx:id="msgContentTableColumn" prefWidth="509.0" text="Message content" />
                            </columns>
                         </TableView>

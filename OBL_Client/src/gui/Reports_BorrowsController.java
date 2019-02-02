@@ -184,7 +184,8 @@ public class Reports_BorrowsController
 			max = 10;
 			amount = max - 1;
 		}
-		histogram = calcHistogram(regularDurations, 1, max, amount);
+
+		histogram = calcHistogram(regularDurations, 0, max , 10.0);
 		for (int i = 0; i < amount; i++)
 		{
 			regular.getData().add(new XYChart.Data(ranges[i], histogram[i]));
@@ -207,13 +208,25 @@ public class Reports_BorrowsController
 
 	}
 
-	private String[] getDaysRange(int amount)
+	private String[] getDaysRange(int max)
 	{
-		if (amount < 10)
+		if (max < 10)
 		{
 			return new String[]
 			{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 		}
+		String[] ranges = new String[10];
+		int start = 0;
+		double step = Math.ceil(max/10.0);
+		ranges[0]= "[" +String.valueOf(start) +" - " +String.valueOf(step) +"]";
+
+		for(int i=1;i<10;i++)
+		{
+			ranges[i]= "[" +String.valueOf((i)*step) +" - " +String.valueOf((i+1)*step) +"]";
+
+		}
+		return ranges;
+		/*
 		String[] ranges = new String[amount];
 		int maxDaysLate = amount, daysCount = 1;
 		String daysRanges = "";
@@ -238,28 +251,30 @@ public class Reports_BorrowsController
 			daysCount++;
 		}
 		ranges = daysRanges.split(" ");
-		return ranges;
+		return ranges;*/
 	}
 
-	public static int[] calcHistogram(int[] data, int min, int max, int numBins)
+	public static int[] calcHistogram(int[] data, int min, int max, double numBins)
 	{
-		final int[] result = new int[numBins];
-		double binSize = 0;
-		if (numBins != 0)
-			binSize = (max - min) / numBins;
+		final int[] result = new int[10];
+		
+		double binSize = Math.ceil(max/numBins);
+
 
 		for (int d : data)
 		{
 			int bin;
-			if(binSize ==0) bin =0;
-			else bin = (int) ((d - min) / binSize);
+			if (binSize == 0)
+				bin = 0;
+			else
+				bin = (int) ((d - min) / binSize);
 			if (bin < 0)
 			{
-				/* this data is smaller than min */ } 
-			else if (bin >= numBins)
+				/* this data is smaller than min */
+			} else if (bin >= 10)
 			{
-				/* this data point is bigger than max */ } 
-			else
+				/* this data point is bigger than max */
+			} else
 			{
 				result[bin] += 1;
 			}
