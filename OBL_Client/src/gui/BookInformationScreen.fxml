@@ -196,14 +196,14 @@
                   <Font size="18.0" />
                </font>
             </JFXTextField>
-            <Pane fx:id="onEditShowPane" layoutX="464.0" layoutY="318.0" prefHeight="267.0" prefWidth="255.0">
+            <Pane fx:id="onEditShowPane" layoutX="464.0" layoutY="326.0" prefHeight="244.0" prefWidth="255.0">
                <children>
                   <JFXCheckBox fx:id="wantedBookCheckBox" layoutX="54.0" layoutY="7.0" text="wanted book" textFill="#f5eeee">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </JFXCheckBox>
-                  <JFXButton buttonType="RAISED" layoutX="9.0" layoutY="223.0" onAction="#saveChangesClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #047f17;" text="Save changes" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="9.0" layoutY="201.0" onAction="#saveChangesClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #047f17;" text="Save changes" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -211,21 +211,21 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" cancelButton="true" layoutX="136.0" layoutY="223.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc">
+                  <JFXButton buttonType="RAISED" cancelButton="true" layoutX="136.0" layoutY="201.0" onAction="#cancelClick" prefHeight="30.0" prefWidth="111.0" style="-fx-background-color: #da0f0f;" text="Cancel" textFill="#fcfcfc">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton fx:id="remove_btn" buttonType="RAISED" layoutX="133.0" layoutY="164.0" onAction="#removeCopiesClick" prefHeight="30.0" prefWidth="113.0" style="-fx-background-color: #3C58FA;" text="Remove copy" textFill="WHITE">
+                  <JFXButton fx:id="remove_btn" buttonType="RAISED" layoutX="133.0" layoutY="127.0" onAction="#removeCopiesClick" prefHeight="30.0" prefWidth="113.0" style="-fx-background-color: #3C58FA;" text="Remove copy" textFill="WHITE">
                      <font>
                         <Font size="13.0" />
                      </font></JFXButton>
-                  <Label layoutX="14.0" layoutY="87.0" prefHeight="27.0" prefWidth="86.0" text="Add copies:" textFill="#a0a2ab">
+                  <Label layoutX="14.0" layoutY="90.0" prefHeight="27.0" prefWidth="86.0" text="Add copies:" textFill="#a0a2ab">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Spinner fx:id="copiesSpinner" editable="true" layoutX="133.0" layoutY="88.0" prefHeight="25.0" prefWidth="113.0">
+                  <Spinner fx:id="copiesSpinner" editable="true" layoutX="133.0" layoutY="91.0" prefHeight="25.0" prefWidth="113.0">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -235,13 +235,7 @@
                         <Font size="19.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="copiesComboBox" layoutX="13.0" layoutY="164.0" prefHeight="27.0" prefWidth="103.0" />
-                  <ComboBox fx:id="lostCopiesComboBox" layoutX="13.0" layoutY="124.0" prefHeight="27.0" prefWidth="103.0" />
-                  <JFXButton fx:id="reprotLostCopies_btn" buttonType="RAISED" layoutX="133.0" layoutY="124.0" onAction="#reportLostCopiesClick" prefHeight="30.0" prefWidth="113.0" style="-fx-background-color: #3C58FA;" text="Report lost copy" textFill="WHITE">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                  </JFXButton>
+                  <ComboBox fx:id="copiesComboBox" layoutX="13.0" layoutY="127.0" prefHeight="27.0" prefWidth="103.0" />
                </children>
             </Pane>
             <JFXButton fx:id="uploadFileBtn" buttonType="RAISED" layoutX="59.0" layoutY="633.0" onAction="#btnUploadTableOfcontentClick" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #3C58FA;" text="Upload table of content" textFill="WHITE">

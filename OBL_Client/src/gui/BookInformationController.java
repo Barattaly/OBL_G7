@@ -159,7 +159,8 @@ public class BookInformationController implements IClientUI
 		GuiManager.limitTextFieldMaxCharacters(locationTextField, 6);
 		catNumTextField.setText(book.getCatalogNumber());
 		cancelOrderBookBtn.setVisible(false);
-		boolean isOrderExist = false;
+		availableLabel.setText("The book available for borrow");
+		availableLabel.setTextFill(Color.web("#12d318"));
 		if (book.getClassification().equals("wanted"))
 		{
 			wantedBookLabel.setVisible(true);
@@ -169,6 +170,7 @@ public class BookInformationController implements IClientUI
 			wantedBookLabel.setVisible(false);
 			wantedLogo.setVisible(false);
 		}
+		//setOrderButton(book);
 		if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
 		{
 			
@@ -257,15 +259,11 @@ public class BookInformationController implements IClientUI
 	@FXML
 	void btn_cancelOrderClick(ActionEvent event)
 	{
+		BookOrder orderToCancel = new BookOrder(userLoggedIn.getId(), catNumTextField.getText());
 
+		GuiManager.client.cancelOrder(orderToCancel);
 	}
 	
-	@FXML
-    void reportLostCopiesClick(ActionEvent event)
-	{
-
-    }
-
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
@@ -273,10 +271,36 @@ public class BookInformationController implements IClientUI
 		{
 		case CreateNewOrder:
 		{
+			BookOrder order = (BookOrder) msg.Data;
+			if (order.getSubscriberId().equals("0"))
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Yoy have an active order of this book. Please close book page and refresh the books table at search book page.");
+				});
+			} 
+			else
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Order executed Successfully!");
 					orderBookBtn.setDisable(true);
+				});
+			}
+			break;
+		}
+		case CancelOrder:
+		{
+			BookOrder order = (BookOrder) msg.Data;
+			if (order.getSubscriberId().equals("0"))
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Yoy don't have an active order of this book. Please close book page and refresh the books table at search book page.");
+				});
+			} 
+			else
+			{
+				Platform.runLater(() -> {
+					cancelOrderBookBtn.setDisable(true);
+					GuiManager.ShowMessagePopup("Order canceled Successfully!");
 				});
 			}
 			break;
@@ -597,7 +621,6 @@ public class BookInformationController implements IClientUI
 		int dotIndex = fileName.lastIndexOf('.');
 		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
 	}
-	
 	
 	private void isSubscriberLoggedIn(Book book)
 	{

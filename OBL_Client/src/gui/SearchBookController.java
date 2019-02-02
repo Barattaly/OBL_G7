@@ -3,12 +3,14 @@ package gui;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.jfoenix.controls.JFXTextField;
 
 import client.IClientUI;
 import entities.Book;
+import entities.BookOrder;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
@@ -382,6 +384,13 @@ public class SearchBookController implements Initializable, IClientUI
 				bookInformationController.getStage().close();
 				refreshBtnClicked(null);
 				//openUpdatedBook(((Book)msg.Data).getCatalogNumber());
+			});
+			break;
+		}
+		case CancelOrder:
+		{
+			Platform.runLater(() -> {
+				bookInformationController.getMessageFromServer(msg);
 			});
 			break;
 		}
