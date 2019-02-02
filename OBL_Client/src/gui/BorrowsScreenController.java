@@ -180,7 +180,7 @@ public class BorrowsScreenController implements IClientUI
 		observableBorrowsList = FXCollections.observableArrayList();
 		spinnerAnchorPane.setLayoutX(280);
 		spinnerAnchorPane.setLayoutY(170);
-		
+		 
 		/*borrowsTable.setRowFactory(tv -> new TableRow<ObservableBorrow>() {
 		    @Override
 		    public void updateItem(ObservableBorrow item, boolean empty)
@@ -315,7 +315,7 @@ public class BorrowsScreenController implements IClientUI
 		copyNumberColumn.setCellValueFactory(new PropertyValueFactory<>("copyId"));
 		catalogNumberColumn.setCellValueFactory(new PropertyValueFactory<>("catalogNumber"));
 		subscriberIDColumn.setVisible(false);
-		spinnerAnchorPane.setLayoutX(280);
+		spinnerAnchorPane.setLayoutX(280); 
 		spinnerAnchorPane.setLayoutY(230);
 		borrowsTable.setRowFactory(tv -> { // press on row in borrow table to do what ever we want
 			TableRow<ObservableBorrow> row = new TableRow<>();
