@@ -663,7 +663,7 @@ public class OBLServer extends AbstractServer
 																			// wanted
 				{
 					if (LocalDate.parse(borrowToAdd.getExpectedReturnDate())
-							.isAfter((LocalDate.parse(getCurrentDateAsString()).plusDays(2))))
+							.isAfter((LocalDate.parse(getCurrentDateAsString()).plusDays(3))))
 					{
 						borrowToAdd.setExpectedReturnDate("1");
 						DBMessage returnMsg = new DBMessage(DBAction.CreateNewBorrow, borrowToAdd);
