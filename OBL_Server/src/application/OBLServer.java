@@ -289,6 +289,11 @@ public class OBLServer extends AbstractServer
 				createBorrowExtension((BorrowExtension) dbMessage.Data, client);
 				break;
 			}
+			case CancelOrder:
+			{
+				cancelOrder((BookOrder) dbMessage.Data, client);
+				break;
+			}
 			default:
 				break;
 			}
@@ -895,7 +900,28 @@ public class OBLServer extends AbstractServer
 
 	private void createNewOrder(BookOrder bookOrder, ConnectionToClient client) throws IOException
 	{
-		String query = OrdersQueries.addNewOrder(bookOrder);
+		Book book = new Book(bookOrder.getBookCatalogNumber());
+		String query = OrdersQueries.getBookCurrentOrders(book);
+		ResultSet rsBookCurrentOrders = oblDB.executeQuery(query);
+		try
+		{
+			while(rsBookCurrentOrders.next())
+			{ 
+				// check if the subscriber already have active order of this book
+				if(rsBookCurrentOrders.getString(2).equals(bookOrder.getSubscriberId()))
+				{
+					bookOrder.setSubscriberId("0");
+					DBMessage returnMsg = new DBMessage(DBAction.CreateNewOrder, bookOrder);
+					client.sendToClient(returnMsg);
+					return;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		query = OrdersQueries.addNewOrder(bookOrder);
 		oblDB.executeUpdate(query); // add a new order to Orders table
 
 		DBMessage returnMsg = new DBMessage(DBAction.CreateNewOrder, bookOrder);
@@ -992,6 +1018,69 @@ public class OBLServer extends AbstractServer
 		return;
 
 	}
+	
+	
+	private void cancelOrder(BookOrder orderToCancel, ConnectionToClient client) throws IOException
+	{
+		Book book = new Book(orderToCancel.getBookCatalogNumber());
+		String query = OrdersQueries.getBookCurrentOrders(book);
+		ResultSet rsBookCurrentOrders = oblDB.executeQuery(query);
+		boolean isActiveOrderExist = false;
+		int rowCount = getRowCount(rsBookCurrentOrders);
+		if(rowCount == 0)
+		{
+			orderToCancel.setSubscriberId("0");
+			DBMessage returnMsg = new DBMessage(DBAction.CancelOrder, orderToCancel);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		try
+		{
+			while(rsBookCurrentOrders.next())
+			{ 
+				// check if the subscriber already have active order of this book
+				if(rsBookCurrentOrders.getString(2).equals(orderToCancel.getSubscriberId()))
+				{
+					isActiveOrderExist = true;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(!isActiveOrderExist)
+		{
+			orderToCancel.setSubscriberId("0");
+			DBMessage returnMsg = new DBMessage(DBAction.CancelOrder, orderToCancel);
+			client.sendToClient(returnMsg);
+			return;
+		}
+		else
+		{
+			query = OrdersQueries.getSubscriberOrderToCancel(orderToCancel);
+			ResultSet rs = oblDB.executeQuery(query); // get order details in order to change the status to canceled
+			try
+			{
+				rs.next();
+				orderToCancel.setId(rs.getString(1));
+				orderToCancel.setOrderDate(rs.getString(3));
+				orderToCancel.setBookArriveDate(rs.getString(5));
+			} 
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			orderToCancel.setStatus("canceled");
+			query = OrdersQueries.updateOrderStatus(orderToCancel);
+			oblDB.executeUpdate(query); // update order status to canceled
+
+			DBMessage returnMsg = new DBMessage(DBAction.CancelOrder, orderToCancel);
+			client.sendToClient(returnMsg);
+			return;
+		}
+	}
+	
 
 	private boolean isBookExist(Book bookToCheck)
 	{

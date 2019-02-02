@@ -110,4 +110,12 @@ public class OrdersQueries
 		return queryMsg;
 	}
 	
+	public static String getSubscriberOrderToCancel(BookOrder orderToCancel)
+	{
+		String queryMsg = "SELECT * FROM obl_db.orders" 
+						+ " WHERE subscriberID = '" + orderToCancel.getSubscriberId() + "' AND bookCatalogNumber = '" 
+						+ orderToCancel.getBookCatalogNumber() + "' AND status ='active';";
+				return queryMsg;
+	}
+	
 }

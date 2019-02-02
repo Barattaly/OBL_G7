@@ -411,5 +411,19 @@ public class ClientController extends AbstractClient
 			ex.printStackTrace();
 		}
 	}
+	
+	public void cancelOrder(BookOrder newOrder)
+	{
+		DBMessage message = new DBMessage(DBAction.CancelOrder, newOrder);
+		try
+		{
+			sendToServer(message);
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+	}
+
 }
 //End of ClientController class

@@ -270,6 +270,13 @@ public class SubscriberScreenController implements Initializable, IClientUI
 			});
 			break;
 		}
+		case CancelOrder:
+		{
+			searchBookWindowController.getMessageFromServer(msg);
+			break;
+		}
+		default:
+			break;
 		}
 	}
 
