@@ -38,7 +38,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 /**
- * A static class, handling all the GUI. This is the main Controller between the
+ * A static class, handling all the GUI's controllers. This is the main Controller between the
  * communication with the server (aka "ClientController") and the GUI (all of
  * the FXML controllers).
  */
@@ -186,7 +186,9 @@ public class GuiManager
 		}
 	}
 
-	
+	/**
+	 * The initial window for the connection to server
+	 */
 	private static void getServerIp()
 	{
 		final Stage dialog = new Stage();

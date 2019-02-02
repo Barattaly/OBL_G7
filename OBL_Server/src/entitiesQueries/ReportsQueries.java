@@ -12,7 +12,11 @@ import com.mysql.jdbc.MySQLConnection;
 import entities.Report_Activity;
 import entities.Report_LateReturns;
 import entities.Report_LateReturns.NumberAndDurationOfLates;
-
+/**
+ * This class hold all the queries for the reports
+ * And the creation of reports entities from ResaultSet
+ *
+ */
 public class ReportsQueries
 {
 	public static String countTotalSubscribers()
@@ -55,7 +59,8 @@ public class ReportsQueries
 	public static String countSubscribersNumThatLate()
 	{
 		String queryMsg = "SELECT COUNT(*) FROM " + "(SELECT * FROM obl_db.borrows "
-				+ "WHERE obl_db.borrows.isReturnedLate = 'yes' " + "GROUP BY obl_db.borrows.subscriberID) "
+				+ "WHERE obl_db.borrows.isReturnedLate = 'yes' AND  actualReturnDate IS NULL "
+				+ "GROUP BY obl_db.borrows.subscriberID) "
 				+ "as lateReturnsPerSub";
 		return queryMsg;
 	}

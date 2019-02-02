@@ -62,7 +62,7 @@ public class OBLServer extends AbstractServer
 
 	public TextArea logREF = null;
 	private MySQLConnection oblDB;
-	private final String pathToSavePDF = ".\\src\\resources\\tablesOfContent\\";
+	private final String pathToSavePDF = ".\\BooksTablesOfContent\\";
 
 	/**
 	 * Constructs an instance of the OBL server.
@@ -121,6 +121,7 @@ public class OBLServer extends AbstractServer
 	/**
 	 * This method handles any messages received from the client. In this method we
 	 * handle all the unexpected exceptions.
+	 * Each request has a unique ENUM and a function. Therefore we manipulate the message through "switch" by the ENUM.
 	 *
 	 * @param dbMessage The message received from the client.
 	 * @param client    The connection from which the message originated.

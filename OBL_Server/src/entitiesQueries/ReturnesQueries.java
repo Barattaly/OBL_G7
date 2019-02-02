@@ -4,7 +4,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import entities.ActivityLog;
-
+/**
+ * This class hold all the queries for returns
+ * And the creation of returns entities from ResaultSet
+ *
+ */
 public class ReturnesQueries
 {
 

@@ -7,7 +7,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
+/**
+ * This class holds the main function to start the OBL Server application
+ *
+ */
 public class mainServer extends Application
 {
 	@Override

@@ -164,8 +164,8 @@ public class ViewSubscriberCardController implements IClientUI
 	@FXML
 	void btn_CancelClick(ActionEvent event)
 	{
-		// GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
-		// GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
+		//GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
+		//GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
 
 		setSubscriberToShow(subscriberToShow);
 
@@ -267,6 +267,8 @@ public class ViewSubscriberCardController implements IClientUI
 		warningLabel.setVisible(false);
 		SuccessLabel.setText("Changes saved successfully");
 		freezeSubscriberToggleButton.setVisible(false);
+		GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
+
 	}
 
 	public JFXTextField getFirstNameField()

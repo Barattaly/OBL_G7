@@ -3,7 +3,11 @@ package entitiesQueries;
 import java.sql.ResultSet;
 
 import entities.Subscriber;
-
+/**
+ * This class hold all the queries for subscribers
+ * And the creation of subscribers entities from ResaultSet
+ *
+ */
 public class SubscribersQueries
 {
 	public static String createSubscriber(Subscriber subscriber)

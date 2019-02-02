@@ -8,7 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import entities.User;
-
+/**
+ * This class is responsible for the DB connection with the server.
+ *
+ */
 public class MySQLConnection
 {
 	private Connection conn;
