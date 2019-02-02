@@ -1,6 +1,9 @@
 package gui;
 
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -11,6 +14,7 @@ import com.jfoenix.controls.JFXTextField;
 import client.IClientUI;
 import entities.Book;
 import entities.BookOrder;
+import entities.BorrowACopyOfBook;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
@@ -20,17 +24,23 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXSpinner;
 
+import javafx.scene.control.DateCell;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -42,6 +52,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import observableEntities.*;
 
@@ -360,7 +374,10 @@ public class SearchBookController implements Initializable, IClientUI
 		}
 		case CreateNewOrder:
 		{
-			bookInformationController.getMessageFromServer(msg);
+			Platform.runLater(() -> {
+				bookInformationController.getMessageFromServer(msg);
+				refreshBtnClicked(null);
+			});
 			break;
 		}
 		case AddBook:
@@ -391,6 +408,7 @@ public class SearchBookController implements Initializable, IClientUI
 		{
 			Platform.runLater(() -> {
 				bookInformationController.getMessageFromServer(msg);
+				refreshBtnClicked(null);
 			});
 			break;
 		}
