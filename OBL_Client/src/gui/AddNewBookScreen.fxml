@@ -169,6 +169,7 @@
                   <Font size="17.0" />
                </font>
             </Label>
+            <Label layoutX="58.0" layoutY="521.0" style="-fx-font-weight: BOLD;" text="* Required fields" textFill="#ff0f0f" />
          </children>
       </AnchorPane>
    </center>

@@ -154,6 +154,7 @@ public class BookInformationController implements IClientUI
 		String categories = book.getCategories().toString().replace("[", "").replace("]", "");
 		categoriesTextArea.setText(categories);
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
+		GuiManager.limitTextFieldMaxCharacters(editionNumTextField, 11);
 		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
 		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
 		GuiManager.limitTextFieldMaxCharacters(locationTextField, 6);
@@ -605,8 +606,7 @@ public class BookInformationController implements IClientUI
 				}
 			} catch (IOException e)
 			{
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
+
 				uploadedFileByteArray = null;
 			}
 		}
