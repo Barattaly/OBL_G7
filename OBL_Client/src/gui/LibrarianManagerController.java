@@ -1,6 +1,9 @@
 package gui;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -56,12 +59,14 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -73,7 +78,6 @@ import observableEntities.ObservableBook;
 import observableEntities.ObservableBorrow;
 import observableEntities.ObservableEmployee;
 import observableEntities.ObservableMessage;
-
 
 public class LibrarianManagerController extends LibrarianScreenController
 {
@@ -146,6 +150,9 @@ public class LibrarianManagerController extends LibrarianScreenController
 	private Label instructionLabelActivityReport;
 
 	private Map<String, Report_Activity> oldActivityReports;
+
+	@FXML
+	private ImageView instructionImageView;
 
 	// this is the search function, it is in listener for text inside the textfield
 	private InvalidationListener onSearchStart = new InvalidationListener()
@@ -521,7 +528,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 			reportsListView.setItems(reportsList);
 		});
 	}
-	
+
 	private void openLateReturnsReport(Report_LateReturns data)
 	{
 		try
@@ -542,7 +549,7 @@ public class LibrarianManagerController extends LibrarianScreenController
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void setMessages()
 	{
@@ -556,11 +563,11 @@ public class LibrarianManagerController extends LibrarianScreenController
 					String msg = rowData.getMsgContent();
 					String id = msg.substring(16, 25);
 					GuiManager.client.getSubscriberFromDB(id);
-					//GuiManager.openSubscriberCard(new Subscriber(id), getUserLogedIn());
-					//GuiManager.subscriberCardController.setEditMode(true);
 				}
 			});
 			return row;
 		});
 	}
+
+
 }
