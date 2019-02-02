@@ -31,12 +31,12 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label layoutX="37.0" layoutY="456.0" style="-fx-font-weight: BOLD;" text="*One day before return date / return date" textFill="GREEN" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="37.0">
+      <Label layoutX="37.0" layoutY="456.0" style="-fx-font-weight: BOLD;" text="*One day before return date / return date" textFill="GREEN" visible="false" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="37.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="37.0" layoutY="482.0" style="-fx-font-weight: BOLD;" text="*Return date has passed, you're late! " textFill="RED" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="37.0">
+      <Label layoutX="37.0" layoutY="482.0" style="-fx-font-weight: BOLD;" text="*Return date has passed, you're late! " textFill="RED" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="37.0">
          <font>
             <Font size="14.0" />
          </font>
@@ -46,7 +46,7 @@
             <Font size="14.0" />
          </font>
       </JFXTextField>
-      <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="705.0" layoutY="85.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="refreshBtn" fitHeight="41.0" fitWidth="48.0" layoutX="705.0" layoutY="85.0" onMouseClicked="#refreshBtnClicked" onMousePressed="#pressRefresh" onMouseReleased="#releasedRefresh" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="10.0">
          <image>
             <Image url="@../resources/refresh.png" />
          </image>

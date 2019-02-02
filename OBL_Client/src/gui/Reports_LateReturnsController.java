@@ -205,19 +205,19 @@ public class Reports_LateReturnsController
 		Arrays.sort(durationOfLatesArray);
 		// Number of late:
 		int max = numberOfLatesArray[numberOfLatesArray.length - 1];
-		int amount;
+		double amount;
 		ranges = getDaysRange(max);
 
 		if (max > 10)
 		{
-			amount = 10;
+			amount = 10.0;
 
 		} else
 		{
 			max = 10;
 			amount = max - 1;
 		}
-		histogram = calcHistogram(numberOfLatesArray, 1, max, amount);
+		histogram = calcHistogram(numberOfLatesArray, 0, max, amount);
 		for (int i = 0; i < amount; i++)
 		{
 			numberOflates.getData().add(new XYChart.Data(ranges[i], histogram[i]));
@@ -228,14 +228,14 @@ public class Reports_LateReturnsController
 
 		if (max > 10)
 		{
-			amount = 10;
+			amount = 10.0;
 
 		} else
 		{
 			max = 10;
 			amount = max - 1;
 		}
-		histogram = calcHistogram(durationOfLatesArray, 1, max, amount);
+		histogram = calcHistogram(durationOfLatesArray, 0, max, amount);
 		for (int i = 0; i < amount; i++)
 		{
 			durationOflates.getData().add(new XYChart.Data(ranges[i], histogram[i]));
@@ -291,46 +291,32 @@ public class Reports_LateReturnsController
 
 	}
 
-	private String[] getDaysRange(int amount)
+	private String[] getDaysRange(int max)
 	{
-		if (amount < 10)
+		if (max < 10)
 		{
 			return new String[]
 			{ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
 		}
-		String[] ranges = new String[amount];
-		int maxDaysLate = amount, daysCount = 1;
-		String daysRanges = "";
-		for (int i = 0; i < (10 - (maxDaysLate % 10)); i++) // amount of columns
+		String[] ranges = new String[10];
+		int start = 0;
+		double step = Math.ceil(max/10.0);
+		ranges[0]= "[" +String.valueOf(start) +" - " +String.valueOf(step) +"]";
+
+		for(int i=1;i<10;i++)
 		{
-			daysRanges += daysCount;
-			for (int j = 0; j < ((maxDaysLate / 10) - 1); j++) // range of days
-			{
-				daysCount++;
-			}
-			daysRanges += "-" + daysCount + " ";
-			daysCount++;
+			ranges[i]= "[" +String.valueOf((i)*step) +" - " +String.valueOf((i+1)*step) +"]";
+
 		}
-		for (int i = 0; i < (maxDaysLate % 10); i++) // amount of columns
-		{
-			daysRanges += daysCount;
-			for (int j = 0; j < ((maxDaysLate / 10)); j++) // range of days
-			{
-				daysCount++;
-			}
-			daysRanges += "-" + daysCount + " ";
-			daysCount++;
-		}
-		ranges = daysRanges.split(" ");
 		return ranges;
 	}
 
-	public static int[] calcHistogram(int[] data, int min, int max, int numBins)
+	public static int[] calcHistogram(int[] data, int min, int max, double numBins)
 	{
-		final int[] result = new int[numBins];
-		double binSize = 0;
-		if (numBins != 0)
-			binSize = (max - min) / numBins;
+		final int[] result = new int[10];
+		
+		double binSize = Math.ceil(max/numBins);
+
 
 		for (int d : data)
 		{
@@ -341,14 +327,17 @@ public class Reports_LateReturnsController
 				bin = (int) ((d - min) / binSize);
 			if (bin < 0)
 			{
-				/* this data is smaller than min */ } else if (bin >= numBins)
+				/* this data is smaller than min */
+			} else if (bin >= 10)
 			{
-				/* this data point is bigger than max */ } else
+				/* this data point is bigger than max */
+			} else
 			{
 				result[bin] += 1;
 			}
 		}
 		return result;
 	}
+
 
 }

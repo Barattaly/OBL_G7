@@ -202,7 +202,7 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		msgContentTableColumn.setCellValueFactory(new PropertyValueFactory<>("msgContent"));
 		observableMsgList = FXCollections.observableArrayList();
 		messagesTableView.setItems(observableMsgList);
-		
+			
 		pane_home.setVisible(true);
 		pane_createNewSubscriberCard.setVisible(false);
 		pane_searchBook.setVisible(false);
@@ -816,6 +816,16 @@ public class LibrarianScreenController implements Initializable, IClientUI
 			observableMsgList.add(tempMsg);
 		}
 		messagesTableView.setItems(observableMsgList);
+		Platform.runLater(new Runnable()
+		{
+			
+			@Override
+			public void run()
+			{
+				messagesTableView.getSortOrder().add(dateSentTableColumn);				
+			}
+		});
+		
 	}
     @FXML
     void borrowExtensionClick(ActionEvent event) 
