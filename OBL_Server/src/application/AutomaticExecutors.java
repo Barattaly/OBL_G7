@@ -37,9 +37,9 @@ public class AutomaticExecutors
 			return;
 		AutomaticExecutors.oblDB = oblDb;
 		executor = new ScheduledThreadPoolExecutor(1);
-		/*executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 5, TimeUnit.MINUTES);
+		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 5, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 1, TimeUnit.HOURS);
-		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 1, TimeUnit.HOURS);*/
+		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 1, TimeUnit.HOURS);
 	}
 	public void shutDown()
 	{
@@ -163,7 +163,7 @@ public class AutomaticExecutors
 		{
 			messageContent = "The subscriber: " + subscriber.getId()
 		  	   + " is late at return of 3 books.\n"
-		  	   + "Please approve to change the subscriber card status to deep freeze";
+		  	   + "Please double click on this message in order to change the subscriber card status to deep freeze";
 			message = new OblMessage(messageContent, "library manager");
 			query = OblMessagesQueries.sendMessageToLibraryManager(message);
 			oblDB.executeUpdate(query); // add a new message to messages table
