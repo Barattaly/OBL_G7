@@ -90,10 +90,13 @@ public class AddNewBookController implements Initializable
 				new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, Integer.parseInt(INITAL_VALUE)));
 		copiesSpinner.setEditable(false);
 		
-		
 		GuiManager.preventLettersTypeInTextField(editionNumTextField);
-		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
+		GuiManager.limitTextFieldMaxCharacters(editionNumTextField, 11);
+
+		GuiManager.limitTextFieldMaxCharacters(locationTextField, 6);
+		
 		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
+		GuiManager.preventLettersTypeInTextField(publicationYearTextField);
 
 
 	}

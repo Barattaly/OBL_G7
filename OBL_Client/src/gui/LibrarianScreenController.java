@@ -9,6 +9,9 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import org.omg.CORBA.Current;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
@@ -814,4 +817,10 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 		messagesTableView.setItems(observableMsgList);
 	}
+    @FXML
+    void borrowExtensionClick(ActionEvent event) 
+    {
+    	GuiManager.ShowMessagePopup("To make borrow extension:\n"
+    			+ "Double click on the wanted row in \"Current borrowed books\"");
+    }
 }

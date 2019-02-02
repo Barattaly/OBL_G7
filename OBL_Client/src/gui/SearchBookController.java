@@ -445,6 +445,7 @@ public class SearchBookController implements Initializable, IClientUI
 			}
 		}
 		BookTable.refresh();
+		BookTable.getSortOrder().add(catalognumbercol);
 	}
 
 	@Override

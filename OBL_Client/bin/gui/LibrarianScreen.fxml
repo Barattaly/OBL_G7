@@ -206,7 +206,7 @@
                         <Font size="14.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton buttonType="RAISED" layoutX="647.0" layoutY="227.0" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Borrow extension" textFill="WHITE">
+                  <JFXButton buttonType="RAISED" layoutX="647.0" layoutY="227.0" onAction="#borrowExtensionClick" prefHeight="42.0" prefWidth="150.0" style="-fx-background-color: #3C58FA;" text="Borrow extension" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

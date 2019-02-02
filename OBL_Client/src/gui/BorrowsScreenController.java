@@ -563,6 +563,5 @@ public class BorrowsScreenController implements IClientUI
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String string = format.format(calendar.getTime());
 		return string;
-	}
-	
+	}	
 }
