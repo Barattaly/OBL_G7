@@ -163,7 +163,7 @@ public class AutomaticExecutors
 		{
 			messageContent = "The subscriber: " + subscriber.getId()
 		  	   + " is late at return of 3 books.\n"
-		  	   + "Please approve to change the subscriber card status to deep freeze";
+		  	   + "Please double click on this message in order to change the subscriber card status to deep freeze";
 			message = new OblMessage(messageContent, "library manager");
 			query = OblMessagesQueries.sendMessageToLibraryManager(message);
 			oblDB.executeUpdate(query); // add a new message to messages table
