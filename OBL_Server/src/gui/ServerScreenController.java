@@ -71,13 +71,13 @@ public class ServerScreenController implements Initializable
 				serverIPLabel.setText(socket.getLocalAddress().getHostAddress());
 			}
 			loadingSpinner.setVisible(false);
-			java.util.List<String> password = Files.readAllLines(Paths.get("dbPass.txt"));
-			dbPassTextField.setText(password.get(0));
+			//java.util.List<String> password = Files.readAllLines(Paths.get("dbPass.txt"));
+			dbPassTextField.setText("Aa123456");
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			dbPassTextField.setText("Group7");
+			dbPassTextField.setText("Aa123456");
 
 		}
 		dbNameTextField.setText("obl_db");
@@ -116,7 +116,7 @@ public class ServerScreenController implements Initializable
 			_logTextArea.setText("Server running on port "+_serverPortTextField.getText() + System.lineSeparator() + _logTextArea.getText());
 			_serverLedIndicator.setFill(javafx.scene.paint.Color.GREEN);
 			_startBtn.setText("Stop Server");
-			connectBtnClicked(event);//NEED TO BE CHANGED
+			//connectBtnClicked(event);//NEED TO BE CHANGED
 		}
 		catch(Exception ex)
 		{

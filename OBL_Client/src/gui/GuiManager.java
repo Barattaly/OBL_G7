@@ -18,22 +18,29 @@ import entities.User;
 import entities.DBMessage.DBAction;
 import entities.Subscriber;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 /**
  * A static class, handling all the GUI. This is the main Controller between the
  * communication with the server (aka "ClientController") and the GUI (all of
  * the FXML controllers).
- * 
- *
  */
 public class GuiManager
 {
@@ -49,6 +56,7 @@ public class GuiManager
 	public static boolean dbConnected = false;
 	public static ViewSubscriberCardController subscriberCardController = null;
 	public static int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+	private static String serverIp;
 
 	/**
 	 * Map from string to a type of user screen
@@ -148,10 +156,10 @@ public class GuiManager
 	 */
 	public static void InitialPrimeryStage(SCREENS fxmlPath, Stage primaryStage)
 	{
-
+		getServerIp();
 		try
 		{
-			client = ClientController.createClientIfNotExist("localhost", ClientController.DEFAULT_PORT);// get
+			client = ClientController.createClientIfNotExist(serverIp, ClientController.DEFAULT_PORT);// get
 																											// connection
 			client.sendToServer(new DBMessage(DBAction.isDBRuning, null));// check DB
 		} catch (Exception e)
@@ -178,6 +186,48 @@ public class GuiManager
 		}
 	}
 
+	
+	private static void getServerIp()
+	{
+		final Stage dialog = new Stage();
+		dialog.setOnCloseRequest(new EventHandler<WindowEvent>()
+		{
+
+			@Override
+			public void handle(WindowEvent arg0)
+			{
+				System.exit(0);
+			}
+		});
+		dialog.initStyle(StageStyle.DECORATED);
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.setTitle("Connect to Server");
+		VBox dialogVbox = new VBox(10);
+		Label headline = new Label("Enter Server IP");
+		headline.setFont(new Font(25));
+		Label warning = new Label("(Make sure you are on the same lan)");
+		warning.setFont(new Font(12));
+		dialogVbox.setAlignment(Pos.CENTER);
+		javafx.scene.control.TextField ipTextField = new javafx.scene.control.TextField("Example: 162.123.1.206");
+		ipTextField.setMaxWidth(140);
+		Button button = new Button("OK");
+		button.setOnMouseClicked(new EventHandler<Event>()
+		{
+			@Override
+			public void handle(Event e)
+			{
+				if (ipTextField.getText().isEmpty() || ipTextField.getText().contains("Example: 162.123.1.206"))
+					return;
+				serverIp = ipTextField.getText();
+				dialog.close();
+			}
+		});
+		dialogVbox.getChildren().addAll(headline, warning, ipTextField, button);
+		Scene dialogScene = new Scene(dialogVbox, 300, 200);
+		dialog.setScene(dialogScene);
+		dialog.showAndWait();
+	}
+	
 	/**
 	 * A "safe shutdown" function doing logout and closing the connection to the
 	 * server.
