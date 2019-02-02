@@ -91,7 +91,6 @@ public class AutomaticExecutors
 				if (LocalDate.parse(currentDate).isAfter(LocalDate.parse(expectedReturnDate)) 
 						&& borrowFromBorrowsTable.getActualReturnDate() == null) 
 				{
-					lateReturnsCount++;
 					query = SubscribersQueries.getSubscriberStatus(subscriberToUpdate);
 					ResultSet rsSubscriberStatus = oblDB.executeQuery(query); // get subscriber's status
 					try
@@ -103,17 +102,6 @@ public class AutomaticExecutors
 					{
 						e.printStackTrace();
 					}
-					if (lateReturnsCount % 3 == 0 && lateReturnsCount != 0 
-							&& !subscriberToUpdate.getStatus().equals("deep freeze"))
-					{
-						for (Subscriber subscriberToCheck : subscribersLateReturnsThreeTimes)
-						{
-							if(subscriberToCheck.getId().equals(subscriberToUpdate.getId()))
-								existInArrayList = true;
-						}
-						if(!existInArrayList)
-							subscribersLateReturnsThreeTimes.add(subscriberToUpdate);
-					}
 					query = BorrowsQueries.getIsReturnedLate(borrowFromBorrowsTable);
 					// get the value of "isReturnedLate" flag
 					ResultSet rsIsReturnedLate = oblDB.executeQuery(query); 
@@ -122,6 +110,7 @@ public class AutomaticExecutors
 						rsIsReturnedLate.next();
 						if (rsIsReturnedLate.getString(1).equals("no"))
 						{
+							lateReturnsCount++;
 							borrowFromBorrowsTable.setIsReturnedLate("yes");
 							query = BorrowsQueries.updateIsReturnedLateToYes(borrowFromBorrowsTable);
 							// update the flag at the borrow if the subscriber returned the copy late
@@ -137,6 +126,17 @@ public class AutomaticExecutors
 					} catch (Exception e)
 					{
 						e.printStackTrace();
+					}
+					if (lateReturnsCount % 3 == 0 && lateReturnsCount != 0 
+							&& !subscriberToUpdate.getStatus().equals("deep freeze"))
+					{
+						for (Subscriber subscriberToCheck : subscribersLateReturnsThreeTimes)
+						{
+							if(subscriberToCheck.getId().equals(subscriberToUpdate.getId()))
+								existInArrayList = true;
+						}
+						if(!existInArrayList)
+							subscribersLateReturnsThreeTimes.add(subscriberToUpdate);
 					}
 					if (borrowFromBorrowsTable.getActualReturnDate() == null)
 					{
@@ -161,6 +161,7 @@ public class AutomaticExecutors
 		/*send a message to the subscriber about 3 late at returns*/
 		for (Subscriber subscriber : subscribersLateReturnsThreeTimes)
 		{
+			fullName = getSubscriberFullName(subscriber);
 			messageContent = "The subscriber: " + subscriber.getId()
 		  	   + " is late at return of 3 books.\n"
 		  	   + "Please double click on this message in order to change the subscriber card status to deep freeze";
