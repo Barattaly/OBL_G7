@@ -814,5 +814,4 @@ public class LibrarianScreenController implements Initializable, IClientUI
 		}
 		messagesTableView.setItems(observableMsgList);
 	}
-
 }

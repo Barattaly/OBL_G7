@@ -37,9 +37,9 @@ public class AutomaticExecutors
 			return;
 		AutomaticExecutors.oblDB = oblDb;
 		executor = new ScheduledThreadPoolExecutor(1);
-		executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 5, TimeUnit.MINUTES);
+		/*executor.scheduleAtFixedRate(() -> checkAndUpdateLateReturns(), 0, 5, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(() -> reminderBeforeReturnDate(), 0, 1, TimeUnit.HOURS);
-		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 1, TimeUnit.HOURS);
+		executor.scheduleAtFixedRate(() -> ordersFulfillmentCheck(), 0, 1, TimeUnit.HOURS);*/
 	}
 	public void shutDown()
 	{

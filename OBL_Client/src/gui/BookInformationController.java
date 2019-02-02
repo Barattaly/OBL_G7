@@ -139,6 +139,9 @@ public class BookInformationController implements IClientUI
     @FXML
     private JFXButton uploadFileBtn;
     
+    @FXML
+    private JFXButton cancelOrderBookBtn;
+
 
 	public void setBookInformation(Book book)
 	{
@@ -155,7 +158,9 @@ public class BookInformationController implements IClientUI
 		GuiManager.limitTextFieldMaxCharacters(publicationYearTextField, 4);
 		GuiManager.limitTextFieldMaxCharacters(locationTextField, 6);
 		catNumTextField.setText(book.getCatalogNumber());
-		boolean isOrderExist = false;
+		cancelOrderBookBtn.setVisible(false);
+		availableLabel.setText("The book available for borrow");
+		availableLabel.setTextFill(Color.web("#12d318"));
 		if (book.getClassification().equals("wanted"))
 		{
 			wantedBookLabel.setVisible(true);
@@ -165,16 +170,19 @@ public class BookInformationController implements IClientUI
 			wantedBookLabel.setVisible(false);
 			wantedLogo.setVisible(false);
 		}
+		//setOrderButton(book);
 		if (book.getCurrentNumOfBorrows() < book.getMaxCopies()) // book is available for borrow
 		{
-			availableLabel.setText("Available for borrow");
-			availableLabel.setTextFill(Color.web("#12d318"));
+			
+			isSubscriberLoggedIn(book);
 			orderBookBtn.setDisable(true);
 			returnDateLabel.setVisible(false);
 			returnDateTextField.setVisible(false);
 			uploadFileBtn.setVisible(false);
 			viewTOC_btn.setVisible(true);
-		} else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
+
+		} 
+		else if (book.getCurrentNumOfBorrows() == book.getMaxCopies()) // book is not available for borrow
 		{
 			availableLabel.setText("Not available for borrow"); // means that the book is available for order
 			availableLabel.setTextFill(Color.RED);
@@ -200,43 +208,8 @@ public class BookInformationController implements IClientUI
 				availableLabel.setTextFill(Color.RED);
 				orderBookBtn.setDisable(true);
 			}
-			if (subscriberLoggedIn != null)
-			{
-				/*
-				 * if the subscriber is currently borrow one of the copies of this book, than we
-				 * need to prevent the option to order this book
-				 */
-				for (BorrowACopyOfBook borrow : book.getBorrows())
-				{
-					if (borrow.getSubscriberId().equals(subscriberLoggedIn.getId()))
-					{
-						availableLabel.setText("You cant order a book that\nyou are currently borrowing");
-						availableLabel.setTextFill(Color.RED);
-						orderBookBtn.setDisable(true);
-					}
-				}
-				/*
-				 * if the subscriber is currently order the book, than we need to show the
-				 * location in orders queue
-				 */
-				int i = 1, positionInQueue = 0;
-				for (BookOrder order : book.getOrders())
-				{
-					// check if the subscriber already ordered this book
-					if (order.getSubscriberId().equals(subscriberLoggedIn.getId()))
-					{
-						isOrderExist = true;
-						positionInQueue = i;
-					}
-					i++;
-				}
-				if (isOrderExist)
-				{
-					availableLabel.setText("Your position in orders queue: " + positionInQueue);
-					availableLabel.setTextFill(Color.web("#12d318"));
-					orderBookBtn.setDisable(true);
-				}
-			}
+			isSubscriberLoggedIn(book);
+			
 			// check what is the closest expected return date
 			String closestReturnDate = book.getBorrows().get(1).getExpectedReturnDate();
 			for (BorrowACopyOfBook borrow : book.getBorrows())
@@ -282,7 +255,15 @@ public class BookInformationController implements IClientUI
 
 		GuiManager.client.createNewOrder(newOrder);
 	}
+	
+	@FXML
+	void btn_cancelOrderClick(ActionEvent event)
+	{
+		BookOrder orderToCancel = new BookOrder(userLoggedIn.getId(), catNumTextField.getText());
 
+		GuiManager.client.cancelOrder(orderToCancel);
+	}
+	
 	@Override
 	public void getMessageFromServer(DBMessage msg)
 	{
@@ -290,10 +271,36 @@ public class BookInformationController implements IClientUI
 		{
 		case CreateNewOrder:
 		{
+			BookOrder order = (BookOrder) msg.Data;
+			if (order.getSubscriberId().equals("0"))
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Yoy have an active order of this book. Please close book page and refresh the books table at search book page.");
+				});
+			} 
+			else
 			{
 				Platform.runLater(() -> {
 					GuiManager.ShowMessagePopup("Order executed Successfully!");
 					orderBookBtn.setDisable(true);
+				});
+			}
+			break;
+		}
+		case CancelOrder:
+		{
+			BookOrder order = (BookOrder) msg.Data;
+			if (order.getSubscriberId().equals("0"))
+			{
+				Platform.runLater(() -> {
+					GuiManager.ShowMessagePopup("Yoy don't have an active order of this book. Please close book page and refresh the books table at search book page.");
+				});
+			} 
+			else
+			{
+				Platform.runLater(() -> {
+					cancelOrderBookBtn.setDisable(true);
+					GuiManager.ShowMessagePopup("Order canceled Successfully!");
 				});
 			}
 			break;
@@ -613,6 +620,46 @@ public class BookInformationController implements IClientUI
 		String fileName = new File(fullName).getName();
 		int dotIndex = fileName.lastIndexOf('.');
 		return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+	}
+	
+	private void isSubscriberLoggedIn(Book book)
+	{
+		boolean isOrderExist = false;
+		if (subscriberLoggedIn != null)
+		{
+			/* if the subscriber is currently borrow one of the copies of this book, than we
+			 * need to prevent the option to order this book */
+			for (BorrowACopyOfBook borrow : book.getBorrows())
+			{
+				if (borrow.getSubscriberId().equals(subscriberLoggedIn.getId()))
+				{
+					availableLabel.setText("You cant order a book that\nyou are currently borrowing");
+					availableLabel.setTextFill(Color.RED);
+					orderBookBtn.setDisable(true);
+				}
+			}
+			
+			/* if the subscriber is currently order the book, and the book arrived to the library, (available for borrow) 
+			 * than we need to show the location in orders queue, and able the cancel order option*/
+			int i = 1, positionInQueue = 0;
+			for (BookOrder order : book.getOrders())
+			{
+				// check if the subscriber already ordered this book
+				if (order.getSubscriberId().equals(subscriberLoggedIn.getId()))
+				{
+					isOrderExist = true;
+					positionInQueue = i;
+				}
+				i++;
+			}
+			if (isOrderExist)
+			{
+				availableLabel.setText("Your position in orders queue: " + positionInQueue);
+				availableLabel.setTextFill(Color.web("#12d318"));
+				orderBookBtn.setVisible(false);
+				cancelOrderBookBtn.setVisible(true);
+			}
+		}
 	}
 }
 
