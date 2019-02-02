@@ -55,7 +55,8 @@ public class ReportsQueries
 	public static String countSubscribersNumThatLate()
 	{
 		String queryMsg = "SELECT COUNT(*) FROM " + "(SELECT * FROM obl_db.borrows "
-				+ "WHERE obl_db.borrows.isReturnedLate = 'yes' " + "GROUP BY obl_db.borrows.subscriberID) "
+				+ "WHERE obl_db.borrows.isReturnedLate = 'yes' AND  actualReturnDate IS NULL "
+				+ "GROUP BY obl_db.borrows.subscriberID) "
 				+ "as lateReturnsPerSub";
 		return queryMsg;
 	}

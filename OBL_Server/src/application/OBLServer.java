@@ -62,7 +62,7 @@ public class OBLServer extends AbstractServer
 
 	public TextArea logREF = null;
 	private MySQLConnection oblDB;
-	private final String pathToSavePDF = ".\\src\\resources\\tablesOfContent\\";
+	private final String pathToSavePDF = ".\\BooksTablesOfContent\\";
 
 	/**
 	 * Constructs an instance of the OBL server.

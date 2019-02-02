@@ -188,10 +188,10 @@ public class Reports_LateReturnsController
 		int[] durationOfLatesArray = new int[size];
 		int j = 0;
 
-		numberOfLateChart.getXAxis().setLabel("Amount of lates");
+		numberOfLateChart.getXAxis().setLabel("*Amount of lates");
 		numberOfLateChart.getYAxis().setLabel("Amount of books");
 
-		durationOfLateChart.getXAxis().setLabel("Duration of lates");
+		durationOfLateChart.getXAxis().setLabel("*Duration of lates");
 		durationOfLateChart.getYAxis().setLabel("Amount of books");
 
 		for (String key : data.getBookToNumberAndDurationOfLates().keySet())
@@ -217,7 +217,7 @@ public class Reports_LateReturnsController
 			max = 10;
 			amount = max - 1;
 		}
-		histogram = calcHistogram(numberOfLatesArray, 0, max, amount);
+		histogram = calcHistogram(numberOfLatesArray, 0, max, 10.0);
 		for (int i = 0; i < amount; i++)
 		{
 			numberOflates.getData().add(new XYChart.Data(ranges[i], histogram[i]));
