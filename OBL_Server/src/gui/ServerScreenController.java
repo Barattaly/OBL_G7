@@ -19,6 +19,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
+
 /**
  * This class is the GUI controller of the server screen.
  *
@@ -26,8 +27,8 @@ import javafx.scene.layout.AnchorPane;
 public class ServerScreenController implements Initializable
 {
 	private OBLServer server;
-    @FXML
-    private TitledPane _logTitledPane;
+	@FXML
+	private TitledPane _logTitledPane;
 	@FXML
 	private AnchorPane _startServerAnchorPane;
 	@FXML
@@ -41,7 +42,7 @@ public class ServerScreenController implements Initializable
 	@FXML
 	private Circle _serverLedIndicator;
 	@FXML
-	private Circle 	_dbLedIndicator;
+	private Circle _dbLedIndicator;
 	@FXML
 	private TextField dbPassTextField;
 	@FXML
@@ -52,34 +53,27 @@ public class ServerScreenController implements Initializable
 	private TextArea _logTextArea;
 	@FXML
 	private AnchorPane _mainAnchorPane;
-    @FXML
-    private ProgressIndicator loadingSpinner;
-    @FXML
-    private TextField serverIPLabel;
+	@FXML
+	private ProgressIndicator loadingSpinner;
+	@FXML
+	private TextField serverIPLabel;
 
-	
 	private AutomaticExecutors executer = null;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1)
 	{
-		try
-		{
-			try(final DatagramSocket socket = new DatagramSocket())
-			{
-				socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-				serverIPLabel.setText(socket.getLocalAddress().getHostAddress());
-			}
-			loadingSpinner.setVisible(false);
-			//java.util.List<String> password = Files.readAllLines(Paths.get("dbPass.txt"));
-			dbPassTextField.setText("Aa123456");
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			dbPassTextField.setText("Aa123456");
 
+		try (final DatagramSocket socket = new DatagramSocket())
+		{
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			serverIPLabel.setText(socket.getLocalAddress().getHostAddress());
+		} catch (Exception e)
+		{
 		}
+		loadingSpinner.setVisible(false);
+
+
 		dbNameTextField.setText("obl_db");
 		dbUserNameTextField.setText("root");
 	}
@@ -88,12 +82,14 @@ public class ServerScreenController implements Initializable
 	void startServerClicked(ActionEvent event)
 	{
 		loadingSpinner.setVisible(true);
-		if(_startBtn.getText().equals("Stop Server"))
+		if (_startBtn.getText().equals("Stop Server"))
 		{
 			server.stopListening();
-			try {server.close();}
-			catch(Exception e) 
-			{ 			
+			try
+			{
+				server.close();
+			} catch (Exception e)
+			{
 				_logTextArea.setText(e.getMessage() + System.lineSeparator() + _logTextArea.getText());
 			}
 			_serverLedIndicator.setFill(javafx.scene.paint.Color.RED);
@@ -107,23 +103,22 @@ public class ServerScreenController implements Initializable
 			loadingSpinner.setVisible(false);
 			return;
 		}
-		server = new OBLServer(Integer.parseInt(_serverPortTextField.getText()),_logTextArea);
-		try 
+		server = new OBLServer(Integer.parseInt(_serverPortTextField.getText()), _logTextArea);
+		try
 		{
 			server.listen();
 			_startServerAnchorPane.setVisible(false);
 			_connectToDBAnchorPane.setVisible(true);
-			_logTextArea.setText("Server running on port "+_serverPortTextField.getText() + System.lineSeparator() + _logTextArea.getText());
+			_logTextArea.setText("Server running on port " + _serverPortTextField.getText() + System.lineSeparator()
+					+ _logTextArea.getText());
 			_serverLedIndicator.setFill(javafx.scene.paint.Color.GREEN);
 			_startBtn.setText("Stop Server");
-			//connectBtnClicked(event);//NEED TO BE CHANGED
-		}
-		catch(Exception ex)
+			// connectBtnClicked(event);//NEED TO BE CHANGED
+		} catch (Exception ex)
 		{
 			_logTextArea.setText(ex.getMessage() + System.lineSeparator() + _logTextArea.getText());
 			_serverLedIndicator.setFill(javafx.scene.paint.Color.RED);
-		}
-		finally
+		} finally
 		{
 			loadingSpinner.setVisible(false);
 		}
@@ -136,10 +131,9 @@ public class ServerScreenController implements Initializable
 		try
 		{
 			loadingSpinner.setVisible(true);
-			server.connectToDB( dbNameTextField.getText(), dbPassTextField.getText(),
-					dbUserNameTextField.getText());
+			server.connectToDB(dbNameTextField.getText(), dbPassTextField.getText(), dbUserNameTextField.getText());
 			executer = new AutomaticExecutors(server.getConnection());
-		
+
 		} catch (Exception ex)
 		{
 			_logTextArea.setText(ex.getMessage() + System.lineSeparator() + _logTextArea.getText());
@@ -149,7 +143,8 @@ public class ServerScreenController implements Initializable
 		{
 			if (server.isDBRunning())
 			{
-				_logTextArea.setText("Database connected successfully!" + System.lineSeparator() + _logTextArea.getText());
+				_logTextArea
+						.setText("Database connected successfully!" + System.lineSeparator() + _logTextArea.getText());
 				_dbLedIndicator.setFill(javafx.scene.paint.Color.GREEN);
 				_connectToDBAnchorPane.setDisable(true);
 			}
@@ -157,26 +152,26 @@ public class ServerScreenController implements Initializable
 		}
 
 	}
-	
-	public void shutDown() 
+
+	public void shutDown()
 	{
 		try
 		{
 			loadingSpinner.setVisible(true);
-			if(server != null)
+			if (server != null)
 			{
-				
-				if(server.isListening())server.stopListening();
-				server.close();		
+
+				if (server.isListening())
+					server.stopListening();
+				server.close();
 			}
 
-			if(executer != null)
+			if (executer != null)
 				executer.shutDown();
 
 			loadingSpinner.setVisible(false);
-			
-		}
-		catch(Exception e)
+
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
