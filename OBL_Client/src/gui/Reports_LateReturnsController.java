@@ -143,6 +143,9 @@ public class Reports_LateReturnsController
 	private void setAvrages()
 	{
 		float sum = 0;
+		float average = 0;
+		String averageString;
+
 		float size = data.getBookToNumberAndDurationOfLates().keySet().size();
 		for (String key : data.getBookToNumberAndDurationOfLates().keySet())
 		{
@@ -150,10 +153,14 @@ public class Reports_LateReturnsController
 		}
 		if (size != 0)
 		{
-			avrgNumberLateTextField.setText(String.valueOf(sum / size));
+			average = (sum / size);
 		} else
-			avrgNumberLateTextField.setText("0");
-
+			average = 0;
+		averageString = String.valueOf(average);
+		if (averageString.length() > 4)
+			averageString = averageString.substring(0, 4);
+		avrgNumberLateTextField.setText(averageString);
+		
 		sum = 0;
 		for (String key : data.getBookToNumberAndDurationOfLates().keySet())
 		{
@@ -161,9 +168,13 @@ public class Reports_LateReturnsController
 		}
 		if (size != 0)
 		{
-			avrgDurationLateTextField.setText(String.valueOf(sum / size));
+			average = (sum / size);
 		} else
-			avrgDurationLateTextField.setText("0");
+			average = 0;
+		averageString = String.valueOf(average);
+		if (averageString.length() > 4)
+			averageString = averageString.substring(0, 4);
+		avrgDurationLateTextField.setText(averageString);
 	}
 
 	private void setGraphs()
