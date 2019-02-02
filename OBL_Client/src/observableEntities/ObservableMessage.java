@@ -1,7 +1,10 @@
 package observableEntities;
 
 import javafx.beans.property.SimpleStringProperty;
-
+/**
+ * A message entity to show in javafx TableView
+ *
+ */
 public class ObservableMessage
 {
 	public SimpleStringProperty dateSent;

@@ -1,7 +1,10 @@
 package observableEntities;
 
 import javafx.beans.property.SimpleStringProperty;
-
+/**
+ * An employee of the library entity to show in javafx TableView
+ *
+ */
 public class ObservableEmployee
 {
 

@@ -41,7 +41,6 @@ import javafx.stage.Stage;
 
 public class AddNewBookController implements Initializable
 {
-
 	@FXML
 	private TextArea descreptionPane;
 

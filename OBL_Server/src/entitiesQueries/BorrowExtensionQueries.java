@@ -4,7 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 import entities.BorrowExtension;
-
+/**
+ * This class hold all the queries for Borrow Extension
+ * And the creation of Borrow Extension entities from ResaultSet
+ *
+ */
 public class BorrowExtensionQueries 
 {
 	public static String addNewBorrowExtension(BorrowExtension borrowToExtend)

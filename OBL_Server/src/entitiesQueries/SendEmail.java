@@ -2,7 +2,10 @@ package entitiesQueries;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
-
+/**
+ * This class handles the e-mail sending
+ *
+ */
 public class SendEmail 
 {
 	public void sendEmail(String emailRecipient, String emailSubject, String emailMessage) 

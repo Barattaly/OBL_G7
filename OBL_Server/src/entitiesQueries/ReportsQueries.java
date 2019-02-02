@@ -12,7 +12,11 @@ import com.mysql.jdbc.MySQLConnection;
 import entities.Report_Activity;
 import entities.Report_LateReturns;
 import entities.Report_LateReturns.NumberAndDurationOfLates;
-
+/**
+ * This class hold all the queries for the reports
+ * And the creation of reports entities from ResaultSet
+ *
+ */
 public class ReportsQueries
 {
 	public static String countTotalSubscribers()

@@ -2,6 +2,10 @@ package observableEntities;
 
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * A borrow entity to show in javafx TableView
+ *
+ */
 public class ObservableBorrow
 {
 

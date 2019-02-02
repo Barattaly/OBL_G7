@@ -7,7 +7,11 @@ import java.util.List;
 
 import entities.Subscriber;
 import entities.User;
-
+/**
+ * This class hold all the queries for users
+ * And the creation of users entities from ResaultSet
+ *
+ */
 public class UsersQueries
 {
 	public static String searchUserByUserName(User userToCheck)

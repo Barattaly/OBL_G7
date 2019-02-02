@@ -11,7 +11,11 @@ import java.util.Map;
 import entities.ActivityLog;
 import entities.Book;
 import entities.BorrowACopyOfBook;
-
+/**
+ * This class hold all the queries for Borrows
+ * And the creation of Borrows entities from ResaultSet
+ *
+ */
 public class BorrowsQueries
 {
 	public static String addNewBorrow(BorrowACopyOfBook borrowToAdd)

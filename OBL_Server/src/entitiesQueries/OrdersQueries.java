@@ -8,7 +8,11 @@ import java.util.GregorianCalendar;
 import entities.ActivityLog;
 import entities.Book;
 import entities.BookOrder;
-
+/**
+ * This class hold all the queries for orders
+ * And the creation of orders entities from ResaultSet
+ *
+ */
 public class OrdersQueries 
 {
 	public static String addNewOrder(BookOrder bookOrder)

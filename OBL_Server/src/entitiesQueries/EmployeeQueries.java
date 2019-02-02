@@ -5,7 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import entities.Employee;
-
+/**
+ * This class hold all the queries for employees
+ * And the creation of employees entities from ResaultSet
+ *
+ */
 public class EmployeeQueries
 {
 

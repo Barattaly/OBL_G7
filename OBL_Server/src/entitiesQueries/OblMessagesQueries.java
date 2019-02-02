@@ -4,7 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 import entities.OblMessage;
-
+/**
+ * This class hold all the queries for messages
+ * And the creation of messages entities from ResaultSet
+ *
+ */
 public class OblMessagesQueries 
 {
 	public static String sendMessageToLibrarians(OblMessage messageToSend)

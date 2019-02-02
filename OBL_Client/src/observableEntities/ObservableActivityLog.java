@@ -2,6 +2,11 @@ package observableEntities;
 
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * An activity log of subscriber entity to show in javafx TableView
+ *
+ */
+
 public class ObservableActivityLog
 {
 

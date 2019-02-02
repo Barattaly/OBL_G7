@@ -1,7 +1,11 @@
 package entitiesQueries;
 
 import entities.Book;
-
+/**
+ * This class hold all the queries for copies
+ * And the creation of copies entities from ResaultSet
+ *
+ */
 public class CopiesQueries 
 {
 	public static String getCopyDetails(Book bookToCheck)
