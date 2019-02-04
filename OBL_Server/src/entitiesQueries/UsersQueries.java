@@ -1,12 +1,18 @@
 package entitiesQueries;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.MySQLConnection;
+import application.iSqlConnection;
+import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
+import entities.DBMessage.DBAction;
+import ocsf.server.ConnectionToClient;
 /**
  * This class hold all the queries for users
  * And the creation of users entities from ResaultSet
@@ -14,6 +20,73 @@ import entities.User;
  */
 public class UsersQueries
 {
+	public static DBMessage checkIfUserExist(User userToCheck,iSqlConnection oblDB)
+	{
+		String query = UsersQueries.searchUserByUserNameAndPass(userToCheck);
+		ResultSet rs = oblDB.executeQuery(query);
+		DBMessage returnMsg;
+		int rowsNumber = getRowCount(rs);
+		//Check if the user exist in the DB
+		if (rowsNumber == 1)
+		{
+			try
+			{
+				rs.next();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+			// if exist - create it
+			User user = UsersQueries.CreateUserFromRS(rs);
+			if (isUserLocked(userToCheck, oblDB))// check if this is a subscriber and if he is locked
+				return new DBMessage(DBAction.CheckUser, "locked");// This is the message for locked user.
+
+			if (user.getLoginStatus().equals("on"))//check if he is logged already
+			{
+				user = new User(null, null);
+				return new DBMessage(DBAction.CheckUser, user);// This is the message for logged already user.
+			} else// if the user exist AND is not locked or logged in -> connect him! 
+			{
+				user.setLoginStatus("on");
+				query = UsersQueries.updateUserloginStatus(user);
+				oblDB.executeUpdate(query);
+				query = UsersQueries.getMessagesForUser(user);
+				List<String> messages = UsersQueries.createMessagesLisrFromRS(oblDB.executeQuery(query));
+				user.setMessages(messages);
+				returnMsg = new DBMessage(DBAction.CheckUser, user);// This is the message for valid user.
+			}
+			return returnMsg;
+		} else
+		{
+			returnMsg = new DBMessage(DBAction.CheckUser, null);// This is the message for non-existing user.
+			return returnMsg;
+		}
+	}
+	
+	private static boolean isUserLocked(User userToCheck,iSqlConnection oblDB)
+	{
+		String query = SubscribersQueries.getSubscriberStatusByUserName(userToCheck.getUserName());
+		ResultSet rs2 = oblDB.executeQuery(query);
+		int rowsNumber = getRowCount(rs2);
+		if (rowsNumber == 1)
+		{
+			try
+			{
+				rs2.next();
+				if (rs2.getString(1).equals("locked"))
+				{
+					return true;
+				}
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
+	}
+	
 	public static String searchUserByUserName(User userToCheck)
 	{
 		if (userToCheck == null)
@@ -108,6 +181,31 @@ public class UsersQueries
 			messages = new ArrayList<String>();
 		}
 		return messages;
+	}
+	private static int getRowCount(ResultSet resultSet)
+	{
+		if (resultSet == null)
+		{
+			return 0;
+		}
+		try
+		{
+			resultSet.last();
+			return resultSet.getRow();
+		} catch (SQLException exp)
+		{
+			exp.printStackTrace();
+		} finally
+		{
+			try
+			{
+				resultSet.beforeFirst();
+			} catch (SQLException exp)
+			{
+				exp.printStackTrace();
+			}
+		}
+		return 0;
 	}
 
 }
