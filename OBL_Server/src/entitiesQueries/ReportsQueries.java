@@ -35,7 +35,7 @@ public class ReportsQueries
 	public static String countFrozenSubscribers()
 	{
 		String queryMsg = "SELECT COUNT(*) " + "FROM obl_db.subscribers "
-				+ "WHERE obl_db.subscribers.status = 'frozen'";
+				+ "WHERE obl_db.subscribers.status = 'frozen' OR obl_db.subscribers.status = 'deep freeze'";
 		return queryMsg;
 	}
 

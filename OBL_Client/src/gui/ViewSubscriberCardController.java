@@ -205,7 +205,7 @@ public class ViewSubscriberCardController implements IClientUI
 			warningLabel.setVisible(true);
 			warningLabel.setText("Enter last name please");
 		}
-		if (!emailField.getText().isEmpty())
+		if (emailField.getText()!= null)
 		{
 			if (!GuiManager.isValidEmailAddress(emailField.getText()))
 			{
@@ -262,12 +262,12 @@ public class ViewSubscriberCardController implements IClientUI
 		subscriberToUpdate.setUserName(subscriberToShow.getUserName());
 		String name = subscriberToUpdate.getFirstName().substring(0, 1).toUpperCase()
 				+ subscriberToUpdate.getFirstName().substring(1);
-
+		subscriberToShow = subscriberToUpdate;
 		SuccessLabel.setVisible(true);
 		warningLabel.setVisible(false);
 		SuccessLabel.setText("Changes saved successfully");
 		freezeSubscriberToggleButton.setVisible(false);
-		GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
+		//GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
 
 	}
 
