@@ -20,6 +20,14 @@ public class SubscribersQueries
 		+subscriber.getStatus()+"');";
 		return queryMsg;
 	}
+	public static String removeSubscriber(Subscriber subscriber)
+	{
+		if (subscriber == null)
+			return null;
+		String queryMsg ="DELETE FROM obl_db.subscribers WHERE subscriberNumber='"+subscriber.getSubscriberNumber()+"'"
+				+ " And subscriberID = '"+subscriber.getId()+"'";
+		return queryMsg;
+	}
 	public static String searchSubscriberByID(Subscriber subscriber)
 	{
 		if (subscriber == null)

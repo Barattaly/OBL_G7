@@ -129,6 +129,7 @@ public class OBLServer extends AbstractServer
 	@SuppressWarnings("unchecked")
 	public void handleMessageFromClient(Object obj, ConnectionToClient client)
 	{
+		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
 		if (!(obj instanceof DBMessage))
 		{
 			if (obj instanceof String)
@@ -166,7 +167,6 @@ public class OBLServer extends AbstractServer
 
 		}
 		// update gui for getting message
-		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
 		if (!isDBRunning())
 			return;
 		try
@@ -465,63 +465,10 @@ public class OBLServer extends AbstractServer
 		oblDB.executeUpdate(query);
 	}
 
-	private void checkIfUserExist(User userToCheck, ConnectionToClient client) throws SQLException, IOException
+	public void checkIfUserExist(User userToCheck, ConnectionToClient client) throws SQLException, IOException
 	{
-		String query = UsersQueries.searchUserByUserNameAndPass(userToCheck);
-		ResultSet rs = oblDB.executeQuery(query);
-		int rowsNumber = getRowCount(rs);
-		if (rowsNumber == 1)
-		{
-			rs.next();
-			User user = UsersQueries.CreateUserFromRS(rs);
-			if (isUserLocked(userToCheck, client))
-				return;
-			DBMessage returnMsg;
-			if (user.getLoginStatus().equals("on"))
-			{
-				user = new User(null, null);
-				returnMsg = new DBMessage(DBAction.CheckUser, user);
-			} else
-			{
-				user.setLoginStatus("on");
-				query = UsersQueries.updateUserloginStatus(user);
-				oblDB.executeUpdate(query);
-				query = UsersQueries.getMessagesForUser(user);
-				List<String> messages = UsersQueries.createMessagesLisrFromRS(oblDB.executeQuery(query));
-				user.setMessages(messages);
-				returnMsg = new DBMessage(DBAction.CheckUser, user);
-			}
-			client.sendToClient(returnMsg);
-			return;
-		} else
-		{
-			DBMessage returnMsg = new DBMessage(DBAction.CheckUser, null);
-			client.sendToClient(returnMsg);
-		}
-
-	}
-
-	/*
-	 * The function check if the user is locked and if yes she send the message for
-	 * the client
-	 */
-	private boolean isUserLocked(User userToCheck, ConnectionToClient client) throws SQLException, IOException
-	{
-		String query = SubscribersQueries.getSubscriberStatusByUserName(userToCheck.getUserName());
-		ResultSet rs2 = oblDB.executeQuery(query);
-		int rowsNumber = getRowCount(rs2);
-		if (rowsNumber == 1)
-		{
-			rs2.next();
-			DBMessage returnMsg2;
-			if (rs2.getString(1).equals("locked"))
-			{
-				returnMsg2 = new DBMessage(DBAction.CheckUser, "locked");
-				client.sendToClient(returnMsg2);
-				return true;
-			}
-		}
-		return false;
+		DBMessage retrnMsg = UsersQueries.checkIfUserExist(userToCheck,oblDB);
+		client.sendToClient(retrnMsg);
 	}
 
 	private void createSubscriber(Subscriber subscriberToCreate, ConnectionToClient client) throws IOException
@@ -534,7 +481,7 @@ public class OBLServer extends AbstractServer
 			return;
 		}
 		userToCheck.setType("subscriber");
-		String query = UsersQueries.createSubscriberUser(userToCheck);
+		String query = UsersQueries.createUser(userToCheck);
 		oblDB.executeUpdate(query);// add to Users table
 		subscriberToCreate.setStatus("active");
 		query = SubscribersQueries.createSubscriber(subscriberToCreate);

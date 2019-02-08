@@ -12,7 +12,7 @@ import entities.User;
  * This class is responsible for the DB connection with the server.
  *
  */
-public class MySQLConnection
+public class MySQLConnection implements iSqlConnection
 {
 	private Connection conn;
 	public boolean IsConnectionSucceeded = false;
