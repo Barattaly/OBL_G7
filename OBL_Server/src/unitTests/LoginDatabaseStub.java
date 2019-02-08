@@ -13,7 +13,11 @@ public class LoginDatabaseStub implements iSqlConnection
 	private User userToCheck = null;
 	private Subscriber subscriberTocheck = null;
 	
-	public LoginDatabaseStub() {}
+	public LoginDatabaseStub() 
+	{
+		subscriberTocheck = new Subscriber("","","","","","","","","");
+		
+	}
 	@Override
 	public int executeUpdate(String msg)
 	{
@@ -23,12 +27,12 @@ public class LoginDatabaseStub implements iSqlConnection
 	@Override
 	public ResultSet executeQuery(String query)
 	{
-		
 		if(query.equals(UsersQueries.searchUserByUserNameAndPass(userToCheck)))
 		{
 			if(userToCheck.getUserName().equals("notExist"))return new MockResultSet(0);
 			return new MockResultSet(1);// return result set with one row
 		}
+		
 		if(query.contains(SubscribersQueries.getSubscriberStatusByUserName(subscriberTocheck.getUserName())))
 		{
 			if(subscriberTocheck==null) return new MockResultSet(0);

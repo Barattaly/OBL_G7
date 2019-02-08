@@ -129,6 +129,7 @@ public class OBLServer extends AbstractServer
 	@SuppressWarnings("unchecked")
 	public void handleMessageFromClient(Object obj, ConnectionToClient client)
 	{
+		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
 		if (!(obj instanceof DBMessage))
 		{
 			if (obj instanceof String)
@@ -166,7 +167,6 @@ public class OBLServer extends AbstractServer
 
 		}
 		// update gui for getting message
-		logREF.setText("Message received from client: " + client + System.lineSeparator() + logREF.getText());
 		if (!isDBRunning())
 			return;
 		try
@@ -481,7 +481,7 @@ public class OBLServer extends AbstractServer
 			return;
 		}
 		userToCheck.setType("subscriber");
-		String query = UsersQueries.createSubscriberUser(userToCheck);
+		String query = UsersQueries.createUser(userToCheck);
 		oblDB.executeUpdate(query);// add to Users table
 		subscriberToCreate.setStatus("active");
 		query = SubscribersQueries.createSubscriber(subscriberToCreate);

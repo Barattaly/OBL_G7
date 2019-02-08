@@ -103,7 +103,7 @@ public class UsersQueries
 				+ "' AND password ='" + userToCheck.getPassWord() + "'";
 		return queryMsg;
 	}
-	public static String createSubscriberUser(User userToAdd)
+	public static String createUser(User userToAdd)
 	{
 		if (userToAdd == null)
 			return null;
@@ -182,6 +182,7 @@ public class UsersQueries
 		}
 		return messages;
 	}
+	
 	private static int getRowCount(ResultSet resultSet)
 	{
 		if (resultSet == null)
@@ -207,5 +208,12 @@ public class UsersQueries
 		}
 		return 0;
 	}
-
+	
+	public static String removeUser(User userToRemove)
+	{
+		if (userToRemove == null)
+			return null;
+		String queryMsg = "DELETE FROM obl_db.Users WHERE id='"+userToRemove.getId()+"'";
+		return queryMsg;
+	}
 }
