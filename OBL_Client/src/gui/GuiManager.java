@@ -156,10 +156,10 @@ public class GuiManager
 	 */
 	public static void InitialPrimeryStage(SCREENS fxmlPath, Stage primaryStage)
 	{
-		getServerIp();
+		//getServerIp();
 		try
 		{
-			client = ClientController.createClientIfNotExist(serverIp, ClientController.DEFAULT_PORT);// get
+			client = ClientController.createClientIfNotExist("localhost"/*serverIp*/, ClientController.DEFAULT_PORT);// get
 																											// connection
 			client.sendToServer(new DBMessage(DBAction.isDBRuning, null));// check DB
 		} catch (Exception e)

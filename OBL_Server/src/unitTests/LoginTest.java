@@ -99,7 +99,7 @@ public class LoginTest
 		oblDB.executeUpdate(UsersQueries.removeUser(activeSubscriber));
 		oblDB.executeUpdate(UsersQueries.removeUser(frozenSubscriber));
 		oblDB.executeUpdate(UsersQueries.removeUser(lockedSubscriber));
-
+		
 	}
 
 	@Test
