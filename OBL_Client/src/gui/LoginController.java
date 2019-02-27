@@ -106,7 +106,6 @@ public class LoginController implements IClientUI, Initializable
 
 					} else
 					{
-
 						// Avoid throwing IllegalStateException by running from a non-JavaFX thread.
 						Platform.runLater(() -> {
 							thisNode.getScene().getWindow().hide();

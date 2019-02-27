@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.MySQLConnection;
-import application.iSqlConnection;
+import application.ISqlConnection;
 import entities.DBMessage;
 import entities.Subscriber;
 import entities.User;
@@ -20,7 +20,7 @@ import ocsf.server.ConnectionToClient;
  */
 public class UsersQueries
 {
-	public static DBMessage checkIfUserExist(User userToCheck,iSqlConnection oblDB)
+	public static DBMessage checkIfUserExist(User userToCheck,ISqlConnection oblDB)
 	{
 		String query = UsersQueries.searchUserByUserNameAndPass(userToCheck);
 		ResultSet rs = oblDB.executeQuery(query);
@@ -64,7 +64,7 @@ public class UsersQueries
 		}
 	}
 	
-	private static boolean isUserLocked(User userToCheck,iSqlConnection oblDB)
+	private static boolean isUserLocked(User userToCheck,ISqlConnection oblDB)
 	{
 		String query = SubscribersQueries.getSubscriberStatusByUserName(userToCheck.getUserName());
 		ResultSet rs2 = oblDB.executeQuery(query);

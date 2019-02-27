@@ -54,7 +54,7 @@ public class ClientController extends AbstractClient
 	public void handleMessageFromServer(Object msg)
 	{
 		if (msg == null)
-			GuiManager.ShowErrorPopup("Something went wrong.\nPlease restart the progrem");
+			GuiManager.ShowErrorPopup("Something went wrong.\nPlease restart the program");
 		if (!(msg instanceof DBMessage))
 			return;// check if the message is DBMessage and not something else
 		DBMessage message = (DBMessage) msg;

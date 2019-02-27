@@ -2,13 +2,13 @@ package unitTests;
 
 import java.lang.reflect.Proxy;
 import java.sql.ResultSet;
-import application.iSqlConnection;
+import application.ISqlConnection;
 import entities.Subscriber;
 import entities.User;
 import entitiesQueries.SubscribersQueries;
 import entitiesQueries.UsersQueries;
 
-public class LoginDatabaseStub implements iSqlConnection
+public class LoginDatabaseStub implements ISqlConnection
 {
 	private User userToCheck = null;
 	private Subscriber subscriberTocheck = null;
