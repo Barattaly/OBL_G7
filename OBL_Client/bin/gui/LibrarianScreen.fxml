@@ -168,7 +168,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <JFXButton fx:id="btn_viewSubscriberCard" alignment="CENTER" buttonType="RAISED" layoutX="252.0" layoutY="291.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
+                  <JFXButton fx:id="btn_viewSubscriberCard" alignment="CENTER" buttonType="RAISED" layoutX="252.0" layoutY="291.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="View subscriber card" textFill="#f9fafc">
                      <font>
                         <Font size="14.0" />
                      </font>
