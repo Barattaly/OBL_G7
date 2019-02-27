@@ -163,8 +163,8 @@ public class ViewSubscriberCardController implements IClientUI
 	@FXML
 	void btn_CancelClick(ActionEvent event)
 	{
-		// GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
-		// GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
+		GuiManager.client.getSubscriberFromDB(subscriberToShow.getId());
+		GuiManager.client.getActivityLogFromDB(subscriberToShow.getId());
 
 		setSubscriberToShow(subscriberToShow);
 
