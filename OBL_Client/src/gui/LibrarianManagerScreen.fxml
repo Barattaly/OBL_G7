@@ -31,7 +31,7 @@
          <children>
             <Pane fx:id="pane_searchSubscriberCard" layoutX="40.0" layoutY="1.0" prefHeight="611.0" prefWidth="650.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="323.0" layoutY="288.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="view subscriber card" textFill="#f9fafc">
+                  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="323.0" layoutY="288.0" onAction="#btn_viewSubscriberCardClick" prefHeight="42.0" prefWidth="155.0" ripplerFill="#bcbfcf" style="-fx-background-color: #3C58FA;" text="View subscriber card" textFill="#f9fafc">
                      <font>
                         <Font size="14.0" />
                      </font>

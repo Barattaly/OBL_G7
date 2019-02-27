@@ -94,7 +94,7 @@ public class LoginController implements IClientUI, Initializable
 				if (msg.Data == null)
 				{
 					Platform.runLater(() -> {
-						warningLabel.setText("Wrong user user name or password.");
+						warningLabel.setText("Wrong user name or password.");
 					});
 				} else if (msg.Data instanceof User)
 				{
