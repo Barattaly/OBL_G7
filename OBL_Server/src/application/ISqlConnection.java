@@ -6,5 +6,4 @@ public interface ISqlConnection
 {
 	int executeUpdate(String msg);
 	ResultSet executeQuery(String query);
-	
 }

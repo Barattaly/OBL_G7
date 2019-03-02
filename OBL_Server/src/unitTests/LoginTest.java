@@ -27,21 +27,29 @@ import entitiesQueries.UsersQueries;
  */
 public class LoginTest
 {
-	MySQLConnection oblDB;
-	String loggedInStatus = "on";
-	// new User(idNum, name, pass, first, last, status, userType)
-	User librarian = new User("1", "librarian", "123", "example", "librarian", "off", "librarian");
-	User libraryManager = new User("2", "libraryManager", "123", "example", "libraryManager", "off", "library manager");
-	Subscriber activeSubscriber = new Subscriber("3", "example", "activeSubscriber", "", "", "active");
-	Subscriber lockedSubscriber = new Subscriber("4", "example", "lockedSubscriber", "", "", "locked");
-	Subscriber frozenSubscriber = new Subscriber("5", "example", "frozenSubscriber", "", "", "frozen");
+	//Constants:
+	private final String loggedInStatus = "on";
+	private final String dbName = "obl_db";
+	private final String dbPassword = "Aa123456";
+	private final String dbUserName = "root";
+
+	
+	//DB connection real or fake:
+	private MySQLConnection oblDB;
+	
+	//Users to check in DB:
+	private User librarian = new User("1", "librarian", "123", "example", "librarian", "off", "librarian");
+	private User libraryManager = new User("2", "libraryManager", "123", "example", "libraryManager", "off", "library manager");
+	private Subscriber activeSubscriber = new Subscriber("3", "example", "activeSubscriber", "", "", "active");
+	private Subscriber lockedSubscriber = new Subscriber("4", "example", "lockedSubscriber", "", "", "locked");
+	private Subscriber frozenSubscriber = new Subscriber("5", "example", "frozenSubscriber", "", "", "frozen");
 
 	@Before
 	public void setUp()
 	{
 		try
 		{
-			oblDB = new MySQLConnection("obl_db", "Group7", "root");
+			oblDB = new MySQLConnection(dbName, dbPassword, dbUserName);
 			// Add the tested users
 			// Librarian and library manager:
 			oblDB.executeUpdate(UsersQueries.createUser(librarian));
@@ -70,7 +78,7 @@ public class LoginTest
 			oblDB.executeUpdate(UsersQueries.createUser(frozenSubscriber));// add to Users table
 			oblDB.executeUpdate(SubscribersQueries.createSubscriber(frozenSubscriber));// add to Subscribers table
 
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -99,7 +107,6 @@ public class LoginTest
 		oblDB.executeUpdate(UsersQueries.removeUser(activeSubscriber));
 		oblDB.executeUpdate(UsersQueries.removeUser(frozenSubscriber));
 		oblDB.executeUpdate(UsersQueries.removeUser(lockedSubscriber));
-		
 	}
 
 	@Test
@@ -118,7 +125,6 @@ public class LoginTest
 		assertEquals(loggedInStatus, ((User) actuals.Data).getLoginStatus());// Make sure he is logged in
 
 		// Subscribers:
-
 		// Active:
 		expecteds = new DBMessage(DBAction.CheckUser, activeSubscriber);
 		actuals = UsersQueries.checkIfUserExist(activeSubscriber, oblDB);// The login method
@@ -149,13 +155,14 @@ public class LoginTest
 		// 1. Make a first login.
 		// 2. Try to login again.
 		
+		DBMessage expected = new DBMessage(DBAction.CheckUser, new User(null, null));
+
 		// Librarian:
 		User userLoggedIn = librarian;
 		// First Login:
 		DBMessage afterLoggin = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
-		assertEquals("on", ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
+		assertEquals(loggedInStatus, ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
 		// Try to log again:
-		DBMessage expected = new DBMessage(DBAction.CheckUser, new User(null, null));
 		DBMessage actuals = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
 		assertEquals(expected.Data, expected.Data);
 
@@ -163,21 +170,18 @@ public class LoginTest
 		userLoggedIn = libraryManager;
 		// First Login:
 		afterLoggin = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
-		assertEquals("on", ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
+		assertEquals(loggedInStatus, ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
 		// Try to log again:
-		expected = new DBMessage(DBAction.CheckUser, new User(null, null));
 		actuals = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
 		assertEquals(expected.Data, expected.Data);
 
 		// Subscribers:
-
 		// active:
 		userLoggedIn = activeSubscriber;
 		// First Login:
 		afterLoggin = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
-		assertEquals("on", ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
+		assertEquals(loggedInStatus, ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
 		// Try to log again:
-		expected = new DBMessage(DBAction.CheckUser, new User(null, null));
 		actuals = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
 		assertEquals(expected.Data, expected.Data);
 
@@ -185,9 +189,8 @@ public class LoginTest
 		userLoggedIn = frozenSubscriber;
 		// First Login:
 		afterLoggin = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
-		assertEquals("on", ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
+		assertEquals(loggedInStatus, ((User) afterLoggin.Data).getLoginStatus());// Check he is logged in
 		// Try to log again:
-		expected = new DBMessage(DBAction.CheckUser, new User(null, null));
 		actuals = UsersQueries.checkIfUserExist(userLoggedIn, oblDB);// The login method
 		assertEquals(expected.Data, expected.Data);
 	}

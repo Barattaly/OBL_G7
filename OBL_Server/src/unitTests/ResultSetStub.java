@@ -24,7 +24,7 @@ import java.util.Map;
 
 import entities.Subscriber;
 
-public class MockResultSet implements ResultSet
+public class ResultSetStub implements ResultSet
 {
 	public int NumberOfRows = 0;
 	public Subscriber subscriber = null;
@@ -32,7 +32,7 @@ public class MockResultSet implements ResultSet
 	{
 		this.subscriber = subscriberTocheck;
 	}
-	public MockResultSet(int numberOfRows)
+	public ResultSetStub(int numberOfRows)
 	{
 		this.NumberOfRows = numberOfRows;
 	}

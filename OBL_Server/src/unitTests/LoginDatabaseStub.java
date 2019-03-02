@@ -29,20 +29,20 @@ public class LoginDatabaseStub implements ISqlConnection
 	{
 		if(query.equals(UsersQueries.searchUserByUserNameAndPass(userToCheck)))
 		{
-			if(userToCheck.getUserName().equals("notExist"))return new MockResultSet(0);
-			return new MockResultSet(1);// return result set with one row
+			if(userToCheck.getUserName().equals("notExist"))return new ResultSetStub(0);
+			return new ResultSetStub(1);// return result set with one row
 		}
 		
 		if(query.contains(SubscribersQueries.getSubscriberStatusByUserName(subscriberTocheck.getUserName())))
 		{
-			if(subscriberTocheck==null) return new MockResultSet(0);
-			MockResultSet rs = new MockResultSet(1);
+			if(subscriberTocheck==null) return new ResultSetStub(0);
+			ResultSetStub rs = new ResultSetStub(1);
 			rs.setSubscriber(subscriberTocheck);
 			return rs;
 		}
 		
 		
-		return new MockResultSet(0);
+		return new ResultSetStub(0);
 
 	}
 
