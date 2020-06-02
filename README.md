@@ -3,7 +3,8 @@
 This project includes the client and the server sides for a full working Library (of books 😉)
 including a "Guest","Librarian", "Reader", "Manager" Users and full functionality.
 The project was made with Java and JavaFx (using scenebuilder), MySql and the network was based on ocsf library of tcp\ip.
-Some GUI from the project:
+
+## Some GUI from the project:
 
 ## **Server**
 
